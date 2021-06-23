@@ -1,6 +1,6 @@
 package com.gitegg.service.system.api.feign;
 
-import com.gitegg.platform.boot.common.base.Result;
+import com.gitegg.platform.base.result.Result;
 import com.gitegg.service.system.api.dto.ApiSystemDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

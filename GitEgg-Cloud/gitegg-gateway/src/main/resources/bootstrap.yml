@@ -1,0 +1,25 @@
+server:
+  port: 80
+spring:
+  application:
+    name: gitegg-service-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        enabled: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: gitegg-service-system
+          uri: lb://gitegg-service-system
+          predicates:
+            - Path=/gitegg-system/**
+          filters:
+            - StripPrefix=1

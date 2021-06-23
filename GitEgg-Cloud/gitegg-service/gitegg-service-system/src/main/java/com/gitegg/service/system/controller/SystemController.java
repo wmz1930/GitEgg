@@ -113,4 +113,10 @@ public class SystemController {
         return Result.success("异常比例/异常数量熔断策略");
     }
 
+    @ApiOperation(value = "Gateway路由转发测试")
+    @GetMapping(value = "gateway/forward")
+    public Result gatewayForward() {
+        return Result.success("gitegg-service-system测试数据");
+    }
+
 }
