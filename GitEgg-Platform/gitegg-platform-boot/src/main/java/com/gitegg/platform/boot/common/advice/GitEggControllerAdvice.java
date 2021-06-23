@@ -108,7 +108,7 @@ public class GitEggControllerAdvice {
         //获取异常字段及对应的异常信息
         StringBuffer stringBuffer = new StringBuffer();
         methodArgumentNotValidException.getBindingResult().getFieldErrors().stream()
-                .map(t -> t.getField()+"=>"+t.getDefaultMessage()+" ")
+                .map(t -> t.getField() + t.getDefaultMessage() + ";")
                 .forEach(e -> stringBuffer.append(e));
         String errorMessage = stringBuffer.toString();
         Result result = Result.error(ResultCodeEnum.PARAM_VALID_ERROR, errorSystem + errorMessage);
