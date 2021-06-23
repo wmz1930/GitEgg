@@ -55,4 +55,16 @@ public class SystemController {
     public Result<String> nacos() {
         return Result.data(nacosMaxActiveType);
     }
+
+    @GetMapping(value = "api/by/id")
+    @ApiOperation(value = "Fegin Get调用测试接口")
+    public Result<Object> feginById(@RequestParam("id") String id) {
+        return Result.data(systemService.list());
+    }
+
+    @PostMapping(value = "api/by/dto")
+    @ApiOperation(value = "Fegin Post调用测试接口")
+    public Result<Object> feginByDto(@Valid @RequestBody SystemDTO systemDTO) {
+        return Result.data(systemDTO);
+    }
 }

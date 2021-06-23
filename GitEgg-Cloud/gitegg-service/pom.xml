@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gitegg-service</artifactId>
+    <name>${project.artifactId}</name>
+    <version>${project.parent.version}</version>
     <packaging>pom</packaging>
     <modules>
         <module>gitegg-service-base</module>

@@ -10,12 +10,32 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gitegg-service-api</artifactId>
+    <name>${project.artifactId}</name>
+    <version>${project.parent.version}</version>
     <packaging>pom</packaging>
     <modules>
         <module>gitegg-service-base-api</module>
         <module>gitegg-service-bigdata-api</module>
         <module>gitegg-service-system-api</module>
     </modules>
+
+    <dependencies>
+        <!-- gitegg Spring Boot自定义及扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-boot</artifactId>
+        </dependency>
+        <!-- gitegg Spring Cloud自定义及扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-cloud</artifactId>
+        </dependency>
+        <!-- gitegg swagger2-knife4j -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-swagger</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>

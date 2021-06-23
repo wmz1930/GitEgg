@@ -1,8 +1,8 @@
 server:
-  port: 8001
+  port: 8002
 spring:
   application:
-    name: gitegg-service-system
+    name: gitegg-service-base
   cloud:
     nacos:
       discovery:
@@ -10,5 +10,6 @@ spring:
       config:
         server-addr: 127.0.0.1:8848
         file-extension: yaml
+        prefix: gitegg-service-system
         group: DEFAULT_GROUP
         enabled: true
