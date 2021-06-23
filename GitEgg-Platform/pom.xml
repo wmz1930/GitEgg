@@ -16,6 +16,7 @@
         <module>gitegg-platform-mybatis</module>
         <module>gitegg-platform-swagger</module>
         <module>gitegg-platform-boot</module>
+        <module>gitegg-platform-cloud</module>
     </modules>
 
     <properties>
@@ -34,8 +35,6 @@
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
         <!-- SpringCloud版本号 -->
         <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
-        <!-- SpringPlatform版本号 -->
-        <spring.platform.version>Cairo-SR8</spring.platform.version>
 
     </properties>
 
@@ -103,54 +102,5 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>aliyun-repos</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>gitegg-release</id>
-            <name>Release Repository</name>
-            <url>https://packages.aliyun.com/maven/repository/2020515-release-dpxo1j/</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aliyun-plugin</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <profileActive>dev</profileActive>
-            </properties>
-            <activation>
-                <!--默认为dev环境打包方式-->
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <profileActive>test</profileActive>
-            </properties>
-        </profile>
-        <profile>
-            <id>pro</id>
-            <properties>
-                <profileActive>pro</profileActive>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>

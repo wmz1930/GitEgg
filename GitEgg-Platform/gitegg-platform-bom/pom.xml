@@ -43,6 +43,8 @@
         <mybatis.plus.version>3.4.0</mybatis.plus.version>
         <!-- Knife4j Swagger2文档 -->
         <knife4j.version>3.0.1</knife4j.version>
+        <!-- Spring Cloud Alibaba -->
+        <spring.cloud.alibaba>2.2.3.RELEASE</spring.cloud.alibaba>
 
     </properties>
 
@@ -70,6 +72,12 @@
             <dependency>
                 <groupId>com.gitegg.platform</groupId>
                 <artifactId>gitegg-platform-boot</artifactId>
+                <version>${gitegg.project.version}</version>
+            </dependency>
+            <!-- gitegg cloud自定义扩展 -->
+            <dependency>
+                <groupId>com.gitegg.platform</groupId>
+                <artifactId>gitegg-platform-cloud</artifactId>
                 <version>${gitegg.project.version}</version>
             </dependency>
             <!-- mysql数据库驱动 -->
@@ -101,6 +109,14 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-dependencies</artifactId>
                 <version>${knife4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring Cloud Alibaba -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring.cloud.alibaba}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
