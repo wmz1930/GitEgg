@@ -11,7 +11,6 @@
 
     <artifactId>gitegg-platform-cloud</artifactId>
     <name>${project.artifactId}</name>
-    <version>${project.parent.version}</version>
     <packaging>jar</packaging>
 
     <dependencies>

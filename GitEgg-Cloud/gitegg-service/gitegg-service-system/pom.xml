@@ -11,9 +11,6 @@
 
     <artifactId>gitegg-service-system</artifactId>
     <name>${project.artifactId}</name>
-    <version>${project.parent.version}</version>
     <packaging>jar</packaging>
-
-
 
 </project>

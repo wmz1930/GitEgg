@@ -15,7 +15,6 @@
     <groupId>com.gitegg.platform</groupId>
     <artifactId>gitegg-platform-bom</artifactId>
     <name>${project.artifactId}</name>
-    <version>${gitegg.project.version}</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -33,6 +32,8 @@
         <!-- GitEgg项目统一设置版本号 -->
         <gitegg.project.version>1.0-SNAPSHOT</gitegg.project.version>
 
+        <!-- Spring Cloud Alibaba -->
+        <spring.cloud.alibaba>2.2.3.RELEASE</spring.cloud.alibaba>
         <!-- mysql数据库驱动 -->
         <mysql.connector.version>8.0.17</mysql.connector.version>
         <!-- postgresql数据库驱动 -->
@@ -43,13 +44,21 @@
         <mybatis.plus.version>3.4.0</mybatis.plus.version>
         <!-- Knife4j Swagger2文档 -->
         <knife4j.version>3.0.1</knife4j.version>
-        <!-- Spring Cloud Alibaba -->
-        <spring.cloud.alibaba>2.2.3.RELEASE</spring.cloud.alibaba>
+        <!-- redisson Redis客户端工具 -->
+        <redisson.version>3.13.6</redisson.version>
 
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- Spring Cloud Alibaba -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring.cloud.alibaba}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!-- gitegg基础底层定义包 -->
             <dependency>
                 <groupId>com.gitegg.platform</groupId>
@@ -86,6 +95,12 @@
                 <artifactId>gitegg-platform-cloud</artifactId>
                 <version>${gitegg.project.version}</version>
             </dependency>
+            <!-- gitegg cache自定义扩展 -->
+            <dependency>
+                <groupId>com.gitegg.platform</groupId>
+                <artifactId>gitegg-platform-redis</artifactId>
+                <version>${gitegg.project.version}</version>
+            </dependency>
             <!-- mysql数据库驱动 -->
             <dependency>
                 <groupId>mysql</groupId>
@@ -118,13 +133,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Spring Cloud Alibaba -->
+            <!-- redisson Redis客户端-->
             <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring.cloud.alibaba}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

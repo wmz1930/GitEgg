@@ -11,7 +11,6 @@
 
     <artifactId>gitegg-service</artifactId>
     <name>${project.artifactId}</name>
-    <version>${project.parent.version}</version>
     <packaging>pom</packaging>
     <modules>
         <module>gitegg-service-base</module>
@@ -44,6 +43,12 @@
         <dependency>
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-swagger</artifactId>
+        </dependency>
+        <!-- gitegg cache自定义扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-redis</artifactId>
+            <version>${gitegg.project.version}</version>
         </dependency>
         <!-- spring boot web核心包 -->
         <dependency>
