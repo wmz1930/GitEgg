@@ -15,20 +15,25 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- Nacos 服务注册发现-->
+        <!-- Nacos 服务注册发现 -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-        <!-- Nacos 分布式配置-->
+        <!-- Nacos 分布式配置 -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
-        <!-- OpenFeign 微服务调用解决方案-->
+        <!-- OpenFeign 微服务调用解决方案 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!-- Sentinel 高可用流量防护组件 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
     </dependencies>
 

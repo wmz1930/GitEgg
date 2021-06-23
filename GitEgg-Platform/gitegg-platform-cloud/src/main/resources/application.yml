@@ -1,3 +1,14 @@
+spring:
+  cloud:
+    sentinel:
+      filter:
+        enabled: true
+      transport:
+        port: 8719
+        #指定sentinel控制台的地址
+        dashboard: 127.0.0.1:8086
+      eager: true
+#Ribbon配置
 ribbon:
   #请求连接的超时时间
   ConnectTimeout: 5000
@@ -9,3 +20,9 @@ ribbon:
   MaxAutoRetriesNextServer: 1
   #当前实例的重试次数
   MaxAutoRetries: 1
+#Sentinel端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
