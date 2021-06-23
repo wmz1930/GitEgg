@@ -24,7 +24,7 @@ public class SwaggerConfig {
         Docket docket=new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 //分组名称
-                .groupName("2.X版本")
+                .groupName("1.X版本")
                 .select()
                 //这里指定Controller扫描包路径
                 .apis(RequestHandlerSelectors.basePackage("com.gitegg"))
@@ -35,8 +35,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().version("1.0.0")
-                .title("Spring Cloud Swagger2 文档")
-                .description("Spring Cloud Swagger2 文档")
+                .title("GitEgg Cloud 文档")
+                .description("GitEgg Cloud 文档")
                 .termsOfServiceUrl("www.gitegg.com")
                 .build();
     }

@@ -66,6 +66,12 @@
                 <artifactId>gitegg-platform-swagger</artifactId>
                 <version>${gitegg.project.version}</version>
             </dependency>
+            <!-- gitegg boot自定义扩展 -->
+            <dependency>
+                <groupId>com.gitegg.platform</groupId>
+                <artifactId>gitegg-platform-boot</artifactId>
+                <version>${gitegg.project.version}</version>
+            </dependency>
             <!-- mysql数据库驱动 -->
             <dependency>
                 <groupId>mysql</groupId>

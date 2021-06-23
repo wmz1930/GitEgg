@@ -18,6 +18,11 @@
     </modules>
 
     <dependencies>
+        <!-- gitegg Spring Boot自定义及扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-boot</artifactId>
+        </dependency>
         <!-- gitegg数据库驱动及连接池 -->
         <dependency>
             <groupId>com.gitegg.platform</groupId>

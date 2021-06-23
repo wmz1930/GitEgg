@@ -1,5 +1,7 @@
 package com.gitegg.service.system.controller;
 
+import com.gitegg.platform.boot.common.base.Result;
+import com.gitegg.platform.boot.common.exception.BusinessException;
 import com.gitegg.service.system.service.ISystemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,5 +29,11 @@ public class SystemController {
     @ApiOperation(value = "system page接口")
     public Object page() {
         return systemService.page();
+    }
+
+    @GetMapping(value = "exception")
+    @ApiOperation(value = "自定义异常及返回测试接口")
+    public Result<String> exception() {
+        return Result.data(systemService.exception());
     }
 }

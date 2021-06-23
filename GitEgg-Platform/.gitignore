@@ -24,3 +24,13 @@ hs_err_pid*
 /.idea
 /gitegg-platform-db/target
 /gitegg-platform-mybatis/target
+/gitegg-platform-bom/gitegg-platform-bom.iml
+/gitegg-platform-boot/target
+/gitegg-platform-boot/gitegg-platform-boot.iml
+/gitegg-platform-db/*.iml
+/gitegg-platform-db/*
+/gitegg-platform-mybatis/gitegg-platform-mybatis.iml
+/gitegg-platform-mybatis/target
+/gitegg-platform-swagger/gitegg-platform-swagger.iml
+/gitegg-platform-swagger/target
+/GitEgg-Platform.iml

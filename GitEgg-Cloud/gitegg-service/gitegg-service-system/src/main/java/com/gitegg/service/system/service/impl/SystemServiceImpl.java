@@ -1,6 +1,7 @@
 package com.gitegg.service.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitegg.platform.boot.common.exception.BusinessException;
 import com.gitegg.service.system.entity.SystemTable;
 import com.gitegg.service.system.mapper.SystemTableMapper;
 import com.gitegg.service.system.service.ISystemService;
@@ -29,5 +30,10 @@ public class SystemServiceImpl implements ISystemService {
         List<SystemTable> records = systemTableMapper.page(page);
         page.setRecords(records);
         return page;
+    }
+
+    @Override
+    public String exception() {
+        throw new BusinessException("自定义异常");
     }
 }
