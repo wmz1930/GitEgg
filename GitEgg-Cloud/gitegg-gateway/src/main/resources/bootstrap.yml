@@ -22,4 +22,12 @@ spring:
           predicates:
             - Path=/gitegg-system/**
           filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-service-base
+          uri: lb://gitegg-service-base
+          predicates:
+            - Path=/gitegg-base/**
+          filters:
+            - SwaggerHeaderFilter
             - StripPrefix=1
