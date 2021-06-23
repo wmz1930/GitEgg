@@ -1,0 +1,2 @@
+# GitEgg-Platform
+SpringCloud企业级应用开发框架GitEgg-Platform底层公共组件开发框架代码

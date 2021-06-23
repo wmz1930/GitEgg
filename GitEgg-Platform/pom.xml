@@ -4,19 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.gitegg.cloud</groupId>
-    <artifactId>GitEgg-Cloud</artifactId>
-    <name>gitegg-cloud</name>
-    <packaging>pom</packaging>
+    <groupId>com.gitegg.platform</groupId>
+    <artifactId>GitEgg-Platform</artifactId>
+    <name>${project.artifactId}</name>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <modules>
-        <module>gitegg-common</module>
-        <module>gitegg-oauth</module>
-        <module>gitegg-gateway</module>
-        <module>gitegg-plugin</module>
-        <module>gitegg-service</module>
-        <module>gitegg-service-api</module>
+        <module>gitegg-platform-bom</module>
+        <module>gitegg-platform-db</module>
+        <module>gitegg-platform-mybatis</module>
     </modules>
 
     <properties>
@@ -31,8 +28,6 @@
         <!-- 项目统一字符集编码UTF-8 -->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- GitEgg项目统一设置版本号 -->
-        <gitegg.project.version>1.0-SNAPSHOT</gitegg.project.version>
         <!-- SpringBoot版本号 -->
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
         <!-- SpringCloud版本号 -->
@@ -42,17 +37,15 @@
 
     </properties>
 
-    <dependencies>
-        <!-- Lombok 通过简单注解消除冗长代码  -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-    </dependencies>
-
     <dependencyManagement>
         <dependencies>
-            <!-- spring boot工程的依赖库,无需继承spring-boot-starter-parent -->
+            <dependency>
+                <groupId>com.gitegg.platform</groupId>
+                <artifactId>gitegg-platform-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -60,7 +53,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- spring cloud工程的依赖库 -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -68,15 +60,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- GitEgg-Component相关Jar包 -->
-            <dependency>
-                <groupId>com.gitegg.platform</groupId>
-                <artifactId>gitegg-platform-bom</artifactId>
-                <version>${gitegg.project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -93,33 +76,9 @@
                 </includes>
             </resource>
         </resources>
-        <pluginManagement>
-            <plugins>
-                <!-- 能够将Spring Boot应用打包为可执行的jar或war文件，然后以通常的方式运行Spring Boot应用 -->
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring.boot.version}</version>
-                    <configuration>
-                        <fork>true</fork>
-                        <finalName>${project.build.finalName}</finalName>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>repackage</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.plugin.version}</version>
                 <configuration>
@@ -134,5 +93,54 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>aliyun-repos</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>gitegg-release</id>
+            <name>Release Repository</name>
+            <url>https://packages.aliyun.com/maven/repository/2020515-release-dpxo1j/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-plugin</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profileActive>dev</profileActive>
+            </properties>
+            <activation>
+                <!--默认为dev环境打包方式-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <profileActive>test</profileActive>
+            </properties>
+        </profile>
+        <profile>
+            <id>pro</id>
+            <properties>
+                <profileActive>pro</profileActive>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

@@ -18,6 +18,16 @@
     </modules>
 
     <dependencies>
+        <!-- gitegg数据库驱动及连接池 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-db</artifactId>
+        </dependency>
+        <!-- gitegg mybatis-plus -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-mybatis</artifactId>
+        </dependency>
         <!-- spring boot web核心包 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
