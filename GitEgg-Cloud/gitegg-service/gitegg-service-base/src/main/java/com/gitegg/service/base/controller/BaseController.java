@@ -1,6 +1,6 @@
 package com.gitegg.service.base.controller;
 
-import com.gitegg.platform.boot.common.base.Result;
+import com.gitegg.platform.base.result.Result;
 import com.gitegg.service.system.api.dto.ApiSystemDTO;
 import com.gitegg.service.system.api.feign.ISystemFeign;
 import io.swagger.annotations.Api;

@@ -1,7 +1,7 @@
 package com.gitegg.service.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitegg.platform.boot.common.exception.BusinessException;
+import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.service.system.entity.SystemTable;
 import com.gitegg.service.system.mapper.SystemTableMapper;
 import com.gitegg.service.system.service.ISystemService;

@@ -1,11 +1,11 @@
-package com.gitegg.platform.boot.common.base;
+package com.gitegg.platform.base.result;
 
-import java.util.List;
-
-import com.gitegg.platform.boot.common.enums.ResultCodeEnum;
+import com.gitegg.platform.base.enums.ResultCodeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @ClassName: PageResult

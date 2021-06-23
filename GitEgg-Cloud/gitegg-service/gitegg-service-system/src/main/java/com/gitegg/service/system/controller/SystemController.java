@@ -1,7 +1,7 @@
 package com.gitegg.service.system.controller;
 
-import com.gitegg.platform.boot.common.base.Result;
-import com.gitegg.platform.boot.common.exception.BusinessException;
+import com.gitegg.platform.base.exception.BusinessException;
+import com.gitegg.platform.base.result.Result;
 import com.gitegg.service.system.dto.SystemDTO;
 import com.gitegg.service.system.service.ISystemService;
 import io.swagger.annotations.Api;

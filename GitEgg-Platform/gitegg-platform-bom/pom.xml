@@ -50,6 +50,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- gitegg基础底层定义包 -->
+            <dependency>
+                <groupId>com.gitegg.platform</groupId>
+                <artifactId>gitegg-platform-base</artifactId>
+                <version>${gitegg.project.version}</version>
+            </dependency>
             <!-- gitegg数据库驱动及连接池 -->
             <dependency>
                 <groupId>com.gitegg.platform</groupId>

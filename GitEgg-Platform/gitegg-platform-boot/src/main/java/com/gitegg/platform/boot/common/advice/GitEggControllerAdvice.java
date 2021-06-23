@@ -1,9 +1,9 @@
 package com.gitegg.platform.boot.common.advice;
 
-import com.gitegg.platform.boot.common.base.Result;
-import com.gitegg.platform.boot.common.enums.ResultCodeEnum;
-import com.gitegg.platform.boot.common.exception.BusinessException;
-import com.gitegg.platform.boot.common.exception.SystemException;
+import com.gitegg.platform.base.enums.ResultCodeEnum;
+import com.gitegg.platform.base.exception.BusinessException;
+import com.gitegg.platform.base.exception.SystemException;
+import com.gitegg.platform.base.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.HttpMessageNotReadableException;

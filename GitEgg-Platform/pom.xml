@@ -17,6 +17,7 @@
         <module>gitegg-platform-swagger</module>
         <module>gitegg-platform-boot</module>
         <module>gitegg-platform-cloud</module>
+        <module>gitegg-platform-base</module>
     </modules>
 
     <properties>

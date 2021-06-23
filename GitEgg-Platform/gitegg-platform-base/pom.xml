@@ -9,26 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gitegg-platform-boot</artifactId>
+    <artifactId>gitegg-platform-base</artifactId>
     <name>${project.artifactId}</name>
     <version>${project.parent.version}</version>
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <!-- spring-boot-starter-web 2.3.x开始不再默认引入，这里需要手动引入-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-swagger</artifactId>

@@ -1,9 +1,10 @@
-package com.gitegg.platform.boot.common.base;
+package com.gitegg.platform.base.result;
 
-import com.gitegg.platform.boot.common.enums.ResultCodeEnum;
+import com.gitegg.platform.base.enums.ResultCodeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @ClassName: Result

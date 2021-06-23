@@ -1,4 +1,4 @@
-package com.gitegg.platform.boot.common.enums;
+package com.gitegg.platform.base.enums;
 
 
 /**
@@ -18,6 +18,11 @@ public enum ResultCodeEnum {
      * 系统错误
      */
     ERROR(500, "系统错误"),
+
+    /**
+     * 系统繁忙，请稍后重试
+     */
+    SYSTEM_BUSY(429, "系统繁忙，请稍后重试"),
 
     /**
      * 操作失败

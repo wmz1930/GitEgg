@@ -1,6 +1,6 @@
-package com.gitegg.platform.boot.common.exception;
+package com.gitegg.platform.base.exception;
 
-import com.gitegg.platform.boot.common.enums.ResultCodeEnum;
+import com.gitegg.platform.base.enums.ResultCodeEnum;
 import lombok.Getter;
 
 /**
