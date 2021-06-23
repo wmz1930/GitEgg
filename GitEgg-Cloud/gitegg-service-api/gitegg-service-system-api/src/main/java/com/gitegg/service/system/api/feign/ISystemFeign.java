@@ -28,4 +28,12 @@ public interface ISystemFeign {
      */
     @PostMapping("/system/api/by/dto")
     Result<ApiSystemDTO> querySystemByDto(@RequestBody ApiSystemDTO apiSystemDTO);
+
+    /**
+     * OpenFeign测试Ribbon负载均衡功能
+     * @return
+     */
+    @GetMapping("/system/api/ribbon")
+    Result<String> testRibbon();
+
 }

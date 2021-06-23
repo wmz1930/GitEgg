@@ -33,4 +33,9 @@ public class BaseController {
         return Result.data(systemFeign.querySystemByDto(systemDTO));
     }
 
+    @PostMapping(value = "api/ribbon")
+    @ApiOperation(value = "Ribbon调用测试接口")
+    public Result<Object> testRibbon() {
+        return Result.data(systemFeign.testRibbon());
+    }
 }
