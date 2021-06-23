@@ -1,6 +1,7 @@
 package com.gitegg.service.system.controller;
 
 import com.gitegg.platform.boot.common.base.Result;
+import com.gitegg.platform.boot.common.exception.BusinessException;
 import com.gitegg.service.system.dto.SystemDTO;
 import com.gitegg.service.system.service.ISystemService;
 import io.swagger.annotations.Api;
@@ -82,4 +83,34 @@ public class SystemController {
     public Result<String> sentinelProtected() {
         return Result.data("访问的是限流测试接口");
     }
+
+    @ApiOperation(value = "慢调用比例熔断策略")
+    @GetMapping(value = "sentinel/slow/request/ratio")
+    public Result<String> sentinelRR() {
+        try {
+            double randomNumber;
+            randomNumber = Math.random();
+            if (randomNumber >= 0 && randomNumber <= 0.80) {
+                Thread.sleep(300L);
+            } else if (randomNumber >= 0.80 && randomNumber <= 0.80 + 0.10) {
+                Thread.sleep(10L);
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return Result.success("慢调用比例熔断策略");
+    }
+
+    @ApiOperation(value = "异常比例/异常数量熔断策略")
+    @GetMapping(value = "sentinel/error/ratio")
+    public Result sentinelRatio() {
+        double randomNumber;
+        randomNumber = Math.random();
+        if (randomNumber >= 0 && randomNumber <= 0.80) {
+            throw new BusinessException("系统异常");
+        }
+        return Result.success("异常比例/异常数量熔断策略");
+    }
+
 }
