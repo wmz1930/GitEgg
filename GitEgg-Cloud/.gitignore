@@ -1,0 +1,39 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+/.idea
+/*.iml
+/gitegg-common/gitegg-common.iml
+/gitegg-gateway/gitegg-gateway.iml
+/gitegg-oauth/gitegg-oauth.iml
+/gitegg-plugin/gitegg-plugin.iml
+/gitegg-service/gitegg-service.iml
+/gitegg-service/gitegg-service-base/gitegg-service-base.iml
+/gitegg-service/gitegg-service-bigdata/gitegg-service-bigdata.iml
+/gitegg-service/gitegg-service-system/target
+/gitegg-service/gitegg-service-system/gitegg-service-system.iml
+/gitegg-service/gitegg-service.iml
+/gitegg-service-api/gitegg-service-api.iml
+/gitegg-service-api/gitegg-service-base-api/gitegg-service-base-api.iml
+/gitegg-service-api/gitegg-service-bigdata-api/gitegg-service-bigdata-api.iml
+/gitegg-service-api/gitegg-service-system-api/gitegg-service-system-api.iml
