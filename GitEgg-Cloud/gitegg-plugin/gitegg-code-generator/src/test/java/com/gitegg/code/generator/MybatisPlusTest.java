@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
 /**
  * 
- * @author GitEgg
+ * @author  GitEgg
  * @date 2020/12/14
  **/
 public class MybatisPlusTest {
