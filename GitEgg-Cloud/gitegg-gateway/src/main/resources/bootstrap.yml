@@ -6,10 +6,11 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 172.16.20.188:8848
       config:
-        server-addr: 127.0.0.1:8848
+        server-addr: 172.16.20.188:8848
         file-extension: yaml
+        prefix: gitegg-service-system
         group: DEFAULT_GROUP
         enabled: true
     gateway:
@@ -17,6 +18,13 @@ spring:
         locator:
           enabled: true
       routes:
+        - id: gitegg-oauth
+          uri: lb://gitegg-oauth
+          predicates:
+            - Path=/gitegg-oauth/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
         - id: gitegg-service-system
           uri: lb://gitegg-service-system
           predicates:
@@ -24,10 +32,45 @@ spring:
           filters:
             - SwaggerHeaderFilter
             - StripPrefix=1
+        - id: gitegg-service-extension
+          uri: lb://gitegg-service-extension
+          predicates:
+            - Path=/gitegg-extension/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
         - id: gitegg-service-base
           uri: lb://gitegg-service-base
           predicates:
             - Path=/gitegg-base/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-mall-user
+          uri: lb://gitegg-mall-user
+          predicates:
+            - Path=/mall-user/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-mall-goods
+          uri: lb://gitegg-mall-goods
+          predicates:
+            - Path=/mall-goods/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-mall-order
+          uri: lb://gitegg-mall-order
+          predicates:
+            - Path=/mall-order/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-mall-pay
+          uri: lb://gitegg-mall-pay
+          predicates:
+            - Path=/mall-pay/**
           filters:
             - SwaggerHeaderFilter
             - StripPrefix=1
