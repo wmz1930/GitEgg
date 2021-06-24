@@ -10,6 +10,61 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gitegg-oauth</artifactId>
+    <name>${project.artifactId}</name>
+    <packaging>jar</packaging>
 
+    <dependencies>
+        <!-- gitegg-platform-boot -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-boot</artifactId>
+        </dependency>
+        <!-- gitegg-platform-cloud -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-cloud</artifactId>
+        </dependency>
+        <!-- gitegg cache自定义扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-cache</artifactId>
+        </dependency>
+        <!-- gitegg-platform-oauth2 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-oauth2</artifactId>
+        </dependency>
+        <!-- gitegg数据库驱动及连接池 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-db</artifactId>
+        </dependency>
+        <!-- gitegg mybatis-plus -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-mybatis</artifactId>
+        </dependency>
+        <!-- 验证码 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-captcha</artifactId>
+        </dependency>
+        <!-- gitegg-service-system 的fegin公共调用方法 -->
+        <dependency>
+            <groupId>com.gitegg.cloud</groupId>
+            <artifactId>gitegg-service-system-client</artifactId>
+            <version>${gitegg.project.version}</version>
+        </dependency>
+        <!-- gitegg-service-extension 的fegin公共调用方法 -->
+        <dependency>
+            <groupId>com.gitegg.cloud</groupId>
+            <artifactId>gitegg-service-extension-client</artifactId>
+            <version>${gitegg.project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

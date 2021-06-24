@@ -1,0 +1,268 @@
+#菜单
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      3,
+      0,
+      '${table.comment!}',
+      '${package.ModuleName}${entity}Table',
+      '2',
+      'jiaoseguanli',
+      '${package.ModuleName}${entity}Table',
+      'system/${package.ModuleName}/${table.entityPath}/${table.entityPath}Table',
+      2,
+      1,
+      1,
+      '${table.entityPath}Table',
+      '1',
+      '${table.comment!}',
+      '2016-04-22 10:43:19',
+      1,
+      '2018-11-02 14:50:45',
+      1,
+      '0'
+  );
+#查询数据列表
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      4,
+      0,
+      '获取${table.comment!}列表',
+      '${package.ModuleName}:${table.entityPath}:list',
+      '4',
+      'xitongrizhi',
+      '${package.ModuleName}${entity}List',
+      '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/list',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '获取${table.comment!}列表数据',
+      '2018-10-27 17:40:14',
+      1,
+      '2018-11-02 14:53:38',
+      1,
+      '0'
+  );
+
+#添加
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      4,
+      0,
+      '添加${table.comment!}',
+      '${package.ModuleName}:${table.entityPath}:create',
+      '4',
+      'xitongrizhi',
+      '${package.ModuleName}${entity}Create',
+      '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/create',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '添加${table.comment!}',
+      '2018-10-27 17:40:14',
+      1,
+      '2018-11-02 14:53:38',
+      1,
+      '0'
+  );
+
+#更新
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      4,
+      0,
+      '更新${table.comment!}',
+      '${package.ModuleName}:${table.entityPath}:update',
+      '4',
+      'xitongrizhi',
+      '${package.ModuleName}${entity}Update',
+      '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/update',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '更新${table.comment!}',
+      '2018-10-27 17:40:14',
+      1,
+      '2018-11-02 14:53:38',
+      1,
+      '0'
+  );
+
+#删除
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      4,
+      0,
+      '删除${table.comment!}',
+      '${package.ModuleName}:${table.entityPath}:delete',
+      '4',
+      'xitongrizhi',
+      '${package.ModuleName}${entity}Delete',
+      '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/delete/{${table.entityPath}Id}',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '删除${table.comment!}',
+      '2018-10-27 17:40:14',
+      1,
+      '2018-11-02 14:53:38',
+      1,
+      '0'
+  );
+
+#批量删除
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+  VALUES
+  (
+      4,
+      0,
+      '批量删除${table.comment!}',
+      '${package.ModuleName}:${table.entityPath}:batch:delete',
+      '4',
+      'xitongrizhi',
+      '${package.ModuleName}${entity}BatchDelete',
+      '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/batch/delete',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '批量删除${table.comment!}',
+      '2018-10-27 17:40:14',
+      1,
+      '2018-11-02 14:53:38',
+      1,
+      '0'
+  );

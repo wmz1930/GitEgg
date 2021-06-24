@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>gitegg-plugin</artifactId>
+        <groupId>com.gitegg.cloud</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>gitegg-code-generator</artifactId>
+
+    <dependencies>
+        <!-- gitegg基础底层定义包 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-base</artifactId>
+        </dependency>
+        <!-- gitegg数据库驱动及连接池 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-db</artifactId>
+        </dependency>
+        <!-- gitegg mybatis-plus -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-mybatis</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

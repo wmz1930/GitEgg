@@ -1,0 +1,15 @@
+server:
+  port: 8003
+spring:
+  application:
+    name: gitegg-oauth
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.16.20.188:8848
+      config:
+        server-addr: 172.16.20.188:8848
+        file-extension: yaml
+        prefix: gitegg-service-system
+        group: DEFAULT_GROUP
+        enabled: true
