@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.mall.pay.mapper.PayRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.mall.pay.entity.PayRecord">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="order_no" property="orderNo" />
+        <result column="amount" property="amount" />
+        <result column="pay_status" property="payStatus" />
+        <result column="pay_type" property="payType" />
+        <result column="title" property="title" />
+        <result column="refund" property="refund" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, order_no, amount, pay_status, pay_type, title, refund, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询列表 -->
+    <select id="queryPayRecordList" resultType="com.gitegg.mall.pay.dto.PayRecordDTO" parameterType="com.gitegg.mall.pay.dto.QueryPayRecordDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_mall_pay_record
+        WHERE del_flag = 0
+        <if test="payRecord.id != null and payRecord.id != ''">
+            AND id = #{payRecord.id}
+        </if>
+        <if test="payRecord.startDateTime != null and payRecord.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{payRecord.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="payRecord.endDateTime != null and payRecord.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{payRecord.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询信息 -->
+    <select id="queryPayRecord" resultType="com.gitegg.mall.pay.dto.PayRecordDTO" parameterType="com.gitegg.mall.pay.dto.QueryPayRecordDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_mall_pay_record
+        WHERE del_flag = 0
+        <if test="payRecord.id != null and payRecord.id != ''">
+            AND id = #{payRecord.id}
+        </if>
+        <if test="payRecord.startDateTime != null and payRecord.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{payRecord.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="payRecord.endDateTime != null and payRecord.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{payRecord.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

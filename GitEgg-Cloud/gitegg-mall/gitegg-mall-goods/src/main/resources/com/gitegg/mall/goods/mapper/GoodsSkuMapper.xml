@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gitegg.mall.goods.mapper.GoodsSkuMapper" >
+
+    <select id="queryGoodsByIds" resultType="com.gitegg.mall.goods.entity.GoodsSku">
+        select * from t_mall_goods_sku where id in
+        <foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="reduceStock">
+        update t_mall_goods_sku set stock = (stock-#{number}) where id = #{skuId} and stock>=#{number}
+    </update>
+</mapper>
