@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.extension.mapper.SmsTemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.extension.entity.SmsTemplate">
+        <id column="id" property="id" />
+        <result column="channel_id" property="channelId" />
+        <result column="sms_code" property="smsCode" />
+        <result column="sms_name" property="smsName" />
+        <result column="template_id" property="templateId" />
+        <result column="sign_name" property="signName" />
+        <result column="template_status" property="templateStatus" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, channel_id, sms_code, sms_name, template_id, sign_name, template_status, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 通用查询结果列-模板 -->
+    <sql id="Base_Column_List_Template">
+        template.id, template.channel_id, template.sms_name, template.template_id, template.sign_name, template.template_status, template.comments, template.tenant_id, template.create_time, template.creator, template.update_time, template.operator, template.del_flag
+    </sql>
+
+    <!-- 通用查询结果列-渠道 -->
+    <sql id="Base_Column_List_Channel">
+        channel.channel_code, channel.channel_name, channel.secret_id, channel.secret_key, channel.region_id, channel.channel_status
+    </sql>
+
+    <!-- 分页查询短信配置表列表 -->
+    <select id="querySmsTemplateList" resultType="com.gitegg.service.extension.dto.SmsTemplateDTO" parameterType="com.gitegg.service.extension.dto.QuerySmsTemplateDTO">
+        SELECT
+        <include refid="Base_Column_List_Template"/>
+        ,
+        <include refid="Base_Column_List_Channel"/>
+        FROM t_sys_sms_template template
+        inner join t_sys_sms_channel channel on template.channel_id = channel.id and channel.del_flag = 0
+        WHERE template.del_flag = 0
+        <if test="smsTemplate.id != null and smsTemplate.id != ''">
+            AND template.id = #{smsTemplate.id}
+        </if>
+        <if test="smsTemplate.smsCode != null and smsTemplate.smsCode != ''">
+            AND template.sms_code = #{smsTemplate.smsCode}
+        </if>
+        <if test="smsTemplate.startDateTime != null and smsTemplate.startDateTime != ''">
+            AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsTemplate.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="smsTemplate.endDateTime != null and smsTemplate.endDateTime != ''">
+            AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{smsTemplate.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY template.id DESC
+    </select>
+
+    <!-- 查询短信配置表信息 -->
+    <select id="querySmsTemplate" resultType="com.gitegg.service.extension.dto.SmsTemplateDTO" parameterType="com.gitegg.service.extension.dto.QuerySmsTemplateDTO">
+        SELECT
+        <include refid="Base_Column_List_Template"/>
+        ,
+        <include refid="Base_Column_List_Channel"/>
+        FROM t_sys_sms_template template
+        inner join t_sys_sms_channel channel on template.channel_id = channel.id and channel.del_flag = 0
+        WHERE template.del_flag = 0
+        <if test="smsTemplate.id != null and smsTemplate.id != ''">
+            AND template.id = #{smsTemplate.id}
+        </if>
+        <if test="smsTemplate.smsCode != null and smsTemplate.smsCode != ''">
+            AND template.sms_code = #{smsTemplate.smsCode}
+        </if>
+        <if test="smsTemplate.startDateTime != null and smsTemplate.startDateTime != ''">
+            AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsTemplate.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="smsTemplate.endDateTime != null and smsTemplate.endDateTime != ''">
+            AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{smsTemplate.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY template.id DESC
+    </select>
+
+</mapper>

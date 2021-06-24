@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.base.mapper.TenantMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.base.entity.Tenant">
+        <id column="id" property="id"/>
+        <result column="tenant_name" property="tenantName"/>
+        <result column="domain_name" property="domainName"/>
+        <result column="background_image" property="backgroundImage"/>
+        <result column="contacts" property="contacts"/>
+        <result column="contact_number" property="contactNumber"/>
+        <result column="address" property="address"/>
+        <result column="account_limit" property="accountLimit"/>
+        <result column="expire_time" property="expireTime"/>
+        <result column="license_key" property="licenseKey"/>
+        <result column="tenant_status" property="tenantStatus"/>
+        <result column="comments" property="comments"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="operator" property="operator"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tenant_name, domain_name, background_image, contacts, contact_number, address, account_limit, expire_time, license_key, tenant_status, comments, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询租户信息表列表 -->
+    <select id="queryTenantList" resultType="com.gitegg.service.base.dto.TenantDTO" parameterType="com.gitegg.service.base.dto.QueryTenantDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_tenant
+        WHERE del_flag = 0
+        <if test="tenant.id != null and tenant.id != ''">
+            AND id = #{tenant.id}
+        </if>
+        <if test="tenant.startDateTime != null and tenant.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.startDateTime},'%Y-%m-%d
+            %H:%M:%S')
+        </if>
+        <if test="tenant.endDateTime != null and tenant.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{tenant.endDateTime},'%Y-%m-%d
+            %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询租户信息表信息 -->
+    <select id="queryTenant" resultType="com.gitegg.service.base.dto.TenantDTO" parameterType="com.gitegg.service.base.dto.QueryTenantDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_tenant
+        WHERE del_flag = 0
+        <if test="tenant.id != null and tenant.id != ''">
+            AND ID = #{tenant.id}
+        </if>
+        <if test="tenant.startDateTime != null and tenant.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.startDateTime},'%Y-%m-%d
+            %H:%M:%S')
+        </if>
+        <if test="tenant.endDateTime != null and tenant.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{tenant.endDateTime},'%Y-%m-%d
+            %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

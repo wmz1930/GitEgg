@@ -32,8 +32,8 @@ public class SystemController {
 
     private final RedisTemplate<String, String> template;
 
-    @Value("${spring.datasource.maxActive}")
-    private String nacosMaxActiveType;
+    @Value("${spring.jackson.time-zone}")
+    private String timeZone;
 
     @Value("${server.port}")
     private Integer serverPort;
@@ -66,7 +66,7 @@ public class SystemController {
     @PostMapping(value = "nacos")
     @ApiOperation(value = "Nacos读取配置文件测试接口")
     public Result<String> nacos() {
-        return Result.data(nacosMaxActiveType);
+        return Result.data(timeZone);
     }
 
     @GetMapping(value = "api/by/id")

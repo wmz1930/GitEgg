@@ -6,9 +6,10 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 172.16.20.188:8848
       config:
-        server-addr: 127.0.0.1:8848
+        server-addr: 172.16.20.188:8848
         file-extension: yaml
+        prefix: gitegg-service-system
         group: DEFAULT_GROUP
         enabled: true

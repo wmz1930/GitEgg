@@ -1,0 +1,40 @@
+package com.gitegg.service.system.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.gitegg.platform.mybatis.entity.BaseEntity;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+/**
+ * <p>
+ * 可以给组织权限，在该组织下的所有用户都有此权限
+ * </p>
+ *
+ * @author gitegg
+ * @since 2019-10-24
+ */
+@Data
+@TableName("t_sys_organization_role")
+@ApiModel(value="OrganizationRole对象", description="可以给组织权限，在该组织下的所有用户都有此权限")
+public class OrganizationRole extends BaseEntity {
+
+    private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty(value = "主键")
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    @ApiModelProperty(value = "机构id")
+    @TableField("organization_id")
+    private Long organizationId;
+
+    @ApiModelProperty(value = "角色id")
+    @TableField("role_id")
+    private Long roleId;
+
+}

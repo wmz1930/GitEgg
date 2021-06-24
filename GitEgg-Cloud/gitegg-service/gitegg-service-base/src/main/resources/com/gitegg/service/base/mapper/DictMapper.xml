@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.base.mapper.DictMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.base.entity.Dict">
+        <id column="id" property="id"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="dict_name" property="dictName"/>
+        <result column="dict_code" property="dictCode"/>
+        <result column="dict_order" property="dictOrder"/>
+        <result column="dict_status" property="dictStatus"/>
+        <result column="comments" property="comments"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="operator" property="operator"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tenant_id, parent_id, dict_name, dict_code, dict_order, dict_status, comments, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 使用存储过程查询树，推荐使用 -->
+    <select id="queryDictTreeProc" parameterType="java.lang.Integer" resultType="com.gitegg.service.base.dto.DictDTO"
+            statementType="CALLABLE">
+        CALL queryDictList(#{parentId,mode=IN})
+    </select>
+
+    <select id="selectDictList" resultType="com.gitegg.service.base.dto.DictDTO"
+            parameterType="com.gitegg.service.base.dto.QueryDictDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_dict
+        WHERE del_flag = 0
+        <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+            <if test="dict.id != null">
+                AND id = #{dict.id}
+            </if>
+            <if test="dict.parentId != null">
+                AND parent_id = #{dict.parentId}
+            </if>
+            <if test="dict.dictCode != null and dict.dictCode != ''">
+                AND dict_code = #{dict.dictCode}
+            </if>
+            <if test="dict.dictName != null and dict.dictName != ''">
+                AND dict_name = #{dict.dictName}
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

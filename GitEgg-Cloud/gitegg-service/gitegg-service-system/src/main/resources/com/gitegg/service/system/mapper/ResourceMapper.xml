@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.system.mapper.ResourceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.system.entity.Resource">
+        <id column="id" property="id"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="resource_name" property="resourceName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="resource_key" property="resourceKey"/>
+        <result column="resource_type" property="resourceType"/>
+        <result column="resource_icon" property="resourceIcon"/>
+        <result column="resource_path" property="resourcePath"/>
+        <result column="resource_url" property="resourceUrl"/>
+        <result column="resource_level" property="resourceLevel"/>
+        <result column="resource_show" property="resourceShow"/>
+        <result column="resource_cache" property="resourceCache"/>
+        <result column="resource_page_name" property="resourcePageName"/>
+        <result column="resource_status" property="resourceStatus"/>
+        <result column="comments" property="comments"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="operator" property="operator"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tenant_id, resource_name, parent_id, resource_key, resource_type, resource_icon, resource_path, resource_url, resource_level, resource_show, resource_cache, resource_page_name, resource_status, comments, create_time, creator, update_time, operator, del_flag
+    </sql>
+    
+    <!-- 根据用户名查询用户权限 -->
+	<select id="queryResourceByUserId" resultType="com.gitegg.service.system.entity.Resource" parameterType="Long">
+		SELECT DISTINCT
+		sysResource.id,
+		sysResource.tenant_id,
+		sysResource.resource_name,
+		sysResource.parent_id,
+		sysResource.resource_key,
+		sysResource.resource_type,
+		sysResource.resource_icon,
+		sysResource.resource_path,
+		sysResource.resource_url,
+		sysResource.resource_cache,
+		sysResource.resource_show,
+		sysResource.resource_level,
+		sysResource.resource_page_name,
+		sysResource.resource_status
+		FROM t_sys_user sysUser
+		INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
+		INNER JOIN t_sys_role_resource roleResource ON userRole.role_id = roleResource.role_id AND roleResource.del_flag = 0
+		INNER JOIN t_sys_resource sysResource ON roleResource.resource_id = sysResource.id AND sysResource.resource_type = 2 AND sysResource.del_flag = 0
+		WHERE sysUser.id = #{userId} AND sysUser.del_flag = 0 ORDER BY resource_level
+	</select>
+	
+	<!-- 使用存储过程查询树，推荐使用 -->
+	<select id="queryResourceTreeProc" parameterType="com.gitegg.service.system.entity.Resource" resultType="com.gitegg.service.system.entity.Resource" statementType="CALLABLE">
+		CALL queryResourceList(#{parentId,mode=IN})
+	</select>
+
+    <!-- 查询拥有某个资源权限的角色id列表-->
+    <resultMap id="resourceRoleMap" type="com.gitegg.service.system.entity.Resource" extends="BaseResultMap">
+        <!--
+            property： 集合属性的名称，如User的card_one和card_many
+            ofType： 集合中元素的类型，如Card（谨慎起见，应带上包名）
+            select： 子查询的ID
+            column： 传给子查询的参数
+            javaType： 一般为ArrayList
+        -->
+        <collection property="roleIds" ofType="Long" column="{resourceId = id}" select="queryRoleIdsByResourceId">
+        </collection>
+    </resultMap>
+    <select id="queryResourceRoleIds"  resultMap="resourceRoleMap">
+            select
+            <include refid="Base_Column_List" />
+        from t_sys_resource where resource_type = 4 and del_flag = 0
+    </select>
+
+    <select id="queryRoleIdsByResourceId" resultType="Long">
+        select role_id from t_sys_role_resource where resource_id = #{resourceId} and del_flag = 0
+    </select>
+
+</mapper>

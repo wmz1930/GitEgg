@@ -17,7 +17,7 @@
         <!-- gitegg-service-system 的fegin公共调用方法 -->
         <dependency>
             <groupId>com.gitegg.cloud</groupId>
-            <artifactId>gitegg-service-system-api</artifactId>
+            <artifactId>gitegg-service-system-client</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

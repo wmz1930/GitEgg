@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.system.mapper.UserMapper">
+
+     <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.system.entity.User">
+		<id column="id" property="id"/>
+		<result column="tenant_id" property="tenantId"/>
+		<result column="account" property="account"/>
+		<result column="nickname" property="nickname"/>
+		<result column="real_name" property="realName"/>
+		<result column="gender" property="gender"/>
+		<result column="email" property="email"/>
+		<result column="mobile" property="mobile"/>
+		<result column="password" property="password"/>
+		<result column="status" property="status"/>
+		<result column="avatar" property="avatar"/>
+		<result column="country" property="country"/>
+		<result column="province" property="province"/>
+		<result column="city" property="city"/>
+		<result column="area" property="area"/>
+		<result column="street" property="street"/>
+		<result column="comments" property="comments"/>
+		<result column="create_time" property="createTime"/>
+		<result column="creator" property="creator"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="operator" property="operator"/>
+		<result column="del_flag" property="delFlag"/>
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tenant_id, account, nickname, real_name, gender, email, mobile,password, status, avatar, country, province, city, area, street, comments, create_time, creator, update_time, operator, del_flag
+    </sql>
+    
+    <!-- 分页查询用户列表 -->
+	<select id="selectUserList" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.entity.User">
+		SELECT DISTINCT
+		sysUser.id AS id,
+		sysUser.tenant_id AS tenantId,
+		sysUser.account AS account,
+		sysUser.nickname AS nickname,
+		sysUser.real_name AS realName,
+		sysUser.gender AS gender,
+		sysUser.email AS email,
+		sysUser.mobile AS mobile,
+		sysUser.password AS password,
+		sysUser.status AS status,
+		sysUser.avatar AS avatar,
+		sysUser.country AS country,
+		sysUser.province AS province,
+		provinceDistrict.name AS provinceName,
+		sysUser.city AS city,
+		cityDistrict.name AS cityName,
+		sysUser.area AS area,
+		sysUser.street AS street,
+		sysUser.comments AS comments,
+		sysUser.create_time AS createTime,
+		sysUser.creator AS creator,
+		sysUser.update_time AS updateTime,
+		sysUser.operator AS operator,
+		GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
+		GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKey,
+		GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleName,
+		GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS dataPermission,
+		sysOrganization.id AS organizationId,
+		sysOrganization.organization_name AS organizationName
+		FROM t_sys_user sysUser
+		INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
+		LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
+		LEFT JOIN t_sys_district provinceDistrict ON sysUser.province = provinceDistrict.code
+		LEFT JOIN t_sys_district cityDistrict ON sysUser.city = cityDistrict.code
+		LEFT JOIN t_sys_data_permission dataPermission ON sysUser.id = dataPermission.user_id AND
+		dataPermission.del_flag = 0
+		INNER JOIN t_sys_organization_user organizationUser ON sysUser.id = organizationUser.user_id AND
+		organizationUser.del_flag = 0
+		INNER JOIN t_sys_organization sysOrganization ON organizationUser.organization_id = sysOrganization.id AND
+		sysOrganization.del_flag = 0
+		WHERE sysUser.del_flag = 0
+		<if test="user.id != null and user.id != ''">
+			AND sysUser.id = #{user.id}
+		</if>
+		<trim prefix="AND (" suffix=")" prefixOverrides="AND">
+			<if test="user.account != null and user.account != ''">
+				AND sysUser.account like concat('%', #{user.account}, '%')
+			</if>
+			<if test="user.nickname != null and user.nickname != ''">
+				AND sysUser.nickname like concat('%', #{user.nickname}, '%')
+			</if>
+			<if test="user.realName != null and user.realName != ''">
+				AND sysUser.real_name like concat('%', #{user.realName}, '%')
+			</if>
+			<if test="user.mobile != null and user.mobile != ''">
+				AND sysUser.mobile like concat('%', #{user.mobile}, '%')
+			</if>
+			<if test="user.email != null and user.email != ''">
+				AND sysUser.email like concat('%', #{user.email}, '%')
+			</if>
+			<if test="user.status != null and user.status != ''">
+				AND sysUser.status = #{user.status}
+			</if>
+			<if test="user.roleId != null and user.roleId != ''">
+				<!--这里需要这么写，否则多角色用户再通过角色查询时，只能查询出一个角色-->
+				AND sysUser.id IN (SELECT sysUser.id FROM t_sys_user sysUser INNER JOIN t_sys_user_role userRole ON
+				sysUser.id = userRole.user_id AND userRole.del_flag = 0 AND userRole.role_id = #{user.roleId})
+			</if>
+			<if test="user.organizationId != null and user.organizationId != ''">
+				AND sysOrganization.id = #{user.organizationId}
+			</if>
+			<if test="user.startDateTime != null and user.startDateTime != ''">
+				AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{user.startDateTime},'%Y-%m-%d')
+			</if>
+			<if test="user.endDateTime != null and user.endDateTime != ''">
+				AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{user.endDateTime},'%Y-%m-%d')
+			</if>
+		</trim>
+		GROUP BY sysUser.id
+		ORDER BY sysUser.create_time DESC
+	</select>
+
+	<!-- 查询用户信息 -->
+	<select id="queryUserInfo" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.entity.User">
+		SELECT DISTINCT
+		sysUser.id AS id,
+		sysUser.tenant_id AS tenantId,
+		sysUser.account AS account,
+		sysUser.nickname AS nickname,
+		sysUser.real_name AS realName,
+		sysUser.gender AS gender,
+		sysUser.email AS email,
+		sysUser.mobile AS mobile,
+		sysUser.password AS password,
+		sysUser.status AS status,
+		sysUser.avatar AS avatar,
+		sysUser.country AS country,
+		sysUser.province AS province,
+		provinceDistrict.name AS provinceName,
+		sysUser.city AS city,
+		cityDistrict.name AS cityName,
+		sysUser.area AS area,
+		sysUser.street AS street,
+		sysUser.comments AS comments,
+		sysUser.create_time AS createTime,
+		sysUser.creator AS creator,
+		sysUser.update_time AS updateTime,
+		sysUser.operator AS operator,
+		GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
+		GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKeys,
+		GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleNames,
+		GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS dataPermission,
+		sysOrganization.id AS organizationId,
+		sysOrganization.organization_name AS organizationName
+		FROM t_sys_user sysUser
+		INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
+		LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
+		LEFT JOIN t_sys_district provinceDistrict ON sysUser.province = provinceDistrict.code
+		LEFT JOIN t_sys_district cityDistrict ON sysUser.city = cityDistrict.code
+		LEFT JOIN t_sys_data_permission dataPermission ON sysUser.id = dataPermission.user_id AND
+		dataPermission.del_flag = 0
+		INNER JOIN t_sys_organization_user organizationUser ON sysUser.id = organizationUser.user_id AND
+		organizationUser.del_flag = 0
+		INNER JOIN t_sys_organization sysOrganization ON organizationUser.organization_id = sysOrganization.id AND
+		sysOrganization.del_flag = 0
+		WHERE sysUser.del_flag = 0
+		<if test="user.id != null and user.id != ''">
+			AND sysUser.id = #{user.id}
+		</if>
+		<trim prefix="AND (" suffix=")" prefixOverrides="AND">
+			<if test="user.account != null and user.account != ''">
+				AND sysUser.account = #{user.account}
+			</if>
+			<if test="user.realName != null and user.realName != ''">
+				AND sysUser.real_name = #{user.realName}
+			</if>
+			<if test="user.mobile != null and user.mobile != ''">
+				AND sysUser.mobile = #{user.mobile}
+			</if>
+			<if test="user.email != null and user.email != ''">
+				AND sysUser.email = #{user.email}
+			</if>
+		</trim>
+		GROUP BY sysUser.id
+	</select>
+
+</mapper>
