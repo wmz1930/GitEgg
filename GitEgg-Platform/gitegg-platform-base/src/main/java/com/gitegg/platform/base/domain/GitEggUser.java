@@ -110,6 +110,10 @@ public class GitEggUser implements Serializable {
     @ApiModelProperty(value = "角色key列表")
     private List<String> roleKeyList;
 
+    //一个用户拥有多个角色时，取最大数据权限
+    @ApiModelProperty(value = "角色数据权限类型")
+    private String dataPermissionType;
+
     @ApiModelProperty(value = "机构id列表")
     private List<String> organizationIdList;
 

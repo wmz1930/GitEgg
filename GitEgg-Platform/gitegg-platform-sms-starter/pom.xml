@@ -24,27 +24,11 @@
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-sms-tencent</artifactId>
         </dependency>
-        <!-- gitegg 短信自定义扩展-百度云 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-sms-baidu</artifactId>
-        </dependency>
-        <!-- gitegg 短信自定义扩展-华为云 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-sms-huawei</artifactId>
-        </dependency>
-        <!-- gitegg 短信自定义扩展-京东云 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-sms-jd</artifactId>
-        </dependency>
         <!-- gitegg 短信自定义扩展-七牛云 -->
         <dependency>
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-sms-qiniu</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

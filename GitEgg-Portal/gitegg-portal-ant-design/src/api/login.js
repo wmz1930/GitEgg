@@ -15,6 +15,8 @@ const userApi = {
   UserMenu: '/user/nav'
 }
 
+export default userApi
+
 /**
  * login func
  * parameter: {
@@ -38,6 +40,7 @@ export function logout (parameter) {
   return request({
     url: userApi.Logout,
     method: 'post',
+    skipAuthRefresh: true,
     data: parameter
   })
 }

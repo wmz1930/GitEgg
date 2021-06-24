@@ -1,15 +1,5 @@
 package com.gitegg.service.system.service.impl;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,15 +7,27 @@ import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.base.util.BeanCopierUtils;
+import com.gitegg.platform.mybatis.enums.DataPermissionTypeEnum;
 import com.gitegg.service.system.dto.CreateUserDTO;
 import com.gitegg.service.system.dto.QueryUserDTO;
+import com.gitegg.service.system.dto.RolePermissionSort;
 import com.gitegg.service.system.dto.UpdateUserDTO;
 import com.gitegg.service.system.entity.*;
 import com.gitegg.service.system.mapper.UserMapper;
 import com.gitegg.service.system.service.*;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @ClassName: UserServiceImpl
@@ -44,7 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     private final IOrganizationUserService organizationUserService;
 
-    private final IDataPermissionService dataPermissionService;
+    private final IDataPermissionUserService dataPermissionUserService;
 
     private final IResourceService resourceService;
 
@@ -117,10 +119,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             organizationUserService.save(orgUser);
 
             //默认增加用户所在机构数据权限值，但是否有操作权限还是会根据资源权限判断
-            DataPermission dataPermission = new DataPermission();
+            DataPermissionUser dataPermission = new DataPermissionUser();
             dataPermission.setUserId(userEntity.getId());
             dataPermission.setOrganizationId(organizationId);
-            dataPermissionService.save(dataPermission);
+            dataPermissionUserService.save(dataPermission);
 
             //保存用户角色信息
             user.setId(userEntity.getId());
@@ -198,10 +200,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             QueryWrapper<OrganizationUser> organizationUserRemoveWrapper = new QueryWrapper<>();
             organizationUserRemoveWrapper.eq("user_id", userEntity.getId());
             OrganizationUser orgUserRemove = organizationUserService.getOne(organizationUserRemoveWrapper);
-            QueryWrapper<DataPermission> dataPermissionRemoveWrapper = new QueryWrapper<>();
+            QueryWrapper<DataPermissionUser> dataPermissionRemoveWrapper = new QueryWrapper<>();
             dataPermissionRemoveWrapper.eq("user_id", userEntity.getId()).eq("organization_id", orgUserRemove.getOrganizationId());
             //删除旧机构的数据权限
-            dataPermissionService.remove(dataPermissionRemoveWrapper);
+            dataPermissionUserService.remove(dataPermissionRemoveWrapper);
             //删除旧机构的组织机构关系
             organizationUserService.remove(organizationUserRemoveWrapper);
             //保存用户和组织机构的关系
@@ -210,10 +212,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             orgUser.setOrganizationId(organizationId);
             organizationUserService.save(orgUser);
             //默认增加用户所在机构数据权限值，但是否有操作权限还是会根据资源权限判断
-            DataPermission dataPermission = new DataPermission();
-            dataPermission.setUserId(userEntity.getId());
-            dataPermission.setOrganizationId(organizationId);
-            dataPermissionService.save(dataPermission);
+            DataPermissionUser dataPermissionUser = new DataPermissionUser();
+            dataPermissionUser.setUserId(userEntity.getId());
+            dataPermissionUser.setOrganizationId(organizationId);
+            dataPermissionUserService.save(dataPermissionUser);
         }
 
         List<Long> roleIds = user.getRoleIds();
@@ -337,7 +339,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         String roleIds = userInfo.getRoleIds();
-        String roleKeys = userInfo.getRoleKeys();
 
         //组装角色ID列表，用于Oatuh2和Gateway鉴权
         if (!StringUtils.isEmpty(roleIds))
@@ -346,11 +347,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userInfo.setRoleIdList(Arrays.asList(roleIds));
         }
 
+        String roleKeys = userInfo.getRoleKeys();
         //组装角色key列表，用于前端页面鉴权
         if (!StringUtils.isEmpty(roleKeys))
         {
             String[] roleKeysArray = roleKeys.split(",");
             userInfo.setRoleKeyList(Arrays.asList(roleKeysArray));
+        }
+
+        String dataPermissionType = userInfo.getDataPermissionType();
+        //组装角色key列表，用于前端页面鉴权
+        if (!StringUtils.isEmpty(dataPermissionType))
+        {
+            String[] dataPermissionTypeArray = dataPermissionType.split(",");
+            List<RolePermissionSort> rolePermissionSortList = new ArrayList<>();
+            for(String type : dataPermissionTypeArray)
+            {
+                RolePermissionSort rolePermissionSort = new RolePermissionSort();
+                rolePermissionSort.setDataPermissionType(type);
+                rolePermissionSort.setIndex( DataPermissionTypeEnum.getLevel(type).intValue());
+                rolePermissionSortList.add(rolePermissionSort);
+            }
+            RolePermissionSort maxPermission = rolePermissionSortList.stream()
+                    .max(Comparator.comparing(RolePermissionSort::getIndex)).get();
+            userInfo.setDataPermissionType(maxPermission.getDataPermissionType());
         }
 
         // 查询用户菜单的列表，用于前端页面鉴权

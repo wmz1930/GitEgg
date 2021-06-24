@@ -102,6 +102,10 @@
             slot-scope="text, record">
         <a-tag :color="record.roleStatus | statusFilter">{{ record.roleStatus | statusNameFilter }}</a-tag>
       </span>
+      <span slot="dataPermission"
+            slot-scope="text, record">
+        <a-tag :color="record.dataPermissionType | dataPermissionTypeFilter">{{ record.dataPermissionType | dataPermissionTypeFilter }}</a-tag>
+      </span>
       <span slot="createTime"
             slot-scope="text, record">
         <span>{{ record.createTime | moment }}</span>
@@ -177,6 +181,14 @@
             <a-radio :value="0">禁用</a-radio>
           </a-radio-group>
         </a-form-model-item>
+        <a-form-model-item label="数据权限"
+                           prop="dataPermissionType">
+          <a-select v-model="roleForm.dataPermissionType">
+            <a-select-option v-for="item in dataPermissionTypeList" :key="item.dictCode" placeholder="请选择分布式存储分类" :label="item.dictName" :value="item.dictCode">
+              {{ item.dictName }}
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
         <a-form-model-item label="备注信息">
           <a-input v-model="roleForm.comments"
                    :autoSize="{ minRows: 2, maxRows: 4}"
@@ -241,7 +253,9 @@
 import { STable } from '@/components'
 import { fetchList, createRole, deleteRole, updateRole, batchDeleteRole, updateRoleStatus, queryRoleResource, updateRoleResources, checkRoleExist } from '@/api/system/role'
 import { fetchResourceList } from '@/api/system/resource'
+import { listDict } from '@/api/system/base/dict'
 import moment from 'moment'
+let vm = {}
 
 export default {
   name: 'RoleTable',
@@ -261,6 +275,9 @@ export default {
         0: '禁用'
       }
       return statusNameMap[status]
+    },
+    dataPermissionTypeFilter (dataPermissionType) {
+      return vm.dataPermissionTypeFilterMap[dataPermissionType]
     }
   },
   data () {
@@ -292,6 +309,7 @@ export default {
         }
       })
     }
+    vm = this
     return {
       advanced: false,
       currentRole: '',
@@ -300,13 +318,14 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      dataPermissionTypeFilterMap: {},
+      dataPermissionTypeList: [],
       listQuery: {
-        current: 1,
-        size: 20,
         id: '',
         roleName: '',
         roleKey: '',
-        roleStatus: ''
+        roleStatus: '',
+        dataPermissionType: ''
       },
       treeQuery: {
         parentId: 0
@@ -336,6 +355,7 @@ export default {
         roleKey: '',
         roleLevel: '',
         roleStatus: 1,
+        dataPermissionType: 'DATA_PERMISSION_SELF',
         comments: ''
       },
       // 表头
@@ -373,6 +393,12 @@ export default {
           scopedSlots: { customRender: 'status' }
         },
         {
+          title: '数据权限',
+          align: 'center',
+          dataIndex: 'dataPermissionType',
+          scopedSlots: { customRender: 'dataPermission' }
+        },
+        {
           title: '描述',
           align: 'center',
           dataIndex: 'comments'
@@ -397,6 +423,9 @@ export default {
         ],
         roleStatus: [
           { required: true, message: '请选择角色状态', trigger: 'change' }
+        ],
+        dataPermissionType: [
+          { required: true, message: '请选择数据权限', trigger: 'change' }
         ],
         comments: [
           { required: true, message: '请填写备注信息', trigger: 'blur' }
@@ -443,17 +472,29 @@ export default {
     // }
   },
   created () {
-    this.getList()
+    this.queryDataPermissionTypeList()
   },
   methods: {
+    queryDataPermissionTypeList () {
+      const that = this
+      that.listLoading = true
+      listDict('DATA_PERMISSION_TYPE').then(response => {
+        that.dataPermissionTypeList = response.data
+        that.dataPermissionTypeFilterMap = {}
+        that.dataPermissionTypeList.forEach((item, index, arr) => {
+           that.dataPermissionTypeFilterMap[item.dictCode] = item.dictName
+        })
+        that.listLoading = false
+        that.getList()
+      })
+    },
     resetQuery () {
       this.listQuery = {
-        current: 1,
-        size: 20,
         id: '',
         roleName: '',
         roleKey: '',
-        roleStatus: ''
+        roleStatus: '',
+        dataPermissionType: ''
       }
     },
     onSelectChange (selectedRowKeys, selectedRows) {
@@ -484,6 +525,7 @@ export default {
         roleKey: '',
         roleLevel: '',
         roleStatus: 1,
+        dataPermissionType: 'DATA_PERMISSION_SELF',
         comments: ''
       }
     },
@@ -657,6 +699,11 @@ export default {
         for (var q = 0; q < delResourceIds.length; q++) {
           this.resourceData.delResources[q] = { roleId: this.currentRole, resourceId: delResourceIds[q] }
         }
+      }
+
+      if (addResourceIds.length === 0 && delResourceIds.length === 0) {
+        this.$message.error('资源没有进行任何变更')
+        return
       }
 
       this.resourceData.roleId = this.currentRole

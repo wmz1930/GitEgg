@@ -45,6 +45,9 @@ public class UserInfo extends User {
     private String roleNames;
 
     @ApiModelProperty(value = "数据权限")
+    private String dataPermissionType;
+
+    @ApiModelProperty(value = "数据权限")
     private String dataPermission;
 
     @ApiModelProperty(value = "角色id列表")

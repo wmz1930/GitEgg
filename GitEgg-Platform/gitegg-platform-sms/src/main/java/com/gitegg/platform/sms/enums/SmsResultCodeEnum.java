@@ -29,7 +29,13 @@ public enum SmsResultCodeEnum {
      */
     PHONE_NUMBER_ERROR(500, "手机号错误");
 
+    /**
+     * 短信发送返回结果码
+     */
     public int code;
 
+    /**
+     * 短信发送返回结果信息
+     */
     public String msg;
 }

@@ -11,6 +11,7 @@
 		<result column="role_key" property="roleKey"/>
 		<result column="role_level" property="roleLevel"/>
 		<result column="role_status" property="roleStatus"/>
+		<result column="data_permission_type" property="dataPermissionType"/>
 		<result column="comments" property="comments"/>
 		<result column="create_time" property="createTime"/>
 		<result column="creator" property="creator"/>
@@ -21,7 +22,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, tenant_id, parent_id, role_name, role_key, role_level, role_status, comments, create_time, creator, update_time, operator, del_flag
+        id, tenant_id, parent_id, role_name, role_key, role_level, role_status, data_permission_type, comments, create_time, creator, update_time, operator, del_flag
     </sql>
     
     <!-- 分页查询角色列表 -->
@@ -44,6 +45,9 @@
 		</if>
 		<if test="role.roleStatus != null and role.roleStatus != ''">
 			AND role_status = #{role.roleStatus}
+		</if>
+		<if test="role.dataPermissionType != null and role.dataPermissionType != ''">
+			AND data_permission_type = #{role.dataPermissionType}
 		</if>
 		ORDER BY id DESC
 	</select>

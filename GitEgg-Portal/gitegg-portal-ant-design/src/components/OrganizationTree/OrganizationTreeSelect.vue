@@ -177,7 +177,9 @@ export default {
     },
     onOrganizationTreeSelect (selectedKeys, info) {
       this.organizationTreeSelectedKeys = selectedKeys
-      this.onSelect(info.selectedNodes[0].data.props)
+      if (info && info.selectedNodes[0] && info.selectedNodes[0].data) {
+        this.onSelect(info.selectedNodes[0].data.props)
+      }
     },
     onOrganizationTreeCheck (item, e) {
       this.onCheck(item, e)

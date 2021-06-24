@@ -1,9 +1,9 @@
 package com.gitegg.service.extension.sms.factory;
 
-import com.gitegg.platform.sms.service.SmsSendService;
+import com.gitegg.platform.sms.service.ISmsSendService;
 import com.gitegg.platform.sms.tencent.props.TencentSmsProperties;
 import com.gitegg.platform.sms.tencent.service.impl.TencentSmsSendServiceImpl;
-import com.gitegg.service.extension.dto.SmsTemplateDTO;
+import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
  */
 public class SmsTencentFactory {
 
-    public static SmsSendService getSmsSendService(SmsTemplateDTO sms) {
+    public static ISmsSendService getSmsSendService(SmsTemplateDTO sms) {
 
         TencentSmsProperties tencentSmsProperties = new TencentSmsProperties();
         tencentSmsProperties.setSmsSdkAppId(sms.getSecretId());

@@ -2,7 +2,7 @@ package com.gitegg.platform.sms.tencent.service.impl;
 
 import com.gitegg.platform.sms.domain.SmsData;
 import com.gitegg.platform.sms.domain.SmsResponse;
-import com.gitegg.platform.sms.service.SmsSendService;
+import com.gitegg.platform.sms.service.ISmsSendService;
 import com.gitegg.platform.sms.tencent.props.TencentSmsProperties;
 import com.tencentcloudapi.sms.v20190711.SmsClient;
 import com.tencentcloudapi.sms.v20190711.models.SendSmsRequest;
@@ -20,7 +20,7 @@ import java.util.Collection;
  */
 @Slf4j
 @AllArgsConstructor
-public class TencentSmsSendServiceImpl implements SmsSendService {
+public class TencentSmsSendServiceImpl implements ISmsSendService {
 
     private static final String successCode = "Ok";
 

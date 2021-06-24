@@ -14,7 +14,7 @@
     "@ant-design-vue/pro-layout": "^1.0.7",
     "@antv/data-set": "^0.10.2",
     "ant-design-vue": "^1.7.2",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "axios-auth-refresh": "^3.1.0",
     "codemirror": "^5.58.3",
     "core-js": "^3.1.2",

@@ -24,7 +24,8 @@ const refreshAuthLogic = failedRequest =>
       refresh_token: storage.get(REFRESH_ACCESS_TOKEN)
     }),
     {
-      headers: { 'TenantId': process.env.VUE_APP_TENANT_ID, 'Content-Type': 'application/x-www-form-urlencoded' }
+      headers: { 'TenantId': process.env.VUE_APP_TENANT_ID, 'Content-Type': 'application/x-www-form-urlencoded' },
+      skipAuthRefresh: true // 刷新token请求过期，不再进行刷新
     }
     ).then(tokenRefreshResponse => {
       if (tokenRefreshResponse.status === 200 && tokenRefreshResponse.data && tokenRefreshResponse.data.success) {
@@ -32,6 +33,11 @@ const refreshAuthLogic = failedRequest =>
         storage.set(ACCESS_TOKEN, result.tokenHead + result.token, result.expiresIn * 1000)
         storage.set(REFRESH_ACCESS_TOKEN, result.refreshToken, result.refreshExpiresIn * 1000)
         failedRequest.response.config.headers['Authorization'] = result.tokenHead + result.token
+      } else if (tokenRefreshResponse.status === 200 && tokenRefreshResponse.data &&
+        !tokenRefreshResponse.data.success && tokenRefreshResponse.data.code === 401) {
+          store.dispatch('Timeout').then(() => {
+            window.location.reload()
+        })
       }
       return Promise.resolve()
 })
@@ -51,8 +57,8 @@ const errorHandler = (error) => {
         description: data.message
       })
     } else if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
-      // 当刷新token超时，则调到登录页面
-      modal.warn({
+       // 当刷新token超时，则调到登录页面
+       modal.warn({
         title: '登录超时',
         content: '由于您长时间未操作， 为确保安全， 请重新登录系统进行后续操作 ！',
         okText: '重新登录',
@@ -70,6 +76,7 @@ const errorHandler = (error) => {
 // request interceptor
 request.interceptors.request.use(config => {
   const token = storage.get(ACCESS_TOKEN)
+
   // 如果 token 存在
   // 让每个请求携带自定义 token 请根据实际情况自行修改
   if (token) {

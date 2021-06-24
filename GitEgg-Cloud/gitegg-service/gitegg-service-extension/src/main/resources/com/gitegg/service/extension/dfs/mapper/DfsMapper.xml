@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.extension.dfs.mapper.DfsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.extension.dfs.entity.Dfs">
+        <id column="id" property="id" />
+        <result column="dfs_type" property="dfsType" />
+        <result column="dfs_code" property="dfsCode" />
+        <result column="access_url_prefix" property="accessUrlPrefix" />
+        <result column="upload_url" property="uploadUrl" />
+        <result column="bucket" property="bucket" />
+        <result column="app_id" property="appId" />
+        <result column="region" property="region" />
+        <result column="access_key" property="accessKey" />
+        <result column="secret_key" property="secretKey" />
+        <result column="dfs_default" property="dfsDefault" />
+        <result column="dfs_status" property="dfsStatus" />
+        <result column="access_control" property="accessControl" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, dfs_type, dfs_code, access_url_prefix, upload_url, bucket, app_id, region, access_key, secret_key, dfs_default, dfs_status, access_control, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询分布式存储配置表列表 -->
+    <select id="queryDfsList" resultType="com.gitegg.service.extension.dfs.dto.DfsDTO" parameterType="com.gitegg.service.extension.dfs.dto.QueryDfsDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_dfs
+        WHERE del_flag = 0
+        <if test="dfs.id != null and dfs.id != ''">
+            AND id = #{dfs.id}
+        </if>
+        <if test="dfs.startDateTime != null and dfs.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfs.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="dfs.endDateTime != null and dfs.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{dfs.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询分布式存储配置表信息 -->
+    <select id="queryDfs" resultType="com.gitegg.service.extension.dfs.dto.DfsDTO" parameterType="com.gitegg.service.extension.dfs.dto.QueryDfsDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_dfs
+        WHERE del_flag = 0
+        <if test="dfs.id != null and dfs.id != ''">
+            AND id = #{dfs.id}
+        </if>
+        <if test="dfs.dfsCode != null and dfs.dfsCode != ''">
+            AND dfs_code = #{dfs.dfsCode}
+        </if>
+        <if test="dfs.dfsDefault != null and dfs.dfsDefault != ''">
+            AND dfs_default = #{dfs.dfsDefault}
+        </if>
+        <if test="dfs.startDateTime != null and dfs.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfs.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="dfs.endDateTime != null and dfs.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{dfs.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

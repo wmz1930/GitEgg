@@ -1,7 +1,9 @@
 package com.gitegg.service.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.service.system.dto.UpdateRoleResourceDTO;
 import com.gitegg.service.system.entity.Resource;
 import com.gitegg.service.system.entity.RoleResource;
@@ -11,11 +13,13 @@ import com.gitegg.service.system.service.IRoleResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author gitegg
@@ -26,7 +30,15 @@ import java.util.List;
 public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, RoleResource>
         implements IRoleResourceService {
 
+    /**
+     * 是否开启租户模式
+     */
+    @Value(("${tenant.enable}"))
+    private Boolean enable;
+
     private final IResourceService resourceService;
+
+    private final RedisTemplate redisTemplate;
 
     @Override
 //    @Cacheable(value = "resources", key = "'role_id_'.concat(#roleId)")
@@ -66,6 +78,40 @@ public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, Rol
             ewResource.eq("role_id", roleId).in("resource_id", resIdList);
             this.remove(ewResource);
         }
+        //重新初始化角色和权限的对应关系
+        this.initResourceRoles();
         return true;
+    }
+
+    @Override
+    public void initResourceRoles() {
+        // 查询系统角色和权限的关系
+        List<Resource> resourceList = resourceService.queryResourceRoleIds();
+        // 判断是否开启了租户模式，如果开启了，那么角色权限需要按租户进行分类存储
+        if (enable) {
+            Map<Long, List<Resource>> resourceListMap =
+                    resourceList.stream().collect(Collectors.groupingBy(Resource::getTenantId));
+            resourceListMap.forEach((key, value) -> {
+                String redisKey = AuthConstant.TENANT_RESOURCE_ROLES_KEY + key;
+                redisTemplate.delete(redisKey);
+                addRoleResource(redisKey, value);
+            });
+        } else {
+            redisTemplate.delete(AuthConstant.RESOURCE_ROLES_KEY);
+            addRoleResource(AuthConstant.RESOURCE_ROLES_KEY, resourceList);
+        }
+    }
+
+    private void addRoleResource(String key, List<Resource> resourceList) {
+        Map<String, List<String>> resourceRolesMap = new TreeMap<>();
+        Optional.ofNullable(resourceList).orElse(new ArrayList<>()).forEach(resource -> {
+            // roleId -> ROLE_{roleId}
+            List<String> roles = Optional.ofNullable(resource.getRoleIds()).orElse(new ArrayList<>()).stream()
+                    .map(roleId -> AuthConstant.AUTHORITY_PREFIX + roleId).collect(Collectors.toList());
+            if (CollectionUtil.isNotEmpty(roles)) {
+                resourceRolesMap.put(resource.getResourceUrl(), roles);
+            }
+        });
+        redisTemplate.opsForHash().putAll(key, resourceRolesMap);
     }
 }

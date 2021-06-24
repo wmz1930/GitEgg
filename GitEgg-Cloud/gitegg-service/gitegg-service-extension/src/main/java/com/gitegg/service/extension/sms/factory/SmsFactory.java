@@ -1,8 +1,10 @@
 package com.gitegg.service.extension.sms.factory;
 
-import com.gitegg.platform.sms.service.SmsSendService;
-import com.gitegg.service.extension.dto.SmsTemplateDTO;
-import com.gitegg.service.extension.service.ISmsTemplateService;
+import com.gitegg.platform.sms.service.ISmsSendService;
+import com.gitegg.service.extension.sms.constant.SmsConstant;
+import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
+import com.gitegg.service.extension.sms.enums.SmsFactoryClassEnum;
+import com.gitegg.service.extension.sms.service.ISmsTemplateService;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,11 +20,7 @@ public class SmsFactory {
     /**
      * SmsSendService 缓存
      */
-    private final Map<Long, SmsSendService> SmsSendServiceMap = new ConcurrentHashMap<>();
-
-    public SmsFactory(ISmsTemplateService smsTemplateService) {
-        this.smsTemplateService = smsTemplateService;
-    }
+    private final static Map<Long, ISmsSendService> smsSendServiceMap = new ConcurrentHashMap<>();
 
     /**
      * 获取 SmsSendService
@@ -30,18 +28,18 @@ public class SmsFactory {
      * @param smsTemplateDTO 短信模板
      * @return SmsSendService
      */
-    public SmsSendService getSmsSendService(SmsTemplateDTO smsTemplateDTO) {
+    public ISmsSendService getSmsSendService(SmsTemplateDTO smsTemplateDTO) {
 
         //根据channelId获取对应的发送短信服务接口，channelId是唯一的，每个租户有其自有的channelId
         Long channelId = smsTemplateDTO.getChannelId();
-        SmsSendService smsSendService = SmsSendServiceMap.get(channelId);
+        ISmsSendService smsSendService = smsSendServiceMap.get(channelId);
         if (null == smsSendService) {
             Class cls = null;
             try {
-                cls = Class.forName("com.gitegg.service.extension.sms.factory.SmsAliyunFactory");
-                Method staticMethod = cls.getDeclaredMethod("getSmsSendService", SmsTemplateDTO.class);
-                smsSendService = (SmsSendService) staticMethod.invoke(cls,smsTemplateDTO);
-                SmsSendServiceMap.put(channelId, smsSendService);
+                cls = Class.forName(SmsFactoryClassEnum.getValue(smsTemplateDTO.getChannelCode()));
+                Method staticMethod = cls.getDeclaredMethod(SmsConstant.SMS_SERVICE_FUNCTION, SmsTemplateDTO.class);
+                smsSendService = (ISmsSendService) staticMethod.invoke(cls,smsTemplateDTO);
+                smsSendServiceMap.put(channelId, smsSendService);
             } catch (ClassNotFoundException | NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -49,8 +47,11 @@ public class SmsFactory {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-
         }
         return smsSendService;
+    }
+
+    public SmsFactory(ISmsTemplateService smsTemplateService) {
+        this.smsTemplateService = smsTemplateService;
     }
 }

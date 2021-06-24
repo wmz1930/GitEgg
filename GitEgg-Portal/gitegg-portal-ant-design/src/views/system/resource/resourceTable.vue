@@ -75,13 +75,13 @@
                            prop="resourceName">
           <a-input v-model.trim="resourceForm.resourceName"
                    placeholder="权限或者菜单的名称"
-                   :maxLength="32" />
+                   :maxLength="100" />
         </a-form-model-item>
         <a-form-model-item label="资源标识"
                            prop="resourceKey">
           <a-input v-model.trim="resourceForm.resourceKey"
                    placeholder="系统用来判断权限的唯一key"
-                   :maxLength="32" />
+                   :maxLength="100" />
         </a-form-model-item>
         <a-form-model-item label="资源类型"
                            prop="resourceType">
@@ -134,7 +134,7 @@
                      placement="right">
             <a-input v-model.trim="resourceForm.resourcePageName"
                      placeholder="前端页面定义的名称"
-                     :maxLength="32" />
+                     :maxLength="100" />
           </a-tooltip>
         </a-form-model-item>
         <a-form-model-item label="是否缓存"
@@ -299,11 +299,11 @@ export default {
       rules: {
         resourceName: [
           { required: true, message: '请输入资源名称', trigger: 'blur' },
-          { min: 2, max: 32, message: '长度在 2 到 32 个字符', trigger: 'blur' }
+          { min: 2, max: 100, message: '长度在 2 到 32 个字符', trigger: 'blur' }
         ],
         resourceKey: [
           { required: true, message: '请输入资源标识', trigger: 'blur' },
-          { min: 2, max: 32, message: '长度在 2 到 32 个字符', trigger: 'blur' },
+          { min: 2, max: 100, message: '长度在 2 到 32 个字符', trigger: 'blur' },
           { validator: validResourceKey, trigger: 'blur' }
         ],
         resourceType: [

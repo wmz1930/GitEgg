@@ -4,12 +4,15 @@ import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
 import com.gitegg.oauth.dto.SmsVerificationDTO;
+import com.gitegg.oauth.util.CaptchaUtils;
 import com.gitegg.oauth.util.JwtUtils;
 import com.gitegg.platform.base.annotation.auth.CurrentUser;
 import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.constant.TokenConstant;
 import com.gitegg.platform.base.domain.GitEggUser;
+import com.gitegg.platform.base.enums.ResultCodeEnum;
+import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.captcha.constant.CaptchaConstant;
 import com.gitegg.platform.captcha.domain.ImageCaptcha;
@@ -30,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthorizationException;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
@@ -131,8 +135,16 @@ public class GitEggOAuthController {
 
     @ApiOperation("发送短信验证码")
     @PostMapping("/sms/captcha/send")
-    public Result sendSmsCaptcha(@RequestBody SmsVerificationDTO smsVerificationDTO) {
-        Result<Object> sendResult = smsFeign.sendSmsVerificationCode(smsVerificationDTO.getSmsCode(), smsVerificationDTO.getPhoneNumber());
+    public Result sendSmsCaptcha(@ApiIgnore @RequestParam Map<String, String> parameters) {
+        boolean checkCaptchaResult = CaptchaUtils.checkCaptcha(parameters, redisTemplate, captchaService);
+        Result<Object> sendResult;
+        if (checkCaptchaResult)
+        {
+            sendResult = smsFeign.sendSmsVerificationCode(parameters.get(TokenConstant.SMS_CODE), parameters.get(TokenConstant.PHONE_NUMBER));
+        }
+        else {
+            throw new BusinessException("请通过正确的安全验证，再发送短信验证码");
+        }
         return sendResult;
     }
 

@@ -70,7 +70,7 @@
 		LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
 		LEFT JOIN t_sys_district provinceDistrict ON sysUser.province = provinceDistrict.code
 		LEFT JOIN t_sys_district cityDistrict ON sysUser.city = cityDistrict.code
-		LEFT JOIN t_sys_data_permission dataPermission ON sysUser.id = dataPermission.user_id AND
+		LEFT JOIN t_sys_data_permission_user dataPermission ON sysUser.id = dataPermission.user_id AND
 		dataPermission.del_flag = 0
 		INNER JOIN t_sys_organization_user organizationUser ON sysUser.id = organizationUser.user_id AND
 		organizationUser.del_flag = 0
@@ -147,6 +147,7 @@
 		GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
 		GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKeys,
 		GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleNames,
+		GROUP_CONCAT(DISTINCT sysRole.data_permission_type) AS dataPermissionType,
 		GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS dataPermission,
 		sysOrganization.id AS organizationId,
 		sysOrganization.organization_name AS organizationName
@@ -155,7 +156,7 @@
 		LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
 		LEFT JOIN t_sys_district provinceDistrict ON sysUser.province = provinceDistrict.code
 		LEFT JOIN t_sys_district cityDistrict ON sysUser.city = cityDistrict.code
-		LEFT JOIN t_sys_data_permission dataPermission ON sysUser.id = dataPermission.user_id AND
+		LEFT JOIN t_sys_data_permission_user dataPermission ON sysUser.id = dataPermission.user_id AND
 		dataPermission.del_flag = 0
 		INNER JOIN t_sys_organization_user organizationUser ON sysUser.id = organizationUser.user_id AND
 		organizationUser.del_flag = 0

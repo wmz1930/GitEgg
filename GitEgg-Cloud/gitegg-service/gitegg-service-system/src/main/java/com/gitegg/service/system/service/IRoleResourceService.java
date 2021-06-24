@@ -30,4 +30,9 @@ public interface IRoleResourceService extends IService<RoleResource> {
      * @return
      */
     boolean updateList(UpdateRoleResourceDTO updateRoleResource);
+
+    /**
+     * 初始化系统角色权限
+     */
+    void initResourceRoles();
 }

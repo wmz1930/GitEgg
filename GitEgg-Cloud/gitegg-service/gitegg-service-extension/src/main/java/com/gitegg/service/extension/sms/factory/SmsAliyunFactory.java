@@ -6,15 +6,15 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.gitegg.platform.sms.aliyun.props.AliyunSmsProperties;
 import com.gitegg.platform.sms.aliyun.service.impl.AliyunSmsSendServiceImpl;
-import com.gitegg.platform.sms.service.SmsSendService;
-import com.gitegg.service.extension.dto.SmsTemplateDTO;
+import com.gitegg.platform.sms.service.ISmsSendService;
+import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
 
 /**
  * 阿里云短信服务接口工厂类
  */
 public class SmsAliyunFactory {
 
-    public static SmsSendService getSmsSendService(SmsTemplateDTO sms) {
+    public static ISmsSendService getSmsSendService(SmsTemplateDTO sms) {
         AliyunSmsProperties aliyunSmsProperties = new AliyunSmsProperties();
         aliyunSmsProperties.setAccessKeyId(sms.getSecretId());
         aliyunSmsProperties.setAccessKeySecret(sms.getSecretKey());

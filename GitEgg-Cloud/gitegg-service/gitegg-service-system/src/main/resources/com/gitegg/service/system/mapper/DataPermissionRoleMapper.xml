@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.system.mapper.DataPermissionRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.system.entity.DataPermissionRole">
+        <id column="id" property="id" />
+        <result column="resource_id" property="resourceId" />
+        <result column="data_name" property="dataName" />
+        <result column="data_mapper_function" property="dataMapperFunction" />
+        <result column="data_table_name" property="dataTableName" />
+        <result column="data_table_alias" property="dataTableAlias" />
+        <result column="data_column_exclude" property="dataColumnExclude" />
+        <result column="data_column_include" property="dataColumnInclude" />
+        <result column="inner_table_name" property="innerTableName" />
+        <result column="inner_table_alias" property="innerTableAlias" />
+        <result column="data_permission_type" property="dataPermissionType" />
+        <result column="status" property="status" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, resource_id, data_name, data_mapper_function, data_table_name, data_table_alias, data_column_exclude, data_column_include, inner_table_name, inner_table_alias, data_permission_type, status, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List_Permission_Role">
+        permissionRole.id, permissionRole.resource_id, permissionRole.data_name, permissionRole.data_mapper_function, permissionRole.data_table_name, permissionRole.data_table_alias, permissionRole.data_column_exclude, permissionRole.data_column_include, permissionRole.inner_table_name, permissionRole.inner_table_alias, permissionRole.data_permission_type, permissionRole.status, permissionRole.comments, permissionRole.tenant_id, permissionRole.create_time, permissionRole.creator, permissionRole.update_time, permissionRole.operator, permissionRole.del_flag,
+    </sql>
+
+    <!-- 分页查询数据权限配置表列表 -->
+    <select id="queryDataPermissionRoleList" resultType="com.gitegg.service.system.dto.DataPermissionRoleDTO" parameterType="com.gitegg.service.system.dto.QueryDataPermissionRoleDTO">
+        SELECT
+        <include refid="Base_Column_List_Permission_Role"/>
+        resource.resource_name,
+        resource.resource_type
+        FROM t_sys_data_permission_role permissionRole
+        INNER JOIN t_sys_resource resource on permissionRole.resource_id = resource.id and resource.del_flag = 0
+        WHERE permissionRole.del_flag = 0
+        <if test="dataPermissionRole.id != null and dataPermissionRole.id != ''">
+            AND permissionRole.id = #{dataPermissionRole.id}
+        </if>
+        <if test="dataPermissionRole.resourceId != null and dataPermissionRole.resourceId != ''">
+            AND permissionRole.resource_id = #{dataPermissionRole.resourceId}
+        </if>
+        <if test="dataPermissionRole.dataName != null and dataPermissionRole.dataName != ''">
+            AND permissionRole.data_name = #{dataPermissionRole.dataName}
+        </if>
+        <if test="dataPermissionRole.dataMapperFunction != null and dataPermissionRole.dataMapperFunction != ''">
+            AND permissionRole.data_mapper_function = #{dataPermissionRole.dataMapperFunction}
+        </if>
+        <if test="dataPermissionRole.dataTableName != null and dataPermissionRole.dataTableName != ''">
+            AND permissionRole.data_table_name = #{dataPermissionRole.dataTableName}
+        </if>
+        <if test="dataPermissionRole.dataPermissionType != null and dataPermissionRole.dataPermissionType != ''">
+            AND permissionRole.data_permission_type = #{dataPermissionRole.dataPermissionType}
+        </if>
+        <if test="dataPermissionRole.startDateTime != null and dataPermissionRole.startDateTime != ''">
+            AND DATE_FORMAT(permissionRole.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dataPermissionRole.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="dataPermissionRole.endDateTime != null and dataPermissionRole.endDateTime != ''">
+            AND DATE_FORMAT(permissionRole.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{dataPermissionRole.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY permissionRole.id DESC
+    </select>
+
+    <!-- 查询数据权限配置表信息 -->
+    <select id="queryDataPermissionRole" resultType="com.gitegg.service.system.dto.DataPermissionRoleDTO" parameterType="com.gitegg.service.system.dto.QueryDataPermissionRoleDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_data_permission_role
+        WHERE del_flag = 0
+        <if test="dataPermissionRole.id != null and dataPermissionRole.id != ''">
+            AND id = #{dataPermissionRole.id}
+        </if>
+        <if test="dataPermissionRole.startDateTime != null and dataPermissionRole.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dataPermissionRole.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="dataPermissionRole.endDateTime != null and dataPermissionRole.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{dataPermissionRole.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

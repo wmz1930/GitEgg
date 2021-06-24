@@ -102,3 +102,15 @@ hs_err_pid*
 /GitEgg-Cloud/gitegg-service-client/gitegg-service-system-client/target
 /GitEgg-Cloud/gitegg-service-client/gitegg-service-system-client/gitegg-service-system-client.iml
 /GitEgg-Platform/gitegg-platform-dev/gitegg-platform-dev.iml
+/GitEgg-Platform/gitegg-platform-dfs/gitegg-platform-dfs.iml
+/GitEgg-Platform/gitegg-platform-dfs-aliyun/gitegg-platform-dfs-aliyun.iml
+/GitEgg-Platform/gitegg-platform-dfs-minio/gitegg-platform-dfs-minio.iml
+/GitEgg-Platform/gitegg-platform-dfs-qiniu/gitegg-platform-dfs-qiniu.iml
+/GitEgg-Platform/gitegg-platform-dfs-starter/gitegg-platform-dfs-starter.iml
+/GitEgg-Platform/gitegg-platform-dfs-tencent/gitegg-platform-dfs-tencent.iml
+/GitEgg-Platform/gitegg-platform-dfs-aliyun/target
+/GitEgg-Platform/gitegg-platform-dfs-minio/target
+/GitEgg-Platform/gitegg-platform-dfs-qiniu/target
+/GitEgg-Platform/gitegg-platform-dfs-starter/target
+/GitEgg-Platform/gitegg-platform-dfs/target
+/GitEgg-Platform/gitegg-platform-dfs-tencent/target

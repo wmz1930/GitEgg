@@ -93,6 +93,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             QueryWrapper<RoleResource> wpdr = new QueryWrapper<>();
             wpdr.eq("role_id", roleId);
             roleResourceService.remove(wpdr);
+            //重新初始化角色和权限的对应关系
+            roleResourceService.initResourceRoles();
         }
         return result;
     }
@@ -110,6 +112,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             QueryWrapper<RoleResource> wpdr = new QueryWrapper<>();
             wpdr.in("role_id", roleIds);
             roleResourceService.remove(wpdr);
+            //重新初始化角色和权限的对应关系
+            roleResourceService.initResourceRoles();
         }
         return result;
     }

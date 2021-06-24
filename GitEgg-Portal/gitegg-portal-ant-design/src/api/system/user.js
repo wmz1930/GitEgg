@@ -87,7 +87,7 @@ export function fetchRoleList (data) {
 
 export function updateUserDataPermission (data) {
   return request({
-    url: '/gitegg-service-system/user/update/data/permission',
+    url: '/gitegg-service-system/user/update/organization/data/permission',
     method: 'post',
     data
   })
@@ -98,5 +98,21 @@ export function checkUserExist (data) {
     url: '/gitegg-service-system/user/check',
     method: 'post',
     params: data
+  })
+}
+
+export function fetchOrganizationDataList (query) {
+  return request({
+    url: '/gitegg-service-system/user/organization/data/permission/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function batchDeleteOrganizationData (data) {
+  return request({
+    url: '/gitegg-service-system/user/organization/data/permission/batch/delete',
+    method: 'post',
+    data
   })
 }

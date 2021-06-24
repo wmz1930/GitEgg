@@ -3,6 +3,7 @@ package com.gitegg.service.system.dto;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -41,6 +42,9 @@ public class UpdateRoleDTO implements Serializable {
 
     @ApiModelProperty(value = "1有效，0禁用")
     private Integer roleStatus;
+
+    @ApiModelProperty(value = "角色数据权限")
+    private String dataPermissionType;
 
     @ApiModelProperty(value = "备注")
     private String comments;

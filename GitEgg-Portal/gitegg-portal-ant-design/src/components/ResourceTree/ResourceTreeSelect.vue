@@ -1,18 +1,20 @@
 <template>
   <div>
-    <a-input-search style="margin-bottom: 8px" placeholder="输入关键字进行过滤" @change="onTreeChange" />
+    <a-input-search style="margin-bottom: 8px" placeholder="输入关键字进行过滤" @change="resourceTreeSearch" />
     <a-tree
-      ref="resourceTree"
-      checkable
-      :check-strictly="true"
-      v-model="resourceTreeCheckedKeys"
-      :tree-data="resourceTreeData"
-      :replace-fields="treeProps"
+      :ref="treeId"
       :default-expanded-keys="resourceTreeExpandedKeys"
-      :expanded-keys="expandedKeys"
+      :expanded-keys="resourceTreeExpandedKeys"
+      v-model="resourceTreeCheckedKeys"
+      :selected-keys="resourceTreeSelectedKeys"
       :auto-expand-parent="autoExpandParent"
-      @expand="onTreeExpand"
-      @check="computeRoleResources"
+      :tree-data="resourceTreeList"
+      :replace-fields="resourceTreeProps"
+      :checkable="checkable"
+      :check-strictly="checkStrictly"
+      @expand="onResourceTreeExpand"
+      @check="onResourceTreeCheck"
+      @select="onResourceTreeSelect"
     >
       <template slot="resourceName" slot-scope="{ resourceName }">
         <span v-if="resourceName.indexOf(searchValue) > -1">
@@ -27,98 +29,160 @@
 </template>
 
 <script>
-import { fetchOrgList } from '@/api/system/organization'
+import { fetchResourceList } from '@/api/system/resource'
 export default {
-  name: 'OrganizationTreeSelect',
+  name: 'ResourceTreeSelect',
   props: {
-    prefixCls: {
+    // 唯一标识
+    treeId: {
       type: String,
-      default: 'antd-pro-components-standard-form-row-index-standardFormRow'
+      default: 'resourceTree'
+    },
+    checkStrictly: {
+      type: Boolean,
+      default: false
+    },
+    // 是否显示选择框
+    checkable: {
+      type: Boolean,
+      default: false
+    },
+    // onCheck事件
+    onCheck: {
+      type: Function,
+      default: () => {
+      }
+    },
+    // onSelect事件
+    onSelect: {
+      type: Function,
+      default: () => {
+      }
+    },
+    expandedKeys: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
+    checkedKeys: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
+    selectedKeys: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   computed: {
 
   },
+  watch: {
+    expandedKeys (keys) {
+      this.resourceTreeExpandedKeys = keys
+    },
+    checkedKeys (keys) {
+      this.resourceTreeCheckedKeys = keys
+    },
+    selectedKeys (keys) {
+      this.resourceTreeSelectedKeys = keys
+    }
+  },
   data () {
     return {
-      resourceTreeExpandedKeys: [],
-      resourceTreeCheckedKeys: [],
-      resourceTree: [],
-      resourceTreeData: [],
-      resourceDataList: [],
-      oldResourceList: [],
-      treeProps: {
+      resourceTreeProps: {
         children: 'children', title: 'resourceName', key: 'id'
       },
+      resourceList: [],
+      resourceTreeList: [],
+      resourceSearchList: [],
       searchValue: '',
-      autoExpandParent: true
+      autoExpandParent: true,
+      treeChecked: [],
+      resourceTreeExpandedKeys: [],
+      resourceTreeSelectedKeys: [],
+      resourceTreeCheckedKeys: []
     }
   },
   created () {
-     this.queryOrganizationList()
+     this.queryResourceList()
   },
   methods: {
     // 查询组织机构数据
-    queryOrganizationList () {
+    queryResourceList () {
       this.listLoading = true
-      fetchOrgList({ parentId: 0 }).then(response => {
-        this.organizationList = response.data
-        if (this.organizationList) {
-          const organizationListStr = JSON.stringify(this.organizationList)
-          console.log(organizationListStr)
-          this.organizationTreeList = JSON.parse(organizationListStr.replace(/"isLeaf":1/g, '"isLeaf":true').replace(/"isLeaf":0/g, '"isLeaf":false'))
-          console.log(this.organizationTreeList)
-          this.generateOrganizationList(this.organizationTreeList)
+      fetchResourceList({ parentId: 0 }).then(response => {
+        this.resourceList = response.data
+        if (this.resourceList) {
+          const resourceListStr = JSON.stringify(this.resourceList)
+          this.resourceTreeList = JSON.parse(resourceListStr.replace(/"isLeaf":1/g, '"isLeaf":true').replace(/"isLeaf":0/g, '"isLeaf":false'))
+          this.generateResourceList(this.resourceTreeList)
+          this.resourceTreeExpandedKeys = this.expandedKeys
+          this.resourceTreeCheckedKeys = this.checkedKeys
+          this.resourceTreeSelectedKeys = this.selectedKeys
         }
         this.listLoading = false
       })
     },
     // 准备左侧搜索树的数据
-    generateOrganizationList (data) {
+    generateResourceList (data) {
       for (let i = 0; i < data.length; i++) {
         const node = data[i]
-        node.scopedSlots = { title: 'organizationName' }
+        node.scopedSlots = { title: 'resourceName' }
         const key = node.id
-        this.organizationSearchList.push({ key, title: node.organizationName })
+        this.resourceSearchList.push({ key, title: node.resourceName })
         if (node.children) {
-          this.generateOrganizationList(node.children)
+          this.generateResourceList(node.children)
         }
       }
     },
-    getOrganizationParentKey (key, tree) {
+    getResourceParentKey (key, tree) {
       let parentKey
       for (let i = 0; i < tree.length; i++) {
         const node = tree[i]
         if (node.children) {
           if (node.children.some(item => item.id === key)) {
             parentKey = node.id
-          } else if (this.getOrganizationParentKey(key, node.children)) {
-            parentKey = this.getOrganizationParentKey(key, node.children)
+          } else if (this.getResourceParentKey(key, node.children)) {
+            parentKey = this.getResourceParentKey(key, node.children)
           }
         }
       }
       return parentKey
     },
-    onOrganizationTreeExpand (organizationTreeExpandedKeys) {
-      this.organizationTreeExpandedKeys = organizationTreeExpandedKeys
-      this.autoExpandParent = true
+    onResourceTreeExpand (resourceTreeExpandedKeys) {
+      this.resourceTreeExpandedKeys = resourceTreeExpandedKeys
+      this.autoExpandParent = false
     },
-    organizationTreeSearch (e) {
+    resourceTreeSearch (e) {
       const value = e.target.value
-      const organizationTreeExpandedKeys = this.organizationSearchList
+      const resourceTreeExpandedKeys = this.resourceSearchList
         .map(item => {
           if (item.title.indexOf(value) > -1) {
-            return this.getOrganizationParentKey(item.key, this.organizationTreeList)
+            return this.getResourceParentKey(item.key, this.resourceTreeList)
           }
           return null
         })
         .filter((item, i, self) => item && self.indexOf(item) === i)
-      console.log(organizationTreeExpandedKeys)
+      console.log(resourceTreeExpandedKeys)
       Object.assign(this, {
-        organizationTreeExpandedKeys,
+        resourceTreeExpandedKeys,
         searchValue: value,
         autoExpandParent: true
       })
+    },
+    onResourceTreeSelect (selectedKeys, info) {
+      this.resourceTreeSelectedKeys = selectedKeys
+      if (info && info.selectedNodes[0] && info.selectedNodes[0].data) {
+        this.onSelect(info.selectedNodes[0].data.props)
+      }
+    },
+    onResourceTreeCheck (item, e) {
+      this.onCheck(item, e)
     }
   }
 }

@@ -25,6 +25,7 @@ import TagSelect from '@/components/TagSelect'
 import StandardFormRow from '@/components/StandardFormRow'
 import ArticleListContent from '@/components/ArticleListContent'
 import OrganizationTreeSelect from '@/components/OrganizationTree/OrganizationTreeSelect'
+import ResourceTreeSelect from '@/components/ResourceTree/ResourceTreeSelect'
 
 import Dialog from '@/components/Dialog'
 
@@ -53,6 +54,6 @@ export {
   StandardFormRow,
   ArticleListContent,
   OrganizationTreeSelect,
-
+  ResourceTreeSelect,
   Dialog
 }

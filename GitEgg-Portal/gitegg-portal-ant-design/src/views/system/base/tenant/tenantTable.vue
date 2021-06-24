@@ -290,8 +290,6 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        current: 1,
-        size: 20,
         tenantName: '',
         domainName: '',
         tenantStatus: '',
@@ -415,20 +413,9 @@ export default {
   methods: {
     resetQuery () {
       this.listQuery = {
-        current: 1,
-        size: 20,
-        id: '',
         tenantName: '',
         domainName: '',
-        backgroundImage: '',
-        contacts: '',
-        contactNumber: '',
-        address: '',
-        accountLimit: '',
-        expireTime: '',
-        licenseKey: '',
         tenantStatus: '',
-        comments: '',
         startDateTime: '',
         endDateTime: ''
       }

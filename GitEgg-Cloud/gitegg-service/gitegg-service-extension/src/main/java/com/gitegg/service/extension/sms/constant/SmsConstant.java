@@ -12,4 +12,9 @@ public class SmsConstant {
      */
     public final static String SMS_CAPTCHA_TEMPLATE_CODE = "code";
 
+    /**
+     * 获取短信发送的方法
+     */
+    public static final String SMS_SERVICE_FUNCTION = "getSmsSendService";
+
 }

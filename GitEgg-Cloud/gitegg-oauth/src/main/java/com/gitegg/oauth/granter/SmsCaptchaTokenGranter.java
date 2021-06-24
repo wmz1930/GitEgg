@@ -4,6 +4,7 @@ import com.anji.captcha.model.common.RepCodeEnum;
 import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
+import com.gitegg.oauth.util.CaptchaUtils;
 import com.gitegg.platform.base.constant.TokenConstant;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.result.Result;
@@ -75,31 +76,10 @@ public class SmsCaptchaTokenGranter extends AbstractTokenGranter {
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
 
         Map<String, String> parameters = new LinkedHashMap<>(tokenRequest.getRequestParameters());
-        // 获取验证码类型
-        String captchaType = parameters.get(CaptchaConstant.CAPTCHA_TYPE);
-        // 判断传入的验证码类型和系统配置的是否一致
-        if (!StringUtils.isEmpty(captchaType) && !captchaType.equals(this.captchaType)) {
-            throw new UserDeniedAuthorizationException(ResultCodeEnum.INVALID_CAPTCHA_TYPE.getMsg());
-        }
-        if (CaptchaConstant.IMAGE_CAPTCHA.equalsIgnoreCase(captchaType)) {
-            // 图片验证码验证
-            String captchaKey = parameters.get(CaptchaConstant.CAPTCHA_KEY);
-            String captchaCode = parameters.get(CaptchaConstant.CAPTCHA_CODE);
-            // 获取验证码
-            String redisCode = (String)redisTemplate.opsForValue().get(CaptchaConstant.IMAGE_CAPTCHA_KEY + captchaKey);
-            // 判断验证码
-            if (captchaCode == null || !captchaCode.equalsIgnoreCase(redisCode)) {
-                throw new UserDeniedAuthorizationException(ResultCodeEnum.INVALID_CAPTCHA.getMsg());
-            }
-        } else {
-            // 滑动验证码验证
-            String captchaVerification = parameters.get(CaptchaConstant.CAPTCHA_VERIFICATION);
-            CaptchaVO captchaVO = new CaptchaVO();
-            captchaVO.setCaptchaVerification(captchaVerification);
-            ResponseModel responseModel = captchaService.verification(captchaVO);
-            if (null == responseModel || !RepCodeEnum.SUCCESS.getCode().equals(responseModel.getRepCode())) {
-                throw new UserDeniedAuthorizationException(ResultCodeEnum.INVALID_CAPTCHA.getMsg());
-            }
+        boolean checkCaptchaResult = CaptchaUtils.checkCaptcha(parameters, redisTemplate, captchaService);
+        if (!checkCaptchaResult)
+        {
+            throw new UserDeniedAuthorizationException(ResultCodeEnum.INVALID_CAPTCHA.getMsg());
         }
 
         String phoneNumber = parameters.get(TokenConstant.PHONE_NUMBER);

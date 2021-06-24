@@ -2281,9 +2281,9 @@ axios-auth-refresh@^3.1.0:
   resolved "https://registry.yarnpkg.com/axios-auth-refresh/-/axios-auth-refresh-3.1.0.tgz#a48f2c914273b5c9ce4d0e9e25167cbf1afa0727"
   integrity sha512-PLNrXDU8qYo+R4+7nUSkwtPGosTajq4EViBswr+ymJiyBzxKhPCfX2vDFuf6KfyNhsC1wub6RhB62st4wgXKOA==
 
-axios@^0.19.0:
-  version "0.19.2"
-  resolved "https://registry.npm.taobao.org/axios/download/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
+axios@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.npm.taobao.org/axios/download/axios-0.21.1.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
   integrity sha1-PqNsXYgY0NX4qKl6bTa4bNwAyyc=
   dependencies:
     follow-redirects "1.5.10"

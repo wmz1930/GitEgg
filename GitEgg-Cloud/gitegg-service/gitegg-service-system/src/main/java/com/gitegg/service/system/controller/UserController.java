@@ -1,16 +1,5 @@
 package com.gitegg.service.system.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitegg.platform.base.constant.GitEggConstant;
@@ -20,19 +9,28 @@ import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.service.system.dto.CreateUserDTO;
 import com.gitegg.service.system.dto.QueryUserDTO;
-import com.gitegg.service.system.dto.UpdateDataPermissionDTO;
+import com.gitegg.service.system.dto.UpdateDataPermissionUserDTO;
 import com.gitegg.service.system.dto.UpdateUserDTO;
 import com.gitegg.service.system.entity.User;
 import com.gitegg.service.system.entity.UserInfo;
-import com.gitegg.service.system.service.IDataPermissionService;
+import com.gitegg.service.system.service.IDataPermissionUserService;
 import com.gitegg.service.system.service.IUserService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName: UserController
@@ -49,7 +47,7 @@ public class UserController {
 
     private final IUserService userService;
 
-    private final IDataPermissionService dataPermissionService;
+    private final IDataPermissionUserService dataPermissionUserService;
 
 //    @Value("${system.defaultPwd}")
     private String defaultPwd;
@@ -229,10 +227,10 @@ public class UserController {
     /**
      * 修改用户
      */
-    @PostMapping("/update/data/permission")
+    @PostMapping("/update/organization/data/permission")
     @ApiOperation(value = "更新用户数据权限")
-    public Result<?> updateUserDataPermission(@RequestBody UpdateDataPermissionDTO updateDataPermission) {
-        boolean result = dataPermissionService.updateUserDataPermission(updateDataPermission);
+    public Result<?> updateUserDataPermission(@RequestBody UpdateDataPermissionUserDTO updateDataPermission) {
+        boolean result = dataPermissionUserService.updateUserOrganizationDataPermission(updateDataPermission);
         if (result) {
             return Result.success();
         } else {
@@ -262,5 +260,34 @@ public class UserController {
         } else {
             return Result.data(false);
         }
+    }
+
+    /**
+     * 查询所有用户
+     */
+    @GetMapping("/organization/data/permission/list")
+    @ApiOperation(value = "分页查询机构权限下的用户列表")
+    public PageResult<UserInfo> organizationDataUserList(@ApiIgnore QueryUserDTO user, @ApiIgnore Page<UserInfo> page) {
+        if(null == user.getOrganizationId())
+        {
+            return new PageResult(GitEggConstant.COUNT_ZERO, new ArrayList<>());
+        }
+        Page<UserInfo> pageUser = dataPermissionUserService.selectOrganizationUserList(page, user);
+        PageResult<UserInfo> pageResult = new PageResult<>(pageUser.getTotal(), pageUser.getRecords());
+        return pageResult;
+    }
+
+    /**
+     * 批量删除机构下的用户权限关系
+     */
+    @PostMapping("/organization/data/permission/batch/delete")
+    @ApiOperation(value = "批量删除机构下的用户权限关系")
+    @ApiImplicitParam(name = "dataPermissionUserIds", value = "ID列表", required = true, dataType = "List")
+    public Result<?> organizationDataUserBatchDelete(@RequestBody List<Long> dataPermissionUserIds) {
+        if (CollectionUtils.isEmpty(dataPermissionUserIds)) {
+            return new Result<>().error("ID列表不能为空");
+        }
+        boolean result = dataPermissionUserService.batchDeleteDataPermissionUser(dataPermissionUserIds);
+        return Result.result(result);
     }
 }

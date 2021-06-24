@@ -19,6 +19,11 @@
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-sms-starter</artifactId>
         </dependency>
+        <!-- gitegg 分布式存储自定义扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-dfs-starter</artifactId>
+        </dependency>
         <!-- gitegg-service-extension 的fegin公共调用方法 -->
         <dependency>
             <groupId>com.gitegg.cloud</groupId>

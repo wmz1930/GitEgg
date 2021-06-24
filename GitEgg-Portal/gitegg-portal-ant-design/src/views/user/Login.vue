@@ -19,7 +19,8 @@
             <a-input size="large"
                      type="text"
                      :placeholder="$t('user.login.username.placeholder')"
-                     v-decorator="[ 'username', {rules: [{ required: true, message: $t('user.userName.required') }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}]">
+                     :max-length="32"
+                     v-decorator="[ 'username', {rules: [{ required: true, message: $t('user.userName.required') }, { validator: handleUsernameOrEmail }], validateTrigger: 'blur'}]">
               <a-icon slot="prefix"
                       type="user"
                       :style="{ color: '#1890ff' }" />
@@ -29,6 +30,7 @@
           <a-form-item>
             <a-input-password size="large"
                               :placeholder="$t('user.login.password.placeholder')"
+                              :max-length="64"
                               v-decorator="[ 'password', {rules: [{ required: true, message: $t('user.password.required') }], validateTrigger: 'blur'}]">
               <a-icon slot="prefix"
                       type="lock"
@@ -39,16 +41,12 @@
                  v-if="loginCaptchaType === 'image' && grantType !== 'password'">
             <a-col :span="14">
               <a-form-item>
-                <a-input v-decorator="['captchaCode', validatorRules.captchaCode]"
+                <a-input v-decorator="[ 'captchaCode', {rules: [{ required: true, message: $t('user.verification-code.required') }], validateTrigger: 'blur'}]"
                          size="large"
                          type="text"
+                         :max-length="5"
                          :placeholder="$t('user.verification-code.required')">
-                  <a-icon v-if="inputCodeContent == verifiedCode"
-                          slot="prefix"
-                          type="safety-certificate"
-                          :style="{ fontSize: '20px', color: '#1890ff' }" />
-                  <a-icon v-else
-                          slot="prefix"
+                  <a-icon slot="prefix"
                           type="safety-certificate"
                           :style="{ fontSize: '20px', color: '#1890ff' }" />
                 </a-input>
@@ -64,9 +62,15 @@
         <a-tab-pane key="phone_account"
                     :tab="$t('user.login.tab-login-mobile')"
                     class="color:#1890ff;">
+          <a-alert v-if="isPhoneLoginError"
+                   type="error"
+                   showIcon
+                   style="margin-bottom: 24px;"
+                   :message="loginPhoneErrorMsg" />
           <a-form-item>
             <a-input size="large"
                      type="text"
+                     :max-length="11"
                      :placeholder="$t('user.login.mobile.placeholder')"
                      v-decorator="['phoneNumber', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: $t('user.phone-number.required') }], validateTrigger: 'change'}]">
               <a-icon slot="prefix"
@@ -75,6 +79,28 @@
             </a-input>
           </a-form-item>
 
+          <a-row :gutter="0"
+                 v-if="loginCaptchaType === 'image'">
+            <a-col :span="14">
+              <a-form-item>
+                <a-input v-decorator="[ 'captchaCodeSms', {rules: [{ required: true, message: $t('user.verification-code.required') }], validateTrigger: 'blur'}]"
+                         :max-length="5"
+                         size="large"
+                         type="text"
+                         :placeholder="$t('user.verification-code.required')">
+                  <a-icon slot="prefix"
+                          type="safety-certificate"
+                          :style="{ fontSize: '20px', color: '#1890ff' }" />
+                </a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="10">
+              <img :src="captchaImage"
+                   class="v-code-img"
+                   @click="refreshImageCode">
+            </a-col>
+          </a-row>
+
           <a-row :gutter="16">
             <a-col class="gutter-row"
                    :span="16">
@@ -82,6 +108,7 @@
                 <a-input size="large"
                          type="text"
                          :placeholder="$t('user.login.mobile.verification-code.placeholder')"
+                         :max-length="6"
                          v-decorator="['captcha', {rules: [{ required: true, message: $t('user.verification-code.required') }], validateTrigger: 'blur'}]">
                   <a-icon slot="prefix"
                           type="mail"
@@ -94,7 +121,7 @@
               <a-button class="getCaptcha"
                         tabindex="-1"
                         :disabled="state.smsSendBtn"
-                        @click.stop.prevent="getCaptcha"
+                        @click.stop.prevent="captchaVerifySendSms"
                         v-text="!state.smsSendBtn && $t('user.register.get-verification-code') || (state.time+' s')"></a-button>
             </a-col>
           </a-row>
@@ -140,11 +167,6 @@
       </div>
     </a-form>
 
-    <two-step-captcha v-if="requiredTwoStepCaptcha"
-                      :visible="stepCaptchaVisible"
-                      @success="stepCaptchaSuccess"
-                      @cancel="stepCaptchaCancel"></two-step-captcha>
-
     <Verify @success="verifySuccess"
             :mode="'pop'"
             :captchaType="slidingCaptchaType"
@@ -159,7 +181,7 @@ import storage from 'store'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import Verify from '@/components/verifition/Verify'
 import { mapActions } from 'vuex'
-import { timeFix } from '@/utils/util'
+import { timeFix, serialize } from '@/utils/util'
 import { getCaptchaType, getImageCaptcha, getSmsCaptcha } from '@/api/login'
 
 export default {
@@ -174,8 +196,7 @@ export default {
       // login type: 0 email, 1 username, 2 telephone
       loginType: 0,
       isLoginError: false,
-      requiredTwoStepCaptcha: false,
-      stepCaptchaVisible: false,
+      isPhoneLoginError: false,
       form: this.$form.createForm(this),
       state: {
         time: 60,
@@ -200,14 +221,15 @@ export default {
           ]
         }
       },
+      sendSms: false,
       grantType: 'password',
       loginCaptchaType: 'sliding',
       slidingCaptchaType: 'blockPuzzle',
       loginErrorMsg: '用户名或密码错误',
+      loginPhoneErrorMsg: '手机号或短信验证码错误',
       captchaKey: '',
       captchaCode: '',
       captchaImage: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAICRAEAOw==',
-      inputCodeContent: '',
       inputCodeNull: true
     }
   },
@@ -225,16 +247,6 @@ export default {
           }
         }
     })
-
-    // 登录时进行二次验证
-    // get2step({ })
-    //   .then(res => {
-    //     this.requiredTwoStepCaptcha = res.result.stepCode
-    //   })
-    //   .catch(() => {
-    //     this.requiredTwoStepCaptcha = false
-    //   })
-    // this.requiredTwoStepCaptcha = true
   },
   methods: {
     ...mapActions(['Login', 'Logout']),
@@ -249,8 +261,45 @@ export default {
       }
       callback()
     },
-    // 滑动验证码二次校验并提交登录
     verifySuccess (params) {
+      if (!this.sendSms) {
+        this.verifyLoginSuccess(params)
+      } else {
+        this.verifySendSmsSuccess(params)
+      }
+    },
+    // 滑动验证码校验
+    captchaVerify (e) {
+      e.preventDefault()
+      this.sendSms = false
+      const {
+        form: { validateFields },
+        state,
+        customActiveKey
+      } = this
+
+      state.loginBtn = true
+      const validateFieldsKey = customActiveKey === 'tab_account' ? ['username', 'password', 'vcode', 'verkey'] : ['phoneNumber', 'captcha', 'vcode', 'verkey']
+      validateFields(validateFieldsKey, { force: true }, (err, values) => {
+        if (!err) {
+          if (this.grantType === 'password' && customActiveKey === 'tab_account') {
+            this.verifyLoginSuccess()
+          } else {
+            if (this.loginCaptchaType === 'sliding') {
+              this.$refs.verify.show()
+            } else {
+              this.verifyLoginSuccess()
+            }
+          }
+        } else {
+          setTimeout(() => {
+            state.loginBtn = false
+          }, 600)
+        }
+      })
+    },
+    // 滑动验证码二次校验并提交登录
+    verifyLoginSuccess (params) {
       // params 返回的二次验证参数, 和登录参数一起回传给登录接口，方便后台进行二次验证
       const {
         form: { validateFields },
@@ -258,14 +307,12 @@ export default {
         customActiveKey,
         Login
       } = this
-
       state.loginBtn = true
-      const validateFieldsKey = customActiveKey === 'tab_account' ? ['username', 'password', 'captchaCode', 'captchaKey'] : ['phoneNumber', 'captcha', 'captchaCode', 'captchaKey']
+      const validateFieldsKey = customActiveKey === 'tab_account' ? ['username', 'password', 'captchaCode', 'captchaKey'] : ['phoneNumber', 'captcha', 'captchaCodeSms', 'captchaKey']
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
           const loginParams = { ...values }
           delete loginParams.username
-
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
           loginParams.client_id = process.env.VUE_APP_CLIENT_ID
           loginParams.client_secret = process.env.VUE_APP_CLIENT_SECRET
@@ -277,22 +324,25 @@ export default {
             if (customActiveKey === 'tab_account') {
               loginParams.grant_type = 'captcha'
               loginParams.password = values.password
+              loginParams.captcha_key = this.captchaKey
+              loginParams.captcha_code = values.captchaCode
             } else {
               loginParams.grant_type = 'sms_captcha'
               loginParams.phone_number = values.phoneNumber
               loginParams.code = values.captcha
               loginParams.smsCode = 'aliLoginCode'
+              loginParams.captcha_key = this.captchaKey
+              loginParams.captcha_code = values.captchaCodeSms
             }
             // loginParams.password = md5(values.password)
             // 判断是图片验证码还是滑动验证码
             if (this.loginCaptchaType === 'sliding') {
               loginParams.captcha_type = 'sliding'
               loginParams.sliding_type = this.slidingCaptchaType
-              loginParams.captcha_verification = params.captchaVerification
+              loginParams.captcha_verification = params ? params.captchaVerification : undefined
             } else if (this.loginCaptchaType === 'image') {
               loginParams.captcha_type = 'image'
               loginParams.captcha_key = this.captchaKey
-              loginParams.captcha_code = values.captchaCode
             }
           }
           Login(loginParams)
@@ -308,32 +358,63 @@ export default {
         }
       })
     },
-    // 滑动验证码校验
-    captchaVerify (e) {
+    // 发送短信验证码时必须进行验证码安全验证
+    captchaVerifySendSms (e) {
       e.preventDefault()
+      this.sendSms = true
       const {
         form: { validateFields },
-        state,
-        customActiveKey
+        state
       } = this
-
-      state.loginBtn = true
-      const validateFieldsKey = customActiveKey === 'tab_account' ? ['username', 'password', 'vcode', 'verkey'] : ['phoneNumber', 'captcha', 'vcode', 'verkey']
+      state.smsSendBtn = true
+      const validateFieldsKey = ['phoneNumber', 'captchaCodeSms', 'captchaKey']
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          if (this.grantType === 'password') {
-            this.verifySuccess()
+          if (this.loginCaptchaType === 'sliding') {
+            this.$refs.verify.show()
           } else {
-            if (this.loginCaptchaType === 'sliding') {
-              this.$refs.verify.show()
-            } else {
-              this.verifySuccess()
-            }
+            this.verifySuccess()
           }
         } else {
           setTimeout(() => {
-            state.loginBtn = false
+            state.smsSendBtn = false
           }, 600)
+        }
+      })
+    },
+    // 滑动验证码二次校验并提交登录
+    verifySendSmsSuccess (params) {
+      // params 返回的二次验证参数, 和登录参数一起回传给登录接口，方便后台进行二次验证
+      const {
+        form: { validateFields },
+        state
+      } = this
+
+      state.smsSendBtn = true
+      const validateFieldsKey = ['phoneNumber', 'captchaCodeSms', 'captchaKey']
+      validateFields(validateFieldsKey, { force: true }, (err, values) => {
+        if (!err) {
+          const loginParams = { ...values }
+
+          loginParams.client_id = process.env.VUE_APP_CLIENT_ID
+          loginParams.client_secret = process.env.VUE_APP_CLIENT_SECRET
+
+          loginParams.grant_type = 'sms_captcha'
+          loginParams.phone_number = values.phoneNumber
+          loginParams.code = values.captcha
+          loginParams.smsCode = 'aliLoginCode'
+          // 判断是图片验证码还是滑动验证码
+          if (this.loginCaptchaType === 'sliding') {
+            loginParams.captcha_type = 'sliding'
+            loginParams.sliding_type = this.slidingCaptchaType
+            loginParams.captcha_verification = params.captchaVerification
+          } else if (this.loginCaptchaType === 'image') {
+            loginParams.captcha_type = 'image'
+            loginParams.captcha_key = this.captchaKey
+            loginParams.captcha_code = values.captchaCodeSms
+          }
+
+          this.getCaptcha(loginParams)
         }
       })
     },
@@ -359,14 +440,15 @@ export default {
     handleSubmit (e) {
       e.preventDefault()
     },
-    getCaptcha (e) {
-      e.preventDefault()
+    getCaptcha (loginParams) {
+      // e.preventDefault()
       const { form: { validateFields }, state } = this
 
       validateFields(['phoneNumber'], { force: true }, (err, values) => {
         if (!err) {
           state.smsSendBtn = true
-
+          this.isPhoneLoginError = false
+          this.loginPhoneErrorMsg = ''
           const interval = window.setInterval(() => {
             if (state.time-- <= 0) {
               state.time = 60
@@ -376,13 +458,26 @@ export default {
           }, 1000)
 
           const hide = this.$message.loading('验证码发送中..', 0)
-          getSmsCaptcha({ phoneNumber: values.phoneNumber, smsCode: 'aliLoginCode' }).then(res => {
-            setTimeout(hide, 2500)
-            this.$notification['success']({
-              message: '提示',
-              description: '验证码获取成功，您的验证码为：' + res.result.captcha,
-              duration: 8
-            })
+          loginParams.phoneNumber = values.phoneNumber
+          loginParams.smsCode = 'aliLoginCode'
+          getSmsCaptcha(serialize(loginParams)).then(res => {
+            setTimeout(hide, 1)
+            if (res.success && res.data) {
+              if (res.data.success) {
+                this.isPhoneLoginError = false
+                this.$notification['success']({
+                  message: '提示',
+                  description: '验证码获取成功',
+                  duration: 8
+                })
+              } else {
+                this.isPhoneLoginError = true
+                this.loginPhoneErrorMsg = res.data.message
+                state.time = 60
+                state.smsSendBtn = false
+                window.clearInterval(interval)
+              }
+            }
           }).catch(err => {
             setTimeout(hide, 1)
             clearInterval(interval)
@@ -391,15 +486,6 @@ export default {
             this.requestFailed(err)
           })
         }
-      })
-    },
-    stepCaptchaSuccess () {
-      this.loginSuccess()
-    },
-    stepCaptchaCancel () {
-      this.Logout().then(() => {
-        this.loginBtn = false
-        this.stepCaptchaVisible = false
       })
     },
     loginSuccess (res) {
@@ -427,20 +513,30 @@ export default {
       this.isLoginError = false
     },
     requestFailed (err) {
-      this.isLoginError = true
+      const errMsg = err && err.msg ? err.msg : '系统异常，请稍后再试'
       if (err && err.code === 427) {
         // 密码错误次数超过最大限值，请选择验证码模式登录
         if (this.customActiveKey === 'tab_account') {
             this.grantType = 'captcha'
+            this.isLoginError = true
+            this.loginErrorMsg = errMsg
         } else {
             this.grantType = 'sms_captcha'
+            this.isPhoneLoginError = true
+            this.loginPhoneErrorMsg = errMsg
         }
-        this.loginErrorMsg = err.msg
+
         if (this.loginCaptchaType === 'sliding') {
             this.$refs.verify.show()
         }
       } else if (err) {
-            this.loginErrorMsg = err.msg
+            if (this.customActiveKey === 'tab_account') {
+                this.isLoginError = true
+                this.loginErrorMsg = errMsg
+            } else {
+                this.isPhoneLoginError = true
+                this.loginPhoneErrorMsg = errMsg
+            }
       }
     }
   }

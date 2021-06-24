@@ -25,15 +25,18 @@
         <module>gitegg-platform-sms-aliyun</module>
         <module>gitegg-platform-sms-tencent</module>
         <module>gitegg-platform-sms-qiniu</module>
-        <module>gitegg-platform-sms-baidu</module>
-        <module>gitegg-platform-sms-jd</module>
-        <module>gitegg-platform-sms-huawei</module>
         <module>gitegg-platform-push</module>
+        <module>gitegg-platform-sms-starter</module>
         <module>gitegg-platform-wechat</module>
         <module>gitegg-platform-pay</module>
         <module>gitegg-platform-cache</module>
         <module>gitegg-platform-dev</module>
-        <module>gitegg-platform-sms-starter</module>
+        <module>gitegg-platform-dfs</module>
+        <module>gitegg-platform-dfs-qiniu</module>
+        <module>gitegg-platform-dfs-minio</module>
+        <module>gitegg-platform-dfs-aliyun</module>
+        <module>gitegg-platform-dfs-starter</module>
+        <module>gitegg-platform-dfs-tencent</module>
     </modules>
 
     <properties>

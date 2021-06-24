@@ -9,7 +9,7 @@ import com.aliyuncs.utils.StringUtils;
 import com.gitegg.platform.base.util.JsonUtils;
 import com.gitegg.platform.sms.domain.SmsData;
 import com.gitegg.platform.sms.domain.SmsResponse;
-import com.gitegg.platform.sms.service.SmsSendService;
+import com.gitegg.platform.sms.service.ISmsSendService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.gitegg.platform.sms.aliyun.props.AliyunSmsProperties;
@@ -21,7 +21,7 @@ import java.util.Collection;
  */
 @Slf4j
 @AllArgsConstructor
-public class AliyunSmsSendServiceImpl implements SmsSendService {
+public class AliyunSmsSendServiceImpl implements ISmsSendService {
 
     private static final String successCode = "OK";
 

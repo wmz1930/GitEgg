@@ -46,7 +46,7 @@ public class TokenConstant {
 
     public static final String SMS_CODE = "smsCode";
 
-    public static final String CODE = "Code";
+    public static final String CODE = "code";
 
     public static final String USER_ID = "id";
 

@@ -49,6 +49,10 @@ public class Role extends BaseEntity {
     @TableField("role_status")
     private Integer roleStatus;
 
+    @ApiModelProperty(value = "角色数据权限")
+    @TableField("data_permission_type")
+    private String dataPermissionType;
+
     @ApiModelProperty(value = "备注")
     @TableField("comments")
     private String comments;

@@ -170,8 +170,6 @@
                 total: 0,
                 listLoading: true,
                 listQuery: {
-                    current: 1,
-                    size: 20,
                 <#list table.fields as field>
                     ${field.propertyName}: '',
                 </#list>
@@ -252,8 +250,6 @@
         methods: {
             resetQuery () {
                 this.listQuery = {
-                    current: 1,
-                        size: 20,
                         <#list table.fields as field>
                         ${field.propertyName}: '',
                         </#list>

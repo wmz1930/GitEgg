@@ -2,7 +2,7 @@ package com.gitegg.service.extension.sms.feign;
 
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.sms.domain.SmsResponse;
-import com.gitegg.service.extension.service.ISmsService;
+import com.gitegg.service.extension.sms.service.ISmsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

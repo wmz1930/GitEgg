@@ -2,10 +2,8 @@ package com.gitegg.platform.mybatis.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.*;
+import com.gitegg.platform.mybatis.handler.GitEggDataPermissionHandler;
 import com.gitegg.platform.mybatis.props.TenantProperties;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.annotation.MapperScan;
@@ -19,6 +17,8 @@ import org.springframework.context.annotation.Configuration;
 public class MybatisPlusConfig {
 
     private final TenantLineInnerInterceptor tenantLineInnerInterceptor;
+
+    private final GitEggDataPermissionHandler gitEggDataPermissionHandler;
 
     private final TenantProperties tenantProperties;
 
@@ -35,6 +35,9 @@ public class MybatisPlusConfig {
         if (tenantProperties.getEnable()) {
             interceptor.addInnerInterceptor(tenantLineInnerInterceptor);
         }
+
+        //数据权限插件
+        interceptor.addInnerInterceptor(new DataPermissionInterceptor(gitEggDataPermissionHandler));
 
         //分页插件
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));

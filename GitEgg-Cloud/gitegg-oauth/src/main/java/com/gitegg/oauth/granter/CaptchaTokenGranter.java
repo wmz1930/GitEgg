@@ -3,6 +3,7 @@ package com.gitegg.oauth.granter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.gitegg.oauth.util.CaptchaUtils;
 import com.gitegg.platform.base.constant.TokenConstant;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.*;
@@ -56,37 +57,11 @@ public class CaptchaTokenGranter extends AbstractTokenGranter {
     @Override
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
         Map<String, String> parameters = new LinkedHashMap<>(tokenRequest.getRequestParameters());
-        // 获取验证码类型
-        String captchaType = parameters.get(CaptchaConstant.CAPTCHA_TYPE);
-
-        // 判断传入的验证码类型和系统配置的是否一致
-        if (!StringUtils.isEmpty(captchaType) && !captchaType.equals(this.captchaType)) {
-            throw new UserDeniedAuthorizationException(ResultCodeEnum.INVALID_CAPTCHA_TYPE.getMsg());
+        boolean checkCaptchaResult = CaptchaUtils.checkCaptcha(parameters, redisTemplate, captchaService);
+        if (!checkCaptchaResult)
+        {
+            throw new UserDeniedAuthorizationException(ResultCodeEnum.INVALID_CAPTCHA.getMsg());
         }
-
-        if (CaptchaConstant.IMAGE_CAPTCHA.equalsIgnoreCase(captchaType)) {
-            // 图片验证码验证
-            String captchaKey = parameters.get(CaptchaConstant.CAPTCHA_KEY);
-            String captchaCode = parameters.get(CaptchaConstant.CAPTCHA_CODE);
-            // 获取验证码
-            String redisCode = (String)redisTemplate.opsForValue().get(CaptchaConstant.IMAGE_CAPTCHA_KEY + captchaKey);
-            // 判断验证码
-            if (captchaCode == null || !captchaCode.equalsIgnoreCase(redisCode)) {
-                throw new UserDeniedAuthorizationException(ResultCodeEnum.INVALID_CAPTCHA.getMsg());
-            }
-        } else {
-            // 滑动验证码验证
-            String captchaVerification = parameters.get(CaptchaConstant.CAPTCHA_VERIFICATION);
-            String slidingCaptchaType = parameters.get(CaptchaConstant.SLIDING_CAPTCHA_TYPE);
-            CaptchaVO captchaVO = new CaptchaVO();
-            captchaVO.setCaptchaVerification(captchaVerification);
-            captchaVO.setCaptchaType(slidingCaptchaType);
-            ResponseModel responseModel = captchaService.verification(captchaVO);
-            if (null == responseModel || !RepCodeEnum.SUCCESS.getCode().equals(responseModel.getRepCode())) {
-                throw new UserDeniedAuthorizationException(ResultCodeEnum.INVALID_CAPTCHA.getMsg());
-            }
-        }
-
         String username = parameters.get(TokenConstant.USER_NAME);
         String password = parameters.get(TokenConstant.PASSWORD);
         // Protect from downstream leaks of password

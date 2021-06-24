@@ -160,7 +160,7 @@
               <a @click="handleUpdate(record)">编辑</a>
               <a-divider type="vertical" />
               <a href="javascript:;"
-                 @click="handleDataPermission(record)">数据权限</a>
+                 @click="handleDataPermission(record)">机构权限</a>
               <a-divider type="vertical" />
               <a-dropdown>
                 <a class="ant-dropdown-link">
@@ -478,7 +478,7 @@ export default {
       leftSelectedKeys: [],
       dialogFormVisible: false,
       dialogDataPermissionVisible: false,
-      drawerTitle: '设置用户数据权限',
+      drawerTitle: '设置用户机构权限',
       checkStrictly: true,
       checkable: true,
       dialogStatus: '',
@@ -511,7 +511,7 @@ export default {
         {
           title: '序号',
           align: 'center',
-          width: 50,
+          width: 80,
           dataIndex: 'id'
         },
         {
@@ -896,7 +896,7 @@ export default {
       })
     },
     handleDataPermission (row) {
-      this.drawerTitle = '设置用户 [' + row.realName + '] 数据权限'
+      this.drawerTitle = '设置用户 [' + row.realName + '] 机构权限'
       this.dialogStatus = 'update'
       this.dialogDataPermissionVisible = true
       this.resetDataPermissionForm()

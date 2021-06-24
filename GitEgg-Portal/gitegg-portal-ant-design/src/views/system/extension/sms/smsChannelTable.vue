@@ -257,8 +257,6 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        current: 1,
-        size: 20,
         id: '',
         channelCode: '',
         channelName: '',
@@ -383,8 +381,6 @@ export default {
   methods: {
     resetQuery () {
       this.listQuery = {
-        current: 1,
-        size: 20,
         id: '',
         channelCode: '',
         channelName: '',

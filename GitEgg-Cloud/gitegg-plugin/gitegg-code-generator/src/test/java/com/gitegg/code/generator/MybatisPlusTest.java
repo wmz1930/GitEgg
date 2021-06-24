@@ -50,7 +50,7 @@ public class MybatisPlusTest {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         // String projectPath = System.getProperty("user.dir");
-        String projectPath = "D:/MyOpenCode/github_new/GitEgg/GitEgg-Cloud/gitegg-mall/gitegg-mall-order";
+        String projectPath = "D:/MyOpenCode/github_new/GitEgg/GitEgg-Cloud/gitegg-service/gitegg-service-system";
         String projectPortalPath = "D:/MyOpenCode/github_new/GitEgg/GitEgg-Portal/gitegg-portal-ant-design/src";
 
         gc.setOutputDir(projectPath + "/src/main/java");
@@ -77,8 +77,8 @@ public class MybatisPlusTest {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName(scanner("order"));
-        pc.setParent("com.gitegg.mall");
+        pc.setModuleName(scanner("system"));
+        pc.setParent("com.gitegg.service");
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -97,7 +97,7 @@ public class MybatisPlusTest {
         // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
         // Mapper.xml 存放路径
-        String mapperDir = "com/gitegg/mall/order/mapper/";
+        String mapperDir = "com/gitegg/service/system/mapper/";
         // 自定义配置会被优先输出
         focList.add(new FileOutConfig(templatePath) {
             @Override
@@ -127,7 +127,7 @@ public class MybatisPlusTest {
         }.setTemplatePath("/templates/resource.sql.ftl"));
 
         // DTO.java
-        String dtoDir = "com/gitegg/mall/order/dto/";
+        String dtoDir = "com/gitegg/service/system/dto/";
         focList.add(new FileOutConfig(templatePath) {
             @Override
             public String outputFile(TableInfo tableInfo) {
@@ -173,7 +173,7 @@ public class MybatisPlusTest {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPortalPath + "/views/mall/order/" + tableInfo.getEntityPath() + "/"
+                return projectPortalPath + "/views/system/dataPermission/" + tableInfo.getEntityPath() + "/"
                     + tableInfo.getEntityPath() + "Table.vue";
             }
         }.setTemplatePath("/templates/pageListTable.vue.ftl"));
@@ -183,7 +183,7 @@ public class MybatisPlusTest {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPortalPath + "/api/mall/order/" + tableInfo.getEntityPath() + ".js";
+                return projectPortalPath + "/api/system/dataPermission/" + tableInfo.getEntityPath() + ".js";
             }
         }.setTemplatePath("/templates/pageListTable.js.ftl"));
 
@@ -234,9 +234,9 @@ public class MybatisPlusTest {
         // 写于父类中的公共字段
         strategy.setSuperEntityColumns(
             new String[] {"tenant_id", "create_time", "creator", "update_time", "operator", "del_flag"});
-        strategy.setInclude(scanner("t_mall_order_sku").split(","));
+        strategy.setInclude(scanner("t_sys_role_data_permission").split(","));
         strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix("t_mall_");
+        strategy.setTablePrefix("t_sys_");
         strategy.setLogicDeleteFieldName("del_flag");
 
         List<TableFill> tableFillList = new ArrayList<>();
