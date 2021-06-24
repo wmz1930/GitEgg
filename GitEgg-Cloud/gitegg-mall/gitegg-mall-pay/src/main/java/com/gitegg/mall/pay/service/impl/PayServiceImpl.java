@@ -2,6 +2,7 @@ package com.gitegg.mall.pay.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.gitegg.mall.pay.entity.PayRecord;
+import com.gitegg.mall.pay.mapper.PayRecordMapper;
 import com.gitegg.mall.pay.service.IPayRecordService;
 import com.gitegg.mall.pay.service.IPayService;
 import com.gitegg.mall.user.client.feign.IMallUserFeign;

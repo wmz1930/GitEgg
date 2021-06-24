@@ -25,6 +25,7 @@ public class GoodsServiceImpl implements IGoodsService {
     private final GoodsSkuMapper goodsSkuMapper;
 
 
+    @DS("mall_goods")
     @Override
     public List<GoodsSku> queryGoodsByIds(List<Long> idList) {
         return goodsSkuMapper.queryGoodsByIds(idList);

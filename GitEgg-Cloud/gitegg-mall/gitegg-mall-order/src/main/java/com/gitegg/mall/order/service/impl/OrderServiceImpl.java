@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -53,8 +54,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     private final IMallPayFeign mallPayFeign;
 
-    @DS("mall_order")//每一层都需要使用多数据源注解切换所选择的数据库
-    @Transactional
+    @DS("sharding")//每一层都需要使用多数据源注解切换所选择的数据库
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @GlobalTransactional //重点 第一个开启事务的需要添加seata全局事务注解
     @Override
     public void order(List<OrderSkuDTO> orderSkuList, Long userId) {
@@ -120,6 +121,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             orderSkus.add(orderSku);
         });
         orderSkuService.saveBatch(orderSkus);
+        throw new BusinessException("测试异常");
     }
 
     /**

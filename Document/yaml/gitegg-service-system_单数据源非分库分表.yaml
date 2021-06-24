@@ -1,0 +1,265 @@
+spring:
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://127.0.0.1/gitegg-oauth/oauth/public_key'
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    initialSize: 1
+    minIdle: 3
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: config,stat,slf4j
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;
+    # 合并多个DruidDataSource的监控数据
+    useGlobalDataSourceStat: true
+  cloud:
+    sentinel:
+      filter:
+        enabled: true
+      transport:
+        port: 8719
+        dashboard: 127.0.0.1:8086
+      eager: true
+      datasource:
+        ds2:
+          nacos:
+            data-type: json
+            server-addr: 127.0.0.1:8848
+            dataId: ${spring.application.name}-sentinel
+            groupId: DEFAULT_GROUP
+            rule-type: flow
+  redis:
+    database: 1
+    host: 127.0.0.1
+    port: 6312
+    password: myredis4Hisc
+    ssl: false
+    timeout: 2000
+  redisson: 
+    config: |
+      singleServerConfig:
+        idleConnectionTimeout: 10000
+        connectTimeout: 10000
+        timeout: 3000
+        retryAttempts: 3
+        retryInterval: 1500
+        password: myredis4Hisc
+        subscriptionsPerConnection: 5
+        clientName: null
+        address: "redis://127.0.0.1:6312"
+        subscriptionConnectionMinimumIdleSize: 1
+        subscriptionConnectionPoolSize: 50
+        connectionMinimumIdleSize: 32
+        connectionPoolSize: 64
+        database: 0
+        dnsMonitoringInterval: 5000
+      threads: 0
+      nettyThreads: 0
+      codec: !<org.redisson.codec.JsonJacksonCodec> {}
+      "transportMode":"NIO"
+#业务系统相关初始化参数
+system:
+    #登录密码默认最大尝试次数
+    maxTryTimes: 5
+    #不需要验证码登录的最大次数
+    maxNonCaptchaTimes: 2
+    #注册用户默认密码
+    defaultPwd: 12345678
+    #注册用户默认角色ID
+    defaultRoleId: 4
+    #注册用户默认组织机构ID
+    defaultOrgId: 79
+    #不需要数据权限过滤的角色key
+    noDataFilterRole: DATA_NO_FILTER
+    #AccessToken过期时间（秒）默认为2小时
+    accessTokenExpiration: 60
+    #RefreshToken过期时间（秒）默认为24小时
+    refreshTokenExpiration: 300
+feign:
+  hystrix:
+    enabled: false
+#Ribbon配置
+ribbon:
+  #请求连接的超时时间
+  ConnectTimeout: 5000
+  #请求处理/响应的超时时间
+  ReadTimeout: 5000
+  #对所有操作请求都进行重试
+  OkToRetryOnAllOperations: true
+  #切换实例的重试次数
+  MaxAutoRetriesNextServer: 5
+  #当前实例的重试次数
+  MaxAutoRetries: 5
+#Sentinel端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+mybatis-plus:
+  mapper-locations: classpath*:/com/gitegg/*/*/mapper/*Mapper.xml
+  typeAliasesPackage: com.gitegg.*.*.entity
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 2
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    #逻辑删除配置
+    logic-delete-value: 1
+    logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+# 多租户配置
+tenant:
+  # 是否开启租户模式
+  enable: true
+  # 需要排除的多租户的表
+  exclusionTable:
+    - "t_sys_district"
+    - "t_sys_tenant"
+    - "t_sys_role"
+    - "t_sys_resource"
+    - "t_sys_role_resource"
+    - "oauth_client_details"
+  # 租户字段名称
+  column: tenant_id
+seata:
+  enabled: true
+  application-id: ${spring.application.name}
+  tx-service-group: gitegg_seata_tx_group
+  enable-auto-data-source-proxy: true
+  config:
+    type: nacos
+    nacos:
+      namespace:
+      serverAddr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      userName: "nacos"
+      password: "nacos"
+  registry:
+    type: nacos
+    nacos:
+      #seata服务端(TC)在nacos中的应用名称
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      namespace:
+      userName: "nacos"
+      password: "nacos"
+#验证码配置
+captcha:
+  #验证码的类型 sliding: 滑动验证码 image: 图片验证码
+  type: sliding
+aj:
+  captcha:
+    #缓存local/redis...
+    cache-type: redis
+    #local缓存的阈值,达到这个值，清除缓存
+    #cache-number=1000
+    #local定时清除过期缓存(单位秒),设置为0代表不执行
+    #timing-clear=180
+    #验证码类型default两种都实例化。
+    type: default
+    #汉字统一使用Unicode,保证程序通过@value读取到是中文，在线转换 https://tool.chinaz.com/tools/unicode.aspx 中文转Unicode
+    #右下角水印文字(我的水印)
+    water-mark: GitEgg
+    #右下角水印字体(宋体)
+    water-font: 宋体
+    #点选文字验证码的文字字体(宋体)
+    font-type: 宋体
+    #校验滑动拼图允许误差偏移量(默认5像素)
+    slip-offset: 5
+    #aes加密坐标开启或者禁用(true|false)
+    aes-status: true
+    #滑动干扰项(0/1/2) 1.2.2版本新增
+    interference-options: 2
+    # 接口请求次数一分钟限制是否开启 true|false
+    req-frequency-limit-enable: true
+    # 验证失败5次，get接口锁定
+    req-get-lock-limit: 5
+    # 验证失败后，锁定时间间隔,s
+    req-get-lock-seconds: 360
+    # get接口一分钟内请求数限制
+    req-get-minute-limit: 30
+    # check接口一分钟内请求数限制
+    req-check-minute-limit: 60
+    # verify接口一分钟内请求数限制
+    req-verify-minute-limit: 60
+#SMS短信通用配置
+sms:
+  #手机号码正则表达式，为空则不做验证
+  reg:
+  #负载均衡类型 可选值: Random、RoundRobin、WeightRandom、WeightRoundRobin
+  load-balancer-type: Random
+  web:
+    #启用web端点
+    enable: true
+    #访问路径前缀
+    base-path: /commons/sms
+  verification-code:
+    #验证码长度
+    code-length: 6
+    #为true则验证失败后删除验证码
+    delete-by-verify-fail: false
+    #为true则验证成功后删除验证码
+    delete-by-verify-succeed: true
+    #重试间隔时间，单位秒
+    retry-interval-time: 60
+    #验证码有效期，单位秒
+    expiration-time: 180
+    #识别码长度
+    identification-code-length: 3
+    #是否启用识别码
+    use-identification-code: false
+  redis:
+    #验证码业务在保存到redis时的key的前缀
+    key-prefix: VerificationCode
+# 网关放行设置 1、whiteUrls不需要鉴权的公共url，白名单，配置白名单路径 2、authUrls需要鉴权的公共url
+oauth-list:
+  whiteUrls:
+    - "/gitegg-oauth/login/phone"
+    - "/gitegg-oauth/login/qr"
+    - "/gitegg-oauth/oauth/token"
+    - "/gitegg-oauth/oauth/public_key"
+    - "/gitegg-oauth/oauth/captcha/type"
+    - "/gitegg-oauth/oauth/captcha"
+    - "/gitegg-oauth/oauth/captcha/check"
+    - "/gitegg-oauth/oauth/captcha/image"
+    - "/gitegg-oauth/oauth/sms/captcha/send"
+  authUrls:
+    - "/gitegg-oauth/oauth/user/info"
+    - "/gitegg-oauth/oauth/logout"
+    - "/gitegg-mall-goods/mall/goods/stock/reduce"
+    - "/gitegg-mall-goods/mall/goods/list/by/id"
+    - "/gitegg-mall-user/mall/user/account/deduction"
+    - "/gitegg-mall-pay/mall/pay/pay"
+    - "/gitegg-mall-order/mall/order/order"

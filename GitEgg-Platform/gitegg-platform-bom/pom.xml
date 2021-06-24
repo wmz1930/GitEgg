@@ -41,6 +41,8 @@
         <postgresql.connector.version>9.1-901.jdbc4</postgresql.connector.version>
         <!-- 数据库连接池Druid -->
         <druid.version>1.1.22</druid.version>
+        <!-- Shardingsphere-JDBC -->
+        <shardingsphere.jdbc.version>5.0.0-alpha</shardingsphere.jdbc.version>
         <!-- 动态数据源 -->
         <dynamic.datasource.version>3.3.2</dynamic.datasource.version>
         <!-- Mybatis Plus增强工具 -->
@@ -231,6 +233,17 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid.version}</version>
+            </dependency>
+            <!-- Shardingsphere-jdbc -->
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+                <version>${shardingsphere.jdbc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>shardingsphere-jdbc-core-spring-namespace</artifactId>
+                <version>${shardingsphere.jdbc.version}</version>
             </dependency>
             <!-- 动态数据源 -->
             <dependency>

@@ -10,6 +10,6 @@
     </select>
 
     <update id="reduceStock">
-        update t_mall_goods_sku set stock = (stock-#{number}) where id = #{skuId} and stock>=#{number}
+        update t_mall_goods_sku set stock = (stock-#{number}), update_time=now() where id = #{skuId} and stock>=#{number}
     </update>
 </mapper>
