@@ -180,7 +180,7 @@
                 <artifactId>gitegg-platform-sms-jd</artifactId>
                 <version>${gitegg.project.version}</version>
             </dependency>
-            <!-- gitegg 短信自定义扩展-jpush -->
+            <!-- gitegg 自定义消息推送-push -->
             <dependency>
                 <groupId>com.gitegg.platform</groupId>
                 <artifactId>gitegg-platform-push</artifactId>
