@@ -16,7 +16,9 @@
         <module>gitegg-gateway</module>
         <module>gitegg-plugin</module>
         <module>gitegg-service</module>
-        <module>gitegg-service-api</module>
+        <module>gitegg-service-client</module>
+        <module>gitegg-mall</module>
+        <module>gitegg-mall-client</module>
     </modules>
 
     <properties>
@@ -37,15 +39,8 @@
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
         <!-- SpringCloud版本号 -->
         <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
-        <!-- SpringPlatform版本号 -->
-        <spring.platform.version>Cairo-SR8</spring.platform.version>
-
-        <!-- mysql数据库驱动 -->
-        <mysql.connector.version>8.0.17</mysql.connector.version>
-        <!-- 数据库连接池Druid -->
-        <druid.version>1.1.23</druid.version>
-        <!-- Mybatis Plus增强工具 -->
-        <mybatis.plus.version>3.4.0</mybatis.plus.version>
+        <!-- hutool工具版本 -->
+        <hutool.version>5.5.1</hutool.version>
 
     </properties>
 
@@ -55,18 +50,16 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <!-- hutool Java常用工具包-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring IO Platform主要是解决依赖版本的冲突问题，spring-boot-dependencies已引入此库，需要自定义版本时，自己选择版本引入。 -->
-<!--            <dependency>-->
-<!--                <groupId>io.spring.platform</groupId>-->
-<!--                <artifactId>platform-bom</artifactId>-->
-<!--                <version>${spring.platform.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
             <!-- spring boot工程的依赖库,无需继承spring-boot-starter-parent -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
