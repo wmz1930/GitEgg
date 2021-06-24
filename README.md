@@ -126,6 +126,20 @@ GitEgg-Cloud
 ### 打包发布
 
 ### 项目界面
+![登录界面](https://upload-images.jianshu.io/upload_images/19669137-b357fa343904018f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![用户管理](https://upload-images.jianshu.io/upload_images/19669137-44ad0680280074ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![角色管理](https://upload-images.jianshu.io/upload_images/19669137-07f02fa112cd05d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![资源管理](https://upload-images.jianshu.io/upload_images/19669137-16c6c9288a09c231.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![组织管理](https://upload-images.jianshu.io/upload_images/19669137-a1b6bd2a34e81b70.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![数据权限](https://upload-images.jianshu.io/upload_images/19669137-72a14c70d6ca18a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![组织权限](https://upload-images.jianshu.io/upload_images/19669137-619c4a1c60e329b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![数据字典](https://upload-images.jianshu.io/upload_images/19669137-e7bb90579c31d468.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![租户管理](https://upload-images.jianshu.io/upload_images/19669137-048658392907247e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![存储配置](https://upload-images.jianshu.io/upload_images/19669137-96ffd448f5db983b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![上传记录](https://upload-images.jianshu.io/upload_images/19669137-577303bc49970e48.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![短信模板](https://upload-images.jianshu.io/upload_images/19669137-9c4e2d5fdb77af0c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![短信渠道](https://upload-images.jianshu.io/upload_images/19669137-656f951da7073d32.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![操作日志](https://upload-images.jianshu.io/upload_images/19669137-6daf8e21b6e18f3f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 技术交流
 
