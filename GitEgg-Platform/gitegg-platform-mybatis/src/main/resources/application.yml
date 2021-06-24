@@ -1,0 +1,9 @@
+tenant:
+  # 是否开启租户模式
+  enable: true
+  # 需要排除的多租户的表
+  exclusionTable:
+    - "t_sys_district"
+    - "oauth_client_details"
+  # 租户字段名称
+  column: tenant_id

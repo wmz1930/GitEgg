@@ -70,7 +70,7 @@ public class GitEggControllerAdvice {
     @ExceptionHandler(value = {Exception.class})
     public Result handlerException(Exception exception, HttpServletRequest request) {
         log.error("请求路径uri={},系统内部出现异常:{}", request.getRequestURI(), exception);
-        Result result = Result.error(ResultCodeEnum.ERROR, errorSystem + exception.toString());
+        Result result = Result.error(ResultCodeEnum.ERROR, errorSystem + exception.getLocalizedMessage());
         return result;
     }
 
@@ -87,7 +87,7 @@ public class GitEggControllerAdvice {
             HttpMessageNotReadableException.class
     })
     public Result handlerSpringAOPException(Exception exception) {
-        Result result = Result.error(ResultCodeEnum.ILLEGAL_REQUEST, errorSystem + exception.getMessage());
+        Result result = Result.error(ResultCodeEnum.ILLEGAL_REQUEST, errorSystem + exception.getLocalizedMessage());
         return result;
     }
 
@@ -96,7 +96,7 @@ public class GitEggControllerAdvice {
      */
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
     public Result handlerSpringAOPException(MethodArgumentTypeMismatchException exception) {
-        Result result = Result.error(ResultCodeEnum.PARAM_TYPE_MISMATCH, errorSystem + exception.getMessage());
+        Result result = Result.error(ResultCodeEnum.PARAM_TYPE_MISMATCH, errorSystem + exception.getLocalizedMessage());
         return result;
     }
 

@@ -182,7 +182,7 @@ public class Result<T> {
 
 
     /**
-     * 返回Result
+     * 返回 Result
      *
      * @param code 状态码
      * @param msg  消息
@@ -196,7 +196,7 @@ public class Result<T> {
     /**
      * 返回Result
      *
-     * @param 
+     * @param resultCodeEnum
      * @param <T>  T 响应数据
      * @返回Result
      */
@@ -207,7 +207,7 @@ public class Result<T> {
     /**
      * 返回Result
      *
-     * @param 
+     * @param resultCodeEnum
      * @param msg   提示信息
      * @param <T>  T 响应数据
      * @返回Result
@@ -217,10 +217,9 @@ public class Result<T> {
     }
     
     /**
-     * 
-     * @param <T>
+     *
      * @param flag
-     * @return
+     * @return <T>  T 响应数据
      */
     public static <T> Result<T> result(boolean flag) {
         return flag ? Result.success("操作成功") : Result.error("操作失败");

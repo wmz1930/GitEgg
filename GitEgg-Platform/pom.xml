@@ -19,6 +19,21 @@
         <module>gitegg-platform-cloud</module>
         <module>gitegg-platform-base</module>
         <module>gitegg-platform-redis</module>
+        <module>gitegg-platform-oauth2</module>
+        <module>gitegg-platform-captcha</module>
+        <module>gitegg-platform-sms</module>
+        <module>gitegg-platform-sms-aliyun</module>
+        <module>gitegg-platform-sms-tencent</module>
+        <module>gitegg-platform-sms-qiniu</module>
+        <module>gitegg-platform-sms-baidu</module>
+        <module>gitegg-platform-sms-jd</module>
+        <module>gitegg-platform-sms-huawei</module>
+        <module>gitegg-platform-sms-jpush</module>
+        <module>gitegg-platform-wechat</module>
+        <module>gitegg-platform-pay</module>
+        <module>gitegg-platform-cache</module>
+        <module>gitegg-platform-dev</module>
+        <module>gitegg-platform-sms-starter</module>
     </modules>
 
     <properties>

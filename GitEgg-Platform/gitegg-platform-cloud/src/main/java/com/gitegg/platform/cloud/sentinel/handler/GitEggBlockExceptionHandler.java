@@ -32,7 +32,7 @@ public class GitEggBlockExceptionHandler implements BlockExceptionHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, BlockException e) throws Exception {
-        response.setStatus(429);
+        response.setStatus(ResultCodeEnum.SYSTEM_BUSY.getCode());
         response.setContentType("application/json;charset=utf-8");
         this.errorSystemMsg = new StringBuffer()
                 .append(this.serverName)

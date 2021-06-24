@@ -22,7 +22,7 @@ ribbon:
   #请求处理/响应的超时时间
   ReadTimeout: 5000
   #对所有操作请求都进行重试
-  OkToRetryOnAllOperations: true
+  OkToRetryOnAllOperations: false
   #切换实例的重试次数
   MaxAutoRetriesNextServer: 1
   #当前实例的重试次数

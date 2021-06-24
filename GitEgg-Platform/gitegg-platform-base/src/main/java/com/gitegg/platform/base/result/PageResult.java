@@ -39,4 +39,16 @@ public class PageResult<T> {
         this.code = ResultCodeEnum.SUCCESS.code;
         this.msg = ResultCodeEnum.SUCCESS.msg;
     }
+
+    /**
+     * 组装数据返回
+     *
+     * @param count  消息
+     * @param data 数据
+     * @param <T>  T 响应数据
+     * @
+     */
+    public static <T> PageResult<T> data(long count, List<T> data) {
+        return new PageResult(count, data);
+    }
 }
