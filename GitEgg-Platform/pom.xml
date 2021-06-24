@@ -28,7 +28,7 @@
         <module>gitegg-platform-sms-baidu</module>
         <module>gitegg-platform-sms-jd</module>
         <module>gitegg-platform-sms-huawei</module>
-        <module>gitegg-platform-sms-jpush</module>
+        <module>gitegg-platform-push</module>
         <module>gitegg-platform-wechat</module>
         <module>gitegg-platform-pay</module>
         <module>gitegg-platform-cache</module>

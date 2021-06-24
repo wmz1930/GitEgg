@@ -181,7 +181,7 @@
             <!-- gitegg 短信自定义扩展-jpush -->
             <dependency>
                 <groupId>com.gitegg.platform</groupId>
-                <artifactId>gitegg-platform-sms-jpush</artifactId>
+                <artifactId>gitegg-platform-push</artifactId>
                 <version>${gitegg.project.version}</version>
             </dependency>
             <!-- gitegg 短信自定义扩展-七牛云 -->
