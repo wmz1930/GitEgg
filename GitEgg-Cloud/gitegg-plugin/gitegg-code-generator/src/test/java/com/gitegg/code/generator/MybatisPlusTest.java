@@ -68,11 +68,11 @@ public class MybatisPlusTest {
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(
-            "jdbc:mysql://172.16.20.188/gitegg_cloud?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = GMT");
+            "jdbc:mysql://127.0.0.1/gitegg_cloud?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = GMT");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("myHisc");
-        dsc.setPassword("root4Hisc");
+        dsc.setUsername("root");
+        dsc.setPassword("root");
         mpg.setDataSource(dsc);
 
         // 包配置
