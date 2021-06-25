@@ -114,3 +114,7 @@ hs_err_pid*
 /GitEgg-Platform/gitegg-platform-dfs-starter/target
 /GitEgg-Platform/gitegg-platform-dfs/target
 /GitEgg-Platform/gitegg-platform-dfs-tencent/target
+/GitEgg-Platform/gitegg-platform-push/gitegg-platform-push.iml
+/GitEgg-Platform/gitegg-platform-push/target
+/GitEgg-Cloud/gitegg-service-client/gitegg-service-base-client/gitegg-service-base-client.iml
+/GitEgg-Cloud/gitegg-service-client/gitegg-service-bigdata-client/gitegg-service-bigdata-client.iml

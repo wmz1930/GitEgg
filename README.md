@@ -142,8 +142,8 @@ GitEgg-Cloud
 ![操作日志](https://upload-images.jianshu.io/upload_images/19669137-6daf8e21b6e18f3f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 技术交流
-![作者微信：gitegg](https://upload-images.jianshu.io/upload_images/19669137-ec75137029ed0df6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/120)
-![QQ群：777023081](https://upload-images.jianshu.io/upload_images/19669137-52ac1f53c83e4f75.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![技术交流](https://upload-images.jianshu.io/upload_images/19669137-c01787de4f8b12b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 版权许可
 
