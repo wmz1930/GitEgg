@@ -2,6 +2,7 @@ package com.gitegg.service.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.gitegg.service.system.entity.Organization;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,4 +22,13 @@ public interface OrganizationMapper extends BaseMapper<Organization> {
      * @return
      */
     List<Organization> queryOrganizationTreeProc(Long parentId);
+
+    /**
+     * 查询组织机构树
+     * @param organization
+     * @return
+     */
+    List<Organization> selectOrganizationChidlren(@Param("org") Organization organization);
+
+
 }

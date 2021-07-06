@@ -104,7 +104,7 @@
       </span>
       <span slot="dataPermission"
             slot-scope="text, record">
-        <a-tag :color="record.dataPermissionType | dataPermissionTypeFilter">{{ record.dataPermissionType | dataPermissionTypeFilter }}</a-tag>
+        {{ record.dataPermissionType | dataPermissionTypeFilter }}
       </span>
       <span slot="createTime"
             slot-scope="text, record">

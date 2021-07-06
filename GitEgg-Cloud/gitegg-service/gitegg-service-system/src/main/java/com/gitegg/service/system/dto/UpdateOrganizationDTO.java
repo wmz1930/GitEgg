@@ -3,6 +3,7 @@ package com.gitegg.service.system.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,6 +30,10 @@ public class UpdateOrganizationDTO implements Serializable {
 
     @ApiModelProperty(value = "父id")
     private Long parentId;
+
+    @ApiModelProperty(value = "所有上级组织id的集合")
+    @TableField("ancestors")
+    private String ancestors;
 
     @ApiModelProperty(value = "组织类型：1总公司，2分公司，3事业部")
     private String organizationType;

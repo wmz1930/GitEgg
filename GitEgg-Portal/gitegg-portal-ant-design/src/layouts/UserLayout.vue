@@ -1,10 +1,10 @@
 <template>
   <div id="userLayout" :class="['user-layout-wrapper', isMobile && 'mobile']">
     <background />
-    <div class="user-layout-lang">
-      <select-lang class="select-lang-trigger" />
-    </div>
     <div class="container">
+      <div class="user-layout-lang">
+        <select-lang class="select-lang-trigger" />
+      </div>
       <div class="login_wrap">
         <div class="login_left">
           <span class="circle">
@@ -111,7 +111,6 @@ export default {
       width: 100%;
       min-height: 100%;
       background-size: 100%;
-      padding: 5% 0 144px;
       position: relative;
       a {
         text-decoration: none;
@@ -215,18 +214,17 @@ export default {
               display: block;
           }
           .circle{
-              width: 200px;
-              height: 200px;
+              width: 100px;
+              height: 100px;
               border-radius: 35%;
               box-shadow: rgba(129, 176, 40,.8) 0px 0px 10px 1px;
-              top: 70px;
-              left: 50%;
-              margin-left: -100px;
+              top: 30%;
+              left: 40%;
               overflow: hidden;
               .logo {
                 position: relative;
-                width: 210px;
-                height: 210px;
+                width: 110px;
+                height: 110px;
                 margin-left: -5px;
                 margin-top: -5px;
                 vertical-align: top;
@@ -318,7 +316,7 @@ export default {
               text-align: center;
               color: #ffffff;
               font-weight: 600;
-              margin-top: 365px;
+              margin-top: 350px;
               font-size: 25px;
           }
           p i{

@@ -37,6 +37,10 @@ public class Organization extends BaseEntity {
     @TableField("parent_id")
     private Long parentId;
 
+    @ApiModelProperty(value = "所有上级组织id的集合")
+    @TableField("ancestors")
+    private String ancestors;
+
     @ApiModelProperty(value = "组织类型：1总公司，2分公司，3事业部")
     @TableField("organization_type")
     private String organizationType;
@@ -81,7 +85,7 @@ public class Organization extends BaseEntity {
     private String comments;
 
     /**
-     * 是否是叶子节点
+     * 是否是叶子节点(查询时，如果此值为 1，则表示只查询子节点)
      */
     @TableField(exist = false)
     private Integer isLeaf;

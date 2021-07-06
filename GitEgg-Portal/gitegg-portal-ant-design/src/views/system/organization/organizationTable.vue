@@ -72,54 +72,87 @@
                     class="organizationForm"
                     :label-col="orgLabelCol"
                     :wrapper-col="orgWrapperCol">
-        <a-form-model-item label="组织名称"
-                           prop="organizationName">
-          <a-input v-model.trim="organizationForm.organizationName"
-                   placeholder="输入组织名称"
-                   :maxLength="32" />
-        </a-form-model-item>
-        <a-form-model-item label="组织标识"
-                           prop="organizationKey">
-          <a-input v-model.trim="organizationForm.organizationKey"
-                   placeholder="输入组织标识"
-                   :maxLength="32" />
-        </a-form-model-item>
-        <a-form-model-item label="组织类型"
-                           prop="organizationType">
-          <a-select v-model="organizationForm.organizationType"
-                    style="width: 100%"
-                    class="filter-item">
-            <a-select-option v-for="item in typesOption"
-                             :key="item.key"
-                             :value="item.key">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-model-item>
-        <a-form-model-item label="组织图标"
-                           prop="organizationIcon">
-          <a-input v-model.trim="organizationForm.organizationIcon"
-                   placeholder="输入组织图标"
-                   :maxLength="11" />
-        </a-form-model-item>
-        <a-form-model-item label="组织排序"
-                           prop="organizationLevel">
-          <a-input v-model.number="organizationForm.organizationLevel"
-                   placeholder="输入组织排序"
-                   :maxLength="32" />
-        </a-form-model-item>
-        <a-form-model-item label="组织地区"
-                           prop="province">
-          <a-cascader v-model="organizationForm.areas"
-                      :options="provinceOptions"
-                      placeholder="组织地区" />
-        </a-form-model-item>
-        <a-form-model-item label="详细地址"
-                           prop="street">
-          <a-input v-model="organizationForm.street"
-                   placeholder="详细地址"
-                   :maxLength="120" />
-        </a-form-model-item>
+        <a-row>
+          <a-col :span="12">
+            <a-form-model-item label="上级组织"
+                               prop="selectedOrgOptions">
+              <a-cascader :options="orgList"
+                          v-model="selectedOrgOptions"
+                          :field-names="propsOrg"
+                          :show-search="{ filter }"
+                          change-on-select
+                          placeholder="请选择上级组织" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="组织类型"
+                               prop="organizationType">
+              <a-select v-model="organizationForm.organizationType"
+                        style="width: 100%"
+                        class="filter-item">
+                <a-select-option v-for="item in typesOption"
+                                 :key="item.key"
+                                 :value="item.key">
+                  {{ item.label }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12">
+            <a-form-model-item label="组织名称"
+                               prop="organizationName">
+              <a-input v-model.trim="organizationForm.organizationName"
+                       placeholder="输入组织名称"
+                       :maxLength="32" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="组织标识"
+                               prop="organizationKey">
+              <a-input v-model.trim="organizationForm.organizationKey"
+                       placeholder="输入组织标识"
+                       :maxLength="32" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12">
+            <a-form-model-item label="组织图标"
+                               prop="organizationIcon">
+              <a-input v-model.trim="organizationForm.organizationIcon"
+                       placeholder="输入组织图标"
+                       :maxLength="11" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="组织排序"
+                               prop="organizationLevel">
+              <a-input v-model.number="organizationForm.organizationLevel"
+                       placeholder="输入组织排序"
+                       :maxLength="32" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12">
+            <a-form-model-item label="组织地区"
+                               prop="province">
+              <a-cascader v-model="organizationForm.areas"
+                          :options="provinceOptions"
+                          placeholder="请选择组织地区" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="详细地址"
+                               prop="street">
+              <a-input v-model="organizationForm.street"
+                       placeholder="详细地址"
+                       :maxLength="120" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
         <a-form-model-item label="备注信息">
           <a-input v-model.trim="organizationForm.comments"
                    :autoSize="{ minRows: 2, maxRows: 4}"
@@ -204,9 +237,16 @@ export default {
       props: {
         children: 'children', title: 'organizationName', key: 'id'
       },
+      propsOrg: {
+        children: 'children',
+        value: 'id',
+        label: 'organizationName'
+      },
       list: [],
       baseList: [],
+      orgList: [],
       rootFlag: false,
+      selectedOrgOptions: [],
       expandTitle: 'organizationTable.organizationName',
       expandName: 'organizationName',
       dialogFormVisible: false,
@@ -319,6 +359,9 @@ export default {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
+    displayRender ({ labels }) {
+      return labels[labels.length - 1]
+    },
     getList () {
       this.listLoading = true
       fetchOrgList(this.treeQuery).then(response => {
@@ -359,12 +402,19 @@ export default {
         children: [], // 必须加，否则新增的节点不显示
         comments: ''
       }
+      this.selectedOrgOptions = []
+      var orgListStr = JSON.stringify(this.list)
+      this.orgList = JSON.parse(orgListStr.replace(/"isLeaf":1/g, '"isLeaf":true').replace(/"isLeaf":0/g, '"isLeaf":false')) // 数组深复制
     },
     handleCreate (row) {
       this.resetOrganizationForm()
       if (row) {
         this.rootFlag = false
         this.organizationForm.parentId = row.id
+        if (this.organizationForm.parentId && this.organizationForm.parentId !== '0') {
+          var orgStr = this.selectOrgListByLastId(this.orgList, this.organizationForm.parentId) + ''
+          this.selectedOrgOptions = orgStr.split(',')
+        }
       } else {
         this.rootFlag = true
       }
@@ -377,42 +427,23 @@ export default {
       }
     },
     createData () {
+      if (this.selectedOrgOptions.length > 0) {
+        this.organizationForm.parentId = this.selectedOrgOptions[this.selectedOrgOptions.length - 1]
+      } else {
+        this.organizationForm.parentId = '0'
+      }
       this.$refs['organizationForm'].validate(valid => {
         if (valid) {
           createOrganization(this.organizationForm).then(response => {
             this.dialogFormVisible = false
-            this.organizationForm.id = response.data.id
-            if (this.rootFlag) {
-              this.organizationForm['children'] = null
-              this.list.push(this.organizationForm)
-              this.baseList.push(
-                JSON.parse(JSON.stringify(this.organizationForm))
-              )
-            } else {
-              this.createDataCallBack(this.list)
-              this.createDataCallBack(this.baseList)
-            }
+            this.getList()
             this.$message.success('创建成功')
           })
         }
       })
     },
-    createDataCallBack (dataList) {
-      for (const v of dataList) {
-        if (v.id === this.organizationForm.parentId) {
-          if (!v.children) {
-            v['children'] = []
-          }
-          this.organizationForm['children'] = null
-          v.children.push(JSON.parse(JSON.stringify(this.organizationForm)))
-          break
-        }
-        if (v.children && v.children.length > 0) {
-          this.createDataCallBack(v.children)
-        }
-      }
-    },
     handleUpdate (row) {
+      this.resetOrganizationForm()
       this.organizationForm = Object.assign({}, row) // copy obj
       if (!this.organizationForm.areas || this.organizationForm.areas.length === 0) {
         this.organizationForm.areas = [
@@ -421,6 +452,14 @@ export default {
           this.organizationForm.area
         ]
       }
+
+     if (this.organizationForm.parentId && this.organizationForm.parentId !== '0') {
+        var orgStr = this.selectOrgListByLastId(this.orgList, this.organizationForm.parentId) + ''
+        this.selectedOrgOptions = orgStr.split(',')
+      }
+
+     this.disabledOrgById(this.orgList, this.organizationForm.id)
+
       // JSON不接受循环对象——引用它们自己的对象
       delete this.organizationForm.parent
       delete this.organizationForm.children
@@ -431,27 +470,20 @@ export default {
       }
     },
     updateData () {
+      if (this.selectedOrgOptions.length > 0) {
+        this.organizationForm.parentId = this.selectedOrgOptions[this.selectedOrgOptions.length - 1]
+      } else {
+        this.organizationForm.parentId = '0'
+      }
       this.$refs['organizationForm'].validate(valid => {
         if (valid) {
           updateOrganization(this.organizationForm).then(() => {
             this.dialogFormVisible = false
+            this.getList()
             this.$message.success('更新成功')
-            this.updateDataCallBack(this.list)
-            this.updateDataCallBack(this.baseList)
           })
         }
       })
-    },
-    updateDataCallBack (dataList) {
-      for (const v of dataList) {
-        if (v.id === this.organizationForm.id) {
-          Object.assign(v, JSON.parse(JSON.stringify(this.organizationForm)))
-          break
-        }
-        if (v.children && v.children.length > 0) {
-          this.updateDataCallBack(v.children)
-        }
-      }
     },
     handleDelete (row) {
       var that = this
@@ -462,27 +494,14 @@ export default {
           that.listLoading = true
           deleteOrganization(row.id).then(() => {
             that.listLoading = false
+            this.getList()
             that.$message.success('删除成功!')
-            that.deleteDataCallBack(row.id, that.list)
-            that.deleteDataCallBack(row.id, that.baseList)
           })
         },
         onCancel () {
           that.$message.info('已取消删除')
         }
       })
-    },
-    deleteDataCallBack (id, dataList) {
-      for (const v of dataList) {
-        if (v.id === id) {
-          const index = dataList.indexOf(v)
-          dataList.splice(index, 1)
-          break
-        }
-        if (v.children && v.children.length > 0) {
-          this.deleteDataCallBack(id, v.children)
-        }
-      }
     },
     searchTreeData () {
       this.list = JSON.parse(JSON.stringify(this.baseList))
@@ -495,6 +514,42 @@ export default {
         this.queryData(this.list)
       }
       this.expandAll = true
+    },
+    selectOrgListByLastId (orgList, lastId) {
+      // 递归查询机构父机构，用于展示已选中的机构
+      var orgStr = ''
+      if (orgList) {
+        for (var org of orgList) {
+          // a-tree的isLeaf必须为boolean类型，这里需要转换一下
+          if (org.isLeaf === 1) {
+            org.isLeaf = true
+          } else {
+            org.isLeaf = false
+          }
+          if (lastId === org.id) {
+            return lastId
+          } else if (org.children) {
+            var childOrg = this.selectOrgListByLastId(org.children, lastId)
+            if (childOrg) {
+              orgStr = org.id + ',' + childOrg
+              return orgStr
+            }
+          }
+        }
+      }
+      return orgStr
+    },
+    disabledOrgById (orgList, id) {
+      // 递归查询机构父机构，用于展示已选中的机构
+      if (orgList && orgList.length > 0) {
+        for (var org of orgList) {
+          if (id === org.id) {
+            org.disabled = true
+          } else if (org.children) {
+            this.disabledOrgById(org.children, id)
+          }
+        }
+      }
     },
     queryData (dataList) {
       var haveFlag = false
