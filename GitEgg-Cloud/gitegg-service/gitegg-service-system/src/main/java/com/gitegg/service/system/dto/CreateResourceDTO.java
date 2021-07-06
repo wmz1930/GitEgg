@@ -2,6 +2,7 @@ package com.gitegg.service.system.dto;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,11 +27,14 @@ public class CreateResourceDTO implements Serializable {
     @ApiModelProperty(value = "租户id")
     private Long tenantId;
 
-    @ApiModelProperty(value = "资源名称")
-    private String resourceName;
-
     @ApiModelProperty(value = "父id")
     private Long parentId;
+
+    @ApiModelProperty(value = "所有上级组织id的集合")
+    private String ancestors;
+
+    @ApiModelProperty(value = "资源名称")
+    private String resourceName;
 
     @ApiModelProperty(value = "资源标识")
     private String resourceKey;

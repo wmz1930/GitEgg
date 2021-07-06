@@ -153,12 +153,17 @@
             </a-form-model-item>
           </a-col>
         </a-row>
-        <a-form-model-item label="备注信息">
-          <a-input v-model.trim="organizationForm.comments"
-                   :autoSize="{ minRows: 2, maxRows: 4}"
-                   type="textarea"
-                   placeholder="请输入备注信息" />
-        </a-form-model-item>
+        <a-row>
+          <a-col :span="12">
+            <a-form-model-item label="备注信息">
+              <a-input v-model.trim="organizationForm.comments"
+                       :autoSize="{ minRows: 2, maxRows: 4}"
+                       type="textarea"
+                       placeholder="请输入备注信息" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12"></a-col>
+        </a-row>
       </a-form-model>
       <div slot="footer"
            class="dialog-footer">
@@ -457,7 +462,6 @@ export default {
         var orgStr = this.selectOrgListByLastId(this.orgList, this.organizationForm.parentId) + ''
         this.selectedOrgOptions = orgStr.split(',')
       }
-
      this.disabledOrgById(this.orgList, this.organizationForm.id)
 
       // JSON不接受循环对象——引用它们自己的对象
@@ -494,7 +498,7 @@ export default {
           that.listLoading = true
           deleteOrganization(row.id).then(() => {
             that.listLoading = false
-            this.getList()
+            that.getList()
             that.$message.success('删除成功!')
           })
         },

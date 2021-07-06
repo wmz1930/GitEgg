@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.gitegg.service.system.entity.Resource;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -32,6 +33,14 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @return List<Resource>
      */
     List<Resource> queryResourceTreeProc(Long parentId);
+
+    /**
+     *
+     * 查询所有资源
+     * @param resourceParent
+     * @return
+     */
+    List<Resource> selectResourceChidlren(@Param("resource") Resource resourceParent);
 
     /**
      * 查询拥有权限资源的角色 使用@InterceptorIgnore注解

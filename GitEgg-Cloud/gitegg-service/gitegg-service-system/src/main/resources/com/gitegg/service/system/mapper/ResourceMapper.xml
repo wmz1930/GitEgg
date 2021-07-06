@@ -6,8 +6,9 @@
     <resultMap id="BaseResultMap" type="com.gitegg.service.system.entity.Resource">
         <id column="id" property="id"/>
         <result column="tenant_id" property="tenantId"/>
-        <result column="resource_name" property="resourceName"/>
         <result column="parent_id" property="parentId"/>
+        <result column="ancestors" property="ancestors"/>
+        <result column="resource_name" property="resourceName"/>
         <result column="resource_key" property="resourceKey"/>
         <result column="resource_type" property="resourceType"/>
         <result column="resource_icon" property="resourceIcon"/>
@@ -28,7 +29,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, tenant_id, resource_name, parent_id, resource_key, resource_type, resource_icon, resource_path, resource_url, resource_level, resource_show, resource_cache, resource_page_name, resource_status, comments, create_time, creator, update_time, operator, del_flag
+        id, tenant_id, parent_id, ancestors, resource_name, resource_key, resource_type, resource_icon, resource_path, resource_url, resource_level, resource_show, resource_cache, resource_page_name, resource_status, comments, create_time, creator, update_time, operator, del_flag
     </sql>
     
     <!-- 根据用户名查询用户权限 -->
@@ -36,8 +37,9 @@
 		SELECT DISTINCT
 		sysResource.id,
 		sysResource.tenant_id,
-		sysResource.resource_name,
 		sysResource.parent_id,
+		sysResource.ancestors,
+		sysResource.resource_name,
 		sysResource.resource_key,
 		sysResource.resource_type,
 		sysResource.resource_icon,
@@ -77,9 +79,29 @@
             <include refid="Base_Column_List" />
         from t_sys_resource where resource_type = 4 and del_flag = 0
     </select>
-
     <select id="queryRoleIdsByResourceId" resultType="Long">
         select role_id from t_sys_role_resource where resource_id = #{resourceId} and del_flag = 0
+    </select>
+
+    <!-- 通过parentId查询所有子资源 -->
+    <select id="selectResourceChidlren" resultType="com.gitegg.service.system.entity.Resource" parameterType="com.gitegg.service.system.entity.Resource">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_resource
+        WHERE del_flag = 0
+        <if test="resource.parentId != null and resource.parentId != ''">
+            <choose>
+                <!-- 仅查询子资源，不包含parentId资源本身 -->
+                <when test="resource.isLeaf != null and resource.isLeaf == '1'.toString()">
+                    AND find_in_set(#{resource.parentId}, ancestors)
+                </when>
+                <!-- 查询子资源，包含parentId机构本身 -->
+                <otherwise>
+                    AND (id = #{resource.parentId} OR find_in_set(#{resource.parentId}, ancestors))
+                </otherwise>
+            </choose>
+        </if>
+        ORDER BY id
     </select>
 
 </mapper>

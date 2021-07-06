@@ -60,17 +60,28 @@
       </span>
     </a-table>
 
-    <a-modal :title="textMap[dialogStatus]"
-             v-model="dialogFormVisible"
-             :width="800"
-             :maskClosable="false"
-             :destroyOnClose="true"
-             @cancel="() => dialogFormVisible = false">
+    <a-drawer :title="textMap[dialogStatus]"
+              placement="right"
+              :visible="dialogFormVisible"
+              :width="700"
+              :closable="false"
+              :destroyOnClose="true"
+              :maskClosable="false"
+              @cancel="() => dialogFormVisible = false">
       <a-form-model ref="resourceForm"
                     :model="resourceForm"
                     :rules="rules"
                     :label-col="resourceLabelCol"
                     :wrapper-col="resourceWrapperCol">
+        <a-form-model-item label="上级资源"
+                           prop="selectedResourceOptions">
+          <a-cascader :options="resourceList"
+                      v-model="selectedResourceOptions"
+                      :field-names="propsResource"
+                      :show-search="{ filter }"
+                      change-on-select
+                      placeholder="请选择上级资源" />
+        </a-form-model-item>
         <a-form-model-item label="资源名称"
                            prop="resourceName">
           <a-input v-model.trim="resourceForm.resourceName"
@@ -160,25 +171,17 @@
                    placeholder="请输入备注信息" />
         </a-form-model-item>
       </a-form-model>
-      <div slot="footer"
-           class="dialog-footer">
+      <div class="footer-button">
         <a-button @click="dialogFormVisible = false">取消</a-button>
-        <a-button v-if="dialogStatus=='create'"
-                  type="primary"
-                  @click="createData">确定</a-button>
-        <a-button v-else
-                  type="primary"
-                  @click="updateData">确定</a-button>
+        <a-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</a-button>
+        <a-button v-else type="primary" @click="updateData">修改</a-button>
       </div>
-    </a-modal>
+    </a-drawer>
   </a-card>
 </template>
 
 <script>
-/**
-  Auth: Jeebase
-  Created: 2018/1/19-14:54
-*/
+
 import { fetchResourceList, createResource, deleteResource, updateResource, checkResourceExist } from '@/api/system/resource'
 
 export default {
@@ -223,6 +226,13 @@ export default {
       },
       selectedRowKeys: [],
       selectedRows: [],
+      propsResource: {
+        children: 'children',
+        value: 'id',
+        label: 'resourceName'
+      },
+      resourceList: [],
+      selectedResourceOptions: [],
       list: [],
       baseList: [],
       rootFlag: false,
@@ -349,10 +359,8 @@ export default {
     getList () {
       this.listLoading = true
       fetchResourceList(this.treeQuery).then(response => {
-        var resourceListStr = JSON.stringify(response.data)
-        var dataResourceList = JSON.parse(resourceListStr.replace(/"children":\[\]/g, '"children":null'))
-        this.list = dataResourceList
-        this.baseList = JSON.parse(JSON.stringify(dataResourceList)) // 数组深复制
+        this.list = response.data
+        this.baseList = JSON.parse(JSON.stringify(response.data)) // 数组深复制
         this.listLoading = false
       })
     },
@@ -373,12 +381,20 @@ export default {
         children: [], // 必须加，否则新增的节点不显示
         comments: ''
       }
+
+      this.selectedResourceOptions = []
+      var resourceListStr = JSON.stringify(this.list)
+      this.resourceList = JSON.parse(resourceListStr.replace(/"isLeaf":1/g, '"isLeaf":true').replace(/"isLeaf":0/g, '"isLeaf":false')) // 数组深复制
     },
     handleCreate (row) {
       this.resetResourceForm()
       if (row) {
         this.rootFlag = false
         this.resourceForm.parentId = row.id
+        if (this.resourceForm.parentId && this.resourceForm.parentId !== '0') {
+          var resourceStr = this.selectResourceListByLastId(this.resourceList, this.resourceForm.parentId) + ''
+          this.selectedResourceOptions = resourceStr.split(',')
+        }
       } else {
         this.rootFlag = true
       }
@@ -391,41 +407,30 @@ export default {
       })
     },
     createData () {
+      if (this.selectedResourceOptions.length > 0) {
+        this.resourceForm.parentId = this.selectedResourceOptions[this.selectedResourceOptions.length - 1]
+      } else {
+        this.resourceForm.parentId = '0'
+      }
       this.$refs['resourceForm'].validate(valid => {
         if (valid) {
           createResource(this.resourceForm).then(response => {
             this.dialogFormVisible = false
-            this.resourceForm.id = response.data.id
-            if (this.rootFlag) {
-              this.resourceForm['children'] = null
-              this.list.push(this.resourceForm)
-              this.baseList.push(JSON.parse(JSON.stringify(this.resourceForm)))
-            } else {
-              this.createDataCallBack(this.list)
-              this.createDataCallBack(this.baseList)
-            }
+            this.getList()
             this.$message.success('创建成功')
           })
         }
       })
     },
-    createDataCallBack (dataList) {
-      for (const v of dataList) {
-        if (v.id === this.resourceForm.parentId) {
-          if (!v.children) {
-            v['children'] = []
-          }
-          this.resourceForm['children'] = null
-          v.children.push(JSON.parse(JSON.stringify(this.resourceForm)))
-          break
-        }
-        if (v.children && v.children.length > 0) {
-          this.createDataCallBack(v.children)
-        }
-      }
-    },
     handleUpdate (row) {
+      this.resetResourceForm()
       this.resourceForm = Object.assign({}, row) // copy obj
+
+      if (this.resourceForm.parentId && this.resourceForm.parentId !== '0') {
+        var resourceStr = this.selectResourceListByLastId(this.resourceList, this.resourceForm.parentId) + ''
+        this.selectedResourceOptions = resourceStr.split(',')
+      }
+      this.disabledResourceById(this.resourceList, this.resourceForm.id)
       // JSON不接受循环对象——引用它们自己的对象
       delete this.resourceForm.parent
       delete this.resourceForm.children
@@ -439,27 +444,20 @@ export default {
       })
     },
     updateData () {
+      if (this.selectedResourceOptions.length > 0) {
+        this.resourceForm.parentId = this.selectedResourceOptions[this.selectedResourceOptions.length - 1]
+      } else {
+        this.resourceForm.parentId = '0'
+      }
       this.$refs['resourceForm'].validate(valid => {
         if (valid) {
           updateResource(this.resourceForm).then(() => {
             this.dialogFormVisible = false
+            this.getList()
             this.$message.success('更新成功')
-            this.updateDataCallBack(this.list)
-            this.updateDataCallBack(this.baseList)
           })
         }
       })
-    },
-    updateDataCallBack (dataList) {
-      for (const v of dataList) {
-        if (v.id === this.resourceForm.id) {
-          Object.assign(v, JSON.parse(JSON.stringify(this.resourceForm)))
-          break
-        }
-        if (v.children && v.children.length > 0) {
-          this.updateDataCallBack(v.children)
-        }
-      }
     },
     handleDelete (row) {
       var that = this
@@ -470,9 +468,8 @@ export default {
           that.listLoading = true
           deleteResource(row.id).then(() => {
             that.listLoading = false
+            that.getList()
             that.$message.success('删除成功!')
-            that.deleteDataCallBack(row.id, that.list)
-            that.deleteDataCallBack(row.id, that.baseList)
           })
         },
         onCancel () {
@@ -480,15 +477,39 @@ export default {
         }
       })
     },
-    deleteDataCallBack (id, dataList) {
-      for (const v of dataList) {
-        if (v.id === id) {
-          const index = dataList.indexOf(v)
-          dataList.splice(index, 1)
-          break
+    selectResourceListByLastId (resourceList, lastId) {
+      // 递归查询机构父机构，用于展示已选中的机构
+      var resourceStr = ''
+      if (resourceList) {
+        for (var resource of resourceList) {
+          // a-tree的isLeaf必须为boolean类型，这里需要转换一下
+          if (resource.isLeaf === 1) {
+            resource.isLeaf = true
+          } else {
+            resource.isLeaf = false
+          }
+          if (lastId === resource.id) {
+            return lastId
+          } else if (resource.children) {
+            var childResource = this.selectResourceListByLastId(resource.children, lastId)
+            if (childResource) {
+              resourceStr = resource.id + ',' + childResource
+              return resourceStr
+            }
+          }
         }
-        if (v.children && v.children.length > 0) {
-          this.deleteDataCallBack(id, v.children)
+      }
+      return resourceStr
+    },
+    disabledResourceById (resourceList, id) {
+      // 递归查询机构父机构，用于展示已选中的机构
+      if (resourceList && resourceList.length > 0) {
+        for (var resource of resourceList) {
+          if (id === resource.id) {
+            resource.disabled = true
+          } else if (resource.children) {
+            this.disabledResourceById(resource.children, id)
+          }
         }
       }
     },
@@ -577,7 +598,28 @@ export default {
         haveFlag = true
       }
       return haveFlag
+    },
+    filter (inputValue, path) {
+      return path.some(option => option.resourceName.toLowerCase().indexOf(inputValue.toLowerCase()) > -1)
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+.footer-button {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: right;
+  left: 0;
+  background: #fff;
+  border-radius: 0 0 2px 2px;
+}
+
+.footer-button button {
+  margin-left: 10px;
+}
+</style>

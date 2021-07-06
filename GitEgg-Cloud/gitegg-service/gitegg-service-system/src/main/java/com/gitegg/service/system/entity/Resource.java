@@ -40,6 +40,10 @@ public class Resource extends BaseEntity {
     @TableField("parent_id")
     private Long parentId;
 
+    @ApiModelProperty(value = "所有上级组织id的集合")
+    @TableField("ancestors")
+    private String ancestors;
+
     @ApiModelProperty(value = "资源标识")
     @TableField("resource_key")
     private String resourceKey;
@@ -85,10 +89,16 @@ public class Resource extends BaseEntity {
     private String comments;
 
     /**
+     * 是否是叶子节点(查询时，如果此值为 1，则表示只查询子节点)
+     */
+    @TableField(exist = false)
+    private Integer isLeaf;
+
+    /**
      * 子菜单，必须初始化否则vue新增不展示树子菜单
      */
     @TableField(exist = false)
-    private List<Resource> children = new ArrayList<>();
+    private List<Resource> children;
 
     /**
      * 拥有资源权限角色id集合

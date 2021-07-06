@@ -26,11 +26,14 @@ public class UpdateResourceDTO implements Serializable {
     @ApiModelProperty(value = "租户id")
     private Long tenantId;
 
-    @ApiModelProperty(value = "资源名称")
-    private String resourceName;
-
     @ApiModelProperty(value = "父id")
     private Long parentId;
+
+    @ApiModelProperty(value = "所有上级组织id的集合")
+    private String ancestors;
+
+    @ApiModelProperty(value = "资源名称")
+    private String resourceName;
 
     @ApiModelProperty(value = "资源标识")
     private String resourceKey;

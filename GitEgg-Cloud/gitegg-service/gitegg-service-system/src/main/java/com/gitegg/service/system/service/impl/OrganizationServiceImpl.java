@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import cn.hutool.core.util.StrUtil;
 import com.gitegg.platform.base.constant.GitEggConstant;
+import com.gitegg.service.system.entity.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -60,33 +61,16 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
 
     @Override
     public List<Organization> queryOrganizationByPanentId(Long parentId) {
-        if (null == parentId) {
-            parentId = GitEggConstant.PARENT_ID;
-        }
-        List<Organization> orgs = new ArrayList<>();
+        List<Organization> orgs;
         try {
+            if (null == parentId) {
+                parentId = GitEggConstant.PARENT_ID;
+            }
             Organization organizationParent = new Organization();
             organizationParent.setParentId(parentId);
             List<Organization> orgList = organizationMapper.selectOrganizationChidlren(organizationParent);
             Map<Long, Organization> organizationMap = new HashMap<>();
-            // 组装子父级目录
-            for (Organization organization : orgList) {
-                organizationMap.put(organization.getId(), organization);
-            }
-            for (Organization organization : orgList) {
-                Long treePId = organization.getParentId();
-                Organization pTreev = organizationMap.get(treePId);
-                if (null != pTreev && !organization.equals(pTreev)) {
-                    List<Organization> nodes = pTreev.getChildren();
-                    if (null == nodes) {
-                        nodes = new ArrayList<Organization>();
-                        pTreev.setChildren(nodes);
-                    }
-                    nodes.add(organization);
-                } else {
-                    orgs.add(organization);
-                }
-            }
+            orgs = this.assembleOrganizationTree(orgList, organizationMap);
         } catch (Exception e) {
             log.error("查询组织树失败:", e);
             throw new BusinessException("查询组织树失败");
@@ -171,5 +155,34 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
             result = removeByIds(orgIds);
         }
         return result;
+    }
+
+    /**
+     * 组装子父级目录
+     * @param organizationList
+     * @param organizationMap
+     * @return
+     */
+    private List<Organization> assembleOrganizationTree(List<Organization> organizationList, Map<Long, Organization> organizationMap)
+    {
+        List<Organization> organizations = new ArrayList<>();
+        for (Organization organization : organizationList) {
+            organizationMap.put(organization.getId(), organization);
+        }
+        for (Organization organization : organizationList) {
+            Long treePId = organization.getParentId();
+            Organization organizationTree = organizationMap.get(treePId);
+            if (null != organizationTree && !organization.equals(organizationTree)) {
+                List<Organization> nodes = organizationTree.getChildren();
+                if (null == nodes) {
+                    nodes = new ArrayList<>();
+                    organizationTree.setChildren(nodes);
+                }
+                nodes.add(organization);
+            } else {
+                organizations.add(organization);
+            }
+        }
+        return organizations;
     }
 }
