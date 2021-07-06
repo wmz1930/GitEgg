@@ -63,7 +63,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-//    @CacheEvict(value = "roles", allEntries = true)
     public boolean updateRole(UpdateRoleDTO role) {
         QueryWrapper<Role> ew = new QueryWrapper<>();
         ew.ne("id", role.getId()).and(e -> e.eq("role_name", role.getRoleName()).or().eq("role_key", role.getRoleKey())
@@ -81,7 +80,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-//    @CacheEvict(value = "roles", allEntries = true)
     public boolean deleteRole(Long roleId) {
         boolean result = removeById(roleId);
         if (result) {
@@ -100,7 +98,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-//    @CacheEvict(value = "roles", allEntries = true)
     public boolean batchDeleteRole(List<Long> roleIds) {
         boolean result = removeByIds(roleIds);
         if (result) {

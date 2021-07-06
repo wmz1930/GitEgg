@@ -194,11 +194,12 @@
             </span>
           </s-table>
 
-          <a-modal :title="textMap[dialogStatus]"
-                   :maskClosable="false"
-                   :visible="dialogFormVisible"
-                   :width="800"
-                   @cancel="() => dialogFormVisible = false">
+          <a-drawer :title="textMap[dialogStatus]"
+                    :maskClosable="false"
+                    :visible="dialogFormVisible"
+                    placement="right"
+                    :width="700"
+                    @cancel="() => dialogFormVisible = false">
             <a-form-model ref="userForm"
                           :model="userForm"
                           :rules="rules"
@@ -297,17 +298,12 @@
                          placeholder="请输入备注信息" />
               </a-form-model-item>
             </a-form-model>
-            <div slot="footer"
-                 class="dialog-footer">
+            <div class="footer-button">
               <a-button @click="dialogFormVisible = false">取消</a-button>
-              <a-button v-if="dialogStatus=='create'"
-                        type="primary"
-                        @click="createData">确定</a-button>
-              <a-button v-else
-                        type="primary"
-                        @click="updateData">修改</a-button>
+              <a-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</a-button>
+              <a-button v-else type="primary" @click="updateData">修改</a-button>
             </div>
-          </a-modal>
+          </a-drawer>
 
           <a-drawer :title="drawerTitle"
                     placement="right"
