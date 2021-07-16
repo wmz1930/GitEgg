@@ -50,8 +50,11 @@ public class DataPermissionEntity {
     @ApiModelProperty(value = "数据权限表的别名,默认organization")
     private String innerTableAlias;
 
-    @ApiModelProperty(value = "数据权限类型:1只能查看本人 2只能查看本部门 3只能查看本部门及子部门 4可以查看所有数据")
+    @ApiModelProperty(value = "数据权限类型:1只能查看本人 2只能查看本部门 3只能查看本部门及子部门 4可以查看所有数据 5自定义数据权限")
     private String dataPermissionType;
+
+    @ApiModelProperty(value = "自定义数据权限类型")
+    private String customExpression;
 
     @ApiModelProperty(value = "状态 0禁用，1 启用,")
     private Integer status;

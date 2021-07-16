@@ -50,7 +50,7 @@ public class TokenConstant {
 
     public static final String USER_ID = "id";
 
-    public static final String DATA_PERMISSION = "dataPermission";
+    public static final String ORGANIZATION_ID_LIST = "organizationIdList";
 
     public static final String ORGANIZATION_ID = "organizationId";
 

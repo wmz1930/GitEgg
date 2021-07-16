@@ -45,7 +45,12 @@ public @interface DataPermission {
     String innerTableAlias() default "dpOrg";
 
     /**
-     * 数据权限类型:1只能查看本人 2只能查看本部门 3只能查看本部门及子部门 4可以查看所有数据
+     * 数据权限类型:1只能查看本人 2只能查看本部门 3只能查看本部门及子部门 4可以查看所有数据 5 自定义
      */
     String dataPermissionType() default "";
+
+    /**
+     * 自定义数据权限类型
+     */
+    String customExpression() default "";
 }

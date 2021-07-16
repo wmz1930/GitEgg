@@ -126,7 +126,7 @@ public class GitEggUserDetailsServiceImpl implements UserDetailsService {
                 gitEggUser.getOrganizationName(),
                     gitEggUser.getOrganizationIds(), gitEggUser.getOrganizationNames(), gitEggUser.getRoleId(), gitEggUser.getRoleIds(), gitEggUser.getRoleName(), gitEggUser.getRoleNames(),
                 gitEggUser.getRoleIdList(), gitEggUser.getRoleKeyList(), gitEggUser.getResourceKeyList(),
-                gitEggUser.getDataPermission(), gitEggUser.getDataPermissionType(),
+                gitEggUser.getDataPermissionType(), gitEggUser.getOrganizationIdList(),
                 gitEggUser.getAvatar(), gitEggUser.getAccount(), gitEggUser.getPassword(), !String.valueOf(GitEggConstant.DISABLE).equals(gitEggUser.getStatus()), true, true, true,
                 AuthorityUtils.createAuthorityList(gitEggUser.getRoleIdList().toArray(new String[gitEggUser.getRoleIdList().size()])));
         } else {

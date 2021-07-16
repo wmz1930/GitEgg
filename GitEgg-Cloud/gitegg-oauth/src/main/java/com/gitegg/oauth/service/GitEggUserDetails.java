@@ -3,6 +3,7 @@ package com.gitegg.oauth.service;
 import java.util.Collection;
 import java.util.List;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -72,11 +73,6 @@ public class GitEggUserDetails extends User {
 	/**
 	 * 机构id
 	 */
-	private final String organizationIds;
-
-	/**
-	 * 机构id
-	 */
 	private final String organizationNames;
 
 	/**
@@ -95,6 +91,11 @@ public class GitEggUserDetails extends User {
 	private final String dataPermissionType;
 
 	/**
+	 * 数据权限机构id列表
+	 */
+	private final String organizationIds;
+
+	/**
 	 * 角色id列表
 	 */
 	private List<String> roleIdList;
@@ -110,9 +111,9 @@ public class GitEggUserDetails extends User {
 	private List<String> resourceKeyList;
 
 	/**
-	 * 数据权限
+	 * 机构id列表
 	 */
-	private String dataPermission;
+	private List<String> organizationIdList;
 
 	/**
 	 * 头像
@@ -123,7 +124,7 @@ public class GitEggUserDetails extends User {
 
     public GitEggUserDetails(Long id, String tenantId, String oauthId, String nickname, String realName,
 							 Long organizationId, String organizationName, String organizationIds, String organizationNames, Long roleId, String roleIds, String roleName, String roleNames,
-							 List<String> roleIdList, List<String> roleKeyList, List<String> resourceKeyList, String dataPermission, String dataPermissionType,
+							 List<String> roleIdList, List<String> roleKeyList, List<String> resourceKeyList, String dataPermissionType, List<String> organizationIdList,
         String avatar, String account, String password, boolean enabled, boolean accountNonExpired,
         boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(account, AuthConstant.BCRYPT + password, enabled, accountNonExpired, credentialsNonExpired,
@@ -145,8 +146,8 @@ public class GitEggUserDetails extends User {
 		this.roleIdList = roleIdList;
 		this.roleKeyList = roleKeyList;
 		this.resourceKeyList = resourceKeyList;
-		this.dataPermission = dataPermission;
 		this.dataPermissionType = dataPermissionType;
+		this.organizationIdList = organizationIdList;
 		this.avatar = avatar;
 	}
 

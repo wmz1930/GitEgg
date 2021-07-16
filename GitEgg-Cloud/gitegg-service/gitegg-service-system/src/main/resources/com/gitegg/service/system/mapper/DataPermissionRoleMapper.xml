@@ -15,6 +15,7 @@
         <result column="inner_table_name" property="innerTableName" />
         <result column="inner_table_alias" property="innerTableAlias" />
         <result column="data_permission_type" property="dataPermissionType" />
+        <result column="custom_expression" property="customExpression" />
         <result column="status" property="status" />
         <result column="comments" property="comments" />
         <result column="tenant_id" property="tenantId" />
@@ -26,12 +27,12 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, resource_id, data_name, data_mapper_function, data_table_name, data_table_alias, data_column_exclude, data_column_include, inner_table_name, inner_table_alias, data_permission_type, status, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, resource_id, data_name, data_mapper_function, data_table_name, data_table_alias, data_column_exclude, data_column_include, inner_table_name, inner_table_alias, data_permission_type, custom_expression, status, comments, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List_Permission_Role">
-        permissionRole.id, permissionRole.resource_id, permissionRole.data_name, permissionRole.data_mapper_function, permissionRole.data_table_name, permissionRole.data_table_alias, permissionRole.data_column_exclude, permissionRole.data_column_include, permissionRole.inner_table_name, permissionRole.inner_table_alias, permissionRole.data_permission_type, permissionRole.status, permissionRole.comments, permissionRole.tenant_id, permissionRole.create_time, permissionRole.creator, permissionRole.update_time, permissionRole.operator, permissionRole.del_flag,
+        permissionRole.id, permissionRole.resource_id, permissionRole.data_name, permissionRole.data_mapper_function, permissionRole.data_table_name, permissionRole.data_table_alias, permissionRole.data_column_exclude, permissionRole.data_column_include, permissionRole.inner_table_name, permissionRole.inner_table_alias, permissionRole.data_permission_type, permissionRole.custom_expression, permissionRole.status, permissionRole.comments, permissionRole.tenant_id, permissionRole.create_time, permissionRole.creator, permissionRole.update_time, permissionRole.operator, permissionRole.del_flag,
     </sql>
 
     <!-- 分页查询数据权限配置表列表 -->

@@ -52,9 +52,9 @@
                 <template v-if="advanced">
                   <a-col :md="6"
                          :sm="24">
-                    <a-form-model-item label="主表名">
+                    <a-form-model-item label="数据主表">
                       <a-input v-model.trim="listQuery.dataTableName"
-                               placeholder="主表名"
+                               placeholder="数据主表"
                                :max-length="100"
                                @keyup.enter.native="handleFilter" />
                     </a-form-model-item>
@@ -192,24 +192,6 @@
               <a-form-model-item label="Mapper全路径" prop="dataMapperFunction">
                 <a-input v-model="dataPermissionRoleForm.dataMapperFunction" placeholder="输入数据权限对应的mapper方法全路径" :maxLength="200" />
               </a-form-model-item>
-              <a-form-model-item label="数据权限主表" prop="dataTableName">
-                <a-input v-model="dataPermissionRoleForm.dataTableName" placeholder="输入需要做数据权限主表" :maxLength="100" />
-              </a-form-model-item>
-              <a-form-model-item label="数据权限表别名" prop="dataTableAlias">
-                <a-input v-model="dataPermissionRoleForm.dataTableAlias" placeholder="输入需要做数据权限表的别名" :maxLength="32" />
-              </a-form-model-item>
-              <a-form-model-item label="排除的字段" prop="dataColumnExclude">
-                <a-input v-model="dataPermissionRoleForm.dataColumnExclude" placeholder="输入数据权限需要排除的字段"/>
-              </a-form-model-item>
-              <a-form-model-item label="保留的字段" prop="dataColumnInclude">
-                <a-input v-model="dataPermissionRoleForm.dataColumnInclude" placeholder="输入数据权限需要保留的字段"/>
-              </a-form-model-item>
-              <a-form-model-item label="数据权限表" prop="innerTableName">
-                <a-input v-model="dataPermissionRoleForm.innerTableName" placeholder="输入数据权限表,默认t_sys_organization" :maxLength="100" />
-              </a-form-model-item>
-              <a-form-model-item label="数据权限表别名" prop="innerTableAlias">
-                <a-input v-model="dataPermissionRoleForm.innerTableAlias" placeholder="输入数据权限表的别名,默认organization" :maxLength="32" />
-              </a-form-model-item>
               <a-form-model-item label="数据权限类型" prop="dataPermissionType">
                 <a-select v-model="dataPermissionRoleForm.dataPermissionType"
                           placeholder="数据权限类型"
@@ -223,6 +205,33 @@
                     {{ item.dictName }}
                   </a-select-option>
                 </a-select>
+              </a-form-model-item>
+              <a-form-model-item label="数据主表" prop="dataTableName">
+                <a-input v-model="dataPermissionRoleForm.dataTableName" placeholder="输入需要做数据权限主表" :maxLength="100" />
+              </a-form-model-item>
+              <a-form-model-item label="数据主表别名" prop="dataTableAlias">
+                <a-input v-model="dataPermissionRoleForm.dataTableAlias" placeholder="输入需要做数据权限表的别名" :maxLength="32" />
+              </a-form-model-item>
+              <!-- <a-divider orientation="left">
+                数据权限表配置
+              </a-divider> -->
+              <a-form-model-item label="数据权限表" prop="innerTableName">
+                <a-input v-model="dataPermissionRoleForm.innerTableName" placeholder="输入数据权限表,默认t_sys_organization" :maxLength="100" />
+              </a-form-model-item>
+              <a-form-model-item label="数据权限表别名" prop="innerTableAlias">
+                <a-input v-model="dataPermissionRoleForm.innerTableAlias" placeholder="输入数据权限表的别名,默认organization" :maxLength="32" />
+              </a-form-model-item>
+              <!-- <a-divider orientation="left">
+                数据权限字段配置
+              </a-divider> -->
+              <a-form-model-item label="排除的字段" prop="dataColumnExclude">
+                <a-input v-model="dataPermissionRoleForm.dataColumnExclude" placeholder="输入数据权限需要排除的字段"/>
+              </a-form-model-item>
+              <a-form-model-item label="保留的字段" prop="dataColumnInclude">
+                <a-input v-model="dataPermissionRoleForm.dataColumnInclude" placeholder="输入数据权限需要保留的字段"/>
+              </a-form-model-item>
+              <a-form-model-item label="自定义表达式">
+                <a-input v-model="dataPermissionRoleForm.customExpression" :autoSize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入自定义表达式" />
               </a-form-model-item>
               <a-form-model-item label="状态" prop="status">
                 <a-radio-group v-model="dataPermissionRoleForm.status" name="status">
@@ -389,6 +398,7 @@ export default {
         innerTableName: '',
         innerTableAlias: '',
         dataPermissionType: '',
+        customExpression: '',
         status: 1,
         comments: ''
       },
@@ -435,7 +445,7 @@ export default {
            dataIndex: 'dataMapperFunction'
         },
         {
-          title: '主表',
+          title: '数据主表',
           align: 'center',
           width: 130,
           ellipsis: true,
@@ -475,10 +485,10 @@ export default {
           { validator: validDataMapperFunction, trigger: 'blur' }
         ],
         dataTableName: [
-          { required: true, message: '请输入数据权限主表', trigger: 'blur' }
+          { required: true, message: '请输入数据主表', trigger: 'blur' }
         ],
         dataTableAlias: [
-          { required: true, message: '请输入数据权限主表的别名', trigger: 'blur' }
+          { required: true, message: '请输入数据主表的别名', trigger: 'blur' }
         ],
         innerTableName: [
           { required: true, message: '请输入数据权限表', trigger: 'blur' }
@@ -710,6 +720,7 @@ export default {
         innerTableName: '',
         innerTableAlias: '',
         dataPermissionType: '',
+        customExpression: '',
         status: 1,
         comments: ''
       }

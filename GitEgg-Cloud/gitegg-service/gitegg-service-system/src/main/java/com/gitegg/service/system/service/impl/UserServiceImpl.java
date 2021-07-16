@@ -320,7 +320,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-//    @Cacheable(value = "users", key = "'account_'.concat(#userAccount)")
     public User queryUserByAccount(String userAccount) {
         QueryWrapper<User> ew = new QueryWrapper<>();
         ew.and(e -> e.eq("account", userAccount).or().eq("email", userAccount).or().eq("mobile",
@@ -339,12 +338,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         String roleIds = userInfo.getRoleIds();
-
         //组装角色ID列表，用于Oatuh2和Gateway鉴权
         if (!StringUtils.isEmpty(roleIds))
         {
             String[] roleIdsArray = roleIds.split(",");
-            userInfo.setRoleIdList(Arrays.asList(roleIds));
+            userInfo.setRoleIdList(Arrays.asList(roleIdsArray));
         }
 
         String roleKeys = userInfo.getRoleKeys();
@@ -356,7 +354,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         String dataPermissionType = userInfo.getDataPermissionType();
-        //组装角色key列表，用于前端页面鉴权
+        // 获取用户的角色数据权限级别，如果用户有多种角色，那么取最大的角色权限
         if (!StringUtils.isEmpty(dataPermissionType))
         {
             String[] dataPermissionTypeArray = dataPermissionType.split(",");
@@ -373,10 +371,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userInfo.setDataPermissionType(maxPermission.getDataPermissionType());
         }
 
+        String organizationIds = userInfo.getOrganizationIds();
+        // 获取用户机构数据权限列表
+        if (!StringUtils.isEmpty(organizationIds))
+        {
+            String[] organizationIdArray = organizationIds.split(",");
+            userInfo.setOrganizationIdList(Arrays.asList(organizationIdArray));
+        }
+
         // 查询用户菜单的列表，用于前端页面鉴权
         List<String> menuList = resourceService.queryMenuListByUserId(userInfo.getId());
         userInfo.setResourceKeyList(menuList);
 
+        // 查询用户菜单树，用于页面展示
         List<Resource> menuTree = resourceService.queryMenuTreeByUserId(userInfo.getId());
         userInfo.setMenuTree(menuTree);
 

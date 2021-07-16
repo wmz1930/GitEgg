@@ -179,7 +179,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
             map.put(TokenConstant.NICK_NAME, user.getNickname());
             map.put(TokenConstant.ROLE_ID_LIST, user.getRoleIdList());
             map.put(TokenConstant.ROLE_KEY_LIST, user.getRoleKeyList());
-            map.put(TokenConstant.DATA_PERMISSION, user.getDataPermission());
+            map.put(TokenConstant.ORGANIZATION_ID_LIST, user.getOrganizationIdList());
             map.put(TokenConstant.AVATAR, user.getAvatar());
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(map);
             return accessToken;

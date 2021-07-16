@@ -46,7 +46,9 @@
         <!-- 动态数据源 -->
         <dynamic.datasource.version>3.3.2</dynamic.datasource.version>
         <!-- Mybatis Plus增强工具 -->
-        <mybatis.plus.version>3.4.1</mybatis.plus.version>
+        <mybatis.plus.version>3.4.3.1</mybatis.plus.version>
+        <!-- Mybatis Plus增强工具 -->
+        <mybatis.plus.generator.version>3.5.0</mybatis.plus.generator.version>
         <!-- Freemarker增强工具 -->
         <freemarker.version>2.3.30</freemarker.version>
         <!-- Knife4j Swagger2文档 -->
@@ -283,7 +285,7 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
-                <version>${mybatis.plus.version}</version>
+                <version>${mybatis.plus.generator.version}</version>
             </dependency>
             <!-- freemarker -->
             <dependency>
