@@ -48,6 +48,6 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @param
      * @return
      */
-    @InterceptorIgnore
+    @InterceptorIgnore(tenantLine = "true")
     List<Resource> queryResourceRoleIds();
 }

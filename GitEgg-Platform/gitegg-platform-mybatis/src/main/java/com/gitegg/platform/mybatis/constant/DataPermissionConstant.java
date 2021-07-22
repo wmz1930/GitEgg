@@ -5,7 +5,12 @@ public class DataPermissionConstant {
     /**
      * Redis缓存数据权限规则key
      */
-    public static final String DATA_PERMISSION_KEY = "auth:data:permission:";
+    public static final String DATA_PERMISSION_KEY = "auth:data:permission";
+
+    /**
+     * 带租户的Redis缓存数据权限规则key
+     */
+    public static final String TENANT_DATA_PERMISSION_KEY = "auth:tenant:data:permission:";
 
     /**
      * Redis缓存数据权限规则key mapper_

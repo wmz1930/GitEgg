@@ -89,4 +89,10 @@
         ORDER BY id DESC
     </select>
 
+    <select id="queryDataPermissionRoleListAll" resultType="com.gitegg.service.system.dto.DataPermissionRoleDTO">
+        select
+        <include refid="Base_Column_List" />
+        from t_sys_data_permission_role where del_flag = 0
+    </select>
+
 </mapper>

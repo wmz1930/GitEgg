@@ -38,8 +38,11 @@ public class UserInfo extends User {
     @ApiModelProperty(value = "角色名称集合")
     private String roleNames;
 
-    @ApiModelProperty(value = "数据权限类型")
-    private String dataPermissionType;
+    @ApiModelProperty(value = "角色数据权限类型列表字符串")
+    private String dataPermissionTypes;
+
+    @ApiModelProperty(value = "角色数据权限类型列表")
+    private List<String> dataPermissionTypeList;
 
     @ApiModelProperty(value = "数据权限机构id集合")
     private String organizationIds;

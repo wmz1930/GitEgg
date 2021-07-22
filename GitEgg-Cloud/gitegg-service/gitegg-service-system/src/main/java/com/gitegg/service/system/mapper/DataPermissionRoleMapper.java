@@ -1,5 +1,6 @@
 package com.gitegg.service.system.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.gitegg.service.system.entity.DataPermissionRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -8,6 +9,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.gitegg.service.system.dto.DataPermissionRoleDTO;
 import com.gitegg.service.system.dto.QueryDataPermissionRoleDTO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -33,4 +36,11 @@ public interface DataPermissionRoleMapper extends BaseMapper<DataPermissionRole>
     * @return
     */
     DataPermissionRoleDTO queryDataPermissionRole(@Param("dataPermissionRole") QueryDataPermissionRoleDTO dataPermissionRoleDTO);
+
+    /**
+     * 初始化数据权限缓存, 添加InterceptorIgnore注解，初始化时忽略租户拦截
+     * @return
+     */
+    @InterceptorIgnore(tenantLine = "true")
+    List<DataPermissionRoleDTO> queryDataPermissionRoleListAll();
 }

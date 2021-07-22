@@ -1,13 +1,21 @@
 package com.gitegg.service.system.service.impl;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitegg.platform.base.constant.AuthConstant;
+import com.gitegg.platform.mybatis.constant.DataPermissionConstant;
+import com.gitegg.platform.mybatis.entity.DataPermissionEntity;
+import com.gitegg.service.system.entity.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.gitegg.service.system.entity.DataPermissionRole;
 import com.gitegg.service.system.mapper.DataPermissionRoleMapper;
 import com.gitegg.service.system.service.IDataPermissionRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
@@ -33,7 +41,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRoleMapper, DataPermissionRole> implements IDataPermissionRoleService {
 
+    /**
+     * 是否开启租户模式
+     */
+    @Value(("${tenant.enable}"))
+    private Boolean enable;
+
     private final DataPermissionRoleMapper dataPermissionRoleMapper;
+
+    private final RedisTemplate redisTemplate;
 
     /**
     * 分页查询数据权限配置表列表
@@ -104,5 +120,38 @@ public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRol
     public boolean batchDeleteDataPermissionRole(List<Long> dataPermissionRoleIds) {
         boolean result = this.removeByIds(dataPermissionRoleIds);
         return result;
+    }
+
+    @Override
+    public void initDataRolePermissions() {
+        List<DataPermissionRoleDTO> dataPermissionRoleList = dataPermissionRoleMapper.queryDataPermissionRoleListAll();
+        // 判断是否开启了租户模式，如果开启了，那么角色权限需要按租户进行分类存储
+        if (enable) {
+            Map<Long, List<DataPermissionRoleDTO>> dataPermissionRoleListMap =
+                    dataPermissionRoleList.stream().collect(Collectors.groupingBy(DataPermissionRoleDTO::getTenantId));
+            dataPermissionRoleListMap.forEach((key, value) -> {
+                // auth:tenant:data:permission:0
+                String redisKey = DataPermissionConstant.TENANT_DATA_PERMISSION_KEY + key;
+                redisTemplate.delete(redisKey);
+                addDataRolePermissions(redisKey, value);
+            });
+        } else {
+            redisTemplate.delete(DataPermissionConstant.DATA_PERMISSION_KEY);
+            // auth:data:permission
+            addDataRolePermissions(DataPermissionConstant.DATA_PERMISSION_KEY, dataPermissionRoleList);
+        }
+    }
+
+    private void addDataRolePermissions(String key, List<DataPermissionRoleDTO> dataPermissionRoleList) {
+        Map<String, DataPermissionEntity> dataPermissionMap = new TreeMap<>();
+        Optional.ofNullable(dataPermissionRoleList).orElse(new ArrayList<>()).forEach(dataPermissionRole -> {
+            String dataRolePermissionCache = new StringBuffer(DataPermissionConstant.DATA_PERMISSION_KEY_MAPPER)
+                    .append(dataPermissionRole.getDataMapperFunction()).append(DataPermissionConstant.DATA_PERMISSION_KEY_TYPE)
+                    .append(dataPermissionRole.getDataPermissionType()).toString();
+            DataPermissionEntity dataPermissionEntity = BeanCopierUtils.copyByClass(dataPermissionRole, DataPermissionEntity.class);
+            dataPermissionMap.put(dataRolePermissionCache, dataPermissionEntity);
+        });
+//        redisTemplate.opsForHash().putAll(key, dataPermissionMap);
+        redisTemplate.boundHashOps(key).putAll(dataPermissionMap);
     }
 }

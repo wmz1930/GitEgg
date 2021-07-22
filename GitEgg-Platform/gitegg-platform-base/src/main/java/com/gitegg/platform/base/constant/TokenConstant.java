@@ -74,4 +74,8 @@ public class TokenConstant {
 
     public static final String RESOURCE_KEY_LIST = "resourceKeyList";
 
+    public static final String DATA_PERMISSION_TYPE = "dataPermissionType";
+
+    public static final String DATA_PERMISSION_TYPE_LIST = "dataPermissionTypeList";
+
 }

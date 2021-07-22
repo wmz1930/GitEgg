@@ -41,9 +41,9 @@
                               show-search
                               :filter-option="filterOption">
                       <a-select-option v-for="item in dataPermissionTypeList"
-                                       :key="item.id"
+                                       :key="item.dictCode"
                                        :label="item.dictName"
-                                       :value="item.id">
+                                       :value="item.dictCode">
                         {{ item.dictName }}
                       </a-select-option>
                     </a-select>
@@ -199,17 +199,17 @@
                           show-search
                           :filter-option="filterOption">
                   <a-select-option v-for="item in dataPermissionTypeList"
-                                   :key="item.id"
+                                   :key="item.dictCode"
                                    :label="item.dictName"
-                                   :value="item.id">
+                                   :value="item.dictCode">
                     {{ item.dictName }}
                   </a-select-option>
                 </a-select>
               </a-form-model-item>
-              <a-form-model-item label="数据主表" prop="dataTableName">
+              <a-form-model-item label="权限主表" prop="dataTableName">
                 <a-input v-model="dataPermissionRoleForm.dataTableName" placeholder="输入需要做数据权限主表" :maxLength="100" />
               </a-form-model-item>
-              <a-form-model-item label="数据主表别名" prop="dataTableAlias">
+              <a-form-model-item label="权限主表别名" prop="dataTableAlias">
                 <a-input v-model="dataPermissionRoleForm.dataTableAlias" placeholder="输入需要做数据权限表的别名" :maxLength="32" />
               </a-form-model-item>
               <!-- <a-divider orientation="left">
@@ -224,10 +224,10 @@
               <!-- <a-divider orientation="left">
                 数据权限字段配置
               </a-divider> -->
-              <a-form-model-item label="排除的字段" prop="dataColumnExclude">
+              <a-form-model-item label="需排除的字段" prop="dataColumnExclude">
                 <a-input v-model="dataPermissionRoleForm.dataColumnExclude" placeholder="输入数据权限需要排除的字段"/>
               </a-form-model-item>
-              <a-form-model-item label="保留的字段" prop="dataColumnInclude">
+              <a-form-model-item label="仅保留的字段" prop="dataColumnInclude">
                 <a-input v-model="dataPermissionRoleForm.dataColumnInclude" placeholder="输入数据权限需要保留的字段"/>
               </a-form-model-item>
               <a-form-model-item label="自定义表达式">
@@ -662,7 +662,7 @@ export default {
         that.dataPermissionTypeList = response.data
         that.dataPermissionTypeFilterMap = {}
         that.dataPermissionTypeList.forEach((item, index, arr) => {
-          that.dataPermissionTypeFilterMap[item.id] = item.dictName
+          that.dataPermissionTypeFilterMap[item.dictCode] = item.dictName
         })
         that.listLoading = false
         })

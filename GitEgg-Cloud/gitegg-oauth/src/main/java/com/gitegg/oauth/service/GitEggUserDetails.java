@@ -86,9 +86,9 @@ public class GitEggUserDetails extends User {
 	private final String roleNames;
 
 	/**
-	 * 数据权限类型
+	 * 数据权限类型列表
 	 */
-	private final String dataPermissionType;
+	private List<String> dataPermissionTypeList;
 
 	/**
 	 * 数据权限机构id列表
@@ -124,7 +124,7 @@ public class GitEggUserDetails extends User {
 
     public GitEggUserDetails(Long id, String tenantId, String oauthId, String nickname, String realName,
 							 Long organizationId, String organizationName, String organizationIds, String organizationNames, Long roleId, String roleIds, String roleName, String roleNames,
-							 List<String> roleIdList, List<String> roleKeyList, List<String> resourceKeyList, String dataPermissionType, List<String> organizationIdList,
+							 List<String> roleIdList, List<String> roleKeyList, List<String> resourceKeyList, List<String> dataPermissionTypeList, List<String> organizationIdList,
         String avatar, String account, String password, boolean enabled, boolean accountNonExpired,
         boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(account, AuthConstant.BCRYPT + password, enabled, accountNonExpired, credentialsNonExpired,
@@ -146,7 +146,7 @@ public class GitEggUserDetails extends User {
 		this.roleIdList = roleIdList;
 		this.roleKeyList = roleKeyList;
 		this.resourceKeyList = resourceKeyList;
-		this.dataPermissionType = dataPermissionType;
+		this.dataPermissionTypeList = dataPermissionTypeList;
 		this.organizationIdList = organizationIdList;
 		this.avatar = avatar;
 	}

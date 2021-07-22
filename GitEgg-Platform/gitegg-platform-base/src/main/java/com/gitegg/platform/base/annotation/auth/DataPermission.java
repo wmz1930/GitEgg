@@ -1,7 +1,5 @@
 package com.gitegg.platform.base.annotation.auth;
 
-import io.swagger.annotations.ApiModelProperty;
-
 import java.lang.annotation.*;
 
 /**
@@ -12,6 +10,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Repeatable(DataPermissions.class)
 public @interface DataPermission {
 
     /**

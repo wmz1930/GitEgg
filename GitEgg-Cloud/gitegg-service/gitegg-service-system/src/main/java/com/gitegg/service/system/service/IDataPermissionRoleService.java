@@ -63,4 +63,9 @@ public interface IDataPermissionRoleService extends IService<DataPermissionRole>
     * @return
     */
     boolean batchDeleteDataPermissionRole(List<Long> dataPermissionRoleIds);
+
+    /**
+     * 初始化系统数据权限权限
+     */
+    void initDataRolePermissions();
 }

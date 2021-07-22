@@ -353,22 +353,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userInfo.setRoleKeyList(Arrays.asList(roleKeysArray));
         }
 
-        String dataPermissionType = userInfo.getDataPermissionType();
-        // 获取用户的角色数据权限级别，如果用户有多种角色，那么取最大的角色权限
-        if (!StringUtils.isEmpty(dataPermissionType))
+        String dataPermissionTypes = userInfo.getDataPermissionTypes();
+        // 获取用户的角色数据权限级别
+        if (!StringUtils.isEmpty(dataPermissionTypes))
         {
-            String[] dataPermissionTypeArray = dataPermissionType.split(",");
-            List<RolePermissionSort> rolePermissionSortList = new ArrayList<>();
-            for(String type : dataPermissionTypeArray)
-            {
-                RolePermissionSort rolePermissionSort = new RolePermissionSort();
-                rolePermissionSort.setDataPermissionType(type);
-                rolePermissionSort.setIndex( DataPermissionTypeEnum.getLevel(type).intValue());
-                rolePermissionSortList.add(rolePermissionSort);
-            }
-            RolePermissionSort maxPermission = rolePermissionSortList.stream()
-                    .max(Comparator.comparing(RolePermissionSort::getIndex)).get();
-            userInfo.setDataPermissionType(maxPermission.getDataPermissionType());
+            String[] dataPermissionTypeArray = dataPermissionTypes.split(",");
+            userInfo.setDataPermissionTypeList(Arrays.asList(dataPermissionTypeArray));
         }
 
         String organizationIds = userInfo.getOrganizationIds();

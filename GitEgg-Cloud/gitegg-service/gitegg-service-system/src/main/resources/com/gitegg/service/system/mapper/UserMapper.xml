@@ -147,7 +147,7 @@
 		GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
 		GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKeys,
 		GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleNames,
-		GROUP_CONCAT(DISTINCT sysRole.data_permission_type) AS dataPermissionType,
+		GROUP_CONCAT(DISTINCT sysRole.data_permission_type) AS dataPermissionTypes,
 		GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS organizationIds,
 		sysOrganization.id AS organizationId,
 		sysOrganization.organization_name AS organizationName
