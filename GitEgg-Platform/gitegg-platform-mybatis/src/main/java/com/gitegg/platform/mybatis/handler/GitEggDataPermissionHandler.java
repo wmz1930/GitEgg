@@ -48,6 +48,12 @@ public class GitEggDataPermissionHandler implements DataPermissionHandler {
     @Value(("${tenant.enable}"))
     private Boolean enable;
 
+    /**
+     * 注解方式默认关闭,这里只是说明一种实现方式，实际使用时，使用配置的方式即可
+     */
+    @Value(("${data-permission.annotation-enable}"))
+    private Boolean annotationEnable = false;
+
     private final RedisTemplate redisTemplate;
 
     public void processDataPermission(PlainSelect plainSelect, String mappedStatementId) {
@@ -78,30 +84,31 @@ public class GitEggDataPermissionHandler implements DataPermissionHandler {
                         break;
                     }
                 }
-                //mappedStatementId是否有配置数据权限
+                // mappedStatementId是否有配置数据权限
                 if (ObjectUtils.isNotEmpty(dataPermissionEntity))
                 {
                     dataPermissionFilter(loginUser, dataPermissionEntity, plainSelect);
                 }
-                else
+                //默认不开启注解，因每次查询都遍历注解，影响性能，直接选择使用配置的方式实现数据权限即可
+                else if(annotationEnable)
                 {
-                    // 2 根据注解的数据权限拼装sql,这里需要优化，注解的权限需要支持多种DataPermissionType类型，目前只支持一种
+                    // 2 根据注解的数据权限拼装sql
                     Class<?> clazz = Class.forName(mappedStatementId.substring(GitEggConstant.Number.ZERO, mappedStatementId.lastIndexOf(StringPool.DOT)));
                     String methodName = mappedStatementId.substring(mappedStatementId.lastIndexOf(StringPool.DOT) + GitEggConstant.Number.ONE);
                     Method[] methods = clazz.getDeclaredMethods();
                     for (Method method : methods) {
-                        DataPermissions annotations = method.getAnnotation(DataPermissions.class);
+                        //当有多个时，这个方法可以获取到
+                        DataPermission[] annotations = method.getAnnotationsByType(DataPermission.class);
                         if (ObjectUtils.isNotEmpty(annotations) && method.getName().equals(methodName)) {
-                            DataPermission[] annotationArray = annotations.value();
-                            for (DataPermission dataPermission : annotationArray) {
+                            for (DataPermission dataPermission : annotations) {
                                 String dataPermissionType = dataPermission.dataPermissionType();
                                 for (String dataPermissionUser : loginUser.getDataPermissionTypeList()) {
                                     if (ObjectUtils.isNotEmpty(dataPermission) && StringUtils.isNotEmpty(dataPermissionType)
                                             && dataPermissionUser.equals(dataPermissionType)) {
                                         DataPermissionEntity dataPermissionEntityAnnotation = annotationToEntity(dataPermission);
                                         dataPermissionFilter(loginUser, dataPermissionEntityAnnotation, plainSelect);
+                                        break;
                                     }
-                                    break;
                                 }
                             }
                         }
