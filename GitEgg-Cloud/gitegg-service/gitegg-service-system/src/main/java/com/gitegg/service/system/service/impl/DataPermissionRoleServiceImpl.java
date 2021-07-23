@@ -151,7 +151,6 @@ public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRol
             DataPermissionEntity dataPermissionEntity = BeanCopierUtils.copyByClass(dataPermissionRole, DataPermissionEntity.class);
             dataPermissionMap.put(dataRolePermissionCache, dataPermissionEntity);
         });
-//        redisTemplate.opsForHash().putAll(key, dataPermissionMap);
         redisTemplate.boundHashOps(key).putAll(dataPermissionMap);
     }
 }
