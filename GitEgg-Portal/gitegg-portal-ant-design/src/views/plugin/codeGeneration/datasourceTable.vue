@@ -51,9 +51,15 @@
         </a-button>
       </a-dropdown>
 
-      <a-button type="primary" icon="cloud-upload" ghost @click="handleUpload" style="margin-left: 8px;">导入</a-button>
       <a-button type="primary" icon="cloud-download" @click="handleDownload" style="margin-left: 8px;">导出</a-button>
-
+      <a-upload
+        name="uploadFile"
+        :show-upload-list="false"
+        :before-upload="beforeUpload"
+      >
+        <a-button> <a-icon type="upload" /> 导入 </a-button>
+      </a-upload>
+      <a href="javascript:;" @click="handleDownloadTemplate" style="margin-left: 8px;">下载导入模板</a>
     </div>
 
     <s-table
@@ -131,9 +137,11 @@
 
 <script>
     import { STable } from '@/components'
-    import { queryCodeGenerationDatasourceList, createCodeGenerationDatasource, updateCodeGenerationDatasource, batchDeleteCodeGenerationDatasource, deleteCodeGenerationDatasource, checkCodeGenerationDatasourceExist } from '@/api/plugin/codeGeneration/datasource/datasource'
+    import { queryCodeGenerationDatasourceList, createCodeGenerationDatasource, updateCodeGenerationDatasource,
+              batchDeleteCodeGenerationDatasource, deleteCodeGenerationDatasource, checkCodeGenerationDatasourceExist, downloadCodeGenerationDatasourceList, downloadCodeGenerationDatasourceTemplate, uploadCodeGenerationDatasource } from '@/api/plugin/codeGeneration/datasource/datasource'
     import moment from 'moment'
     import { listDict } from '@/api/system/base/dict'
+    import { handleDownloadBlod } from '@/utils/util'
     const vm = {}
     export default {
         name: 'CodeGenerationDatasourceTable',
@@ -444,56 +452,41 @@
                     }
                 })
             },
-            handleUpload () {
+            beforeUpload (file) {
+                this.handleUpload(file)
+                return false
+            },
+            handleUpload (file) {
+                this.uploadedFileName = ''
+                const formData = new FormData()
+                formData.append('uploadFile', file)
+                this.uploading = true
+                uploadCodeGenerationDatasource(formData).then(() => {
+                    this.uploading = false
+                    this.$message.success('数据导入成功')
+                    this.handleFilter()
+                }).catch(err => {
+                  console.log('uploading', err)
+                  this.$message.error('数据导入失败')
+                })
             },
             handleDownload () {
                 this.downloadLoading = true
-                import('@/vendor/Export2Excel').then(excel => {
-                    const tHeader = [
-                        '主键',
-                        '数据源名称',
-                        '连接地址',
-                        '用户名',
-                        '密码',
-                        '数据库驱动',
-                        '数据库类型',
-                        '备注'
-                    ]
-                    const filterVal = [
-                        'id',
-                        'datasourceName',
-                        'url',
-                        'username',
-                        'password',
-                        'driver',
-                        'dbType',
-                        'comments'
-                    ]
-                    const data = this.formatJson(filterVal, this.list)
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: '数据源配置表数据导出列表'
-                    })
-                    this.downloadLoading = false
+                downloadCodeGenerationDatasourceList(this.listQuery).then(response => {
+                  handleDownloadBlod('数据源配置列表.xlsx', response)
+                  this.listLoading = false
                 })
             },
-            formatJson (filterVal, jsonData) {
-                return jsonData.map(v =>
-                    filterVal.map(j => {
-                        if (j === 'createTime') {
-                            return moment(v[j])
-                        } else if (j === 'codeGenerationDatasourceStatus') {
-                            return this.$options.filters['statusNameFilter'](v[j])
-                        } else {
-                            return v[j]
-                        }
-                    })
-                )
+            handleDownloadTemplate () {
+                this.downloadLoading = true
+                downloadCodeGenerationDatasourceTemplate(this.listQuery).then(response => {
+                  handleDownloadBlod('数据源配置上传模板.xlsx', response)
+                  this.listLoading = false
+                })
             },
             filterOption (input, option) {
               return (
-                      option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )
             }
         }

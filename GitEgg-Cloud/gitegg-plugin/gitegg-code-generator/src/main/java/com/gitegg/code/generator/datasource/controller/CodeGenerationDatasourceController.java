@@ -1,15 +1,19 @@
 package com.gitegg.code.generator.datasource.controller;
 
 
+import cn.hutool.json.JSONUtil;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitegg.code.generator.datasource.dto.*;
 import com.gitegg.code.generator.datasource.entity.CodeGenerationDatasource;
 import com.gitegg.code.generator.datasource.entity.CodeGenerationDatasourceExport;
+import com.gitegg.code.generator.datasource.entity.CodeGenerationDatasourceImport;
 import com.gitegg.code.generator.datasource.service.ICodeGenerationDatasourceService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
+import com.gitegg.platform.base.enums.ResultCodeEnum;
+import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
@@ -17,14 +21,20 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,9 +154,8 @@ public class CodeGenerationDatasourceController {
      * @param queryCodeGenerationDatasourceDTO
      * @throws IOException
      */
-    @GetMapping("/export/list")
+    @GetMapping("/download")
     public void download(HttpServletResponse response, QueryCodeGenerationDatasourceDTO queryCodeGenerationDatasourceDTO) throws IOException {
-        // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
         // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
@@ -160,6 +169,42 @@ public class CodeGenerationDatasourceController {
         }
         String sheetName = "数据源列表";
         EasyExcel.write(response.getOutputStream(), CodeGenerationDatasourceExport.class).sheet(sheetName).doWrite(companyExportList);
+    }
+
+    /**
+     * 下载导入模板
+     * @param response
+     * @throws IOException
+     */
+    @GetMapping("/download/template")
+    public void downloadTemplate(HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = URLEncoder.encode("数据源导入模板", "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        String sheetName = "数据源列表";
+        EasyExcel.write(response.getOutputStream(), CodeGenerationDatasourceImport.class).sheet(sheetName).doWrite(null);
+    }
+
+    /**
+     * 上传数据
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/upload")
+    public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
+        List<CodeGenerationDatasourceImport> datasourceImportList =  EasyExcel.read(file.getInputStream(), CodeGenerationDatasourceImport.class, null).sheet().doReadSync();
+        if (!CollectionUtils.isEmpty(datasourceImportList))
+        {
+            List<CodeGenerationDatasource> codeGenerationDatasourceList = new ArrayList<>();
+            datasourceImportList.stream().forEach(datasourceImport-> {
+                codeGenerationDatasourceList.add(BeanCopierUtils.copyByClass(datasourceImport, CodeGenerationDatasource.class));
+            });
+            codeGenerationDatasourceService.saveBatch(codeGenerationDatasourceList);
+        }
+        return Result.success();
     }
 
  }

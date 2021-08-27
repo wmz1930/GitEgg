@@ -53,3 +53,29 @@ export function checkCodeGenerationDatasourceExist (data) {
     params: data
   })
 }
+
+export function downloadCodeGenerationDatasourceList (query) {
+  return request({
+    url: '/gitegg-plugin-code/code/generation/datasource/download',
+    method: 'get',
+    responseType: 'blob',
+    params: query
+  })
+}
+
+export function downloadCodeGenerationDatasourceTemplate (query) {
+  return request({
+    url: '/gitegg-plugin-code/code/generation/datasource/download/template',
+    method: 'get',
+    responseType: 'blob',
+    params: query
+  })
+}
+
+export function uploadCodeGenerationDatasource (formData) {
+  return request({
+    url: '/gitegg-plugin-code/code/generation/datasource/upload',
+    method: 'post',
+    data: formData
+  })
+}

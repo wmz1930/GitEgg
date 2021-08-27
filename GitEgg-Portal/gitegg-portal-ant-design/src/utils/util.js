@@ -1,3 +1,5 @@
+import notification from 'ant-design-vue/es/notification'
+
 export function timeFix () {
   const time = new Date()
   const hour = time.getHours()
@@ -101,4 +103,35 @@ export const serialize = data => {
     list.push(`${ele}=${data[ele]}`)
   })
   return list.join('&').replace(/\+/g, '%2B')
+}
+
+// 导出Excel
+export function exportBlod (fileName, data) {
+  const blob = new Blob([data])
+  const elink = document.createElement('a')
+  elink.download = fileName
+  elink.style.display = 'none'
+  elink.href = URL.createObjectURL(blob)
+  document.body.appendChild(elink)
+  elink.click()
+  URL.revokeObjectURL(elink.href)
+  document.body.removeChild(elink)
+}
+
+// 处理请求返回信息
+export function handleDownloadBlod (fileName, response) {
+    const res = response.data
+    if (res.type === 'application/json') {
+      const reader = new FileReader()
+      reader.readAsText(response.data, 'utf-8')
+      reader.onload = function () {
+        const { msg } = JSON.parse(reader.result)
+        notification.error({
+          message: '下载失败',
+          description: msg
+        })
+    }
+  } else {
+    exportBlod(fileName, res)
+  }
 }
