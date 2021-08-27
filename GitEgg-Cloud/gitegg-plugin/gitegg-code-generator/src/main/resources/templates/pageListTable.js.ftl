@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function query${entity}List (query) {
   return request({
-    url: '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/list',
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/list',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function query${entity}List (query) {
 
 export function create${entity} (data) {
   return request({
-    url: '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/create',
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/create',
     method: 'post',
     data
   })
@@ -18,22 +18,22 @@ export function create${entity} (data) {
 
 export function update${entity} (data) {
   return request({
-    url: '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/update',
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/update',
     method: 'post',
     data
   })
 }
 
-export function update${entity}Status (${table.entityPath}Id, status) {
+export function update${entity}Status (<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>Id, status) {
   return request({
-    url: '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/status/' + ${table.entityPath}Id + '/' + status,
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/status/' + <#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>Id + '/' + status,
     method: 'post'
   })
 }
 
 export function batchDelete${entity} (data) {
   return request({
-    url: '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/batch/delete',
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/batch/delete',
     method: 'post',
     data
   })
@@ -41,14 +41,14 @@ export function batchDelete${entity} (data) {
 
 export function delete${entity} (id) {
   return request({
-    url: '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/delete/' + id,
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/delete/' + id,
     method: 'post'
   })
 }
 
 export function check${entity}Exist (data) {
   return request({
-    url: '/gitegg-service-${package.ModuleName}/${package.ModuleName}/${table.entityPath}/check',
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/check',
     method: 'post',
     params: data
   })

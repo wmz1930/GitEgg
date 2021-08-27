@@ -83,7 +83,7 @@ public class RoleController {
     @ApiImplicitParam(paramType = "path", name = "roleId", value = "角色ID", required = true, dataType = "Long")
     public Result<?> delete(@PathVariable("roleId") Long roleId) {
         if (null == roleId) {
-            return new Result<>().error("ID不能为空");
+            return Result.error("ID不能为空");
         }
         boolean result = roleService.deleteRole(roleId);
         return Result.result(result);
@@ -97,7 +97,7 @@ public class RoleController {
     @ApiImplicitParam(name = "roleIds", value = "角色ID列表", required = true, dataType = "List")
     public Result<?> batchDelete(@RequestBody List<Long> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
-            return new Result<>().error("角色ID列表不能为空");
+            return Result.error("角色ID列表不能为空");
         }
         boolean result = roleService.batchDeleteRole(roleIds);
         return Result.result(result);

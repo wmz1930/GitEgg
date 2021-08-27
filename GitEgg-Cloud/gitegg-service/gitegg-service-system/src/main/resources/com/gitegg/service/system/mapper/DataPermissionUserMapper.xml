@@ -29,8 +29,8 @@
         <if test="dataPermissionUser.id != null and dataPermissionUser.id != ''">
             AND id = #{dataPermissionUser.id}
         </if>
-        <if test="dataPermissionUser.startDateTime != null and dataPermissionUser.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dataPermissionUser.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="dataPermissionUser.beginDateTime != null and dataPermissionUser.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dataPermissionUser.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="dataPermissionUser.endDateTime != null and dataPermissionUser.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{dataPermissionUser.endDateTime},'%Y-%m-%d %H:%M:%S')
@@ -47,8 +47,8 @@
         <if test="dataPermissionUser.id != null and dataPermissionUser.id != ''">
             AND id = #{dataPermissionUser.id}
         </if>
-        <if test="dataPermissionUser.startDateTime != null and dataPermissionUser.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dataPermissionUser.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="dataPermissionUser.beginDateTime != null and dataPermissionUser.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dataPermissionUser.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="dataPermissionUser.endDateTime != null and dataPermissionUser.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{dataPermissionUser.endDateTime},'%Y-%m-%d %H:%M:%S')
@@ -129,8 +129,8 @@
             <if test="user.organizationId != null and user.organizationId != ''">
                 AND dataPermission.organization_id = #{user.organizationId}
             </if>
-            <if test="user.startDateTime != null and user.startDateTime != ''">
-                AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{user.startDateTime},'%Y-%m-%d')
+            <if test="user.beginDateTime != null and user.beginDateTime != ''">
+                AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{user.beginDateTime},'%Y-%m-%d')
             </if>
             <if test="user.endDateTime != null and user.endDateTime != ''">
                 AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{user.endDateTime},'%Y-%m-%d')

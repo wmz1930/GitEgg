@@ -36,8 +36,8 @@
         <if test="tenant.id != null and tenant.id != ''">
             AND id = #{tenant.id}
         </if>
-        <if test="tenant.startDateTime != null and tenant.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.startDateTime},'%Y-%m-%d
+        <if test="tenant.beginDateTime != null and tenant.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.beginDateTime},'%Y-%m-%d
             %H:%M:%S')
         </if>
         <if test="tenant.endDateTime != null and tenant.endDateTime != ''">
@@ -56,8 +56,8 @@
         <if test="tenant.id != null and tenant.id != ''">
             AND ID = #{tenant.id}
         </if>
-        <if test="tenant.startDateTime != null and tenant.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.startDateTime},'%Y-%m-%d
+        <if test="tenant.beginDateTime != null and tenant.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.beginDateTime},'%Y-%m-%d
             %H:%M:%S')
         </if>
         <if test="tenant.endDateTime != null and tenant.endDateTime != ''">

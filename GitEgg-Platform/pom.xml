@@ -37,6 +37,7 @@
         <module>gitegg-platform-dfs-aliyun</module>
         <module>gitegg-platform-dfs-starter</module>
         <module>gitegg-platform-dfs-tencent</module>
+        <module>gitegg-platform-code-generator</module>
     </modules>
 
     <properties>

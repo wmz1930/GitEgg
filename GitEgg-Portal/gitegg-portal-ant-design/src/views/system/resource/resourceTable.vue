@@ -97,7 +97,8 @@
         <a-form-model-item label="资源类型"
                            prop="resourceType">
           <a-radio-group v-model="resourceForm.resourceType"
-                         name="resourceType">
+                         name="resourceType"
+                         @change="onTypeChange">
             <a-radio :value="1">模块</a-radio>
             <a-radio :value="2">菜单</a-radio>
             <a-radio :value="4">接口</a-radio>
@@ -110,7 +111,7 @@
                    placeholder="菜单的图标，不是菜单可以不填"
                    :maxLength="32" />
         </a-form-model-item>
-        <a-form-model-item label="资源path"
+        <a-form-model-item label="路由地址URL"
                            prop="resourcePath">
           <a-tooltip class="item"
                      effect="dark"
@@ -120,7 +121,7 @@
                      placeholder="浏览器地址栏显示的url" />
           </a-tooltip>
         </a-form-model-item>
-        <a-form-model-item label="资源链接"
+        <a-form-model-item label="请求路径"
                            prop="resourceUrl">
           <a-tooltip class="item"
                      effect="dark"
@@ -136,7 +137,7 @@
                    placeholder="菜单排序"
                    :maxLength="32" />
         </a-form-model-item>
-        <a-form-model-item v-show="resourceForm.resourceType === 2"
+        <a-form-model-item v-show="resourceForm.resourceType === 2 && resourceForm.resourceUrl !== 'Layout' && resourceForm.resourceUrl !== 'nested'"
                            label="页面名称"
                            prop="resourcePageName">
           <a-tooltip class="item"
@@ -356,6 +357,19 @@ export default {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
+    onTypeChange (e) {
+      this.changePageNameRules(e.target.value)
+    },
+    changePageNameRules (value) {
+      if (value === 2 && this.resourceForm.resourceUrl !== 'Layout' && this.resourceForm.resourceUrl !== 'nested') {
+        this.rules.resourcePageName = [
+          { required: true, message: '请输入页面名称', trigger: 'blur' },
+          { min: 2, max: 100, message: '长度在 2 到 100 个字符', trigger: 'blur' }
+        ]
+      } else {
+        delete this.rules.resourcePageName
+      }
+    },
     getList () {
       this.listLoading = true
       fetchResourceList(this.treeQuery).then(response => {
@@ -403,6 +417,7 @@ export default {
       this.$nextTick(() => {
         if (this.$refs['resourceForm']) {
           this.$refs['resourceForm'].clearValidate()
+          this.changePageNameRules(this.resourceForm.resourceType)
         }
       })
     },
@@ -440,6 +455,7 @@ export default {
       this.$nextTick(() => {
         if (this.$refs['resourceForm']) {
           this.$refs['resourceForm'].clearValidate()
+          this.changePageNameRules(this.resourceForm.resourceType)
         }
       })
     },

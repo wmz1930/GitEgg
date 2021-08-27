@@ -92,7 +92,7 @@ public class SmsTemplateController {
     @ApiImplicitParam(paramType = "path", name = "smsTemplateId", value = "短信配置表ID", required = true, dataType = "Long")
     public Result<?> delete(@PathVariable("smsTemplateId") Long smsTemplateId) {
         if (null == smsTemplateId) {
-            return new Result<>().error("ID不能为空");
+            return Result.error("ID不能为空");
         }
         boolean result = smsTemplateService.deleteSmsTemplate(smsTemplateId);
         return Result.result(result);
@@ -106,7 +106,7 @@ public class SmsTemplateController {
     @ApiImplicitParam(name = "smsTemplateIds", value = "短信配置表ID列表", required = true, dataType = "List")
     public Result<?> batchDelete(@RequestBody List<Long> smsTemplateIds) {
         if (CollectionUtils.isEmpty(smsTemplateIds)) {
-            return new Result<>().error("短信配置表ID列表不能为空");
+            return Result.error("短信配置表ID列表不能为空");
         }
         boolean result = smsTemplateService.batchDeleteSmsTemplate(smsTemplateIds);
         return Result.result(result);

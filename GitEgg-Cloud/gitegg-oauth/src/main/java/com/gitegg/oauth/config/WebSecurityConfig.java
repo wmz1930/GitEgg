@@ -34,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      *  如果不配置SpringBoot会自动配置一个AuthenticationManager,覆盖掉内存中的用户
      */
+    @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();

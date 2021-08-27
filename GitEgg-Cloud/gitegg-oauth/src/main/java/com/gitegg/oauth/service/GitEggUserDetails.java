@@ -127,7 +127,7 @@ public class GitEggUserDetails extends User {
 							 List<String> roleIdList, List<String> roleKeyList, List<String> resourceKeyList, List<String> dataPermissionTypeList, List<String> organizationIdList,
         String avatar, String account, String password, boolean enabled, boolean accountNonExpired,
         boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-        super(account, AuthConstant.BCRYPT + password, enabled, accountNonExpired, credentialsNonExpired,
+        super(account, password, enabled, accountNonExpired, credentialsNonExpired,
             accountNonLocked, authorities);
 		this.id = id;
 		this.tenantId = tenantId;

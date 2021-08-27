@@ -92,7 +92,7 @@ public class TenantController {
     @ApiImplicitParam(paramType = "path", name = "tenantId", value = "租户信息表ID", required = true, dataType = "Long")
     public Result<?> delete(@PathVariable("tenantId") Long tenantId) {
         if (null == tenantId) {
-            return new Result<>().error("ID不能为空");
+            return Result.error("ID不能为空");
         }
         boolean result = tenantService.deleteTenant(tenantId);
         return Result.result(result);
@@ -106,7 +106,7 @@ public class TenantController {
     @ApiImplicitParam(name = "tenantIds", value = "租户信息表ID列表", required = true, dataType = "List")
     public Result<?> batchDelete(@RequestBody List<Long> tenantIds) {
         if (CollectionUtils.isEmpty(tenantIds)) {
-            return new Result<>().error("租户信息表ID列表不能为空");
+            return Result.error("租户信息表ID列表不能为空");
         }
         boolean result = tenantService.batchDeleteTenant(tenantIds);
         return Result.result(result);

@@ -176,7 +176,7 @@
 </template>
 
 <script>
-// import md5 from 'md5'
+import md5 from 'md5'
 import storage from 'store'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import Verify from '@/components/verifition/Verify'
@@ -319,11 +319,11 @@ export default {
 
           if (this.grantType === 'password' && customActiveKey === 'tab_account') {
               loginParams.grant_type = 'password'
-              loginParams.password = values.password
+              loginParams.password = md5(values.password)
           } else {
             if (customActiveKey === 'tab_account') {
               loginParams.grant_type = 'captcha'
-              loginParams.password = values.password
+              loginParams.password = md5(values.password)
               loginParams.captcha_key = this.captchaKey
               loginParams.captcha_code = values.captchaCode
             } else {
@@ -334,7 +334,6 @@ export default {
               loginParams.captcha_key = this.captchaKey
               loginParams.captcha_code = values.captchaCodeSms
             }
-            // loginParams.password = md5(values.password)
             // 判断是图片验证码还是滑动验证码
             if (this.loginCaptchaType === 'sliding') {
               loginParams.captcha_type = 'sliding'

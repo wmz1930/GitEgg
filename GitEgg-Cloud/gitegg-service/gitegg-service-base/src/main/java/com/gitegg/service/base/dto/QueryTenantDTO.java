@@ -52,7 +52,7 @@ public class QueryTenantDTO extends BaseEntity {
     private Integer tenantStatus;
 
     @ApiModelProperty(value = "开始时间")
-    private String startDateTime;
+    private String beginDateTime;
 
     @ApiModelProperty(value = "结束时间")
     private String endDateTime;

@@ -212,7 +212,7 @@
                     originalName: '',
                     fileName: '',
                     fileStatus: '',
-                    startDateTime: '',
+                    beginDateTime: '',
                     endDateTime: ''
                 },
                 fileDownload: {
@@ -380,7 +380,7 @@
                     originalName: '',
                     fileName: '',
                     fileStatus: '',
-                    startDateTime: '',
+                    beginDateTime: '',
                     endDateTime: ''
                 }
             },

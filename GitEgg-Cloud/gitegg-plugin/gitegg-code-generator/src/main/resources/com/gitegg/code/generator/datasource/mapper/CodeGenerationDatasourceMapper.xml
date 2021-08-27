@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.code.generator.datasource.mapper.CodeGenerationDatasourceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.code.generator.datasource.entity.CodeGenerationDatasource">
+        <id column="id" property="id" />
+        <result column="datasource_name" property="datasourceName" />
+        <result column="url" property="url" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="driver" property="driver" />
+        <result column="db_type" property="dbType" />
+        <result column="comments" property="comments" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, datasource_name, url, username, password, driver, db_type, comments, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询数据源配置表列表 -->
+    <select id="queryCodeGenerationDatasourceList" resultType="com.gitegg.code.generator.datasource.dto.CodeGenerationDatasourceDTO" parameterType="com.gitegg.code.generator.datasource.dto.QueryCodeGenerationDatasourceDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generation_datasource
+        WHERE del_flag = 0
+        <if test="codeGenerationDatasource.id != null and codeGenerationDatasource.id != ''">
+            AND id = #{codeGenerationDatasource.id}
+        </if>
+        <if test="codeGenerationDatasource.datasourceName != null and codeGenerationDatasource.datasourceName != ''">
+            AND datasource_name = #{codeGenerationDatasource.datasourceName}
+        </if>
+        <if test="codeGenerationDatasource.driver != null and codeGenerationDatasource.driver != ''">
+            AND driver = #{codeGenerationDatasource.driver}
+        </if>
+        <if test="codeGenerationDatasource.dbType != null and codeGenerationDatasource.dbType != ''">
+            AND db_type = #{codeGenerationDatasource.dbType}
+        </if>
+        <if test="codeGenerationDatasource.beginDateTime != null and codeGenerationDatasource.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{codeGenerationDatasource.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="codeGenerationDatasource.endDateTime != null and codeGenerationDatasource.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{codeGenerationDatasource.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询数据源配置表信息 -->
+    <select id="queryCodeGenerationDatasource" resultType="com.gitegg.code.generator.datasource.dto.CodeGenerationDatasourceDTO" parameterType="com.gitegg.code.generator.datasource.dto.QueryCodeGenerationDatasourceDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generation_datasource
+        WHERE del_flag = 0
+        <if test="codeGenerationDatasource.id != null and codeGenerationDatasource.id != ''">
+            AND id = #{codeGenerationDatasource.id}
+        </if>
+        <if test="codeGenerationDatasource.datasourceName != null and codeGenerationDatasource.datasourceName != ''">
+            AND datasource_name = #{codeGenerationDatasource.datasourceName}
+        </if>
+        <if test="codeGenerationDatasource.driver != null and codeGenerationDatasource.driver != ''">
+            AND driver = #{codeGenerationDatasource.driver}
+        </if>
+        <if test="codeGenerationDatasource.dbType != null and codeGenerationDatasource.dbType != ''">
+            AND db_type = #{codeGenerationDatasource.dbType}
+        </if>
+        <if test="codeGenerationDatasource.beginDateTime != null and codeGenerationDatasource.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{codeGenerationDatasource.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="codeGenerationDatasource.endDateTime != null and codeGenerationDatasource.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{codeGenerationDatasource.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

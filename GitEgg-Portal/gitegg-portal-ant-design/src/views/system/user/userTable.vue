@@ -845,6 +845,7 @@ export default {
     handleUpdate (row) {
       this.resetUserForm()
       this.userForm = Object.assign({}, row) // copy obj
+      this.userForm.password = undefined
       if (!this.userForm.areas || this.userForm.areas.length === 0) {
         this.userForm.areas = [
           this.userForm.province,

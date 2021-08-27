@@ -143,7 +143,7 @@ public class DictController {
     @ApiImplicitParam(name = "dictIds", value = "字典ID列表", required = true, dataType = "List")
     public Result<?> batchDelete(@RequestBody List<Long> dictIds) {
         if (CollectionUtils.isEmpty(dictIds)) {
-            return new Result<>().error("字典ID列表不能为空");
+            return Result.error("字典ID列表不能为空");
         }
         boolean result = dictService.batchDeleteDict(dictIds);
         if (result) {

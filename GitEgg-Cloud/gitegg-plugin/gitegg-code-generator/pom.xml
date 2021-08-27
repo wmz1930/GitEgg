@@ -10,22 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gitegg-code-generator</artifactId>
+    <name>${project.artifactId}</name>
+    <packaging>jar</packaging>
 
     <dependencies>
-        <!-- gitegg基础底层定义包 -->
+        <!-- gitegg扩展Mybatis Plus代码生成工具 -->
         <dependency>
             <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-base</artifactId>
-        </dependency>
-        <!-- gitegg数据库驱动及连接池 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-db</artifactId>
-        </dependency>
-        <!-- gitegg mybatis-plus -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-mybatis</artifactId>
+            <artifactId>gitegg-platform-code-generator</artifactId>
         </dependency>
     </dependencies>
 

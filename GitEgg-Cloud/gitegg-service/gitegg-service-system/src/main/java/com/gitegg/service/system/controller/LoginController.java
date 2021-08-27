@@ -6,10 +6,14 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.gitegg.platform.base.constant.AuthConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,7 +90,7 @@ public class LoginController {
 //        if (null != vcodeNumbers) {
 //            int num = vcodeNumbers.intValue();
 //            if (num >= smsTimes) {
-//                return new Result<>().error("验证码发送超过最大次数");
+//                return Result.error("验证码发送超过最大次数");
 //            }
 //            cacheChannel.set("smsTimes", phoneNumber + "_sms_times", num + 1);
 //        } else {
@@ -96,7 +100,7 @@ public class LoginController {
 //        System.out.println("注册短信：" + smsCode);
 //        iSmsService.sendVcodeSms(phoneNumber, smsCode);
 //        cacheChannel.set("smsCode", phoneNumber + "_sms_reg", smsCode);
-        return new Result<>().success("验证码发送成功");
+        return Result.success("验证码发送成功");
     }
 
     /**
@@ -110,10 +114,10 @@ public class LoginController {
 //        CacheObject smsCodeCache = cacheChannel.get("smsCode", phoneNumber + "_sms_reg");
 //        String smsCode = (String) smsCodeCache.getValue();
 //        if (StringUtils.isEmpty(smsCode)) {
-//            return new Result<>().error("短信验证码已失效，请重新获取");
+//            return Result.error("短信验证码已失效，请重新获取");
 //        }
 //        if (!smsCode.equals(userSmsCode)) {
-//            return new Result<>().error("短信验证码错误，请重新输入");
+//            return Result.error("短信验证码错误，请重新输入");
 //        }
 CreateUserDTO createUser = BeanCopierUtils.copyByClass(user, CreateUserDTO.class);
         createUser.setRoleId(8L);
@@ -121,9 +125,9 @@ CreateUserDTO createUser = BeanCopierUtils.copyByClass(user, CreateUserDTO.class
         createUser.setAccount(phoneNumber);
         boolean result = userService.createUser(createUser);
         if (result) {
-            return new Result<>().success("注册成功");
+            return Result.success("注册成功");
         } else {
-            return new Result<>().error("添加失败，请重试");
+            return Result.error("添加失败，请重试");
         }
     }
 
@@ -138,14 +142,14 @@ CreateUserDTO createUser = BeanCopierUtils.copyByClass(user, CreateUserDTO.class
         wrapper.eq("USER_MOBILE", smsDTO.getMobile());
         User user = userService.getOne(wrapper);
         if (null == user) {
-            return new Result<>().error("该手机尚未注册");
+            return Result.error("该手机尚未注册");
         }
 //        CacheObject smsTimesCache = cacheChannel.get("smsTimes", phoneNumber + "_sms_times");
 //        Integer vcodeNumbers = (Integer) smsTimesCache.getValue();
 //        if (null != vcodeNumbers) {
 //            int num = vcodeNumbers.intValue();
 //            if (num >= smsTimes) {
-//                return new Result<>().error("验证码发送超过最大次数");
+//                return Result.error("验证码发送超过最大次数");
 //            }
 //            cacheChannel.set("smsTimes", phoneNumber + "_sms_times", num + 1);
 //        } else {
@@ -171,7 +175,7 @@ CreateUserDTO createUser = BeanCopierUtils.copyByClass(user, CreateUserDTO.class
 //        if (null != vcodeNumbers) {
 //            int num = vcodeNumbers.intValue();
 //            if (num >= smsTimes) {
-//                return new Result<>().error("超过最大验证次数，请明天再试");
+//                return Result.error("超过最大验证次数，请明天再试");
 //            }
 //            cacheChannel.set("smsTimes", phoneNumber + "_sms_pwd_times", num + 1);
 //        } else {
@@ -180,10 +184,10 @@ CreateUserDTO createUser = BeanCopierUtils.copyByClass(user, CreateUserDTO.class
 //        CacheObject smsCodeCache = cacheChannel.get("smsCode", phoneNumber + "_sms_pwd");
 //        String smsCode = (String) smsCodeCache.getValue();
 //        if (StringUtils.isEmpty(smsCode)) {
-//            return new Result<>().error("短信验证码已失效，请重新获取");
+//            return Result.error("短信验证码已失效，请重新获取");
 //        }
 //        if (!smsCode.equals(userSmsCode)) {
-//            return new Result<>().error("短信验证码错误，请重新输入");
+//            return Result.error("短信验证码错误，请重新输入");
 //        }
         return Result.success();
     }
@@ -201,7 +205,7 @@ CreateUserDTO createUser = BeanCopierUtils.copyByClass(user, CreateUserDTO.class
 //        if (null != vcodeNumbers) {
 //            int num = vcodeNumbers.intValue();
 //            if (num >= smsTimes) {
-//                return new Result<>().error("超过最大验证次数，请明天再试");
+//                return Result.error("超过最大验证次数，请明天再试");
 //            }
 //            cacheChannel.set("smsTimes", phoneNumber + "_sms_pwd_times", num + 1);
 //        } else {
@@ -210,15 +214,17 @@ CreateUserDTO createUser = BeanCopierUtils.copyByClass(user, CreateUserDTO.class
 //        CacheObject smsCodeCache = cacheChannel.get("smsCode", phoneNumber + "_sms_pwd");
 //        String smsCode = (String) smsCodeCache.getValue();
 //        if (StringUtils.isEmpty(smsCode)) {
-//            return new Result<>().error("短信验证码已失效，请重新获取");
+//            return Result.error("短信验证码已失效，请重新获取");
 //        }
 //        if (!smsCode.equals(userSmsCode)) {
-//            return new Result<>().error("短信验证码错误，请重新输入");
+//            return Result.error("短信验证码错误，请重新输入");
 //        }
-User userEntity = BeanCopierUtils.copyByClass(user, User.class);
+        User userEntity = BeanCopierUtils.copyByClass(user, User.class);
         String pwd = userEntity.getPassword();
         if (!StringUtils.isEmpty(pwd)) {
-            String cryptPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
+            User oldUser = userService.queryUserByAccount(phoneNumber);
+            PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            String cryptPwd = passwordEncoder.encode(AuthConstant.BCRYPT + oldUser.getAccount() + DigestUtils.md5DigestAsHex(pwd.getBytes()));
             userEntity.setPassword(cryptPwd);
         }
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -249,7 +255,7 @@ User userEntity = BeanCopierUtils.copyByClass(user, User.class);
 //        if (null != vcodeNumbers) {
 //            int num = vcodeNumbers.intValue();
 //            if (num >= smsTimes) {
-//                return new Result<>().error("验证码发送超过最大次数");
+//                return Result.error("验证码发送超过最大次数");
 //            }
 //            cacheChannel.set("smsTimes", phoneNumber + "_sms_pw_times", num + 1);
 //        } else {
@@ -269,11 +275,11 @@ User userEntity = BeanCopierUtils.copyByClass(user, User.class);
     @ApiOperation(value = "登录用户，判断验证码是否正确")
     public Result<?> pwdPersonalCodeCheck(@PathVariable("scode") String scode, @ApiIgnore User userc) {
         if (null == userc) {
-            return new Result<>().error("当前用户未登陆");
+            return Result.error("当前用户未登陆");
         }
         String phoneNumber = userc.getMobile();
         if (StringUtils.isEmpty(phoneNumber)) {
-            return new Result<>().error("未获取到当前登录用户手机号");
+            return Result.error("未获取到当前登录用户手机号");
         }
 //        String userSmsCode = scode;
 //        CacheObject smsTimesCache = cacheChannel.get("smsTimes", phoneNumber + "_sms_pw_times");
@@ -281,7 +287,7 @@ User userEntity = BeanCopierUtils.copyByClass(user, User.class);
 //        if (null != vcodeNumbers) {
 //            int num = vcodeNumbers.intValue();
 //            if (num >= smsTimes) {
-//                return new Result<>().error("超过最大验证次数，请明天再试");
+//                return Result.error("超过最大验证次数，请明天再试");
 //            }
 //            cacheChannel.set("smsTimes", phoneNumber + "_sms_pw_times", num + 1);
 //        } else {
@@ -290,10 +296,10 @@ User userEntity = BeanCopierUtils.copyByClass(user, User.class);
 //        CacheObject smsCodeCache = cacheChannel.get("smsCode", phoneNumber + "_sms_pwd_pw");
 //        String smsCode = (String) smsCodeCache.getValue();
 //        if (StringUtils.isEmpty(smsCode)) {
-//            return new Result<>().error("短信验证码已失效，请重新获取");
+//            return Result.error("短信验证码已失效，请重新获取");
 //        }
 //        if (!smsCode.equals(userSmsCode)) {
-//            return new Result<>().error("短信验证码错误，请重新输入");
+//            return Result.error("短信验证码错误，请重新输入");
 //        }
         return Result.success();
     }
@@ -304,14 +310,14 @@ User userEntity = BeanCopierUtils.copyByClass(user, User.class);
     @PostMapping("/pwd/personal/update")
     @ApiOperation(value = "登录用户，更新密码")
     public Result<?> changePwdPersonal(@Valid @RequestBody UpdateUserDTO user, @ApiIgnore User userc) {
-        // String phoneNumber = userc.getMobile();
+         String phoneNumber = userc.getMobile();
 //        String userSmsCode = user.getSmsCode();
 //        CacheObject smsTimesCache = cacheChannel.get("smsTimes", phoneNumber + "_sms_pwd_times");
 //        Integer vcodeNumbers = (Integer) smsTimesCache.getValue();
 //        if (null != vcodeNumbers) {
 //            int num = vcodeNumbers.intValue();
 //            if (num >= smsTimes) {
-//                return new Result<>().error("超过最大验证次数，请明天再试");
+//                return Result.error("超过最大验证次数，请明天再试");
 //            }
 //            cacheChannel.set("smsTimes", phoneNumber + "_sms_pwd_times", num + 1);
 //        } else {
@@ -320,16 +326,18 @@ User userEntity = BeanCopierUtils.copyByClass(user, User.class);
 //        CacheObject smsCodeCache = cacheChannel.get("smsCode", phoneNumber + "_sms_pwd_pw");
 //        String smsCode = (String) smsCodeCache.getValue();
 //        if (StringUtils.isEmpty(smsCode)) {
-//            return new Result<>().error("短信验证码已失效，请重新获取");
+//            return Result.error("短信验证码已失效，请重新获取");
 //        }
 //        if (!smsCode.equals(userSmsCode)) {
-//            return new Result<>().error("短信验证码错误，请重新输入");
+//            return Result.error("短信验证码错误，请重新输入");
 //        }
         User userEntity = new User();
-        userEntity.setMobile(userc.getMobile());
+        userEntity.setMobile(phoneNumber);
         String pwd = user.getPassword();
         if (!StringUtils.isEmpty(pwd)) {
-            String cryptPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
+            User oldUser = userService.queryUserByAccount(phoneNumber);
+            PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            String cryptPwd = passwordEncoder.encode(AuthConstant.BCRYPT + oldUser.getAccount() + DigestUtils.md5DigestAsHex(pwd.getBytes()));
             userEntity.setPassword(cryptPwd);
         }
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -340,23 +348,5 @@ User userEntity = BeanCopierUtils.copyByClass(user, User.class);
         } else {
             return Result.error("密码修改失败，请重试");
         }
-    }
-
-    @PostMapping("/logout")
-    @ApiOperation(value = "退出登录")
-    public Result<?> logOut(HttpServletRequest request) throws Exception {
-        return Result.success();
-    }
-
-    @RequestMapping("401")
-    @ApiIgnore
-    public Result<?> unauthorized() {
-        return Result.error();
-    }
-
-    @RequestMapping("timeout")
-    @ApiIgnore
-    public Result<?> timeOut() {
-        return Result.error();
     }
 }

@@ -1,0 +1,16 @@
+server:
+  port: 8006
+spring:
+  application:
+    name: gitegg-plugin-code
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.16.20.188:8848
+      config:
+        server-addr: 172.16.20.188:8848
+        file-extension: yaml
+        #下面这个是nacos上的配置文件前缀，不是当前服务名前缀
+        prefix: gitegg-service-system
+        group: DEFAULT_GROUP
+        enabled: true

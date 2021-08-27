@@ -1,5 +1,6 @@
 package com.gitegg.oauth.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
@@ -18,6 +19,7 @@ import com.gitegg.platform.captcha.constant.CaptchaConstant;
 import com.gitegg.platform.captcha.domain.ImageCaptcha;
 import com.gitegg.platform.oauth2.domain.Oauth2Token;
 import com.gitegg.service.extension.client.feign.ISmsFeign;
+import com.gitegg.service.system.client.feign.IUserFeign;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.wf.captcha.SpecCaptcha;
@@ -31,10 +33,13 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthorizationException;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
+import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -61,6 +66,8 @@ public class GitEggOAuthController {
     private final KeyPair keyPair;
 
     private final CaptchaService captchaService;
+
+    private final IUserFeign userFeign;
 
     private final ISmsFeign smsFeign;
 
@@ -119,6 +126,22 @@ public class GitEggOAuthController {
     })
     @PostMapping("/token")
     public Result postAccessToken( @ApiIgnore Principal principal, @ApiIgnore @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+
+        //先对密码进行处理，取account和md5加密密码
+        String username = parameters.get("username");
+        String password = parameters.get("password");
+        Result<Object> result = userFeign.queryUserByAccount(username);
+        if (null != result && result.isSuccess()) {
+            GitEggUser gitEggUser = new GitEggUser();
+            BeanUtil.copyProperties(result.getData(), gitEggUser, false);
+            if (!StringUtils.isEmpty(gitEggUser.getAccount())) {
+                username = gitEggUser.getAccount();
+                password = AuthConstant.BCRYPT + gitEggUser.getAccount() + password;
+                parameters.put("username", username);
+                parameters.put("password", password);
+            }
+        }
+
         OAuth2AccessToken oAuth2AccessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
         DefaultExpiringOAuth2RefreshToken refreshToken = (DefaultExpiringOAuth2RefreshToken)oAuth2AccessToken.getRefreshToken();
         Oauth2Token oauth2Token = Oauth2Token.builder()

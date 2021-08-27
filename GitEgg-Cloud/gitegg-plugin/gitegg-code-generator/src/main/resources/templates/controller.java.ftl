@@ -47,7 +47,7 @@ import lombok.RequiredArgsConstructor;
 <#else>
 @Controller
 </#if>
-@RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
+@RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Api(value = "${table.controllerName}|${table.comment!}前端控制器")
 @RefreshScope
@@ -64,6 +64,10 @@ public class ${table.controllerName} {
 
     /**
     * 查询${table.comment!}列表
+    *
+    * @param query${entity}DTO
+    * @param page
+    * @return
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询${table.comment!}列表")
@@ -74,6 +78,9 @@ public class ${table.controllerName} {
 
     /**
     * 查询${table.comment!}详情
+    *
+    * @param query${entity}DTO
+    * @return
     */
     @GetMapping("/query")
     @ApiOperation(value = "查询${table.comment!}详情")
@@ -84,6 +91,9 @@ public class ${table.controllerName} {
 
     /**
     * 添加${table.comment!}
+    *
+    * @param ${table.entityPath}
+    * @return
     */
     @PostMapping("/create")
     @ApiOperation(value = "添加${table.comment!}")
@@ -94,6 +104,9 @@ public class ${table.controllerName} {
 
     /**
     * 修改${table.comment!}
+    *
+    * @param ${table.entityPath}
+    * @return
     */
     @PostMapping("/update")
     @ApiOperation(value = "更新${table.comment!}")
@@ -104,13 +117,16 @@ public class ${table.controllerName} {
 
     /**
     * 删除${table.comment!}
+    *
+    * @param ${table.entityPath}Id
+    * @return
     */
     @PostMapping("/delete/{${table.entityPath}Id}")
     @ApiOperation(value = "删除${table.comment!}")
     @ApiImplicitParam(paramType = "path", name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataType = "Long")
     public Result<?> delete(@PathVariable("${table.entityPath}Id") Long ${table.entityPath}Id) {
         if (null == ${table.entityPath}Id) {
-            return new Result<>().error("ID不能为空");
+            return Result.error("ID不能为空");
         }
         boolean result = ${table.entityPath}Service.delete${entity}(${table.entityPath}Id);
         return Result.result(result);
@@ -118,37 +134,56 @@ public class ${table.controllerName} {
 
     /**
     * 批量删除${table.comment!}
+    *
+    * @param ${table.entityPath}Ids
+    * @return
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除${table.comment!}")
     @ApiImplicitParam(name = "${table.entityPath}Ids", value = "${table.comment!}ID列表", required = true, dataType = "List")
     public Result<?> batchDelete(@RequestBody List<Long> ${table.entityPath}Ids) {
         if (CollectionUtils.isEmpty(${table.entityPath}Ids)) {
-            return new Result<>().error("${table.comment!}ID列表不能为空");
+            return Result.error("${table.comment!}ID列表不能为空");
         }
         boolean result = ${table.entityPath}Service.batchDelete${entity}(${table.entityPath}Ids);
         return Result.result(result);
     }
+    <#list table.fields as field>
+      <#if field.keyFlag>
+         <#assign keyPropertyType="${field.propertyType}"/>
+         <#assign keyPropertyName="${field.propertyName}"/>
+         <#assign keyPropertySet="set${field.capitalName}"/>
+      </#if>
+    </#list>
 
-    /**
-    * 修改${table.comment!}状态
-    */
-    @PostMapping("/status/{${table.entityPath}Id}/{${table.entityPath}Status}")
-    @ApiOperation(value = "修改${table.comment!}状态")
-    @ApiImplicitParams({
-    @ApiImplicitParam(name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataType = "Long", paramType = "path"),
-    @ApiImplicitParam(name = "${table.entityPath}Status", value = "${table.comment!}状态", required = true, dataType = "Integer", paramType = "path") })
-    public Result<?> updateStatus(@PathVariable("${table.entityPath}Id") Long ${table.entityPath}Id,
-            @PathVariable("${table.entityPath}Status") Integer ${table.entityPath}Status) {
-        if (null == ${table.entityPath}Id || StringUtils.isEmpty(${table.entityPath}Status)) {
-            return Result.error("ID和状态不能为空");
-        }
-        Update${entity}DTO ${table.entityPath} = new Update${entity}DTO();
-        ${table.entityPath}.setId(${table.entityPath}Id);
-        ${table.entityPath}.set${entity}Status(${table.entityPath}Status);
-        boolean result = ${table.entityPath}Service.update${entity}(${table.entityPath});
-        return Result.result(result);
-    }
+     <#list table.fields as field>
+     <#if field.annotationColumnName?contains("status")>
+     /**
+     * 修改${table.comment!}状态
+     *
+     * @param ${table.entityPath}Id
+     * @param ${field.propertyName}
+     * @return
+     */
+     @PostMapping("/status/{${table.entityPath}Id}/{${field.propertyName}}")
+     @ApiOperation(value = "修改${table.comment!}状态")
+     @ApiImplicitParams({
+     @ApiImplicitParam(name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataType = "${keyPropertyType}", paramType = "path"),
+     @ApiImplicitParam(name = "${field.propertyName}", value = "${table.comment!}状态", required = true, dataType = "${field.propertyType}", paramType = "path") })
+     public Result<?> updateStatus(@PathVariable("${table.entityPath}Id") ${keyPropertyType} ${table.entityPath}Id,
+         @PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}) {
+
+         if (null == ${table.entityPath}Id || StringUtils.isEmpty(${field.propertyName}) {
+           return Result.error("ID和状态不能为空");
+         }
+         Update${entity}DTO ${table.entityPath} = new Update${entity}DTO();
+         ${table.entityPath}.${keyPropertySet}(${table.entityPath}Id);
+         ${table.entityPath}.set${field.capitalName}(${field.propertyName});
+         boolean result = ${table.entityPath}Service.update${entity}(${table.entityPath});
+         return Result.result(result);
+     }
+     </#if>
+     </#list>
 
     /**
     * 校验${table.comment!}是否存在

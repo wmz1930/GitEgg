@@ -34,6 +34,13 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     Page<${entity}DTO> query${entity}List(Page<${entity}DTO> page, Query${entity}DTO query${entity}DTO);
 
     /**
+    * 查询${table.comment!}列表
+    * @param query${entity}DTO
+    * @return
+    */
+    List<${entity}DTO> query${entity}List(Query${entity}DTO query${entity}DTO);
+
+    /**
     * 查询${table.comment!}详情
     * @param query${entity}DTO
     * @return

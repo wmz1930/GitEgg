@@ -1,12 +1,10 @@
 package com.gitegg.platform.mybatis.handler;
 
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.gitegg.platform.base.annotation.auth.DataPermission;
-import com.gitegg.platform.base.annotation.auth.DataPermissions;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.domain.GitEggUser;
 import com.gitegg.platform.base.exception.BusinessException;

@@ -47,7 +47,7 @@
         <dynamic.datasource.version>3.3.2</dynamic.datasource.version>
         <!-- Mybatis Plus增强工具 -->
         <mybatis.plus.version>3.4.3.1</mybatis.plus.version>
-        <!-- Mybatis Plus增强工具 -->
+        <!-- Mybatis Plus增强工具代码生成 -->
         <mybatis.plus.generator.version>3.5.0</mybatis.plus.generator.version>
         <!-- Freemarker增强工具 -->
         <freemarker.version>2.3.30</freemarker.version>
@@ -73,6 +73,8 @@
         <dfs.minio.version>8.2.1</dfs.minio.version>
         <!-- 七牛云文件存储服务 -->
         <dfs.qiniu.version>7.5.0</dfs.qiniu.version>
+        <!-- Excel 数据导入导出 -->
+        <easyexcel.version>2.2.10</easyexcel.version>
     </properties>
 
     <dependencyManagement>
@@ -234,6 +236,12 @@
                 <artifactId>gitegg-platform-dev</artifactId>
                 <version>${gitegg.project.version}</version>
             </dependency>
+            <!-- gitegg扩展Mybatis Plus代码生成工具 -->
+            <dependency>
+                <groupId>com.gitegg.platform</groupId>
+                <artifactId>gitegg-platform-code-generator</artifactId>
+                <version>${gitegg.project.version}</version>
+            </dependency>
             <!-- hutool Java常用工具包-->
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -318,6 +326,12 @@
                  <groupId>com.github.whvcse</groupId>
                  <artifactId>easy-captcha</artifactId>
                  <version>${easy.captcha.version}</version>
+            </dependency>
+            <!-- Excel 数据导入导出 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
             </dependency>
             <!-- 微信小程序 https://mvnrepository.com/artifact/com.github.binarywang/wx-java-miniapp-spring-boot-starter -->
             <dependency>

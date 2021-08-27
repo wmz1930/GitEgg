@@ -33,8 +33,8 @@
         <if test="smsChannel.id != null and smsChannel.id != ''">
             AND id = #{smsChannel.id}
         </if>
-        <if test="smsChannel.startDateTime != null and smsChannel.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsChannel.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="smsChannel.beginDateTime != null and smsChannel.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsChannel.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="smsChannel.endDateTime != null and smsChannel.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{smsChannel.endDateTime},'%Y-%m-%d %H:%M:%S')
@@ -51,8 +51,8 @@
         <if test="smsChannel.id != null and smsChannel.id != ''">
             AND id = #{smsChannel.id}
         </if>
-        <if test="smsChannel.startDateTime != null and smsChannel.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsChannel.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="smsChannel.beginDateTime != null and smsChannel.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsChannel.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="smsChannel.endDateTime != null and smsChannel.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{smsChannel.endDateTime},'%Y-%m-%d %H:%M:%S')

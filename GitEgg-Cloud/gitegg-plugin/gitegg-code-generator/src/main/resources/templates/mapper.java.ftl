@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${dtoPackage?replace("entity","dto")}.${entity}DTO;
 import ${dtoPackage?replace("entity","dto")}.Query${entity}DTO;
 
+import java.util.List;
+
 /**
  * <p>
  * ${table.comment!} Mapper 接口
@@ -24,12 +26,19 @@ interface ${table.mapperName} : ${superMapperClass}<${entity}>
 public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
 
     /**
-    * 查询${table.comment!}列表
+    * 分页查询${table.comment!}列表
     * @param page
     * @param ${table.entityPath}DTO
     * @return
     */
     Page<${entity}DTO> query${entity}List(Page<${entity}DTO> page, @Param("${table.entityPath}") Query${entity}DTO ${table.entityPath}DTO);
+
+    /**
+    * 查询${table.comment!}列表
+    * @param ${table.entityPath}DTO
+    * @return
+    */
+    List<${entity}DTO> query${entity}List(@Param("${table.entityPath}") Query${entity}DTO ${table.entityPath}DTO);
 
     /**
     * 查询${table.comment!}信息

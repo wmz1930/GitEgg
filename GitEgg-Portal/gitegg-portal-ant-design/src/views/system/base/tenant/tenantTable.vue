@@ -42,7 +42,7 @@
             <a-col :md="6"
                    :sm="24">
               <a-form-model-item label="开始时间">
-                <a-date-picker v-model.trim="listQuery.startDateTime"
+                <a-date-picker v-model.trim="listQuery.beginDateTime"
                                placeholder="开始时间"
                                valueFormat="YYYY-MM-DD"
                                style="width:100%;" />
@@ -293,7 +293,7 @@ export default {
         tenantName: '',
         domainName: '',
         tenantStatus: '',
-        startDateTime: '',
+        beginDateTime: '',
         endDateTime: ''
       },
       statusOption: [{ label: '启用', key: '1' }, { label: '禁用', key: '0' }],
@@ -416,7 +416,7 @@ export default {
         tenantName: '',
         domainName: '',
         tenantStatus: '',
-        startDateTime: '',
+        beginDateTime: '',
         endDateTime: ''
       }
     },

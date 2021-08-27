@@ -49,8 +49,8 @@
         <if test="smsTemplate.smsCode != null and smsTemplate.smsCode != ''">
             AND template.sms_code = #{smsTemplate.smsCode}
         </if>
-        <if test="smsTemplate.startDateTime != null and smsTemplate.startDateTime != ''">
-            AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsTemplate.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="smsTemplate.beginDateTime != null and smsTemplate.beginDateTime != ''">
+            AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsTemplate.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="smsTemplate.endDateTime != null and smsTemplate.endDateTime != ''">
             AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{smsTemplate.endDateTime},'%Y-%m-%d %H:%M:%S')
@@ -73,8 +73,8 @@
         <if test="smsTemplate.smsCode != null and smsTemplate.smsCode != ''">
             AND template.sms_code = #{smsTemplate.smsCode}
         </if>
-        <if test="smsTemplate.startDateTime != null and smsTemplate.startDateTime != ''">
-            AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsTemplate.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="smsTemplate.beginDateTime != null and smsTemplate.beginDateTime != ''">
+            AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsTemplate.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="smsTemplate.endDateTime != null and smsTemplate.endDateTime != ''">
             AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{smsTemplate.endDateTime},'%Y-%m-%d %H:%M:%S')

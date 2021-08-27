@@ -125,7 +125,7 @@ public class UserController {
     @ApiImplicitParam(name = "userIds", value = "用户ID列表", required = true, dataType = "List")
     public Result<?> batchDelete(@RequestBody List<Long> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
-            return new Result<>().error("用户ID列表不能为空");
+            return Result.error("用户ID列表不能为空");
         }
         boolean result = userService.batchDeleteUser(userIds);
         if (result) {
@@ -168,7 +168,7 @@ public class UserController {
     @ApiImplicitParam(paramType = "path", name = "userId", value = "用户ID", required = true, dataType = "Long")
     public Result<?> resetPassword(@PathVariable("userId") Long userId) {
         if (null == userId) {
-            return new Result<>().error("用户ID不能为空");
+            return Result.error("用户ID不能为空");
         }
         UpdateUserDTO user = new UpdateUserDTO();
         user.setId(userId);
@@ -191,7 +191,7 @@ public class UserController {
         @ApiImplicitParam(name = "status", value = "用户状态", required = true, dataType = "Integer", paramType = "path")})
     public Result<?> updateStatus(@PathVariable("userId") Long userId, @PathVariable("status") Integer status) {
         if (null == userId || StringUtils.isEmpty(status)) {
-            return new Result<>().error("ID和状态不能为空");
+            return Result.error("ID和状态不能为空");
         }
         UpdateUserDTO user = new UpdateUserDTO();
         user.setId(userId);
@@ -285,7 +285,7 @@ public class UserController {
     @ApiImplicitParam(name = "dataPermissionUserIds", value = "ID列表", required = true, dataType = "List")
     public Result<?> organizationDataUserBatchDelete(@RequestBody List<Long> dataPermissionUserIds) {
         if (CollectionUtils.isEmpty(dataPermissionUserIds)) {
-            return new Result<>().error("ID列表不能为空");
+            return Result.error("ID列表不能为空");
         }
         boolean result = dataPermissionUserService.batchDeleteDataPermissionUser(dataPermissionUserIds);
         return Result.result(result);

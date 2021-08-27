@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.gitegg.oauth.util.CaptchaUtils;
+import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.platform.base.constant.TokenConstant;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.*;

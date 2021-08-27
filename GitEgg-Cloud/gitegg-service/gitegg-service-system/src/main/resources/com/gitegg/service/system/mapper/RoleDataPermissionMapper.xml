@@ -28,8 +28,8 @@
         <if test="roleDataPermission.id != null and roleDataPermission.id != ''">
             AND id = #{roleDataPermission.id}
         </if>
-        <if test="roleDataPermission.startDateTime != null and roleDataPermission.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{roleDataPermission.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="roleDataPermission.beginDateTime != null and roleDataPermission.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{roleDataPermission.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="roleDataPermission.endDateTime != null and roleDataPermission.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{roleDataPermission.endDateTime},'%Y-%m-%d %H:%M:%S')
@@ -46,8 +46,8 @@
         <if test="roleDataPermission.id != null and roleDataPermission.id != ''">
             AND id = #{roleDataPermission.id}
         </if>
-        <if test="roleDataPermission.startDateTime != null and roleDataPermission.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{roleDataPermission.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="roleDataPermission.beginDateTime != null and roleDataPermission.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{roleDataPermission.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="roleDataPermission.endDateTime != null and roleDataPermission.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{roleDataPermission.endDateTime},'%Y-%m-%d %H:%M:%S')

@@ -92,7 +92,7 @@ public class SmsChannelController {
     @ApiImplicitParam(paramType = "path", name = "smsChannelId", value = "短信渠道表ID", required = true, dataType = "Long")
     public Result<?> delete(@PathVariable("smsChannelId") Long smsChannelId) {
         if (null == smsChannelId) {
-            return new Result<>().error("ID不能为空");
+            return Result.error("ID不能为空");
         }
         boolean result = smsChannelService.deleteSmsChannel(smsChannelId);
         return Result.result(result);
@@ -106,7 +106,7 @@ public class SmsChannelController {
     @ApiImplicitParam(name = "smsChannelIds", value = "短信渠道表ID列表", required = true, dataType = "List")
     public Result<?> batchDelete(@RequestBody List<Long> smsChannelIds) {
         if (CollectionUtils.isEmpty(smsChannelIds)) {
-            return new Result<>().error("短信渠道表ID列表不能为空");
+            return Result.error("短信渠道表ID列表不能为空");
         }
         boolean result = smsChannelService.batchDeleteSmsChannel(smsChannelIds);
         return Result.result(result);

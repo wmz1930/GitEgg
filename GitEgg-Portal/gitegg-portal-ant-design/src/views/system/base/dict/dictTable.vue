@@ -445,7 +445,8 @@ export default {
           { validator: validDictCode, trigger: 'blur' }
         ],
         dictOrder: [
-          { required: true, message: '请输入字典排序', trigger: 'blur' }
+          { required: true, message: '请输入字典排序', trigger: 'blur' },
+          { pattern: /^[1-9]\d*$/, required: true, message: '排序只能是数字', trigger: 'blur' }
         ],
         comments: [
           { required: true, message: '请填写备注信息', trigger: 'blur' }

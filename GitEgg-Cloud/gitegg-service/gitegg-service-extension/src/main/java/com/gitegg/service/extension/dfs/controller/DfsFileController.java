@@ -88,7 +88,7 @@ public class DfsFileController {
     @ApiImplicitParam(paramType = "path", name = "dfsFileId", value = "分布式存储文件记录表ID", required = true, dataType = "Long")
     public Result<?> delete(@PathVariable("dfsFileId") Long dfsFileId) {
         if (null == dfsFileId) {
-            return new Result<>().error("ID不能为空");
+            return Result.error("ID不能为空");
         }
         boolean result = dfsFileService.deleteDfsFile(dfsFileId);
         return Result.result(result);
@@ -102,7 +102,7 @@ public class DfsFileController {
     @ApiImplicitParam(name = "dfsFileIds", value = "分布式存储文件记录表ID列表", required = true, dataType = "List")
     public Result<?> batchDelete(@RequestBody List<Long> dfsFileIds) {
         if (CollectionUtils.isEmpty(dfsFileIds)) {
-            return new Result<>().error("分布式存储文件记录表ID列表不能为空");
+            return Result.error("分布式存储文件记录表ID列表不能为空");
         }
         boolean result = dfsFileService.batchDeleteDfsFile(dfsFileIds);
         return Result.result(result);

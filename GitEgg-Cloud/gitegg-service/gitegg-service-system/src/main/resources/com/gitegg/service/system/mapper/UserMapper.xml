@@ -44,7 +44,6 @@
 		sysUser.gender AS gender,
 		sysUser.email AS email,
 		sysUser.mobile AS mobile,
-		sysUser.password AS password,
 		sysUser.status AS status,
 		sysUser.avatar AS avatar,
 		sysUser.country AS country,
@@ -107,8 +106,8 @@
 			<if test="user.organizationId != null and user.organizationId != ''">
 				AND sysOrganization.id = #{user.organizationId}
 			</if>
-			<if test="user.startDateTime != null and user.startDateTime != ''">
-				AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{user.startDateTime},'%Y-%m-%d')
+			<if test="user.beginDateTime != null and user.beginDateTime != ''">
+				AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{user.beginDateTime},'%Y-%m-%d')
 			</if>
 			<if test="user.endDateTime != null and user.endDateTime != ''">
 				AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{user.endDateTime},'%Y-%m-%d')

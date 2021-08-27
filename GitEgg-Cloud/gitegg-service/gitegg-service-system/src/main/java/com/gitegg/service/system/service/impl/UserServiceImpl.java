@@ -3,6 +3,7 @@ package com.gitegg.service.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.exception.BusinessException;
@@ -18,10 +19,14 @@ import com.gitegg.service.system.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -107,7 +112,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             // 初次登录需要修改密码
             // userEntity.setUserStatus( "2" );
         }
-        String cryptPwd = BCrypt.hashpw(userEntity.getAccount() + pwd, BCrypt.gensalt());
+        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        String cryptPwd = passwordEncoder.encode(AuthConstant.BCRYPT + userEntity.getAccount() +  DigestUtils.md5DigestAsHex(pwd.getBytes()));
         userEntity.setPassword(cryptPwd);
         boolean result = save(userEntity);
         if (result) {
@@ -173,7 +179,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String pwd = userEntity.getPassword();
         User oldInfo = getById(userEntity.getId());
         if (!StringUtils.isEmpty(pwd)) {
-            String cryptPwd = BCrypt.hashpw(oldInfo.getAccount() + pwd, BCrypt.gensalt());
+            PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            String cryptPwd = passwordEncoder.encode(AuthConstant.BCRYPT + oldInfo.getAccount() +  DigestUtils.md5DigestAsHex(pwd.getBytes()));
             userEntity.setPassword(cryptPwd);
         }
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -379,4 +386,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         return userInfo;
     }
+
 }

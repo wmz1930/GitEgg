@@ -65,7 +65,7 @@ public class QueryDataPermissionRoleDTO extends BaseEntity {
 
 
     @ApiModelProperty(value = "开始时间")
-    private String startDateTime;
+    private String beginDateTime;
 
     @ApiModelProperty(value = "结束时间")
     private String endDateTime;

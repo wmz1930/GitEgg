@@ -96,7 +96,7 @@ public class DataPermissionController {
     @ApiImplicitParam(paramType = "path", name = "dataPermissionRoleId", value = "数据权限配置表ID", required = true, dataType = "Long")
     public Result<?> delete(@PathVariable("dataPermissionRoleId") Long dataPermissionRoleId) {
         if (null == dataPermissionRoleId) {
-            return new Result<>().error("ID不能为空");
+            return Result.error("ID不能为空");
         }
         boolean result = dataPermissionRoleService.deleteDataPermissionRole(dataPermissionRoleId);
         return Result.result(result);
@@ -110,7 +110,7 @@ public class DataPermissionController {
     @ApiImplicitParam(name = "dataPermissionRoleIds", value = "数据权限配置表ID列表", required = true, dataType = "List")
     public Result<?> batchDelete(@RequestBody List<Long> dataPermissionRoleIds) {
         if (CollectionUtils.isEmpty(dataPermissionRoleIds)) {
-            return new Result<>().error("数据权限配置表ID列表不能为空");
+            return Result.error("数据权限配置表ID列表不能为空");
         }
         boolean result = dataPermissionRoleService.batchDeleteDataPermissionRole(dataPermissionRoleIds);
         return Result.result(result);

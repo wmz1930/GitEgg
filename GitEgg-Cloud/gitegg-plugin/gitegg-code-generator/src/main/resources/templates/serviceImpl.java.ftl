@@ -54,6 +54,17 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     /**
+    * 查询${table.comment!}列表
+    * @param query${entity}DTO
+    * @return
+    */
+    @Override
+    public List<${entity}DTO> query${entity}List(Query${entity}DTO query${entity}DTO) {
+        List<${entity}DTO> ${table.entityPath}InfoList = ${table.entityPath}Mapper.query${entity}List(query${entity}DTO);
+        return ${table.entityPath}InfoList;
+    }
+
+    /**
     * 查询${table.comment!}详情
     * @param query${entity}DTO
     * @return

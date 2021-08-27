@@ -39,8 +39,8 @@
         <if test="dfs.id != null and dfs.id != ''">
             AND id = #{dfs.id}
         </if>
-        <if test="dfs.startDateTime != null and dfs.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfs.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="dfs.beginDateTime != null and dfs.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfs.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="dfs.endDateTime != null and dfs.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{dfs.endDateTime},'%Y-%m-%d %H:%M:%S')
@@ -63,8 +63,8 @@
         <if test="dfs.dfsDefault != null and dfs.dfsDefault != ''">
             AND dfs_default = #{dfs.dfsDefault}
         </if>
-        <if test="dfs.startDateTime != null and dfs.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfs.startDateTime},'%Y-%m-%d %H:%M:%S')
+        <if test="dfs.beginDateTime != null and dfs.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfs.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="dfs.endDateTime != null and dfs.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{dfs.endDateTime},'%Y-%m-%d %H:%M:%S')
