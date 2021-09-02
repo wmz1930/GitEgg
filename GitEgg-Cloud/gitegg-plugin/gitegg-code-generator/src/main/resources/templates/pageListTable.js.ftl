@@ -24,12 +24,16 @@ export function update${entity} (data) {
   })
 }
 
+<#list table.fields as field>
+<#if field.annotationColumnName?contains("status")>
 export function update${entity}Status (<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>Id, status) {
   return request({
     url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/status/' + <#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>Id + '/' + status,
     method: 'post'
   })
 }
+</#if>
+</#list>
 
 export function batchDelete${entity} (data) {
   return request({
@@ -53,3 +57,33 @@ export function check${entity}Exist (data) {
     params: data
   })
 }
+
+<#if exportFlag == 1>
+export function download${entity}List (query) {
+  return request({
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/download',
+    method: 'get',
+    responseType: 'blob',
+    params: query
+  })
+}
+</#if>
+
+<#if importFlag == 1>
+export function upload${entity} (formData) {
+  return request({
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/upload',
+    method: 'post',
+    data: formData
+  })
+}
+
+export function download${entity}Template (query) {
+  return request({
+    url: '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/download/template',
+    method: 'get',
+    responseType: 'blob',
+    params: query
+  })
+}
+</#if>

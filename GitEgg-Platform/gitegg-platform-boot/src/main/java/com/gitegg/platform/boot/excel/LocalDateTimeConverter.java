@@ -24,7 +24,6 @@ public class LocalDateTimeConverter implements Converter<LocalDateTime> {
      * 不使用{@code @DateTimeFormat}注解指定日期格式时,默认会使用该格式.
      */
     private static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss";
-
     @Override
     public Class supportJavaTypeKey() {
         return LocalDateTime.class;

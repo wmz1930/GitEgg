@@ -208,5 +208,69 @@ public class ${table.controllerName} {
             return Result.data(false);
         }
     }
+
+    <#if exportFlag == 1>
+    /**
+    * 批量导出${table.comment!}数据
+    * @param response
+    * @param query${entity}DTO
+    * @throws IOException
+    */
+    @GetMapping("/download")
+    public void download(HttpServletResponse response, Query${entity}DTO query${entity}DTO) throws IOException {
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = URLEncoder.encode("${table.comment!}数据列表", "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        List<${entity}DTO> ${table.entityPath}List = ${table.entityPath}Service.query${entity}DTOList(query${entity}DTO);
+        List<${entity}Export> ${table.entityPath}ExportList = new ArrayList<>();
+        for (${entity}DTO ${table.entityPath}DTO : ${table.entityPath}List) {
+           ${entity}Export ${table.entityPath}Export = BeanCopierUtils.copyByClass(${table.entityPath}DTO, ${table.entityPath}Export.class);
+           ${table.entityPath}ExportList.add(${table.entityPath}Export);
+        }
+        String sheetName = "${table.comment!}数据列表";
+        EasyExcel.write(response.getOutputStream(), ${entity}Export.class).sheet(sheetName).doWrite(${table.entityPath}ExportList);
+    }
+    </#if>
+
+    <#if importFlag == 1>
+    /**
+    * 批量上传${table.comment!}数据
+    * @param file
+    * @return
+    * @throws IOException
+    */
+    @PostMapping("/upload")
+    public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
+    List<${entity}Import> ${table.entityPath}ImportList =  EasyExcel.read(file.getInputStream(), ${entity}Import.class, null).sheet().doReadSync();
+        if (!CollectionUtils.isEmpty(${table.entityPath}ImportList))
+        {
+            List<${entity}> ${table.entityPath}List = new ArrayList<>();
+            ${table.entityPath}ImportList.stream().forEach(${table.entityPath}Import-> {
+               ${table.entityPath}ImportList.add(BeanCopierUtils.copyByClass(${table.entityPath}Import, ${entity}.class));
+            });
+            ${table.entityPath}Service.saveBatch(${table.entityPath}List);
+        }
+        return Result.success();
+    }
+
+    /**
+    * 下载${table.comment!}数据导入模板
+    * @param response
+    * @throws IOException
+    */
+    @GetMapping("/download/template")
+    public void downloadTemplate(HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = URLEncoder.encode("${table.comment!}数据导入模板", "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        String sheetName = "${table.comment!}数据列表";
+        EasyExcel.write(response.getOutputStream(), ${entity}Import.class).sheet(sheetName).doWrite(null);
+    }
+    </#if>
+
  }
 </#if>

@@ -192,6 +192,18 @@
           批量操作 <a-icon type="down" />
         </a-button>
       </a-dropdown>
+
+      <#if exportFlag == 1><a-button type="primary" icon="cloud-download" @click="handleDownload" style="margin-left: 8px;">导出</a-button></#if>
+      <#if importFlag == 1>
+      <a-upload
+              name="uploadFile"
+              :show-upload-list="false"
+              :before-upload="beforeUpload"
+      >
+          <a-button> <a-icon type="upload" /> 导入 </a-button>
+      </a-upload>
+      <a href="javascript:;" @click="handleDownloadTemplate" style="margin-left: 8px;">下载导入模板</a>
+      </#if>
     </div>
 
     <s-table
@@ -432,10 +444,13 @@
 
 <script>
     import { STable } from '@/components'
-    import { query${entity}List, create${entity}, update${entity}, update${entity}Status, batchDelete${entity}, delete${entity}, check${entity}Exist } from '@/api/${package.ModuleName}/${table.entityPath}'
+    import { query${entity}List, create${entity}, update${entity}, update${entity}Status, batchDelete${entity}, delete${entity}, check${entity}Exist<#if exportFlag == 1>, download${entity}List</#if><#if importFlag == 1>, upload${entity}, download${entity}Template</#if>} from '@/api/${package.ModuleName}/${table.entityPath}'
     import moment from 'moment'
     <#if provinceSelect>
     import Data from '@/api/pcaa'
+    </#if>
+    <#if importFlag == 1 || exportFlag == 1>
+    import { handleDownloadBlod } from '@/utils/util'
     </#if>
     <#if dictSelect>
     import { listDict } from '@/api/system/base/dict'
@@ -792,41 +807,42 @@
             },
             </#if>
             </#list>
+            <#if exportFlag == 1>
             handleDownload () {
                 this.downloadLoading = true
-                import('@/vendor/Export2Excel').then(excel => {
-                    const tHeader = [
-                        <#list table.fields as field>
-                        '${field.comment?replace("'","\"")}'<#if field?has_next>,</#if>
-                        </#list>
-                    ]
-                    const filterVal = [
-                        <#list table.fields as field>
-                        '${field.propertyName}'<#if field?has_next>,</#if>
-                        </#list>
-                    ]
-                    const data = this.formatJson(filterVal, this.list)
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: '${table.comment!}数据导出列表'
-                    })
-                    this.downloadLoading = false
+                download${entity}List(this.listQuery).then(response => {
+                    handleDownloadBlod('${table.comment!}数据列表.xlsx', response)
+                    this.listLoading = false
                 })
             },
-            formatJson (filterVal, jsonData) {
-                return jsonData.map(v =>
-                    filterVal.map(j => {
-                        if (j === 'createTime') {
-                            return moment(v[j])
-                        } else if (j === '${table.entityPath}Status') {
-                            return this.$options.filters['statusNameFilter'](v[j])
-                        } else {
-                            return v[j]
-                        }
-                    })
-                )
+            </#if>
+            <#if importFlag == 1>
+            beforeUpload (file) {
+                this.handleUpload(file)
+                return false
             },
+            handleUpload (file) {
+                this.uploadedFileName = ''
+                const formData = new FormData()
+                formData.append('uploadFile', file)
+                this.uploading = true
+                upload${entity}(formData).then(() => {
+                    this.uploading = false
+                    this.$message.success('${table.comment!}数据导入成功')
+                    this.handleFilter()
+                }).catch(err => {
+                    console.log('uploading', err)
+                    this.$message.error('${table.comment!}数据导入失败')
+                })
+            },
+            handleDownloadTemplate () {
+                this.downloadLoading = true
+                download${entity}Template(this.listQuery).then(response => {
+                    handleDownloadBlod('${table.comment!}批量上传模板.xlsx', response)
+                    this.listLoading = false
+                })
+            },
+            </#if>
             filterOption (input, option) {
               return (
                       option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0

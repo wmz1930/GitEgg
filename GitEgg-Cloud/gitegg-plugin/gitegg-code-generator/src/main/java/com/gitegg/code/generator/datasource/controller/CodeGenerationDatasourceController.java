@@ -162,13 +162,13 @@ public class CodeGenerationDatasourceController {
         String fileName = URLEncoder.encode("数据源列表", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         List<CodeGenerationDatasourceDTO> dataSourceList = codeGenerationDatasourceService.queryCodeGenerationDatasourceList(queryCodeGenerationDatasourceDTO);
-        List<CodeGenerationDatasourceExport> companyExportList = new ArrayList<>();
+        List<CodeGenerationDatasourceExport> dataSourceExportList = new ArrayList<>();
         for (CodeGenerationDatasourceDTO codeGenerationDatasourceDTO : dataSourceList) {
-            CodeGenerationDatasourceExport companyExport = BeanCopierUtils.copyByClass(codeGenerationDatasourceDTO, CodeGenerationDatasourceExport.class);
-            companyExportList.add(companyExport);
+            CodeGenerationDatasourceExport dataSourceExport = BeanCopierUtils.copyByClass(codeGenerationDatasourceDTO, CodeGenerationDatasourceExport.class);
+            dataSourceExportList.add(dataSourceExport);
         }
         String sheetName = "数据源列表";
-        EasyExcel.write(response.getOutputStream(), CodeGenerationDatasourceExport.class).sheet(sheetName).doWrite(companyExportList);
+        EasyExcel.write(response.getOutputStream(), CodeGenerationDatasourceExport.class).sheet(sheetName).doWrite(dataSourceExportList);
     }
 
     /**
