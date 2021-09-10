@@ -33,6 +33,30 @@ function hasRole(roles, route) {
   }
 }
 
+/**
+ * 动态组装菜单时，判断一级子菜单是否全部是隐藏的，如果全是隐藏的，
+ * 那么此菜单hideChildrenInMenu设置为true
+ *
+ * 判断当前路由的跳转是否和其中一个一级子菜单一样，如果一样，那么这个菜单作为router-view父菜单使用，component设置为RouteView
+ * @param resources 一级子菜单
+ * @param parentUrl 父级跳转
+ * @returns {map}
+ */
+ function checkChildHiddenAndRedirect (resources, parentUrl) {
+  let allHidden = false
+  let hasRedirectChild = false
+  resources.forEach(resource => {
+    // 只要有一个是展示的，那么就不算隐藏菜单
+    allHidden = allHidden || resource.resourceShow
+
+    if (resource.resourcePath === parentUrl) {
+      // 动态组装菜单时，判断当前路由的跳转是否和其中一个一级子菜单一样，如果一样，那么这个菜单作为router-view父菜单使用，component设置为RouteView
+      hasRedirectChild = true
+    }
+  })
+  return { menuChildHidden: !allHidden, redirectChild: hasRedirectChild }
+}
+
 function filterAsyncRouter (routerMap, roles) {
   const accessedRouters = routerMap.filter(route => {
     if (hasPermission(roles, route)) {
@@ -48,7 +72,7 @@ function filterAsyncRouter (routerMap, roles) {
 
 /**
  * 递归组装路由表，返回符合用户角色权限的路由表（路由表后台配置时使用）
- * add by jeebase
+ * add by gitegg
  * @param resources
  */
 function assembleAsyncRoutes (resources) {
@@ -56,8 +80,14 @@ function assembleAsyncRoutes (resources) {
   resources.forEach(resource => {
     var route = {}
     var resourceIcon = icons[resource.resourceIcon] ? icons[resource.resourceIcon] : resource.resourceIcon
-    // 一级菜单配置为RouteView，二级菜单配置为PageView。PageView显示标签头。
+    // 一级菜单配置为RouteView，二级菜单配置为PageView, PageView显示标签头。
     var resourceComponent = viewComponent[resource.resourcePageName] ? viewComponent[resource.resourcePageName] : viewComponent['RouteView']
+
+    let nestedRoute = { menuChildHidden: false, redirectChild: false }
+    if (resource.children && resource.children.length) {
+      nestedRoute = checkChildHiddenAndRedirect(resource.children, resource.resourceUrl)
+    }
+
     if (resource.resourceUrl.indexOf('Layout') >= 0) {
       route = {
         path: '/' + resource.resourcePath,
@@ -69,12 +99,13 @@ function assembleAsyncRoutes (resources) {
           icon: resourceIcon
         }
       }
-    } else if (resource.resourceUrl.indexOf('nested') >= 0 && resource.children && resource.children.length) { // 包含子菜单的二级以下菜单
+    } else if (resource.children && resource.children.length && (resource.resourceUrl.indexOf('nested') >= 0 || nestedRoute.redirectChild)) { // 包含子菜单的二级以下菜单
       route = {
         path: '/' + resource.resourcePath,
         component: resourceComponent,
-        redirect: '/' + resource.children[0].resourceUrl,
+        redirect: nestedRoute.redirectChild ? resource.resourceUrl : '/' + resource.children[0].resourcePath,
         name: resource.resourcePageName,
+        hideChildrenInMenu: resource.resourceUrl.indexOf('nested') === -1 && nestedRoute.menuChildHidden,
         meta: {
           title: resource.resourceName,
           keepAlive: resource.resourceCache,
@@ -88,6 +119,7 @@ function assembleAsyncRoutes (resources) {
           path: '/' + resource.resourcePath,
           component: () => import(`@/views/${resource.resourceUrl}`),
           name: resource.resourcePageName,
+          hideChildrenInMenu: true,
           meta: {
             title: resource.resourceName,
             keepAlive: resource.resourceCache,
@@ -100,6 +132,7 @@ function assembleAsyncRoutes (resources) {
           path: resource.resourcePath,
           component: () => import(`@/views/${resource.resourceUrl}`),
           name: resource.resourcePageName,
+          hideChildrenInMenu: true,
           meta: {
             title: resource.resourceName,
             keepAlive: resource.resourceCache,

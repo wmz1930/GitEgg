@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.code.generator.datasource.mapper.DatasourceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.code.generator.datasource.entity.Datasource">
+        <id column="id" property="id" />
+        <result column="datasource_name" property="datasourceName" />
+        <result column="url" property="url" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="driver" property="driver" />
+        <result column="db_type" property="dbType" />
+        <result column="comments" property="comments" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, datasource_name, url, username, password, driver, db_type, comments, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询数据源配置表列表 -->
+    <select id="queryDatasourceList" resultType="com.gitegg.code.generator.datasource.dto.DatasourceDTO" parameterType="com.gitegg.code.generator.datasource.dto.QueryDatasourceDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_datasource
+        WHERE del_flag = 0
+        <if test="datasource.id != null and datasource.id != ''">
+            AND id = #{datasource.id}
+        </if>
+        <if test="datasource.datasourceName != null and datasource.datasourceName != ''">
+            AND datasource_name like concat(#{datasource.datasourceName}, '%')
+        </if>
+        <if test="datasource.driver != null and datasource.driver != ''">
+            AND driver = #{datasource.driver}
+        </if>
+        <if test="datasource.dbType != null and datasource.dbType != ''">
+            AND db_type = #{datasource.dbType}
+        </if>
+        <if test="datasource.beginDateTime != null and datasource.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{datasource.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="datasource.endDateTime != null and datasource.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{datasource.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询数据源配置表信息 -->
+    <select id="queryDatasource" resultType="com.gitegg.code.generator.datasource.dto.DatasourceDTO" parameterType="com.gitegg.code.generator.datasource.dto.QueryDatasourceDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_datasource
+        WHERE del_flag = 0
+        <if test="datasource.id != null and datasource.id != ''">
+            AND id = #{datasource.id}
+        </if>
+        <if test="datasource.datasourceName != null and datasource.datasourceName != ''">
+            AND datasource_name like concat(#{datasource.datasourceName}, '%')
+        </if>
+        <if test="datasource.driver != null and datasource.driver != ''">
+            AND driver = #{datasource.driver}
+        </if>
+        <if test="datasource.dbType != null and datasource.dbType != ''">
+            AND db_type = #{datasource.dbType}
+        </if>
+        <if test="datasource.beginDateTime != null and datasource.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{datasource.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="datasource.endDateTime != null and datasource.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{datasource.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

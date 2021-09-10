@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.code.generator.field.mapper.FieldValidateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.code.generator.field.entity.FieldValidate">
+        <id column="id" property="id" />
+        <result column="field_id" property="fieldId" />
+        <result column="validate_type" property="validateType" />
+        <result column="validate_regular" property="validateRegular" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, field_id, validate_type, validate_regular, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询字段校验规则配置表列表 -->
+    <select id="queryFieldValidateList" resultType="com.gitegg.code.generator.field.dto.FieldValidateDTO" parameterType="com.gitegg.code.generator.field.dto.QueryFieldValidateDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_field_validate
+        WHERE del_flag = 0
+        <if test="fieldValidate.id != null and fieldValidate.id != ''">
+            AND id = #{fieldValidate.id}
+        </if>
+        <if test="fieldValidate.startDateTime != null and fieldValidate.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{fieldValidate.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="fieldValidate.endDateTime != null and fieldValidate.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{fieldValidate.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询字段校验规则配置表信息 -->
+    <select id="queryFieldValidate" resultType="com.gitegg.code.generator.field.dto.FieldValidateDTO" parameterType="com.gitegg.code.generator.field.dto.QueryFieldValidateDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_field_validate
+        WHERE del_flag = 0
+        <if test="fieldValidate.id != null and fieldValidate.id != ''">
+            AND id = #{fieldValidate.id}
+        </if>
+        <if test="fieldValidate.startDateTime != null and fieldValidate.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{fieldValidate.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="fieldValidate.endDateTime != null and fieldValidate.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{fieldValidate.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

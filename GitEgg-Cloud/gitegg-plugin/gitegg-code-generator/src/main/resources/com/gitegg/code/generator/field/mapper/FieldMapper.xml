@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.code.generator.field.mapper.FieldMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.code.generator.field.entity.Field">
+        <id column="id" property="id" />
+        <result column="generation_id" property="generationId" />
+        <result column="join_id" property="joinId" />
+        <result column="field_name" property="fieldName" />
+        <result column="field_type" property="fieldType" />
+        <result column="comment" property="comment" />
+        <result column="entity_type" property="entityType" />
+        <result column="entity_name" property="entityName" />
+        <result column="form_add" property="formAdd" />
+        <result column="form_edit" property="formEdit" />
+        <result column="query_term" property="queryTerm" />
+        <result column="list_show" property="listShow" />
+        <result column="import_flag" property="importFlag" />
+        <result column="export_flag" property="exportFlag" />
+        <result column="required" property="required" />
+        <result column="field_unique" property="fieldUnique" />
+        <result column="query_type" property="queryType" />
+        <result column="control_type" property="controlType" />
+        <result column="dict_code" property="dictCode" />
+        <result column="min" property="min" />
+        <result column="max" property="max" />
+        <result column="min_length" property="minLength" />
+        <result column="max_length" property="maxLength" />
+        <result column="field_sort" property="fieldSort" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, generation_id, join_id, field_name, field_type, comment, entity_type, entity_name, form_add, form_edit, query_term, list_show, import_flag, export_flag, required, field_unique, query_type, control_type, dict_code, min, max, min_length, max_length, field_sort, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询字段属性配置表列表 -->
+    <select id="queryFieldList" resultType="com.gitegg.code.generator.field.dto.FieldDTO" parameterType="com.gitegg.code.generator.field.dto.QueryFieldDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_field
+        WHERE del_flag = 0
+        <if test="field.id != null and field.id != ''">
+            AND id = #{field.id}
+        </if>
+        <if test="field.startDateTime != null and field.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{field.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="field.endDateTime != null and field.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{field.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询字段属性配置表信息 -->
+    <select id="queryField" resultType="com.gitegg.code.generator.field.dto.FieldDTO" parameterType="com.gitegg.code.generator.field.dto.QueryFieldDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_field
+        WHERE del_flag = 0
+        <if test="field.id != null and field.id != ''">
+            AND id = #{field.id}
+        </if>
+        <if test="field.startDateTime != null and field.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{field.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="field.endDateTime != null and field.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{field.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

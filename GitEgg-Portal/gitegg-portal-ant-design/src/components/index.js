@@ -26,6 +26,7 @@ import StandardFormRow from '@/components/StandardFormRow'
 import ArticleListContent from '@/components/ArticleListContent'
 import OrganizationTreeSelect from '@/components/OrganizationTree/OrganizationTreeSelect'
 import ResourceTreeSelect from '@/components/ResourceTree/ResourceTreeSelect'
+import SelectAsyn from '@/components/SelectAsyn/SelectAsyn'
 
 import Dialog from '@/components/Dialog'
 
@@ -55,5 +56,6 @@ export {
   ArticleListContent,
   OrganizationTreeSelect,
   ResourceTreeSelect,
+  SelectAsyn,
   Dialog
 }

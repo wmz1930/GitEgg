@@ -23,6 +23,6 @@ package com.baomidou.mybatisplus.generator.config;
  */
 public enum TemplateType {
 
-    ENTITY, SERVICE, CONTROLLER, MAPPER, XML, VUE, JS, DTO, QUERY_DTO, CREATE_DTO, UPDATE_DTO
+    ENTITY, SERVICE, CONTROLLER, MAPPER, XML, ENTITY_IMPORT, ENTITY_EXPORT, SQL, VUE, JS, DTO, QUERY_DTO, CREATE_DTO, UPDATE_DTO
 
 }

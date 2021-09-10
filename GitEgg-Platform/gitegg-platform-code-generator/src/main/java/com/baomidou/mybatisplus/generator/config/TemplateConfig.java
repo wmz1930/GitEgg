@@ -49,6 +49,12 @@ public class TemplateConfig {
 
     private String controller;
 
+    private String entityExport;
+
+    private String entityImport;
+
+    private String sql;
+
     private String vue;
 
     private String js;
@@ -139,6 +145,15 @@ public class TemplateConfig {
                     case CONTROLLER:
                         this.controller = null;
                         break;
+                    case ENTITY_IMPORT:
+                        this.entityImport = null;
+                        break;
+                    case ENTITY_EXPORT:
+                        this.entityExport = null;
+                        break;
+                    case SQL:
+                        this.sql = null;
+                        break;
                     case VUE:
                         this.vue = null;
                         break;
@@ -186,6 +201,18 @@ public class TemplateConfig {
 
     public String getController() {
         return controller;
+    }
+
+    public String getEntityExport() {
+        return entityExport;
+    }
+
+    public String getEntityImport() {
+        return entityImport;
+    }
+
+    public String getSql() {
+        return sql;
     }
 
     public String getVue() {
@@ -315,6 +342,39 @@ public class TemplateConfig {
          */
         public Builder controller(@NotNull String controllerTemplate) {
             this.templateConfig.controller = controllerTemplate;
+            return this;
+        }
+
+        /**
+         * 设置数据导出模板路径
+         *
+         * @param entityExportTemplate entityExport模板路径
+         * @return this
+         */
+        public Builder entityExport(@NotNull String entityExportTemplate) {
+            this.templateConfig.entityExport = entityExportTemplate;
+            return this;
+        }
+
+        /**
+         * 设置数据导入模板路径
+         *
+         * @param entityImportTemplate entityImport模板路径
+         * @return this
+         */
+        public Builder entityImport(@NotNull String entityImportTemplate) {
+            this.templateConfig.entityImport = entityImportTemplate;
+            return this;
+        }
+
+        /**
+         * 设置权限菜单模板路径
+         *
+         * @param sqlTemplate sql模板路径
+         * @return this
+         */
+        public Builder sql(@NotNull String sqlTemplate) {
+            this.templateConfig.sql = sqlTemplate;
             return this;
         }
 

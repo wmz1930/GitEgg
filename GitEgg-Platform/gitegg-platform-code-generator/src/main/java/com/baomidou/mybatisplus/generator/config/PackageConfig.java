@@ -151,6 +151,10 @@ public class PackageConfig {
             packageInfo.put(ConstVal.CONTROLLER, this.joinPackage(this.getController()));
             packageInfo.put(ConstVal.PARENT, this.getParent());
 
+            packageInfo.put(ConstVal.ENTITY_EXPORT, this.joinPackage(this.getEntity()));
+            packageInfo.put(ConstVal.ENTITY_IMPORT, this.joinPackage(this.getEntity()));
+            packageInfo.put(ConstVal.SQL, this.joinPackage(this.getXml()));
+
             packageInfo.put(ConstVal.VUE, this.getVue() + this.moduleName);
             packageInfo.put(ConstVal.JS, this.getJs() + this.moduleName);
             packageInfo.put(ConstVal.DTO, this.joinPackage(this.getDto()));

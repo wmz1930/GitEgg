@@ -37,6 +37,10 @@ public interface ConstVal {
     String CONTROLLER = "Controller";
     String PARENT = "Parent";
 
+    String ENTITY_IMPORT = "EntityImport";
+    String ENTITY_EXPORT = "EntityExport";
+    String SQL = "Sql";
+
     String VUE = "vue";
     String JS = "js";
     String DTO = "dto";

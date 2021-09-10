@@ -60,6 +60,12 @@ class PathInfoHandler {
         putPathInfo(templateConfig.getCreateDTO(), OutputFile.createDTO, ConstVal.DTO);
         putPathInfo(templateConfig.getUpdateDTO(), OutputFile.updateDTO, ConstVal.DTO);
 
+        //导入导出
+//        putPathInfo(templateConfig.getEntityExport(), OutputFile.entityExport, ConstVal.ENTITY_EXPORT);
+//        putPathInfo(templateConfig.getEntityImport(), OutputFile.entityImport, ConstVal.ENTITY_IMPORT);
+
+        //sql
+        putPathInfo(templateConfig.getSql(), OutputFile.sql, ConstVal.SQL);
 
 
         // 自定义路径 前台代码

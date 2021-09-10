@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.code.generator.join.mapper.TableJoinMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.code.generator.join.entity.TableJoin">
+        <id column="id" property="id" />
+        <result column="generation_id" property="generationId" />
+        <result column="datasource_id" property="datasourceId" />
+        <result column="join_table_name" property="joinTableName" />
+        <result column="join_table_alias" property="joinTableAlias" />
+        <result column="join_table_prefix" property="joinTablePrefix" />
+        <result column="join_table_type" property="joinTableType" />
+        <result column="join_table_select" property="joinTableSelect" />
+        <result column="join_table_on" property="joinTableOn" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, generation_id, datasource_id, join_table_name, join_table_alias, join_table_prefix, join_table_type, join_table_select, join_table_on, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询多表查询时的联合表配置列表 -->
+    <select id="queryTableJoinList" resultType="com.gitegg.code.generator.join.dto.TableJoinDTO" parameterType="com.gitegg.code.generator.join.dto.QueryTableJoinDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_table_join
+        WHERE del_flag = 0
+        <if test="tableJoin.id != null and tableJoin.id != ''">
+            AND id = #{tableJoin.id}
+        </if>
+        <if test="tableJoin.startDateTime != null and tableJoin.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tableJoin.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="tableJoin.endDateTime != null and tableJoin.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{tableJoin.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询多表查询时的联合表配置信息 -->
+    <select id="queryTableJoin" resultType="com.gitegg.code.generator.join.dto.TableJoinDTO" parameterType="com.gitegg.code.generator.join.dto.QueryTableJoinDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_table_join
+        WHERE del_flag = 0
+        <if test="tableJoin.id != null and tableJoin.id != ''">
+            AND id = #{tableJoin.id}
+        </if>
+        <if test="tableJoin.startDateTime != null and tableJoin.startDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tableJoin.startDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="tableJoin.endDateTime != null and tableJoin.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{tableJoin.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>
