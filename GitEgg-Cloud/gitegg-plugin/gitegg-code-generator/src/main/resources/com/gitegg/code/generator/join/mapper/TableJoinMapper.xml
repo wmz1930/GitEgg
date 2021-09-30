@@ -13,6 +13,7 @@
         <result column="join_table_type" property="joinTableType" />
         <result column="join_table_select" property="joinTableSelect" />
         <result column="join_table_on" property="joinTableOn" />
+        <result column="table_sort" property="tableSort" />
         <result column="tenant_id" property="tenantId" />
         <result column="create_time" property="createTime" />
         <result column="creator" property="creator" />
@@ -22,7 +23,7 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, generation_id, datasource_id, join_table_name, join_table_alias, join_table_prefix, join_table_type, join_table_select, join_table_on, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, generation_id, datasource_id, join_table_name, join_table_alias, join_table_prefix, join_table_type, join_table_select, join_table_on, table_sort, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 分页查询多表查询时的联合表配置列表 -->

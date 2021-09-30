@@ -25,22 +25,12 @@ public interface ResourceMapper extends BaseMapper<Resource> {
     List<Resource> queryResourceByUserId(Long userId);
 
     /**
-     * queryResourceTreeProc
-     * 
-     * @Title: queryResourceTreeProc
-     * @Description: 查询登陆用户的许可权限(使用存储过程递归查询所有权限树信息)
-     * @param parentId
-     * @return List<Resource>
-     */
-    List<Resource> queryResourceTreeProc(Long parentId);
-
-    /**
      *
      * 查询所有资源
      * @param resourceParent
      * @return
      */
-    List<Resource> selectResourceChidlren(@Param("resource") Resource resourceParent);
+    List<Resource> selectResourceChildren(@Param("resource") Resource resourceParent);
 
     /**
      * 查询拥有权限资源的角色 使用@InterceptorIgnore注解

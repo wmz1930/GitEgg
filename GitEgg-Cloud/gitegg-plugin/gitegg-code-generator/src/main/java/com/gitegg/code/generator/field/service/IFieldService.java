@@ -2,14 +2,10 @@ package com.gitegg.code.generator.field.service;
 
 import java.util.List;
 
+import com.gitegg.code.generator.field.dto.*;
 import com.gitegg.code.generator.field.entity.Field;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import com.gitegg.code.generator.field.dto.FieldDTO;
-import com.gitegg.code.generator.field.dto.CreateFieldDTO;
-import com.gitegg.code.generator.field.dto.UpdateFieldDTO;
-import com.gitegg.code.generator.field.dto.QueryFieldDTO;
 
 /**
  * <p>
@@ -28,6 +24,20 @@ public interface IFieldService extends IService<Field> {
     * @return
     */
     Page<FieldDTO> queryFieldList(Page<FieldDTO> page, QueryFieldDTO queryFieldDTO);
+
+    /**
+     * 查询字段属性配置表列表
+     * @param queryFieldDTO
+     * @return
+     */
+    List<TableFieldDTO> queryFieldList(QueryFieldDTO queryFieldDTO);
+
+    /**
+     * 创建字段属性配置表
+     * @param fieldList
+     * @return
+     */
+    boolean editField(List<Field> fieldList);
 
     /**
     * 查询字段属性配置表详情

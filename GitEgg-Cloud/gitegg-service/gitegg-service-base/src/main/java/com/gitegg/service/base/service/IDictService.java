@@ -22,10 +22,18 @@ public interface IDictService extends IService<Dict> {
      * 分页查询数据字典
      *
      * @param dict
-     * @param
+     * @param page
      * @return
      */
     Page<DictDTO> selectDictList(Page<DictDTO> page, QueryDictDTO dict);
+
+    /**
+     * 分页查询数据字典
+     *
+     * @param dict
+     * @return
+     */
+    List<DictDTO> selectDictList(QueryDictDTO dict);
 
     /**
      * 创建数据字典
@@ -67,7 +75,7 @@ public interface IDictService extends IService<Dict> {
      * @param dictCode
      * @return
      */
-    List<Dict> queryDictListByPanentCode(String dictCode);
+    List<Dict> queryDictListByParentCode(String dictCode);
 
     /**
      * 查询字典列表树
@@ -75,5 +83,5 @@ public interface IDictService extends IService<Dict> {
      * @param parentId
      * @return
      */
-    List<DictDTO> queryDictTreeByPanentId(Integer parentId);
+    List<Dict> queryDictTreeByParentId(Long parentId);
 }

@@ -1,5 +1,6 @@
 package com.gitegg.code.generator.join.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.gitegg.platform.mybatis.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -45,6 +46,9 @@ public class CreateTableJoinDTO extends BaseEntity {
 
     @ApiModelProperty(value = "自定义on条件")
     private String joinTableOn;
+
+    @ApiModelProperty(value = "显示排序")
+    private Integer tableSort;
 
 
 }

@@ -30,14 +30,9 @@
     <sql id="Base_Column_List">
         id, tenant_id, parent_id, ancestors, organization_type, organization_name, organization_key, organization_icon, organization_level, organization_status, province, city, area, street, comments, create_time, creator, update_time, operator, del_flag
     </sql>
-    
-    <!-- 使用存储过程查询树，推荐使用 -->
-    <select id="queryOrganizationTreeProc" parameterType="com.gitegg.service.system.entity.Organization" resultType="com.gitegg.service.system.entity.Organization" statementType="CALLABLE">
-        CALL queryOrganizationList(#{parentId,mode=IN})
-    </select>
 
     <!-- 通过parentId查询所有子机构 -->
-    <select id="selectOrganizationChidlren" resultType="com.gitegg.service.system.entity.Organization" parameterType="com.gitegg.service.system.entity.Organization">
+    <select id="selectOrganizationChildren" resultType="com.gitegg.service.system.entity.Organization" parameterType="com.gitegg.service.system.entity.Organization">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_sys_organization

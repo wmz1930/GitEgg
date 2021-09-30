@@ -52,7 +52,7 @@ public class OrganizationController {
     @ApiOperation(value = "查询组织机构树", notes = "树状展示组织机构信息")
     @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataType = "Integer")
     public Result<List<Organization>> queryOrganizationTree(Long parentId) {
-        List<Organization> treeList = organizationService.queryOrganizationByPanentId(parentId);
+        List<Organization> treeList = organizationService.queryOrganizationByParentId(parentId);
         return Result.data(treeList);
     }
 

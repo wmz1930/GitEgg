@@ -56,11 +56,6 @@
 		INNER JOIN t_sys_resource sysResource ON roleResource.resource_id = sysResource.id AND sysResource.resource_type = 2 AND sysResource.del_flag = 0
 		WHERE sysUser.id = #{userId} AND sysUser.del_flag = 0 ORDER BY resource_level
 	</select>
-	
-	<!-- 使用存储过程查询树，推荐使用 -->
-	<select id="queryResourceTreeProc" parameterType="com.gitegg.service.system.entity.Resource" resultType="com.gitegg.service.system.entity.Resource" statementType="CALLABLE">
-		CALL queryResourceList(#{parentId,mode=IN})
-	</select>
 
     <!-- 查询拥有某个资源权限的角色id列表-->
     <resultMap id="resourceRoleMap" type="com.gitegg.service.system.entity.Resource" extends="BaseResultMap">
@@ -84,7 +79,7 @@
     </select>
 
     <!-- 通过parentId查询所有子资源 -->
-    <select id="selectResourceChidlren" resultType="com.gitegg.service.system.entity.Resource" parameterType="com.gitegg.service.system.entity.Resource">
+    <select id="selectResourceChildren" resultType="com.gitegg.service.system.entity.Resource" parameterType="com.gitegg.service.system.entity.Resource">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_sys_resource

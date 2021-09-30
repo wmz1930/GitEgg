@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gitegg.service.base.mapper.DictMapper">
+<mapper namespace="com.gitegg.code.generator.dict.mapper.GeneratorDictMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.gitegg.service.base.entity.Dict">
+    <resultMap id="BaseResultMap" type="com.gitegg.code.generator.dict.entity.GeneratorDict">
         <id column="id" property="id"/>
         <result column="tenant_id" property="tenantId"/>
         <result column="parent_id" property="parentId"/>
@@ -25,10 +25,10 @@
     </sql>
 
     <!-- 通过parentId查询所有字典值 -->
-    <select id="selectDictChildren" resultType="com.gitegg.service.base.entity.Dict" parameterType="com.gitegg.service.base.dto.QueryDictDTO">
+    <select id="selectGeneratorDictChildren" resultType="com.gitegg.code.generator.dict.entity.GeneratorDict" parameterType="com.gitegg.code.generator.dict.dto.QueryGeneratorDictDTO">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_sys_dict
+        FROM t_sys_dict_business
         WHERE del_flag = 0
         <if test="dict.parentId != null and dict.parentId != ''">
             <choose>
@@ -45,11 +45,11 @@
         ORDER BY id
     </select>
 
-    <select id="selectDictList" resultType="com.gitegg.service.base.dto.DictDTO"
-            parameterType="com.gitegg.service.base.dto.QueryDictDTO">
+    <select id="selectGeneratorDictList" resultType="com.gitegg.code.generator.dict.dto.GeneratorDictDTO"
+            parameterType="com.gitegg.code.generator.dict.dto.QueryGeneratorDictDTO">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_sys_dict
+        FROM t_sys_dict_business
         WHERE del_flag = 0
         <trim prefix="AND (" suffix=")" prefixOverrides="AND">
             <if test="dict.id != null">

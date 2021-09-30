@@ -34,40 +34,49 @@
         id, datasource_id, module_name, module_code, service_name, table_name, table_alias, table_prefix, parent_package, form_type, table_type, table_show_type, form_item_col, left_tree_type, front_code_path, service_code_path, import_flag, export_flag, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
+    <!-- 通用查询结果列 Config -->
+    <sql id="Base_Column_List_Config">
+        config.id, config.datasource_id, config.module_name, config.module_code, config.service_name, config.table_name, config.table_alias, config.table_prefix, config.parent_package, config.form_type, config.table_type, config.table_show_type, config.form_item_col, config.left_tree_type, config.front_code_path, config.service_code_path, config.import_flag, config.export_flag, config.tenant_id, config.create_time, config.creator, config.update_time, config.operator, config.del_flag
+    </sql>
+
     <!-- 分页查询代码生成配置表列表 -->
     <select id="queryConfigList" resultType="com.gitegg.code.generator.config.dto.ConfigDTO" parameterType="com.gitegg.code.generator.config.dto.QueryConfigDTO">
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_sys_code_generator_config
-        WHERE del_flag = 0
+        <include refid="Base_Column_List_Config"/>,
+        datasource.datasource_name
+        FROM t_sys_code_generator_config config
+        LEFT JOIN t_sys_code_generator_datasource datasource on config.datasource_id = datasource.id and datasource.del_flag = 0
+        WHERE config.del_flag = 0
         <if test="config.id != null and config.id != ''">
-            AND id = #{config.id}
+            AND config.id = #{config.id}
         </if>
         <if test="config.startDateTime != null and config.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{config.startDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(config.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{config.startDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="config.endDateTime != null and config.endDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{config.endDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(config.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{config.endDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
-        ORDER BY id DESC
+        ORDER BY config.id DESC
     </select>
 
     <!-- 查询代码生成配置表信息 -->
     <select id="queryConfig" resultType="com.gitegg.code.generator.config.dto.ConfigDTO" parameterType="com.gitegg.code.generator.config.dto.QueryConfigDTO">
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_sys_code_generator_config
-        WHERE del_flag = 0
+        <include refid="Base_Column_List_Config"/>,
+        datasource.datasource_name
+        FROM t_sys_code_generator_config config
+        LEFT JOIN t_sys_code_generator_datasource datasource on config.datasource_id = datasource.id and datasource.del_flag = 0
+        WHERE config.del_flag = 0
         <if test="config.id != null and config.id != ''">
-            AND id = #{config.id}
+            AND config.id = #{config.id}
         </if>
         <if test="config.startDateTime != null and config.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{config.startDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(config.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{config.startDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="config.endDateTime != null and config.endDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{config.endDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(config.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{config.endDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
-        ORDER BY id DESC
+        ORDER BY config.id DESC
     </select>
 
 </mapper>

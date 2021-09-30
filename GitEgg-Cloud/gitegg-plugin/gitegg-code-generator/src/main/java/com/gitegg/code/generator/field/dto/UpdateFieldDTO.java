@@ -1,5 +1,6 @@
 package com.gitegg.code.generator.field.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.gitegg.platform.mybatis.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +29,9 @@ public class UpdateFieldDTO extends BaseEntity {
 
     @ApiModelProperty(value = "关联表主键")
     private Long joinId;
+
+    @ApiModelProperty(value = "表名")
+    private String joinTableName;
 
     @ApiModelProperty(value = "字段名称")
     private String fieldName;

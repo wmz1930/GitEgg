@@ -60,5 +60,9 @@ public class TableJoin extends BaseEntity {
     @TableField("join_table_on")
     private String joinTableOn;
 
+    @ApiModelProperty(value = "显示排序")
+    @TableField("table_sort")
+    private Integer tableSort;
+
 
 }

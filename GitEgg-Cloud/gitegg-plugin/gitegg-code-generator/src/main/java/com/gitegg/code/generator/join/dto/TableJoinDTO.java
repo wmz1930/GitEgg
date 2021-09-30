@@ -46,5 +46,7 @@ public class TableJoinDTO extends BaseEntity {
     @ApiModelProperty(value = "自定义on条件")
     private String joinTableOn;
 
+    @ApiModelProperty(value = "显示排序")
+    private Integer tableSort;
 
 }

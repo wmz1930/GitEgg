@@ -26,6 +26,9 @@ public class ConfigDTO extends BaseEntity {
     @ApiModelProperty(value = "数据源")
     private Long datasourceId;
 
+    @ApiModelProperty(value = "数据源名称")
+    private String datasourceName;
+
     @ApiModelProperty(value = "模块名称")
     private String moduleName;
 

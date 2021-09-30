@@ -37,6 +37,10 @@ public class Field extends BaseEntity {
     @TableField("join_id")
     private Long joinId;
 
+    @ApiModelProperty(value = "表名")
+    @TableField("join_table_name")
+    private String joinTableName;
+
     @ApiModelProperty(value = "字段名称")
     @TableField("field_name")
     private String fieldName;

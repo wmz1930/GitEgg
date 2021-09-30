@@ -90,7 +90,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             resourceParent.setParentId(resource.getId());
             //只查子节点
             resourceParent.setIsLeaf(GitEggConstant.Number.ONE);
-            List<Resource> resourceChildrenList = resourceMapper.selectResourceChidlren(resourceParent);
+            List<Resource> resourceChildrenList = resourceMapper.selectResourceChildren(resourceParent);
             if (!CollectionUtils.isEmpty(resourceChildrenList)) {
                 resourceChildrenList = resourceChildrenList.stream().map(res -> {res.setAncestors(res.getAncestors().replaceFirst(ancestorsOld, ancestorsNew)); return res;}).collect(Collectors.toList());
             }
@@ -109,7 +109,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         }
         Resource resourceParent = new Resource();
         resourceParent.setParentId(resourceId);
-        List<Resource> resourceChildrenList = resourceMapper.selectResourceChidlren(resourceParent);
+        List<Resource> resourceChildrenList = resourceMapper.selectResourceChildren(resourceParent);
         if (!CollectionUtils.isEmpty(resourceChildrenList))
         {
             List<Long> resourceIds = resourceChildrenList.stream().map(Resource::getId).collect(Collectors.toList());
@@ -154,7 +154,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             }
             Resource resourceParent = new Resource();
             resourceParent.setParentId(parentId);
-            List<Resource> resources = resourceMapper.selectResourceChidlren(resourceParent);
+            List<Resource> resources = resourceMapper.selectResourceChildren(resourceParent);
             Map<Long, Resource> resourceMap = new HashMap<>();
             resourceList = this.assembleResourceTree(resources,resourceMap);
         } catch (Exception e) {

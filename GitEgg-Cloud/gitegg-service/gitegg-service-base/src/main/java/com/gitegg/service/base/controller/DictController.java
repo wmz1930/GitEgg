@@ -1,6 +1,8 @@
 package com.gitegg.service.base.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -30,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * <p>
- * 数据字典表 前端控制器
+ * 系统数据字典表 前端控制器
  * </p>
  *
  * @author GitEgg
@@ -46,14 +48,24 @@ public class DictController {
     private final IDictService dictService;
 
     /**
-     * 查询所有用户
+     * 查询字典列表
      */
     @GetMapping("/list")
-    @ApiOperation(value = "查询操作日志列表")
+    @ApiOperation(value = "查询字典列表")
     public PageResult<DictDTO> list(QueryDictDTO dict, Page<DictDTO> page) {
         Page<DictDTO> pageDict = dictService.selectDictList(page, dict);
         PageResult<DictDTO> pageResult = new PageResult<>(pageDict.getTotal(), pageDict.getRecords());
         return pageResult;
+    }
+
+    /**
+     * 查询所有字典列表
+     */
+    @GetMapping("/list/all")
+    @ApiOperation(value = "查询所有字典列表")
+    public Result<?> listAll(QueryDictDTO dict) {
+        List<DictDTO> dictDTOList = dictService.selectDictList(dict);
+        return Result.data(dictDTOList);
     }
 
     /**
@@ -64,9 +76,9 @@ public class DictController {
      */
     @GetMapping(value = "/tree")
     @ApiOperation(value = "查询字典树列表", notes = "查询字典树列表")
-    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataType = "Integer")
-    public Result<List<DictDTO>> queryDictTree(Integer parentId) {
-        List<DictDTO> treeList = dictService.queryDictTreeByPanentId(parentId);
+    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataType = "Long")
+    public Result<?> queryDictTree(Long parentId) {
+        List<Dict> treeList = dictService.queryDictTreeByParentId(parentId);
         return Result.data(treeList);
     }
 
@@ -159,12 +171,34 @@ public class DictController {
      * @param dictCode
      * @return
      */
-    @PostMapping(value = "/list/{dictCode}")
+    @PostMapping(value = "/query/{dictCode}")
     @ApiOperation(value = "查询字典列表", notes = "查询字典列表")
     @ApiImplicitParam(paramType = "query", name = "dictCode", value = "字典值", required = true, dataType = "String")
     public Result<List<Dict>> queryDictList(@PathVariable("dictCode") String dictCode) {
-        List<Dict> dictList = dictService.queryDictListByPanentCode(dictCode);
+        List<Dict> dictList = dictService.queryDictListByParentCode(dictCode);
         return Result.data(dictList);
+    }
+
+    /**
+     * 批量查询查询字典里列表
+     *
+     * @param dictCodeList
+     * @return
+     */
+    @PostMapping(value = "/batch/query")
+    @ApiOperation(value = "批量查询字典列表", notes = "批量查询字典列表")
+    @ApiImplicitParam(paramType = "query", name = "dictCodeList", value = "字典值", required = true, dataType = "List")
+    public Result<Map<String, List<Dict>>> queryBatchDictList(@RequestBody List<String> dictCodeList) {
+        Map<String, List<Dict>> resultMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(dictCodeList))
+        {
+            dictCodeList.forEach(dictCode-> {
+                List<Dict> dictList = dictService.queryDictListByParentCode(dictCode);
+                resultMap.put(dictCode, dictList);
+            });
+        }
+
+        return Result.data(resultMap);
     }
 
     /**
@@ -176,16 +210,17 @@ public class DictController {
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验字典code是否存在", notes = "校验字典code是否存在")
     public Result<Boolean> checkUserExist(UpdateDictDTO dictDTO) {
-        QueryWrapper<Dict> userQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<Dict> dictQueryWrapper = new QueryWrapper<>();
         if (null != dictDTO && null != dictDTO.getId()) {
-            userQueryWrapper.ne("id", dictDTO.getId());
+            dictQueryWrapper.ne("id", dictDTO.getId());
         }
-        userQueryWrapper.and(e -> e.eq("dict_code", dictDTO.getDictCode()).eq("parent_id", dictDTO.getParentId()));
-        int count = dictService.count(userQueryWrapper);
+        dictQueryWrapper.and(e -> e.eq("dict_code", dictDTO.getDictCode()).eq("parent_id", dictDTO.getParentId()));
+        int count = dictService.count(dictQueryWrapper);
         if (GitEggConstant.COUNT_ZERO == count) {
             return Result.data(true);
         } else {
             return Result.data(false);
         }
     }
+
 }

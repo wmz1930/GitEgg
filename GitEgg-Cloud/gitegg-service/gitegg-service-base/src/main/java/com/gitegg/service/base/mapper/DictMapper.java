@@ -30,10 +30,18 @@ public interface DictMapper extends BaseMapper<Dict> {
     Page<DictDTO> selectDictList(Page<DictDTO> page, @Param("dict") QueryDictDTO dict);
 
     /**
-     * 查询字典列表
+     * 查询数据字典
+     *
+     * @param dict
+     * @return dictInfo
+     */
+    List<DictDTO> selectDictList( @Param("dict") QueryDictDTO dict);
+
+    /**
+     * 查询字典树列表
      * 
-     * @param parentId
+     * @param dict
      * @return
      */
-    List<DictDTO> queryDictTreeProc(Integer parentId);
+    List<Dict> selectDictChildren(@Param("dict") QueryDictDTO dict);
 }

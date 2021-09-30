@@ -3,10 +3,7 @@ package com.gitegg.code.generator.field.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitegg.code.generator.field.dto.CreateFieldDTO;
-import com.gitegg.code.generator.field.dto.FieldDTO;
-import com.gitegg.code.generator.field.dto.QueryFieldDTO;
-import com.gitegg.code.generator.field.dto.UpdateFieldDTO;
+import com.gitegg.code.generator.field.dto.*;
 import com.gitegg.code.generator.field.entity.Field;
 import com.gitegg.code.generator.field.service.IFieldService;
 import com.gitegg.platform.base.constant.GitEggConstant;
@@ -50,6 +47,26 @@ public class FieldController {
     public PageResult<FieldDTO> list(QueryFieldDTO queryFieldDTO, Page<FieldDTO> page) {
         Page<FieldDTO> pageField = fieldService.queryFieldList(page, queryFieldDTO);
         return PageResult.data(pageField.getTotal(), pageField.getRecords());
+    }
+
+    /**
+     * 查询所有字段属性配置表列表
+     */
+    @GetMapping("/list/all")
+    @ApiOperation(value = "查询字段属性配置表列表")
+    public Result<?> listAll(QueryFieldDTO queryFieldDTO) {
+        List<TableFieldDTO> fieldList = fieldService.queryFieldList(queryFieldDTO);
+        return Result.data(fieldList);
+    }
+
+    /**
+     * 字段配置的新增和更新，统一入口
+     */
+    @PostMapping("/edit")
+    @ApiOperation(value = "字段配置的新增和更新")
+    public Result<?> edit(@RequestBody List<Field> fieldList) {
+        boolean result = fieldService.editField(fieldList);
+        return Result.result(result);
     }
 
     /**

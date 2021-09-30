@@ -18,17 +18,10 @@ public interface OrganizationMapper extends BaseMapper<Organization> {
 
     /**
      * 查询组织机构树
-     * @param parentId
-     * @return
-     */
-    List<Organization> queryOrganizationTreeProc(Long parentId);
-
-    /**
-     * 查询组织机构树
      * @param organization
      * @return
      */
-    List<Organization> selectOrganizationChidlren(@Param("org") Organization organization);
+    List<Organization> selectOrganizationChildren(@Param("org") Organization organization);
 
 
 }

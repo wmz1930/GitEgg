@@ -1,4 +1,4 @@
-package com.gitegg.service.base.dto;
+package com.gitegg.code.generator.dict.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,17 +8,20 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 数据字典
+ * 代码生成数据字典
  * </p>
  *
  * @author GitEgg
  * @since 2018-10-28
  */
 @Data
-@ApiModel(value = "Dict对象", description = "数据字典")
-public class CreateDictDTO implements Serializable {
+@ApiModel(value = "QueryGeneratorDictDTO对象", description = "代码生成数据字典")
+public class QueryGeneratorDictDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty(value = "主键")
+    private Long id;
 
     @ApiModelProperty(value = "租户")
     private Long tenantId;
@@ -41,7 +44,7 @@ public class CreateDictDTO implements Serializable {
     @ApiModelProperty(value = "1有效，0禁用")
     private Integer dictStatus;
 
-    @ApiModelProperty(value = "描述信息")
-    private String comments;
+    @ApiModelProperty(value = "是否是叶子节点(查询时，如果此值为 1，则表示只查询子节点)")
+    private Integer isLeaf;
 
 }

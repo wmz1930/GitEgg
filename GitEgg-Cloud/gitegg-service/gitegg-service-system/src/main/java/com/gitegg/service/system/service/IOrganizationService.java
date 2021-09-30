@@ -16,7 +16,7 @@ public interface IOrganizationService extends IService<Organization> {
      * @param parentId
      * @return
      */
-    List<Organization> queryOrganizationByPanentId(Long parentId);
+    List<Organization> queryOrganizationByParentId(Long parentId);
 
     /**
      * 查询机构列表，不组装父子节点

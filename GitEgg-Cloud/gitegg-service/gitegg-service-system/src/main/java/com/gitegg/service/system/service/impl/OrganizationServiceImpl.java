@@ -51,7 +51,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
             }
             Organization organizationParent = new Organization();
             organizationParent.setParentId(parentId);
-            orgList = organizationMapper.selectOrganizationChidlren(organizationParent);
+            orgList = organizationMapper.selectOrganizationChildren(organizationParent);
         } catch (Exception e) {
             log.error("查询组织树失败:", e);
             throw new BusinessException("查询组织树失败");
@@ -60,7 +60,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
     }
 
     @Override
-    public List<Organization> queryOrganizationByPanentId(Long parentId) {
+    public List<Organization> queryOrganizationByParentId(Long parentId) {
         List<Organization> orgs;
         try {
             if (null == parentId) {
@@ -68,7 +68,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
             }
             Organization organizationParent = new Organization();
             organizationParent.setParentId(parentId);
-            List<Organization> orgList = organizationMapper.selectOrganizationChidlren(organizationParent);
+            List<Organization> orgList = organizationMapper.selectOrganizationChildren(organizationParent);
             Map<Long, Organization> organizationMap = new HashMap<>();
             orgs = this.assembleOrganizationTree(orgList, organizationMap);
         } catch (Exception e) {
@@ -128,7 +128,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
             organizationParent.setParentId(organization.getId());
             //只查子节点
             organizationParent.setIsLeaf(GitEggConstant.Number.ONE);
-            List<Organization> orgChildrenList = organizationMapper.selectOrganizationChidlren(organizationParent);
+            List<Organization> orgChildrenList = organizationMapper.selectOrganizationChildren(organizationParent);
             if (!CollectionUtils.isEmpty(orgChildrenList)) {
                 orgChildrenList = orgChildrenList.stream().map(org -> {org.setAncestors(org.getAncestors().replaceFirst(ancestorsOld, ancestorsNew)); return org;}).collect(Collectors.toList());
             }
@@ -148,7 +148,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
         }
         Organization organizationParent = new Organization();
         organizationParent.setParentId(organizationId);
-        List<Organization> orgChildrenList = organizationMapper.selectOrganizationChidlren(organizationParent);
+        List<Organization> orgChildrenList = organizationMapper.selectOrganizationChildren(organizationParent);
         if (!CollectionUtils.isEmpty(orgChildrenList))
         {
             List<Long> orgIds = orgChildrenList.stream().map(Organization::getId).collect(Collectors.toList());
