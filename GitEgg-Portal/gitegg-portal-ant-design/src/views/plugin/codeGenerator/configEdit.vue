@@ -1,78 +1,56 @@
 <template>
   <a-card :bordered="false" class="content">
-    <a-form-model
-      ref="configForm"
-      :model="configForm"
-      :rules="rules"
-      :label-col="configLabelCol"
-      :wrapper-col="configWrapperCol">
-      <a-form-model-item label="数据源" prop="datasourceId">
-        <a-input v-model="configForm.datasourceId" placeholder="输入数据源" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="模块名称" prop="moduleName">
-        <a-input v-model="configForm.moduleName" placeholder="输入模块名称" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="模块代码" prop="moduleCode">
-        <a-input v-model="configForm.moduleCode" placeholder="输入模块代码" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="服务名称" prop="serviceName">
-        <a-input v-model="configForm.serviceName" placeholder="输入服务名称" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="表名" prop="tableName">
-        <a-input v-model="configForm.tableName" placeholder="输入表名" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="表别名" prop="tableAlias">
-        <a-input v-model="configForm.tableAlias" placeholder="输入表别名" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="表前缀" prop="tablePrefix">
-        <a-input v-model="configForm.tablePrefix" placeholder="输入表前缀" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="父级包名" prop="parentPackage">
-        <a-input v-model="configForm.parentPackage" placeholder="输入父级包名" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="表单类型" prop="formType">
-        <a-input v-model="configForm.formType" placeholder="输入表单类型 model弹出框  drawer抽屉  tab新页面" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="联表类型" prop="tableType">
-        <a-input v-model="configForm.tableType" placeholder="输入表类型 single单表  multi多表" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="展示类型" prop="tableShowType">
-        <a-input v-model="configForm.tableShowType" placeholder="输入展示类型 table数据表格 tree_table 树表格 3 left_tree_table左树右表  tree数据树" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="表单字段排列" prop="formItemCol">
-        <a-input v-model="configForm.formItemCol" placeholder="输入表单字段排列 1一列一行  2 两列一行" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="左树类型" prop="leftTreeType">
-        <a-input v-model="configForm.leftTreeType" placeholder="输入左树类型 organization机构树 resource资源权限树 " :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="前端代码路径" prop="frontCodePath">
-        <a-input v-model="configForm.frontCodePath" placeholder="输入前端代码路径" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="后端代码路径" prop="serviceCodePath">
-        <a-input v-model="configForm.serviceCodePath" placeholder="输入后端代码路径" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="支持导入" prop="importFlag">
-        <a-input v-model="configForm.importFlag" placeholder="输入是否支持导入 1支持 0不支持" :maxLength="32" />
-      </a-form-model-item>
-      <a-form-model-item label="支持导出" prop="exportFlag">
-        <a-input v-model="configForm.exportFlag" placeholder="输入是否支持导出 1支持 0不支持" :maxLength="32" />
-      </a-form-model-item>
-    </a-form-model>
-    <div slot="footer" class="dialog-footer">
-      <a-button @click="dialogFormVisible = false">取消</a-button>
-      <a-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</a-button>
-      <a-button v-else type="primary" @click="updateData">修改</a-button>
+    <a-steps size="small" :current="current">
+      <a-step v-for="item in steps" :key="item.title" :title="item.title" >
+        <a-icon slot="icon" :type="item.icon" />
+      </a-step>
+    </a-steps>
+    <div class="steps-content">
+      <table-join :configForm="configForm" v-show="steps[current].content === 'union-table'" ref="tableJoin"></table-join>
+      <table-field :configForm="configForm" v-show="steps[current].content === 'filed-config'" ref="tableConfig"></table-field>
+      <table-form :configForm="configForm" v-show="steps[current].content === 'form-config'" ref="tableForm"></table-form>
+      <table-form-valid :configForm="configForm" v-show="steps[current].content === 'form-valid'" ref="tableFormValid"></table-form-valid>
+      <table-list :configForm="configForm" v-show="steps[current].content === 'list-config'" ref="tableList"></table-list>
+    </div>
+    <div class="back-action">
+      <a-button style="margin-left: 12px" @click="backToList">
+        返回列表
+      </a-button>
+    </div>
+    <div class="steps-action">
+
+      <a-button :disabled="current <= 0" style="margin-right: 12px" @click="prev">
+        上一步
+      </a-button>
+
+      <a-button
+        v-if="current == steps.length - 1"
+        type="primary"
+        @click="$message.success('Processing complete!')"
+      >
+        完成
+      </a-button>
+
+      <a-button v-if="current < steps.length - 1" type="primary" @click="next">
+        下一步
+      </a-button>
     </div>
   </a-card>
 </template>
 
 <script>
     import { STable } from '@/components'
-    import { queryConfigList, createConfig, updateConfig, updateConfigStatus, batchDeleteConfig, deleteConfig, checkConfigExist } from '@/api/plugin/codeGenerator/config/config'
+    import { queryConfigList, createConfig, updateConfig, updateConfigStatus, batchDeleteConfig, deleteConfig, checkConfigExist, queryConfig } from '@/api/plugin/codeGenerator/config/config'
+    import TableJoin from './configSteps/tableJoin'
+    import TableField from './configSteps/tableField'
+    import TableForm from './configSteps/tableForm'
+    import TableFormValid from './configSteps/tableFormValid'
+    import TableList from './configSteps/tableList'
+
     import moment from 'moment'
     export default {
         name: 'ConfigTable',
-        components: { moment, STable },
+        components: { moment, STable, TableJoin, TableField, TableForm, TableFormValid, TableList },
         filters: {
             statusFilter (status) {
                 const statusMap = {
@@ -107,6 +85,34 @@
                 })
             }
             return {
+                current: 0,
+                steps: [
+                    {
+                        title: '联表配置',
+                        content: 'union-table',
+                        icon: 'appstore'
+                    },
+                    {
+                        title: '字段配置',
+                        content: 'filed-config',
+                        icon: 'apartment'
+                    },
+                    {
+                        title: '表单配置',
+                        content: 'form-config',
+                        icon: 'file-text'
+                    },
+                    {
+                        title: '表单校验',
+                        content: 'form-valid',
+                        icon: 'carry-out'
+                    },
+                    {
+                        title: '列表配置',
+                        content: 'list-config',
+                        icon: 'table'
+                    }
+                ],
                 advanced: false,
                 currentConfig: '',
                 filterText: '',
@@ -253,9 +259,27 @@
             // }
         },
         created () {
-            this.getList()
+            this.getConfig()
         },
         methods: {
+            backToList () {
+                this.$router.push({ path: '/plugin/code/generator/config/table' })
+            },
+            next () {
+            this.current++
+            },
+            prev () {
+            this.current--
+            },
+            getConfig () {
+                this.listLoading = true
+                const id = this.$route.params && this.$route.params.id
+                this.listQuery.id = id
+                queryConfig(this.listQuery).then(response => {
+                    this.configForm = response.data
+                    this.listLoading = false
+                })
+            },
             resetQuery () {
                 this.listQuery = {
                         id: '',
@@ -499,3 +523,22 @@
         }
     }
 </script>
+<style scoped>
+.steps-content {
+  margin-top: 16px;
+  /* border: 1px dashed #e9e9e9; */
+  border-radius: 6px;
+  background-color: #fafafa;
+  min-height: 200px;
+}
+
+.steps-action {
+  margin-top: 24px;
+  float: right;
+}
+
+.back-action {
+  margin-top: 24px;
+  float: left;
+}
+</style>

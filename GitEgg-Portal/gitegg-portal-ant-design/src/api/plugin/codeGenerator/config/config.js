@@ -8,6 +8,14 @@ export function queryConfigList (query) {
   })
 }
 
+export function queryConfig (query) {
+  return request({
+    url: '/gitegg-plugin-code/code/generator/config/query',
+    method: 'get',
+    params: query
+  })
+}
+
 export function createConfig (data) {
   return request({
     url: '/gitegg-plugin-code/code/generator/config/create',

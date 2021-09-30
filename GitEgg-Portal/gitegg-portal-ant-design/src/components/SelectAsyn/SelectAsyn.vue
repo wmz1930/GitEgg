@@ -8,7 +8,7 @@
       :filter-option="false"
       @popupScroll="handlePopupScroll"
       @search="filterOpts"
-      @change="onSelect"
+      @change="onChange"
       :not-found-content="undefined">
       <a-select-option v-for="item in dataList" :key="item[optKey]" :value="item[optValue]">
         {{ item[optLable] }}
@@ -21,6 +21,11 @@
 export default {
   name: 'SelectAsyn',
   props: {
+    // 默认值搜索框
+    defaultValue: {
+      type: String,
+      default: undefined
+    },
     // select的key
     optKey: {
       type: String,
@@ -68,7 +73,9 @@ export default {
 
   },
   watch: {
-
+    defaultValue (val) {
+       this.searchValue = val
+    }
   },
   data () {
     return {
@@ -83,6 +90,9 @@ export default {
   },
   created () {
      this.current = this.pageNo
+     if (this.defaultValue && this.defaultValue !== '') {
+       this.searchValue = this.defaultValue
+     }
      this.getDataList()
   },
   methods: {
@@ -123,9 +133,13 @@ export default {
       }
     },
     // 选中 option 调用
-    onSelect (val) {
+    onChange (val) {
         this.searchValue = val
         this.$emit('holderBack', val)
+        // 点击清除之后的回调
+        if (val === undefined) {
+          this.filterOpts(val)
+        }
     }
   }
 }

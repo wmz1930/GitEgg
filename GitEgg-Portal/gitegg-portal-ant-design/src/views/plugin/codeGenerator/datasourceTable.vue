@@ -142,7 +142,7 @@
     import moment from 'moment'
     import { listDict } from '@/api/system/base/dict'
     import { handleDownloadBlod } from '@/utils/util'
-    const vm = {}
+    let vm = {}
     export default {
         name: 'DatasourceTable',
         components: { moment, STable },
@@ -153,6 +153,7 @@
             }
         },
         data () {
+            vm = this
             var validDatasourceName = (rule, value, callback) => {
                 var keyData = {
                     id: this.datasourceForm.id,

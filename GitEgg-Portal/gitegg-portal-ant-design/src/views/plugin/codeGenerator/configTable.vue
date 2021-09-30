@@ -109,8 +109,14 @@
       :pagination="configPagination"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
-      <span slot="status" slot-scope="text, record">
-        <a-tag :color="record.configStatus | statusFilter">{{ record.configStatus | statusNameFilter }}</a-tag>
+      <span slot="formTypeFilter" slot-scope="text, record">
+        {{ record.formType | formTypeFilter }}
+      </span>
+      <span slot="tableTypeFilter" slot-scope="text, record">
+        {{ record.tableType | tableTypeFilter }}
+      </span>
+      <span slot="tableShowTypeFilter" slot-scope="text, record">
+        {{ record.tableShowType | tableShowTypeFilter }}
       </span>
       <span slot="createTime" slot-scope="text, record">
         <span>{{ record.createTime | moment }}</span>
@@ -119,20 +125,16 @@
         <a @click="handleUpdate(record)">编辑</a>
         <a-divider type="vertical" />
         <router-link :to="'/plugin/code/generator/config/edit/'+record.id">
-          规则配置
+          配置规则
         </router-link>
+        <a-divider type="vertical" />
+        <a @click="handleUpdate(record)">执行</a>
         <a-divider type="vertical" />
         <a-dropdown>
           <a class="ant-dropdown-link">
             更多 <a-icon type="down" />
           </a>
           <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;" v-if="record.configStatus!='1'" size="mini" type="success" @click="handleModifyStatus(record,'1')">启用
-              </a>
-              <a href="javascript:;" v-if="record.configStatus!='0' && record.configStatus!='2'" size="mini" @click="handleModifyStatus(record,'0')">禁用
-              </a>
-            </a-menu-item>
             <a-menu-item>
               <a href="javascript:;" @click="handleDelete(record)">删除</a>
             </a-menu-item>
@@ -156,6 +158,7 @@
                            optLable="datasourceName"
                            optPlaceholder="请选择数据源"
                            queryKey="datasourceName"
+                           :defaultValue="configForm.datasourceName"
                            :queryDataList="queryDatasourceListFunction"
                            @holderBack="clickSetForm"
               ></select-asyn>
@@ -205,7 +208,7 @@
         </a-row>
         <a-row>
           <a-col :md="12">
-            <a-form-model-item label="展示类型" prop="formType">
+            <a-form-model-item label="表单类型" prop="formType">
               <a-select v-model="configForm.formType" placeholder="请选择展示类型" allow-clear show-search :filter-option="filterOption">
                 <a-select-option v-for="item in formTypeDict.dictList" :key="item.id" :value="item.dictCode">
                   {{ item.dictName }}
@@ -214,9 +217,9 @@
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
-            <a-form-model-item label="联表类型" prop="tableType">
-              <a-select v-model="configForm.tableType" placeholder="请选择表单类型" allow-clear show-search :filter-option="filterOption">
-                <a-select-option v-for="item in tableTypeDict.dictList" :key="item.id" :value="item.dictCode">
+            <a-form-model-item label="表单列数" prop="formItemCol">
+              <a-select v-model="configForm.formItemCol" placeholder="请选择表单列数" allow-clear show-search :filter-option="filterOption">
+                <a-select-option v-for="item in formColDict.dictList" :key="item.id" :value="item.dictCode">
                   {{ item.dictName }}
                 </a-select-option>
               </a-select>
@@ -225,8 +228,8 @@
         </a-row>
         <a-row>
           <a-col :md="12">
-            <a-form-model-item label="展示类型" prop="tableShowType">
-              <a-select v-model="configForm.tableShowType" placeholder="请选择联表类型" allow-clear show-search :filter-option="filterOption">
+            <a-form-model-item label="数据展示" prop="tableShowType">
+              <a-select v-model="configForm.tableShowType" placeholder="请选择数据展示类型" allow-clear show-search :filter-option="filterOption">
                 <a-select-option v-for="item in tableShowTypeDict.dictList" :key="item.id" :value="item.dictCode">
                   {{ item.dictName }}
                 </a-select-option>
@@ -234,42 +237,59 @@
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
-            <a-form-model-item label="字段排列" prop="formItemCol">
-              <a-input v-model="configForm.formItemCol" placeholder="输入表单字段排列 1一列一行  2 两列一行" :maxLength="32" />
+            <a-form-model-item label="左树类型" prop="leftTreeType">
+              <a-select v-model="configForm.leftTreeType" placeholder="请选择左树类型" allow-clear show-search :filter-option="filterOption">
+                <a-select-option v-for="item in treeTypeDict.dictList" :key="item.id" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-select-option>
+              </a-select>
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
           <a-col :md="12">
-            <a-form-model-item label="左树类型" prop="leftTreeType">
-              <a-input v-model="configForm.leftTreeType" placeholder="输入左树类型 organization机构树 resource资源权限树 " :maxLength="32" />
+            <a-form-model-item label="后端路径" prop="serviceCodePath">
+              <a-input v-model="configForm.serviceCodePath" placeholder="输入后端代码路径" :maxLength="32" />
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
-            <a-form-model-item label="前端代码路径" prop="frontCodePath">
+            <a-form-model-item label="前端路径" prop="frontCodePath">
               <a-input v-model="configForm.frontCodePath" placeholder="输入前端代码路径" :maxLength="32" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
           <a-col :md="12">
-            <a-form-model-item label="后端代码路径" prop="serviceCodePath">
-              <a-input v-model="configForm.serviceCodePath" placeholder="输入后端代码路径" :maxLength="32" />
+            <a-form-model-item label="支持导出" prop="exportFlag">
+              <a-radio-group v-model="configForm.exportFlag" :default-value="1">
+                <a-radio v-for="item in yesOrNoDict.dictList" :key="item.id" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-radio>
+              </a-radio-group>
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
             <a-form-model-item label="支持导入" prop="importFlag">
-              <a-input v-model="configForm.importFlag" placeholder="输入是否支持导入 1支持 0不支持" :maxLength="32" />
+              <a-radio-group v-model="configForm.importFlag" :default-value="1">
+                <a-radio v-for="item in yesOrNoDict.dictList" :key="item.id" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-radio>
+              </a-radio-group>
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
           <a-col :md="12">
-            <a-form-model-item label="支持导出" prop="exportFlag">
-              <a-input v-model="configForm.exportFlag" placeholder="输入是否支持导出 1支持 0不支持" :maxLength="32" />
+            <a-form-model-item label="联表类型" prop="tableType">
+              <a-radio-group v-model="configForm.tableType" default-value="single">
+                <a-radio v-for="item in tableTypeDict.dictList" :key="item.id" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-radio>
+              </a-radio-group>
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
+
           </a-col>
         </a-row>
       </a-form-model>
@@ -284,29 +304,20 @@
 
 <script>
     import { STable, SelectAsyn } from '@/components'
-    import { queryConfigList, createConfig, updateConfig, updateConfigStatus, batchDeleteConfig, deleteConfig, checkConfigExist } from '@/api/plugin/codeGenerator/config/config'
+    import { queryConfigList, createConfig, updateConfig, batchDeleteConfig, deleteConfig } from '@/api/plugin/codeGenerator/config/config'
     import { queryDatasourceList } from '@/api/plugin/codeGenerator/datasource/datasource'
     import moment from 'moment'
-    import { listDict } from '@/api/system/base/dict'
-    const vm = {}
+    import { batchListDict } from '@/api/system/base/dict'
+    let vm = {}
     export default {
         name: 'ConfigTable',
         components: { moment, STable, SelectAsyn },
         filters: {
-            statusFilter (status) {
-                const statusMap = {
-                    '1': 'green',
-                    '2': '',
-                    '0': 'pink'
-                }
-                return statusMap[status]
+            formColFilter (formCol) {
+              return vm.formColDict.filterMap[formCol]
             },
-            statusNameFilter (status) {
-                const statusNameMap = {
-                    '1': '启用',
-                    '0': '禁用'
-                }
-                return statusNameMap[status]
+            yesOrNoFilter (yesOrNo) {
+              return vm.yesOrNoDict.filterMap[yesOrNo]
             },
             formTypeFilter (formType) {
               return vm.formTypeDict.filterMap[formType]
@@ -319,21 +330,7 @@
             }
         },
         data () {
-            // 增加或更新记录时，判断字段是否已经存在
-            var validConfig = (rule, value, callback) => {
-                var keyData = {
-                    id: this.configForm.id,
-                    checkField: 'config', // 这里改为字段名称
-                    checkValue: value
-                }
-                checkConfigExist(keyData).then(response => {
-                    if (!response.data) {
-                        callback(new Error('记录已存在')) // 这里改为字段名称
-                    } else {
-                        callback()
-                    }
-                })
-            }
+            vm = this
             return {
                 advanced: false,
                 currentConfig: '',
@@ -342,6 +339,11 @@
                 list: null,
                 total: 0,
                 listLoading: true,
+                treeTypeDict: {
+                  dictCode: 'TREE_TYPE',
+                  dictList: [],
+                  filterMap: {}
+                },
                 formTypeDict: {
                   dictCode: 'FORM_TYPE',
                   dictList: [],
@@ -357,6 +359,16 @@
                   dictList: [],
                   filterMap: {}
                 },
+                formColDict: {
+                  dictCode: 'FORM_COL',
+                  dictList: [],
+                  filterMap: {}
+                },
+                yesOrNoDict: {
+                  dictCode: 'YES_NO',
+                  dictList: [],
+                  filterMap: {}
+                },
                 listQuery: {
                     datasourceId: '',
                     moduleName: '',
@@ -367,27 +379,26 @@
                     tablePrefix: '',
                     parentPackage: '',
                     formType: undefined,
-                    tableType: undefined,
+                    tableType: 'single',
                     tableShowType: undefined,
-                    formItemCol: '',
-                    leftTreeType: '',
+                    formItemCol: undefined,
+                    leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
-                    importFlag: '',
-                    exportFlag: '',
+                    importFlag: '1',
+                    exportFlag: '1',
                     startDateTime: '',
                     endDateTime: ''
                 },
-                statusOption: [{ label: '启用', key: '1' }, { label: '禁用', key: '0' }],
                 dialogFormVisible: false,
                 dialogStatus: '',
                 textMap: {
-                    update: '编辑',
-                    create: '添加'
+                    update: '编辑代码生成配置',
+                    create: '添加代码生成配置'
                 },
                 configForm: {
                     id: '',
-                    datasourceId: '',
+                    datasourceId: undefined,
                     moduleName: '',
                     moduleCode: '',
                     serviceName: '',
@@ -395,22 +406,22 @@
                     tableAlias: '',
                     tablePrefix: '',
                     parentPackage: '',
-                    formType: '',
-                    tableType: '',
-                    tableShowType: '',
-                    formItemCol: '',
-                    leftTreeType: '',
+                    formType: undefined,
+                    tableType: 'single',
+                    tableShowType: undefined,
+                    formItemCol: undefined,
+                    leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
-                    importFlag: '',
-                    exportFlag: ''
+                    importFlag: '1',
+                    exportFlag: '1'
                 },
                 // 表头
                 columns: [
                     {
                         title: '数据源',
                         align: 'center',
-                        dataIndex: 'datasourceId'
+                        dataIndex: 'datasourceName'
                     },
                     {
                         title: '模块名称',
@@ -436,22 +447,25 @@
                     {
                         title: '表单类型',
                         align: 'center',
-                        dataIndex: 'formType'
+                        dataIndex: 'formType',
+                        scopedSlots: { customRender: 'formTypeFilter' }
                     },
                     {
                         title: '联表类型',
                         align: 'center',
-                        dataIndex: 'tableType'
+                        dataIndex: 'tableType',
+                        scopedSlots: { customRender: 'tableTypeFilter' }
                     },
                     {
                         title: '展示类型',
                         align: 'center',
-                        dataIndex: 'tableShowType'
+                        dataIndex: 'tableShowType',
+                        scopedSlots: { customRender: 'tableShowTypeFilter' }
                     },
                     {
                         title: '操作',
                         dataIndex: 'action',
-                        width: '230px',
+                        width: '260px',
                         scopedSlots: { customRender: 'action' }
                     }
                 ],
@@ -459,8 +473,7 @@
                     // 字段校验，这里自己选择使用哪些校验
                     config: [
                         { required: true, message: '请输入config', trigger: 'blur' },
-                        { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' },
-                        { validator: validConfig, trigger: 'blur' }
+                        { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
                     ]
                 },
                 downloadLoading: false,
@@ -482,11 +495,7 @@
                 },
                 // 加载数据方法 必须为 Promise 对象
                 loadData: parameter => {
-                    return queryConfigList(Object.assign(parameter, this.listQuery))
-                        .then(res => {
-                            this.list = res.data
-                            return res
-                        })
+                    return function () {}
                 },
                 // 获取数据源搜索的查询接口
                 queryDatasourceListFunction: queryDatasourceList
@@ -499,35 +508,84 @@
         },
         created () {
             const that = this
-            this.getDataDictList(this.formTypeDict).then(function (result) {
-              that.formTypeDict = result
+            // this.getDataDictList(this.formTypeDict).then(function (result) {
+            //   that.formTypeDict = result
+            // })
+            // this.getDataDictList(this.treeTypeDict).then(function (result) {
+            //   that.treeTypeDict = result
+            // })
+            // this.getDataDictList(this.tableTypeDict).then(function (result) {
+            //   that.tableTypeDict = result
+            // })
+            // this.getDataDictList(this.tableShowTypeDict).then(function (result) {
+            //   that.tableShowTypeDict = result
+            // })
+            // this.getDataDictList(this.formColDict).then(function (result) {
+            //   that.formColDict = result
+            // })
+            // this.getDataDictList(this.yesOrNoDict).then(function (result) {
+            //   that.yesOrNoDict = result
+            // })
+
+            const dictList = [this.formTypeDict, this.treeTypeDict, this.tableTypeDict, this.tableShowTypeDict, this.formColDict, this.yesOrNoDict]
+
+            // const dictCodeList = [this.formTypeDict.dictCode, this.treeTypeDict.dictCode,
+            // this.tableTypeDict.dictCode, this.tableShowTypeDict.dictCode, this.formColDict.dictCode,
+            // this.yesOrNoDict.dictCode]
+
+            const dictCodeList = dictList.map(function (n) {
+              return n.dictCode
             })
-            this.getDataDictList(this.tableTypeDict).then(function (result) {
-              that.tableTypeDict = result
+
+            this.getBatchDataDictList(dictCodeList).then(function (result) {
+                dictList.forEach(function (dict) {
+                  dict.dictList = result[dict.dictCode]
+                  dict.filterMap = {}
+                  dict.dictList.forEach((item, index, arr) => {
+                    dict.filterMap[item.dictCode] = item.dictName
+                  })
+                })
+
+                that.loadData = function (parameter) {
+                  return queryConfigList(Object.assign(parameter, that.listQuery))
+                        .then(res => {
+                            that.list = res.data
+                            return res
+                  })
+                }
+                that.$nextTick(() => {
+                  that.handleFilter()
+                })
             })
-            this.getDataDictList(this.tableShowTypeDict).then(function (result) {
-              that.tableShowTypeDict = result
-            })
-            this.getList()
         },
         methods: {
-           async getDataDictList (dictParams) {
+          //  async getDataDictList (dictParams) {
+          //     const that = this
+          //     that.listLoading = true
+          //     await listDict(dictParams.dictCode).then(response => {
+          //       dictParams.dictList = response.data
+          //       dictParams.filterMap = {}
+          //       dictParams.dictList.forEach((item, index, arr) => {
+          //         dictParams.filterMap[item.id] = item.dictName
+          //       })
+          //       that.listLoading = false
+          //     })
+          //     return dictParams
+          //   },
+            async getBatchDataDictList (dictParams) {
               const that = this
+              let result = {}
               that.listLoading = true
-              await listDict(dictParams.dictCode).then(response => {
-                dictParams.dictList = response.data
-                dictParams.filterMap = {}
-                dictParams.dictList.forEach((item, index, arr) => {
-                  dictParams.filterMap[item.id] = item.dictName
-                })
+              await batchListDict(dictParams).then(response => {
+                result = response.data
                 that.listLoading = false
               })
-              return dictParams
+              return result
             },
             resetQuery () {
                 this.listQuery = {
                         id: '',
-                        datasourceId: '',
+                        datasourceId: undefined,
                         moduleName: '',
                         moduleCode: '',
                         serviceName: '',
@@ -536,14 +594,14 @@
                         tablePrefix: '',
                         parentPackage: '',
                         formType: undefined,
-                        tableType: undefined,
+                        tableType: 'single',
                         tableShowType: undefined,
-                        formItemCol: '',
-                        leftTreeType: '',
+                        formItemCol: undefined,
+                        leftTreeType: undefined,
                         frontCodePath: '',
                         serviceCodePath: '',
-                        importFlag: '',
-                        exportFlag: '',
+                        importFlag: '1',
+                        exportFlag: '1',
                         startDateTime: '',
                         endDateTime: ''
                 }
@@ -551,7 +609,7 @@
             resetConfigForm () {
                 this.configForm = {
                     id: '',
-                    datasourceId: '',
+                    datasourceId: undefined,
                     moduleName: '',
                     moduleCode: '',
                     serviceName: '',
@@ -560,14 +618,14 @@
                     tablePrefix: '',
                     parentPackage: '',
                     formType: undefined,
-                    tableType: undefined,
+                    tableType: 'single',
                     tableShowType: undefined,
-                    formItemCol: '',
-                    leftTreeType: '',
+                    formItemCol: undefined,
+                    leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
-                    importFlag: '',
-                    exportFlag: ''
+                    importFlag: '1',
+                    exportFlag: '1'
                 }
             },
             // 选中 option 调用
@@ -619,6 +677,9 @@
             },
             handleUpdate (row) {
                 this.configForm = Object.assign({}, row) // copy obj
+                // 数据字典存的是字符串，数据库存的是tinyint，这里需要转换一下
+                this.configForm.importFlag = this.configForm.importFlag + ''
+                this.configForm.exportFlag = this.configForm.exportFlag + ''
                 this.dialogStatus = 'update'
                 this.dialogFormVisible = true
                 this.$nextTick(() => {
@@ -683,79 +744,6 @@
                         that.$message.info('已取消删除')
                     }
                 })
-            },
-            handleModifyStatus (row, status) {
-                this.listLoading = true
-                updateConfigStatus(row.id, status).then(() => {
-                    this.listLoading = false
-                    row.configStatus = status
-                    this.$message.success('状态修改成功')
-                })
-            },
-            handleDownload () {
-                this.downloadLoading = true
-                import('@/vendor/Export2Excel').then(excel => {
-                    const tHeader = [
-                        '主键',
-                        '数据源',
-                        '模块名称',
-                        '模块代码',
-                        '服务名称',
-                        '表名',
-                        '表别名',
-                        '表前缀',
-                        '父级包名',
-                        '表单类型 model弹出框  drawer抽屉  tab新页面',
-                        '表类型 single单表  multi多表',
-                        '展示类型 table数据表格 tree_table 树表格 3 left_tree_table左树右表  tree数据树',
-                        '表单字段排列 1一列一行  2 两列一行',
-                        '左树类型 organization机构树 resource资源权限树 ',
-                        '前端代码路径',
-                        '后端代码路径',
-                        '是否支持导入 1支持 0不支持',
-                        '是否支持导出 1支持 0不支持'
-                    ]
-                    const filterVal = [
-                        'id',
-                        'datasourceId',
-                        'moduleName',
-                        'moduleCode',
-                        'serviceName',
-                        'tableName',
-                        'tableAlias',
-                        'tablePrefix',
-                        'parentPackage',
-                        'formType',
-                        'tableType',
-                        'tableShowType',
-                        'formItemCol',
-                        'leftTreeType',
-                        'frontCodePath',
-                        'serviceCodePath',
-                        'importFlag',
-                        'exportFlag'
-                    ]
-                    const data = this.formatJson(filterVal, this.list)
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: '代码生成配置表数据导出列表'
-                    })
-                    this.downloadLoading = false
-                })
-            },
-            formatJson (filterVal, jsonData) {
-                return jsonData.map(v =>
-                    filterVal.map(j => {
-                        if (j === 'createTime') {
-                            return moment(v[j])
-                        } else if (j === 'configStatus') {
-                            return this.$options.filters['statusNameFilter'](v[j])
-                        } else {
-                            return v[j]
-                        }
-                    })
-                )
             },
             filterOption (input, option) {
               return (

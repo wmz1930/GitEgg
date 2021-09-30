@@ -8,6 +8,14 @@ export function fetchList (data) {
   })
 }
 
+export function queryDictList (data) {
+  return request({
+    url: '/gitegg-service-base/dict/list/all',
+    method: 'get',
+    params: data
+  })
+}
+
 export function createDict (data) {
   return request({
     url: '/gitegg-service-base/dict/create',
@@ -48,8 +56,16 @@ export function batchDeleteDict (data) {
 
 export function listDict (dictCode) {
   return request({
-    url: '/gitegg-service-base/dict/list/' + dictCode,
+    url: '/gitegg-service-base/dict/query/' + dictCode,
     method: 'post'
+  })
+}
+
+export function batchListDict (data) {
+  return request({
+    url: '/gitegg-service-base/dict/batch/query',
+    method: 'post',
+    data
   })
 }
 

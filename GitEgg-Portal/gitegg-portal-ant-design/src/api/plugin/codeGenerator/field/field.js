@@ -8,9 +8,25 @@ export function queryFieldList (query) {
   })
 }
 
+export function queryFieldListAll (query) {
+  return request({
+    url: '/gitegg-plugin-code/code/generator/field/list/all',
+    method: 'get',
+    params: query
+  })
+}
+
 export function createField (data) {
   return request({
     url: '/gitegg-plugin-code/code/generator/field/create',
+    method: 'post',
+    data
+  })
+}
+
+export function editField (data) {
+  return request({
+    url: '/gitegg-plugin-code/code/generator/field/edit',
     method: 'post',
     data
   })
