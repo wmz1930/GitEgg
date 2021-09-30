@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Data
 @ApiModel(value = "DictInfo对象", description = "数据字典")
-public class QueryDictDTO implements Serializable {
+public class QueryDictBusinessDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

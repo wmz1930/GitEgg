@@ -1,7 +1,13 @@
  package com.gitegg.platform.base.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.base.service.IAction;
 import org.springframework.cglib.beans.BeanCopier;
 
@@ -14,9 +20,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class BeanCopierUtils {
-     
-        //使用缓存提高效率
-        private static final ConcurrentHashMap<String, BeanCopier> mapCaches = new ConcurrentHashMap<>();
+
+    /**
+     * 使用缓存提高效率
+     */
+    private static final ConcurrentHashMap<String, BeanCopier> mapCaches = new ConcurrentHashMap<>();
 
         /**
          * 复制到指定类型的对象
@@ -125,5 +133,27 @@ public class BeanCopierUtils {
          */
         private static String generateKey(Class<?> class1, Class<?> class2) {
             return class1.toString() + class2.toString();
+        }
+
+        /**
+         * 对集合进行深拷贝
+         * 注意需要岁泛型类进行序列化（实现serializable）
+         *
+         * @param src
+         * @param <T>
+         * @return
+         * @throws ClassNotFoundException
+         */
+        public static <T> List<T> deepCopyList(List<T> src) {
+            try {
+                ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+                ObjectOutputStream outputStream = new ObjectOutputStream(byteOut);
+                outputStream.writeObject(src);
+                ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+                ObjectInputStream inputStream = new ObjectInputStream(byteIn);
+                return (List<T>) inputStream.readObject();
+            } catch (Exception e) {
+                throw new BusinessException(e);
+            }
         }
 }

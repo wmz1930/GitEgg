@@ -1,10 +1,10 @@
 package com.gitegg.service.base.dto;
 
-import java.io.Serializable;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -28,6 +28,9 @@ public class UpdateDictDTO implements Serializable {
 
     @ApiModelProperty(value = "字典类型")
     private Long parentId;
+
+    @ApiModelProperty(value = "所有上级id的集合")
+    private String ancestors;
 
     @ApiModelProperty(value = "字典名称")
     private String dictName;

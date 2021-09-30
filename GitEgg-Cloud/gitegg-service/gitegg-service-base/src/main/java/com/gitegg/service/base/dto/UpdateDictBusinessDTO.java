@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
@@ -17,12 +15,12 @@ import java.util.List;
  * @since 2018-10-28
  */
 @Data
-@ApiModel(value = "DictInfo对象", description = "数据字典")
-public class QueryDictDTO implements Serializable {
+@ApiModel(value = "Dict对象", description = "数据字典")
+public class UpdateDictBusinessDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "主键")
+    @ApiModelProperty(value = "主键id")
     private Long id;
 
     @ApiModelProperty(value = "租户")
@@ -46,10 +44,6 @@ public class QueryDictDTO implements Serializable {
     @ApiModelProperty(value = "1有效，0禁用")
     private Integer dictStatus;
 
-    @ApiModelProperty(value = "是否是叶子节点(查询时，如果此值为 1，则表示只查询子节点)")
-    private Integer isLeaf;
-
-    @ApiModelProperty(value = "字典列表")
-    private List<DictDTO> children = new ArrayList<>();
-
+    @ApiModelProperty(value = "备注信息")
+    private String comments;
 }

@@ -34,6 +34,9 @@ public class DictDTO implements Serializable {
     @ApiModelProperty(value = "字典类型")
     private Long parentId;
 
+    @ApiModelProperty(value = "所有上级id的集合")
+    private String ancestors;
+
     @ApiModelProperty(value = "字典名称")
     private String dictName;
 
@@ -49,8 +52,10 @@ public class DictDTO implements Serializable {
     @ApiModelProperty(value = "描述信息")
     private String comments;
 
+    @ApiModelProperty(value = "是否是叶子节点(查询时，如果此值为 1，则表示只查询子节点)")
+    private Integer isLeaf;
+
     @ApiModelProperty(value = "字典列表")
-    @TableField(exist = false)
     private List<DictDTO> children = new ArrayList<>();
 
     @ApiModelProperty(value = "创建时间")
