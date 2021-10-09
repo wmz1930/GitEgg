@@ -13,6 +13,11 @@
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
     <dependencies>
+        <!-- Mybatis Plus增强工具 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
         <!-- Mybatis Plus代码生成工具 -->
         <dependency>
             <groupId>com.baomidou</groupId>
