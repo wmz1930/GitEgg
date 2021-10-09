@@ -48,7 +48,7 @@ public class EngineController {
     }
 
     /**
-     * 查询数据源下所有的表
+     * 查询数据源下所有的表字段
      */
     @GetMapping("/table/field/list")
     @ApiOperation(value = "查询表字段信息")

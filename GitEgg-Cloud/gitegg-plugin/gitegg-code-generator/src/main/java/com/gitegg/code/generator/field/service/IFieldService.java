@@ -30,7 +30,14 @@ public interface IFieldService extends IService<Field> {
      * @param queryFieldDTO
      * @return
      */
-    List<TableFieldDTO> queryFieldList(QueryFieldDTO queryFieldDTO);
+    List<FieldDTO> queryFieldList(QueryFieldDTO queryFieldDTO);
+
+    /**
+     * 查询字段属性配置表列表
+     * @param queryFieldDTO
+     * @return
+     */
+    List<TableFieldDTO> queryTableFieldList(QueryFieldDTO queryFieldDTO);
 
     /**
      * 创建字段属性配置表

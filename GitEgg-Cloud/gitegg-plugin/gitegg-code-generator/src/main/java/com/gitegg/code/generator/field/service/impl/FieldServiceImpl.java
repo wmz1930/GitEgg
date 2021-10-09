@@ -1,32 +1,32 @@
 package com.gitegg.code.generator.field.service.impl;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.gitegg.code.generator.config.entity.Config;
 import com.gitegg.code.generator.config.service.IConfigService;
 import com.gitegg.code.generator.engine.service.IEngineService;
 import com.gitegg.code.generator.field.dto.*;
-import com.gitegg.code.generator.field.util.FieldUtils;
-import com.gitegg.code.generator.join.entity.TableJoin;
-import com.gitegg.code.generator.join.service.ITableJoinService;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.gitegg.code.generator.field.entity.Field;
 import com.gitegg.code.generator.field.mapper.FieldMapper;
 import com.gitegg.code.generator.field.service.IFieldService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-
+import com.gitegg.code.generator.field.util.FieldUtils;
+import com.gitegg.code.generator.join.entity.TableJoin;
+import com.gitegg.code.generator.join.service.ITableJoinService;
 import com.gitegg.platform.base.util.BeanCopierUtils;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
 
     private final IConfigService configService;
 
-    private final IEngineService engineService;
+    private final  IEngineService engineService;
 
     private final ITableJoinService tableJoinService;
 
@@ -67,7 +67,18 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
      * @return
      */
     @Override
-    public List<TableFieldDTO> queryFieldList(QueryFieldDTO queryFieldDTO) {
+    public List<FieldDTO> queryFieldList(QueryFieldDTO queryFieldDTO) {
+        List<FieldDTO> fieldInfoList = fieldMapper.queryFieldList(queryFieldDTO);
+        return fieldInfoList;
+    }
+
+    /**
+     * 查询字段属性配置表列表
+     * @param queryFieldDTO
+     * @return
+     */
+    @Override
+    public List<TableFieldDTO> queryTableFieldList(QueryFieldDTO queryFieldDTO) {
 
         // 存放表名和对应的字段
         List<TableFieldDTO> tableFieldDTOList = new ArrayList<>();

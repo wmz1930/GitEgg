@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- gitegg扩展Mybatis Plus代码生成工具 -->
+        <!-- gitegg扩展Mybatis Plus代码生成工具-->
         <dependency>
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-code-generator</artifactId>

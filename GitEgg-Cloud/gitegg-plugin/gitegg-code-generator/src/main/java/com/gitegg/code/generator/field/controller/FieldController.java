@@ -55,7 +55,7 @@ public class FieldController {
     @GetMapping("/list/all")
     @ApiOperation(value = "查询字段属性配置表列表")
     public Result<?> listAll(QueryFieldDTO queryFieldDTO) {
-        List<TableFieldDTO> fieldList = fieldService.queryFieldList(queryFieldDTO);
+        List<TableFieldDTO> fieldList = fieldService.queryTableFieldList(queryFieldDTO);
         return Result.data(fieldList);
     }
 
