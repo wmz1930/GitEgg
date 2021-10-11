@@ -50,6 +50,9 @@
         <if test="field.id != null and field.id != ''">
             AND id = #{field.id}
         </if>
+        <if test="field.generationId != null and field.generationId != ''">
+            AND generation_id = #{field.generationId}
+        </if>
         <if test="field.startDateTime != null and field.startDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{field.startDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
@@ -67,6 +70,9 @@
         WHERE del_flag = 0
         <if test="field.id != null and field.id != ''">
             AND id = #{field.id}
+        </if>
+        <if test="field.generationId != null and field.generationId != ''">
+            AND generation_id = #{field.generationId}
         </if>
         <if test="field.startDateTime != null and field.startDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{field.startDateTime},'%Y-%m-%d %H:%M:%S')

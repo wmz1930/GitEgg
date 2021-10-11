@@ -63,4 +63,11 @@ public interface IConfigService extends IService<Config> {
     * @return
     */
     boolean batchDeleteConfig(List<Long> configIds);
+
+    /**
+     * 复制代码生成配置表
+     * @param queryConfigDTO
+     * @return
+     */
+    boolean copyConfig(QueryConfigDTO queryConfigDTO);
 }

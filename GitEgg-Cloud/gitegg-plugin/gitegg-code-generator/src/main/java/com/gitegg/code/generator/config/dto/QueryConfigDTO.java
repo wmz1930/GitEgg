@@ -74,6 +74,8 @@ public class QueryConfigDTO extends BaseEntity {
     @ApiModelProperty(value = "是否支持导出 1支持 0不支持")
     private Integer exportFlag;
 
+    @ApiModelProperty(value = "配置复制类型 Table只复制table配置  TableField全部复制")
+    private String copyType;
 
     @ApiModelProperty(value = "开始时间")
     private String startDateTime;

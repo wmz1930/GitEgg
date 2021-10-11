@@ -16,7 +16,7 @@ public class FieldUtils {
      * @throws Exception
      */
     public static boolean isExcludeField(String columnName) {
-        List<String> excludeFieldList = Arrays.asList("tenant_id", "create_time", "creator", "update_time", "operator", "del_flag");
+        List<String> excludeFieldList = Arrays.asList("id", "tenant_id", "create_time", "creator", "update_time", "operator", "del_flag");
         return excludeFieldList.contains(columnName);
     }
 }

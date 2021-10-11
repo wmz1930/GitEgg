@@ -45,7 +45,7 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
 
     private final IConfigService configService;
 
-    private final  IEngineService engineService;
+    private final IEngineService engineService;
 
     private final ITableJoinService tableJoinService;
 
@@ -133,15 +133,15 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
                 // 自动填充字段默认新增和编辑表单不需要展示
                 if(!FieldUtils.isExcludeField(field.getColumnName()))
                 {
-                    fieldDTO.setFormAdd(1);
-                    fieldDTO.setFormEdit(1);
-                    fieldDTO.setListShow(1);
-                    fieldDTO.setExportFlag(1);
-                    fieldDTO.setImportFlag(1);
+                    fieldDTO.setFormAdd(true);
+                    fieldDTO.setFormEdit(true);
+                    fieldDTO.setListShow(true);
+                    fieldDTO.setExportFlag(true);
+                    fieldDTO.setImportFlag(true);
                     // id和自动填充字段可以为空，其他字段设置为不能为null时，标注为非空字段
                     if(field.getMetaInfo().isNullable())
                     {
-                        fieldDTO.setRequired(1);
+                        fieldDTO.setRequired(true);
                     }
                 }
 

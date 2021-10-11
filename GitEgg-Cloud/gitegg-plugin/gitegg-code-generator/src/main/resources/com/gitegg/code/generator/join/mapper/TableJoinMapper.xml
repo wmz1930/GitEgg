@@ -35,6 +35,9 @@
         <if test="tableJoin.id != null and tableJoin.id != ''">
             AND id = #{tableJoin.id}
         </if>
+        <if test="tableJoin.generationId != null and tableJoin.generationId != ''">
+            AND generation_id = #{tableJoin.generationId}
+        </if>
         <if test="tableJoin.startDateTime != null and tableJoin.startDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tableJoin.startDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
@@ -52,6 +55,9 @@
         WHERE del_flag = 0
         <if test="tableJoin.id != null and tableJoin.id != ''">
             AND id = #{tableJoin.id}
+        </if>
+        <if test="tableJoin.generationId != null and tableJoin.generationId != ''">
+            AND generation_id = #{tableJoin.generationId}
         </if>
         <if test="tableJoin.startDateTime != null and tableJoin.startDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tableJoin.startDateTime},'%Y-%m-%d %H:%M:%S')

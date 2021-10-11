@@ -59,4 +59,14 @@ public class EngineController {
         return Result.data(tableInfo);
     }
 
+    /**
+     * 执行代码生成操作
+     */
+    @GetMapping("/process/generate/code")
+    @ApiOperation(value = "查询表字段信息")
+    public Result<?> processGenerateCode(QueryConfigDTO queryConfigDTO) {
+        engineService.processGenerateCode(queryConfigDTO);
+        return Result.success();
+    }
+
  }

@@ -62,34 +62,34 @@ public class Field extends BaseEntity {
 
     @ApiModelProperty(value = "表单新增")
     @TableField("form_add")
-    private Integer formAdd;
+    private Boolean formAdd;
 
     @ApiModelProperty(value = "表单编辑")
     @TableField("form_edit")
-    private Integer formEdit;
+    private Boolean formEdit;
 
     @ApiModelProperty(value = "查询条件")
     @TableField("query_term")
-    private Integer queryTerm;
+    private Boolean queryTerm;
 
     @ApiModelProperty(value = "列表展示")
     @TableField("list_show")
-    private Integer listShow;
+    private Boolean listShow;
 
     @ApiModelProperty(value = "是否支持导入 1支持 0不支持")
     @TableField("import_flag")
-    private Integer importFlag;
+    private Boolean importFlag;
 
     @ApiModelProperty(value = "是否支持导出 1支持 0不支持")
     @TableField("export_flag")
-    private Integer exportFlag;
+    private Boolean exportFlag;
 
     @ApiModelProperty(value = "是否必填")
-    private Integer required;
+    private Boolean required;
 
     @ApiModelProperty(value = "是否唯一")
     @TableField("field_unique")
-    private Integer fieldUnique;
+    private Boolean fieldUnique;
 
     @ApiModelProperty(value = "查询类型")
     @TableField("query_type")

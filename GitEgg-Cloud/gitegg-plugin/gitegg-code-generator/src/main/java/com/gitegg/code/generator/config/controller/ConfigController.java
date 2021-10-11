@@ -133,4 +133,18 @@ public class ConfigController {
             return Result.data(false);
         }
     }
+
+    /**
+     * 复制代码生成配置
+     */
+    @GetMapping("/copy")
+    @ApiOperation(value = "复制代码生成配置")
+    public Result<?> copy(QueryConfigDTO queryConfigDTO) {
+        boolean result = configService.copyConfig(queryConfigDTO);
+        if (result){
+            return Result.data(true);
+        } else{
+            return Result.data(false);
+        }
+    }
  }

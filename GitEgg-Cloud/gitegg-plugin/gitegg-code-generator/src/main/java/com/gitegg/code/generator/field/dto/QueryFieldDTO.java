@@ -49,28 +49,28 @@ public class QueryFieldDTO extends BaseEntity {
     private String entityName;
 
     @ApiModelProperty(value = "表单新增")
-    private Integer formAdd;
+    private Boolean formAdd;
 
     @ApiModelProperty(value = "表单编辑")
-    private Integer formEdit;
+    private Boolean formEdit;
 
     @ApiModelProperty(value = "查询条件")
-    private Integer queryTerm;
+    private Boolean queryTerm;
 
     @ApiModelProperty(value = "列表展示")
-    private Integer listShow;
+    private Boolean listShow;
 
     @ApiModelProperty(value = "是否支持导入 1支持 0不支持")
-    private Integer importFlag;
+    private Boolean importFlag;
 
     @ApiModelProperty(value = "是否支持导出 1支持 0不支持")
-    private Integer exportFlag;
+    private Boolean exportFlag;
 
     @ApiModelProperty(value = "是否必填")
-    private Integer required;
+    private Boolean required;
 
     @ApiModelProperty(value = "是否唯一")
-    private Integer fieldUnique;
+    private Boolean fieldUnique;
 
     @ApiModelProperty(value = "查询类型")
     private String queryType;

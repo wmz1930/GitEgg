@@ -38,4 +38,10 @@ public interface IEngineService {
      */
     List<TableInfo> queryConfigFields(QueryConfigDTO queryConfigDTO);
 
+    /**
+     * 执行代码生成
+     * @param queryConfigDTO
+     * @return
+     */
+    boolean processGenerateCode(QueryConfigDTO queryConfigDTO);
 }

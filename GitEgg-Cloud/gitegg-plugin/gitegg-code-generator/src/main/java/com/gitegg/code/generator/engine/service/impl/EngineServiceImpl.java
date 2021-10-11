@@ -58,7 +58,15 @@ public class EngineServiceImpl implements IEngineService {
 
     private final ITableJoinService tableJoinService;
 
-    private @Lazy IFieldService fieldService;
+    /**
+     * 解决循环依赖问题
+     */
+    private IFieldService fieldService;
+
+    @Autowired
+    public void setFieldService(@Lazy IFieldService fieldService) {
+        this.fieldService = fieldService;
+    }
 
     @Override
     public List<TableDTO> queryTableList(QueryConfigDTO queryConfigDTO) {
@@ -138,7 +146,8 @@ public class EngineServiceImpl implements IEngineService {
         return tableInfoList;
     }
 
-    public boolean generatorCode(QueryConfigDTO queryConfigDTO){
+    @Override
+    public boolean processGenerateCode(QueryConfigDTO queryConfigDTO){
 
         Config config = configService.getById(queryConfigDTO.getId());
 
@@ -146,27 +155,15 @@ public class EngineServiceImpl implements IEngineService {
         queryFieldDTO.setGenerationId(queryConfigDTO.getId());
         List<FieldDTO> fieldDTOS = fieldService.queryFieldList(queryFieldDTO);
 
+        //查询数据源配置
+        Datasource datasource = datasourceService.getById(config.getDatasourceId());
+
         //前端代码路径
         String frontCodePath = config.getFrontCodePath();
         //后端代码路径
         String serviceCodePath = config.getServiceCodePath();
 
-        //基础配置
-        String url = "jdbc:mysql://172.16.20.188/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&all owMultiQueries=true&serverTimezone=Asia/Shanghai";
-        String username = "myHisc";
-        String password = "root4Hisc";
-
-        //可选配置
-        String driver = "";
-        String dbType = "";
-        String typeConvert = "";
-        String keyWordsHandler = "";
-        String dbQuery = "";
-        String schema = "";
-
-
-
-        FastAutoGenerator.create(url, username, password)
+        FastAutoGenerator.create(datasource.getUrl(), datasource.getUsername(), datasource.getPassword())
                 .globalConfig(builder -> {
                     //全局配置
                     String author = "GitEgg";
