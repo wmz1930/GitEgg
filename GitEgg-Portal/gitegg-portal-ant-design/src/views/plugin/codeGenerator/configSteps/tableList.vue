@@ -17,6 +17,7 @@
                       show-search
                       style="width:100%;"
                       :default-value="text"
+                      :disabled="!record.queryTerm"
                       :filter-option="filterOption"
                       v-model="record.queryType">
               <a-select-option v-for="item in queryTypeDict.dictList" :key="item.id" :value="item.dictCode">
@@ -41,15 +42,11 @@
           </template>
         </a-table>
       </a-tab-pane>
-      <a-button slot="tabBarExtraContent" @click="createData">
-        保存
-      </a-button>
     </a-tabs>
   </a-card>
 </template>
 
 <script>
-    import { queryFieldListAll, editField } from '@/api/plugin/codeGenerator/field/field'
     import { batchListGeneratorDict } from '@/api/plugin/codeGenerator/dict/dict'
     export default {
         name: 'FieldTable',
@@ -59,6 +56,10 @@
         props: {
             configForm: {
                 type: Object,
+                default: undefined
+            },
+            fields: {
+                type: Array,
                 default: undefined
             }
         },
@@ -87,7 +88,9 @@
                     joinId: ''
                 },
                 // 表头
-                columnsField: [
+                columnsField: [],
+                // 表头
+                baseColumnsField: [
                    {
                         title: '序号',
                         dataIndex: 'index',
@@ -134,22 +137,24 @@
                         width: '130px',
                         dataIndex: 'listShow',
                         scopedSlots: { customRender: 'listShowRender' }
-                    },
-                    {
+                    }
+                ],
+                // 表头
+                importColumnField: {
                         title: '支持导入',
                         align: 'center',
                         width: '130px',
                         dataIndex: 'importFlag',
                         scopedSlots: { customRender: 'importFlagRender' }
-                    },
-                    {
+                },
+                // 表头
+                exportColumnField: {
                         title: '支持导出',
                         align: 'center',
                         width: '130px',
                         dataIndex: 'exportFlag',
                         scopedSlots: { customRender: 'exportFlagRender' }
-                    }
-                ],
+                },
                 rules: {
                     // 字段校验，这里自己选择使用哪些校验
                     field: [
@@ -161,7 +166,10 @@
         },
         watch: {
             configForm (val) {
-              this.getFieldList()
+              this.processImportAndExport()
+            },
+            fields (val) {
+                this.fieldDataList = val
             }
         },
         created () {
@@ -170,6 +178,7 @@
             const dictCodeList = dictList.map(function (n) {
               return n.dictCode
             })
+            this.processImportAndExport()
             this.getBatchDataDictList(dictCodeList).then(function (result) {
                 dictList.forEach(function (dict) {
                   dict.dictList = result[dict.dictCode]
@@ -178,7 +187,7 @@
                     dict.filterMap[item.dictCode] = item.dictName
                   })
                 })
-                that.getFieldList()
+                that.fieldDataList = that.fields
             })
         },
         methods: {
@@ -192,26 +201,14 @@
               })
               return result
             },
-            getFieldList () {
-                if (this.configForm.id && this.configForm.id !== '') {
-                  this.listLoading = true
-                  this.listQuery.generationId = this.configForm.id
-                  queryFieldListAll(this.listQuery).then(response => {
-                      this.fieldDataList = response.data
-                      this.listLoading = false
-                  })
+            processImportAndExport () {
+                this.columnsField = this.baseColumnsField
+                if (this.configForm.importFlag) {
+                    this.columnsField = this.columnsField.concat(this.importColumnField)
                 }
-            },
-            createData () {
-               let filedList = []
-               this.fieldDataList.forEach(function (fieldData) {
-                  filedList = filedList.concat(fieldData.fieldDTOList)
-               })
-               editField(filedList).then(() => {
-                   this.dialogFormVisible = false
-                   this.getFieldList()
-                   this.$message.success('字段设置保存成功')
-               })
+                if (this.configForm.exportFlag) {
+                    this.columnsField = this.columnsField.concat(this.exportColumnField)
+                }
             },
             filterOption (input, option) {
               return (

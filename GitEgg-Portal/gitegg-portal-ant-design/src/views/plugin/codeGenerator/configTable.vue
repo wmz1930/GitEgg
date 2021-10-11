@@ -128,13 +128,19 @@
           配置规则
         </router-link>
         <a-divider type="vertical" />
-        <a @click="handleUpdate(record)">执行</a>
+        <a @click="processGenerateCode(record)">生成代码</a>
         <a-divider type="vertical" />
         <a-dropdown>
           <a class="ant-dropdown-link">
             更多 <a-icon type="down" />
           </a>
           <a-menu slot="overlay">
+            <a-menu-item>
+              <a href="javascript:;" @click="copyTableConfig(record)">复制表配置</a>
+            </a-menu-item>
+            <a-menu-item>
+              <a href="javascript:;" @click="copyTableFieldConfig(record)">复制全部配置</a>
+            </a-menu-item>
             <a-menu-item>
               <a href="javascript:;" @click="handleDelete(record)">删除</a>
             </a-menu-item>
@@ -304,7 +310,8 @@
 
 <script>
     import { STable, SelectAsyn } from '@/components'
-    import { queryConfigList, createConfig, updateConfig, batchDeleteConfig, deleteConfig } from '@/api/plugin/codeGenerator/config/config'
+    import { queryConfigList, createConfig, updateConfig, batchDeleteConfig, deleteConfig, copyConfig } from '@/api/plugin/codeGenerator/config/config'
+    import { generateCode } from '@/api/plugin/codeGenerator/engine/engine'
     import { queryDatasourceList } from '@/api/plugin/codeGenerator/datasource/datasource'
     import moment from 'moment'
     import { batchListDict } from '@/api/system/base/dict'
@@ -390,6 +397,10 @@
                     startDateTime: '',
                     endDateTime: ''
                 },
+                copyParams: {
+                  id: undefined,
+                  copyType: 'Table'
+                },
                 dialogFormVisible: false,
                 dialogStatus: '',
                 textMap: {
@@ -465,7 +476,7 @@
                     {
                         title: '操作',
                         dataIndex: 'action',
-                        width: '260px',
+                        width: '280px',
                         scopedSlots: { customRender: 'action' }
                     }
                 ],
@@ -743,6 +754,51 @@
                     onCancel () {
                         that.$message.info('已取消删除')
                     }
+                })
+            },
+            copyTableConfig (row) {
+                const that = this
+                this.$confirm({
+                    title: '请注意，确定是否仅复制表配置？',
+                    content: '该操作将只会复制表的配置，不会复制表字段的配置，是否继续？',
+                    onOk () {
+                      that.copyParams.id = row.id
+                      that.copyParams.copyType = 'Table'
+                      that.processCopy()
+                    },
+                    onCancel () {
+
+                    }
+                })
+            },
+            copyTableFieldConfig (row) {
+                const that = this
+                this.$confirm({
+                    title: '请注意，确定是否全部复制？',
+                    content: '如果全部复制的话，会将表字段的所有配置都复制，是否继续？',
+                    onOk () {
+                      that.copyParams.id = row.id
+                      that.copyParams.copyType = 'TableField'
+                      that.processCopy()
+                    },
+                    onCancel () {
+
+                    }
+                })
+            },
+            processCopy () {
+                this.$loading.show()
+                copyConfig(this.copyParams).then(response => {
+                    this.$loading.hide()
+                    this.$message.success('复制成功')
+                    this.handleFilter()
+                })
+            },
+            processGenerateCode (row) {
+                this.$loading.show()
+                generateCode({ id: row.id }).then(response => {
+                    this.$loading.hide()
+                    this.$message.success('执行成功')
                 })
             },
             filterOption (input, option) {

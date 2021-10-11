@@ -61,3 +61,11 @@ export function checkConfigExist (data) {
     params: data
   })
 }
+
+export function copyConfig (query) {
+  return request({
+    url: '/gitegg-plugin-code/code/generator/config/copy',
+    method: 'get',
+    params: query
+  })
+}

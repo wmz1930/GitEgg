@@ -6,11 +6,11 @@
       </a-step>
     </a-steps>
     <div class="steps-content">
-      <table-join :configForm="configForm" v-show="steps[current].content === 'union-table'" ref="tableJoin"></table-join>
-      <table-field :configForm="configForm" v-show="steps[current].content === 'filed-config'" ref="tableConfig"></table-field>
-      <table-form :configForm="configForm" v-show="steps[current].content === 'form-config'" ref="tableForm"></table-form>
-      <table-form-valid :configForm="configForm" v-show="steps[current].content === 'form-valid'" ref="tableFormValid"></table-form-valid>
-      <table-list :configForm="configForm" v-show="steps[current].content === 'list-config'" ref="tableList"></table-list>
+      <table-join :configForm="configForm" v-show="steps[current] && steps[current].content === 'union-table' && configForm.tableType === 'multi'" ref="tableJoin"></table-join>
+      <table-field :configForm="configForm" :fields="fieldList" v-show="steps[current] && steps[current].content === 'filed-config'" ref="tableConfig"></table-field>
+      <table-form :configForm="configForm" :fields="fieldList" v-show="steps[current] && steps[current].content === 'form-config'" ref="tableForm"></table-form>
+      <table-form-valid :configForm="configForm" :fields="fieldList" v-show="steps[current] && steps[current].content === 'form-valid'" ref="tableFormValid"></table-form-valid>
+      <table-list :configForm="configForm" :fields="fieldList" v-show="steps[current] && steps[current].content === 'list-config'" ref="tableList"></table-list>
     </div>
     <div class="back-action">
       <a-button style="margin-left: 12px" @click="backToList">
@@ -26,9 +26,9 @@
       <a-button
         v-if="current == steps.length - 1"
         type="primary"
-        @click="$message.success('Processing complete!')"
+        @click="completeSteps"
       >
-        完成
+        配置完成
       </a-button>
 
       <a-button v-if="current < steps.length - 1" type="primary" @click="next">
@@ -41,6 +41,7 @@
 <script>
     import { STable } from '@/components'
     import { queryConfigList, createConfig, updateConfig, updateConfigStatus, batchDeleteConfig, deleteConfig, checkConfigExist, queryConfig } from '@/api/plugin/codeGenerator/config/config'
+    import { queryFieldListAll, editField } from '@/api/plugin/codeGenerator/field/field'
     import TableJoin from './configSteps/tableJoin'
     import TableField from './configSteps/tableField'
     import TableForm from './configSteps/tableForm'
@@ -86,12 +87,15 @@
             }
             return {
                 current: 0,
-                steps: [
+                steps: [],
+                stepsMulti: [
                     {
                         title: '联表配置',
                         content: 'union-table',
                         icon: 'appstore'
-                    },
+                    }
+                ],
+                stepsSingle: [
                     {
                         title: '字段配置',
                         content: 'filed-config',
@@ -118,6 +122,7 @@
                 filterText: '',
                 tableKey: 0,
                 list: null,
+                fieldList: [],
                 total: 0,
                 listLoading: true,
                 listQuery: {
@@ -254,9 +259,13 @@
             }
         },
         watch: {
-            // filterText (val) {
-            //   this.$refs['configTree'].filter(val)
-            // }
+            '$route' (to, from) {
+                if (to.name === 'ConfigEdit' && to.params.id && to.params.id !== '') {
+                    this.fieldList = []
+                    this.current = 0
+                    this.getConfig()
+                }
+            }
         },
         created () {
             this.getConfig()
@@ -266,19 +275,66 @@
                 this.$router.push({ path: '/plugin/code/generator/config/table' })
             },
             next () {
-            this.current++
+                this.current++
+                // 字段配置
+                if (this.steps[this.current].content === 'filed-config') {
+                    this.getFieldList()
+                }
+                // 表单配置
+                if (this.steps[this.current].content === 'form-config') {
+
+                }
+                // 表单校验
+                if (this.steps[this.current].content === 'form-valid') {
+
+                }
+                // 列表配置
+                if (this.steps[this.current].content === 'list-config') {
+
+                }
             },
             prev () {
-            this.current--
+                this.current--
             },
             getConfig () {
-                this.listLoading = true
+                this.$loading.show()
+                this.steps = []
                 const id = this.$route.params && this.$route.params.id
                 this.listQuery.id = id
                 queryConfig(this.listQuery).then(response => {
                     this.configForm = response.data
-                    this.listLoading = false
+                    this.$loading.hide()
+                    if (this.configForm.tableType === 'multi') {
+                        this.steps = this.steps.concat(this.stepsMulti)
+                    } else {
+                        this.getFieldList()
+                    }
+                    this.steps = this.steps.concat(this.stepsSingle)
                 })
+            },
+            getFieldList () {
+                this.$loading.show()
+                const id = this.$route.params && this.$route.params.id
+                queryFieldListAll({ generationId: id }).then(response => {
+                    this.fieldList = response.data
+                    this.$loading.hide()
+                })
+            },
+            createFieldList () {
+               this.$loading.show()
+               let fileds = []
+               this.fieldList.forEach(function (fieldData) {
+                  fileds = fileds.concat(fieldData.fieldDTOList)
+               })
+               editField(fileds).then(() => {
+                   this.dialogFormVisible = false
+                   this.$loading.hide()
+                   this.getFieldList()
+                   this.$message.success('字段设置保存成功')
+               })
+            },
+            completeSteps () {
+                this.createFieldList()
             },
             resetQuery () {
                 this.listQuery = {

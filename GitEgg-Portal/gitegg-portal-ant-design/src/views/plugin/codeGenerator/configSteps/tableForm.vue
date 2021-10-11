@@ -9,12 +9,12 @@
           :pagination="false"
           bordered>
           <template slot="formAddRender" slot-scope="text, record" >
-            <a-checkbox :checked="text === 1" v-model="record.formAdd" @change="onChange('formAdd', record)">
+            <a-checkbox :checked="text" v-model="record.formAdd">
               新增
             </a-checkbox>
           </template>
           <template slot="formEditRender" slot-scope="text, record" >
-            <a-checkbox :checked="text === 1" v-model="record.formEdit" @change="onChange('formEdit', record)">
+            <a-checkbox :checked="text" v-model="record.formEdit">
               编辑
             </a-checkbox>
           </template>
@@ -37,6 +37,7 @@
                       style="width:100%;"
                       :default-value="text"
                       :filter-option="filterOption"
+                      :disabled="dictCodeDisabled(record.controlType)"
                       v-model="record.dictCode">
               <a-select-option v-for="item in baseDictList" :key="item.id" :value="item.dictCode">
                 {{ item.dictName }}
@@ -45,15 +46,11 @@
           </template>
         </a-table>
       </a-tab-pane>
-      <a-button slot="tabBarExtraContent" @click="createData">
-        保存
-      </a-button>
     </a-tabs>
   </a-card>
 </template>
 
 <script>
-    import { queryFieldListAll, editField } from '@/api/plugin/codeGenerator/field/field'
     import { queryDictBusinessList } from '@/api/system/base/dictBusiness'
     import { batchListGeneratorDict } from '@/api/plugin/codeGenerator/dict/dict'
     export default {
@@ -64,6 +61,10 @@
         props: {
             configForm: {
                 type: Object,
+                default: undefined
+            },
+            fields: {
+                type: Array,
                 default: undefined
             }
         },
@@ -160,7 +161,10 @@
         },
         watch: {
             configForm (val) {
-              this.getFieldList()
+
+            },
+            fields (val) {
+                this.fieldDataList = val
             }
         },
         created () {
@@ -178,7 +182,7 @@
                     dict.filterMap[item.dictCode] = item.dictName
                   })
                 })
-                that.getFieldList()
+                that.fieldDataList = that.fields
             })
         },
         methods: {
@@ -199,32 +203,12 @@
                     this.listLoading = false
                 })
             },
-            getFieldList () {
-                if (this.configForm.id && this.configForm.id !== '') {
-                  this.listLoading = true
-                  this.listQuery.generationId = this.configForm.id
-                  queryFieldListAll(this.listQuery).then(response => {
-                      this.fieldDataList = response.data
-                      this.listLoading = false
-                  })
-                }
-            },
-            createData () {
-               let filedList = []
-               this.fieldDataList.forEach(function (fieldData) {
-                  filedList = filedList.concat(fieldData.fieldDTOList)
-               })
-               editField(filedList).then(() => {
-                   this.dialogFormVisible = false
-                   this.getFieldList()
-                   this.$message.success('字段设置保存成功')
-               })
-            },
-            onChange (field, record) {
-              if (record[field]) {
-                record[field] = 1
+            dictCodeDisabled (type) {
+              if (type && (type === 'SELECT' || type === 'RADIO' || type === 'CHECKBOX' ||
+               type === 'SELECT_MULTI' || type === 'SWITCH')) {
+                  return false
               } else {
-                record[field] = 0
+                  return true
               }
             },
             filterOption (input, option) {

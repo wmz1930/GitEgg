@@ -15,3 +15,11 @@ export function queryTableFieldList (query) {
     params: query
   })
 }
+
+export function generateCode (query) {
+  return request({
+    url: '/gitegg-plugin-code/code/generator/engine/process/generate/code',
+    method: 'get',
+    params: query
+  })
+}

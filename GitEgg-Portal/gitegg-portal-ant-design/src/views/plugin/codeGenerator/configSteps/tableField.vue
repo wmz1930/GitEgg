@@ -1,7 +1,7 @@
 <template>
   <a-card :bordered="false" class="step-content">
     <a-tabs :default-active-key="0">
-      <a-tab-pane v-for="fieldData in fieldDataList" :key="fieldData.joinId" :tab="'【' + fieldData.joinTableName + '】 字段配置'">
+      <a-tab-pane v-for="fieldData in fieldDataList" :key="fieldData.joinId" :tab="'表【' + fieldData.joinTableName + '】 字段配置'">
         <a-table
           :rowKey="row=>row.id + row.fieldName"
           :columns="columnsField"
@@ -45,15 +45,11 @@
           </template>
         </a-table>
       </a-tab-pane>
-      <a-button slot="tabBarExtraContent" @click="createData">
-        保存
-      </a-button>
     </a-tabs>
   </a-card>
 </template>
 
 <script>
-    import { queryFieldListAll, editField } from '@/api/plugin/codeGenerator/field/field'
     import { batchListGeneratorDict } from '@/api/plugin/codeGenerator/dict/dict'
     let vm = {}
     export default {
@@ -66,6 +62,10 @@
         props: {
             configForm: {
                 type: Object,
+                default: undefined
+            },
+            fields: {
+                type: Array,
                 default: undefined
             }
         },
@@ -139,7 +139,10 @@
         },
         watch: {
             configForm (val) {
-              this.getFieldList()
+
+            },
+            fields (val) {
+                this.fieldDataList = val
             }
         },
         created () {
@@ -156,7 +159,7 @@
                     dict.filterMap[item.dictCode] = item.dictName
                   })
                 })
-                that.getFieldList()
+                that.fieldDataList = that.fields
             })
         },
         methods: {
@@ -169,27 +172,6 @@
                 that.listLoading = false
               })
               return result
-            },
-            getFieldList () {
-                if (this.configForm.id && this.configForm.id !== '') {
-                  this.listLoading = true
-                  this.listQuery.generationId = this.configForm.id
-                  queryFieldListAll(this.listQuery).then(response => {
-                      this.fieldDataList = response.data
-                      this.listLoading = false
-                  })
-                }
-            },
-            createData () {
-               let filedList = []
-               this.fieldDataList.forEach(function (fieldData) {
-                  filedList = filedList.concat(fieldData.fieldDTOList)
-               })
-               editField(filedList).then(() => {
-                   this.dialogFormVisible = false
-                   this.getFieldList()
-                   this.$message.success('字段设置保存成功')
-               })
             },
             filterOption (input, option) {
               return (

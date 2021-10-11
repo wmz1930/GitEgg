@@ -33,12 +33,12 @@
             />
           </template>
           <template slot="requiredRender" slot-scope="text, record" >
-            <a-checkbox :checked="text === 1" v-model="record.required" @change="onChange('required', record)">
+            <a-checkbox :checked="text" v-model="record.required">
               必填
             </a-checkbox>
           </template>
           <template slot="fieldUniqueRender" slot-scope="text, record" >
-            <a-checkbox :checked="text === 1" v-model="record.fieldUnique" @change="onChange('fieldUnique', record)">
+            <a-checkbox :checked="text" v-model="record.fieldUnique">
               唯一
             </a-checkbox>
           </template>
@@ -60,15 +60,11 @@
           </template>
         </a-table>
       </a-tab-pane>
-      <a-button slot="tabBarExtraContent" @click="createData">
-        保存
-      </a-button>
     </a-tabs>
   </a-card>
 </template>
 
 <script>
-    import { queryFieldListAll, editField } from '@/api/plugin/codeGenerator/field/field'
     import { batchListGeneratorDict } from '@/api/plugin/codeGenerator/dict/dict'
     export default {
         name: 'FormValidTable',
@@ -78,6 +74,10 @@
         props: {
             configForm: {
                 type: Object,
+                default: undefined
+            },
+            fields: {
+                type: Array,
                 default: undefined
             }
         },
@@ -201,7 +201,10 @@
         },
         watch: {
             configForm (val) {
-              this.getFieldList()
+
+            },
+            fields (val) {
+                this.fieldDataList = val
             }
         },
         created () {
@@ -218,7 +221,7 @@
                     dict.filterMap[item.dictCode] = item.dictName
                   })
                 })
-                that.getFieldList()
+                that.fieldDataList = that.fields
             })
         },
         methods: {
@@ -231,27 +234,6 @@
                 that.listLoading = false
               })
               return result
-            },
-            getFieldList () {
-                if (this.configForm.id && this.configForm.id !== '') {
-                  this.listLoading = true
-                  this.listQuery.generationId = this.configForm.id
-                  queryFieldListAll(this.listQuery).then(response => {
-                      this.fieldDataList = response.data
-                      this.listLoading = false
-                  })
-                }
-            },
-            createData () {
-               let filedList = []
-               this.fieldDataList.forEach(function (fieldData) {
-                  filedList = filedList.concat(fieldData.fieldDTOList)
-               })
-               editField(filedList).then(() => {
-                   this.dialogFormVisible = false
-                   this.getFieldList()
-                   this.$message.success('字段设置保存成功')
-               })
             },
             onChange (field, record) {
               if (record[field]) {

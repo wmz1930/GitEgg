@@ -273,22 +273,19 @@
                 },
                 // 加载数据方法 必须为 Promise 对象
                 loadData: parameter => {
-                    return queryTableJoinList(Object.assign(parameter, this.listQuery))
-                        .then(res => {
-                            this.list = res.data
-                            return res
-                        })
+                    return function () {}
                 }
             }
         },
         watch: {
             configForm (val) {
               this.getTableList()
+              this.queryDbTypeDictList()
             }
         },
         created () {
-            this.getTableList()
-            this.queryDbTypeDictList()
+            // this.getTableList()
+            // this.queryDbTypeDictList()
         },
         methods: {
             getTableList () {
@@ -310,15 +307,17 @@
             },
             queryDbTypeDictList () {
                 const that = this
-                that.listLoading = true
-                listGeneratorDict('UNION_TYPE').then(response => {
-                    this.unionTypeDictList = response.data
-                    this.unionTypeDictList.forEach((item, index, arr) => {
-                        this.unionTypeDictFilterMap[item.dictCode] = item.dictName
+                if (that.configForm.id && that.configForm.id !== '') {
+                    that.listLoading = true
+                    listGeneratorDict('UNION_TYPE').then(response => {
+                        this.unionTypeDictList = response.data
+                        this.unionTypeDictList.forEach((item, index, arr) => {
+                            this.unionTypeDictFilterMap[item.dictCode] = item.dictName
+                        })
+                        that.listLoading = false
+                        that.getList()
                     })
-                    that.listLoading = false
-                    that.getList()
-                })
+                }
             },
             handleTableChange (value) {
                 this.tableJoinForm.joinTableSelect = undefined
@@ -363,11 +362,16 @@
                 this.advanced = !this.advanced
             },
             getList () {
-                this.listLoading = true
-                queryTableJoinList(this.listQuery).then(response => {
-                    this.list = response.data
-                    this.total = response.count
-                    this.listLoading = false
+                const that = this
+                that.listQuery.generationId = that.configForm.id
+                  that.loadData = function (parameter) {
+                  return queryTableJoinList(Object.assign(parameter, that.listQuery)).then(response => {
+                    that.list = response.data
+                    return response
+                  })
+                }
+                that.$nextTick(() => {
+                  that.handleFilter()
                 })
             },
             handleFilter () {

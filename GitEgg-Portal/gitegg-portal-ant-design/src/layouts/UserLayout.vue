@@ -216,7 +216,7 @@ export default {
           .circle{
               width: 100px;
               height: 100px;
-              border-radius: 35%;
+              border-radius: 17%;
               box-shadow: rgba(129, 176, 40,.8) 0px 0px 10px 1px;
               top: 30%;
               left: 40%;
