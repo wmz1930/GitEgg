@@ -372,7 +372,7 @@
                   filterMap: {}
                 },
                 yesOrNoDict: {
-                  dictCode: 'YES_NO',
+                  dictCode: 'TRUE_FALSE',
                   dictList: [],
                   filterMap: {}
                 },

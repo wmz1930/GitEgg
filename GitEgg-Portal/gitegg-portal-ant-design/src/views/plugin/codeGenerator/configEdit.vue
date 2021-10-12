@@ -170,8 +170,8 @@
                     leftTreeType: '',
                     frontCodePath: '',
                     serviceCodePath: '',
-                    importFlag: '',
-                    exportFlag: ''
+                    importFlag: false,
+                    exportFlag: false
                 },
                 // 表头
                 columns: [
@@ -378,8 +378,8 @@
                     leftTreeType: '',
                     frontCodePath: '',
                     serviceCodePath: '',
-                    importFlag: '',
-                    exportFlag: ''
+                    importFlag: false,
+                    exportFlag: false
                 }
             },
             onSelectChange (selectedRowKeys, selectedRows) {
