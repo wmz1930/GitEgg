@@ -10,11 +10,8 @@ import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
-import com.baomidou.mybatisplus.generator.fill.Property;
 import com.gitegg.code.generator.config.dto.QueryConfigDTO;
 import com.gitegg.code.generator.config.entity.Config;
 import com.gitegg.code.generator.config.service.IConfigService;
@@ -25,10 +22,12 @@ import com.gitegg.code.generator.engine.dto.TableDTO;
 import com.gitegg.code.generator.engine.service.IEngineService;
 import com.gitegg.code.generator.field.dto.FieldDTO;
 import com.gitegg.code.generator.field.dto.QueryFieldDTO;
-import com.gitegg.code.generator.field.dto.TableFieldDTO;
 import com.gitegg.code.generator.field.service.IFieldService;
 import com.gitegg.code.generator.join.entity.TableJoin;
 import com.gitegg.code.generator.join.service.ITableJoinService;
+import com.gitegg.platform.base.enums.BaseEntityEnum;
+import com.gitegg.platform.code.generator.constant.GitEggCodeGeneratorConstant;
+import com.gitegg.platform.code.generator.engine.GitEggFreemarkerTemplateEngine;
 import com.gitegg.platform.mybatis.entity.BaseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,11 +35,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 代码生成器接口类
@@ -86,28 +86,22 @@ public class EngineServiceImpl implements IEngineService {
         StrategyConfig strategyConfig = new StrategyConfig.Builder()
                 .addInclude(tableNames.toArray(new String[]{}))
                 .entityBuilder()
-//                .superClass(BaseEntity.class)
                 .enableChainModel()
                 .enableLombok()
                 .enableRemoveIsPrefix()
                 .enableTableFieldAnnotation()
                 .enableActiveRecord()
-                .logicDeleteColumnName("del_flag")
-                .logicDeletePropertyName("delFlag")
+                .logicDeleteColumnName(BaseEntityEnum.DEL_FLAG.field)
+                .logicDeletePropertyName(BaseEntityEnum.DEL_FLAG.entity)
                 .naming(NamingStrategy.underline_to_camel)
                 .columnNaming(NamingStrategy.underline_to_camel)
-//                .addSuperEntityColumns("tenant_id", "create_time", "creator", "update_time", "operator", "del_flag")
-                .addTableFills(new Column("create_time", FieldFill.INSERT))
-                .addTableFills(new Property("updateTime", FieldFill.INSERT_UPDATE))
+                .addTableFills(new Column(BaseEntityEnum.CREATE_TIME.field, FieldFill.INSERT))
+                .addTableFills(new Column(BaseEntityEnum.UPDATE_TIME.field, FieldFill.INSERT_UPDATE))
                 .idType(IdType.AUTO)
-                .formatFileName("%sEntity")
                 .build();
 
         ConfigBuilder configBuilder = new ConfigBuilder(null, dataSourceConfig, strategyConfig, null, null, null);
         List<TableInfo> tableInfoList = configBuilder.getTableInfoList();
-        tableInfoList.forEach(tableInfo -> {
-            System.out.println(tableInfo.getComment());
-        });
         return tableInfoList;
     }
 
@@ -155,63 +149,105 @@ public class EngineServiceImpl implements IEngineService {
         queryFieldDTO.setGenerationId(queryConfigDTO.getId());
         List<FieldDTO> fieldDTOS = fieldService.queryFieldList(queryFieldDTO);
 
+
+        Map<String, Object> customMap = new HashMap<>();
+        customMap.put(GitEggCodeGeneratorConstant.CONFIG, config);
+        customMap.put(GitEggCodeGeneratorConstant.FIELDS, fieldDTOS);
+
         //查询数据源配置
         Datasource datasource = datasourceService.getById(config.getDatasourceId());
 
+
+        String serviceName = config.getServiceName();
         //前端代码路径
         String frontCodePath = config.getFrontCodePath();
         //后端代码路径
         String serviceCodePath = config.getServiceCodePath();
+        //自定义路径
+        String parent = config.getParentPackage();
+        String moduleName = config.getModuleCode();
+        String codeDirPath =  (parent + StrUtil.DOT + moduleName).replace(StrUtil.DOT, File.separator) + File.separator;
 
         FastAutoGenerator.create(datasource.getUrl(), datasource.getUsername(), datasource.getPassword())
                 .globalConfig(builder -> {
                     //全局配置
-                    String author = "GitEgg";
+                    String author = GitEggCodeGeneratorConstant.AUTHOR;
                     builder.author(author) // 设置作者
                             .enableSwagger() // 开启 swagger 模式
                             .fileOverride() // 覆盖已生成文件
-                            .outputDir(serviceCodePath); // 指定输出目录
+                            .disableOpenDir()
+                            .outputDir(serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH); // 指定输出目录
                 })
                 .packageConfig(builder -> {
                     //包配置
-                    String parent = config.getParentPackage();
-                    String moduleName = config.getModuleName();
-                    String codeDirPath =  (parent + "." + moduleName).replace(".", "/");
-
+                    Map<OutputFile, String> pathInfoMap = new HashMap<>();
+                    pathInfoMap.put(OutputFile.mapperXml, serviceCodePath + GitEggCodeGeneratorConstant.RESOURCES_PATH + codeDirPath + GitEggCodeGeneratorConstant.MAPPER);
                     builder.parent(parent) // 设置父包名
                     .moduleName(moduleName) // 设置父包模块名
-                    .other("dto")
-                    .pathInfo(Collections.singletonMap(OutputFile.mapperXml, codeDirPath + "/mapper"))
-                    .pathInfo(Collections.singletonMap(OutputFile.other, codeDirPath + "/dto")); // 设置mapperXml生成路径
-                })
-                .templateConfig(builder -> {
-                    builder.entity("/templates/entity.java")
-                            .service("/templates/service.java")
-                            .serviceImpl("/templates/serviceImpl.java")
-                            .mapper("/templates/mapper.java")
-                            .mapperXml("/templates/mapper.xml")
-                            .controller("/templates/controller.java");
+                    .pathInfo(pathInfoMap); // 自定义生成路径
                 })
                 .injectionConfig(builder -> {
+
                     String dtoName = StrUtil.upperFirst(config.getModuleCode());
-                    builder.beforeOutputFile((tableInfo, objectMap) -> {
-                        System.out.println("tableInfo: " + tableInfo.getEntityName() + " objectMap: " + objectMap.size());
-                    })
-                    .customMap(Collections.singletonMap("fields", fieldDTOS))
-                    // DTO
-                    .customFile(Collections.singletonMap(dtoName + "DTO.java", "/templates/dto.java.ftl"))
-                    .customFile(Collections.singletonMap("Create" + dtoName + "DTO.java", "/templates/createDTO.java.ftl"))
-                    .customFile(Collections.singletonMap("Update" + dtoName + "DTO.java", "/templates/updateDTO.java.ftl"))
-                    .customFile(Collections.singletonMap("Query" + dtoName + "DTO.java", "/templates/queryDTO.java.ftl"))
+
+                    //dto
+                    String dtoFile = dtoName + GitEggCodeGeneratorConstant.DTO_JAVA;
+                    String createDtoFile = GitEggCodeGeneratorConstant.CREATE + dtoFile;
+                    String updateDtoFile = GitEggCodeGeneratorConstant.UPDATE + dtoFile;
+                    String queryDtoFile = GitEggCodeGeneratorConstant.QUERY + dtoFile;
+                    //Export and Import
+                    String exportFile = dtoName + GitEggCodeGeneratorConstant.EXPORT_JAVA;
+                    String importFile = dtoName + GitEggCodeGeneratorConstant.IMPORT_JAVA;
+                    // SQL
+                    String sqlFile = dtoName + GitEggCodeGeneratorConstant.RESOURCE_SQL;
+                    // vue and js
+                    String vueFile = config.getModuleCode() + GitEggCodeGeneratorConstant.TABLE_VUE;
+                    String jsFile = config.getModuleCode() + GitEggCodeGeneratorConstant.JS;
+
+                    //因为目前版本框架只支持自定义输出到other目录，所以这里利用重写AbstractTemplateEngine的outputCustomFile方法支持所有自定义文件输出目录
+                    Map<String, String> customFilePath = new HashMap<>();
+                    //dto
+                    String dtoPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + GitEggCodeGeneratorConstant.DTO;
+                    customFilePath.put(dtoFile, dtoPath);
+                    customFilePath.put(createDtoFile, dtoPath);
+                    customFilePath.put(updateDtoFile, dtoPath);
+                    customFilePath.put(queryDtoFile, dtoPath);
                     // Export and Import
-                    .customFile(Collections.singletonMap(dtoName + "Export.java", "/templates/entityExport.java.ftl"))
-                    .customFile(Collections.singletonMap(dtoName + "Import.java", "/templates/entityImport.java.ftl"))
-                     // SQL
-                    .customFile(Collections.singletonMap(dtoName + "Resource.sql", "/templates/resource.sql.ftl"))
-                    // 前端代码
+                    String entityPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + GitEggCodeGeneratorConstant.ENTITY;
+                    customFilePath.put(exportFile, entityPath);
+                    customFilePath.put(importFile, entityPath);
+                    // SQL
+                    String sqlPath = serviceCodePath + GitEggCodeGeneratorConstant.RESOURCES_PATH + codeDirPath + GitEggCodeGeneratorConstant.MAPPER;
+                    customFilePath.put(sqlFile, sqlPath);
+                    // VUE AND JS
+                    int start = serviceName.indexOf(StrUtil.DASHED);
+                    int end = serviceName.length();
+                    String servicePath = serviceName.substring(start, end).replace(StrUtil.DASHED, File.separator);
+                    String vuePath = frontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + servicePath + File.separator + config.getModuleCode();
+                    String jsPath = frontCodePath + GitEggCodeGeneratorConstant.JS_PATH + servicePath + File.separator + config.getModuleCode();
+                    customFilePath.put(vueFile, vuePath);
+                    customFilePath.put(jsFile, jsPath);
+
+                    customMap.put(GitEggCodeGeneratorConstant.CUSTOM_FILE_PATH_MAP, customFilePath);
+
+                    // 设置自定义输出文件
+                    Map<String, String> customFileMap = new HashMap<>();
+                    customFileMap.put(dtoFile, "/templates/dto.java.ftl");
+                    customFileMap.put(createDtoFile, "/templates/createDTO.java.ftl");
+                    customFileMap.put(updateDtoFile, "/templates/updateDTO.java.ftl");
+                    customFileMap.put(queryDtoFile, "/templates/queryDTO.java.ftl");
+                    // Export and Import
+                    customFileMap.put(exportFile, "/templates/entityExport.java.ftl");
+                    customFileMap.put(importFile, "/templates/entityImport.java.ftl");
+                    // SQL
+                    customFileMap.put(sqlFile, "/templates/resource.sql.ftl");
+                    // VUE AND JS
                     // TODO 要支持树形表、左树右表、左表右表、左表右树、左树右树形表、左树右树
-                    .customFile(Collections.singletonMap(config.getModuleCode() + "Table.vue", "/templates/pageListTable.vue.ftl"))
-                    .customFile(Collections.singletonMap(config.getModuleCode() + ".js", "/templates/pageListTable.js.ftl"));
+                    customFileMap.put(vueFile, "/templates/pageListTable.vue.ftl");
+                    customFileMap.put(jsFile, "/templates/pageListTable.js.ftl");
+
+                    builder.customMap(customMap)
+                    .customFile(customFileMap);
                 })
                 .strategyConfig(builder -> {
                     builder
@@ -220,10 +256,11 @@ public class EngineServiceImpl implements IEngineService {
                             .entityBuilder()
                             .enableLombok()
                             .superClass(BaseEntity.class)
-                            .addSuperEntityColumns("tenant_id", "create_time", "creator", "update_time", "operator", "del_flag")
+                            .addSuperEntityColumns(BaseEntityEnum.TENANT_ID.field, BaseEntityEnum.CREATE_TIME.field,
+                                    BaseEntityEnum.CREATOR.field, BaseEntityEnum.UPDATE_TIME.field, BaseEntityEnum.OPERATOR.field, BaseEntityEnum.DEL_FLAG.field)
                             .naming(NamingStrategy.underline_to_camel)
-                            .addTableFills(new Column("create_time", FieldFill.INSERT))	//基于数据库字段填充
-                            .addTableFills(new Property("updateTime", FieldFill.INSERT_UPDATE))	//基于模型属性填充
+                            .addTableFills(new Column(BaseEntityEnum.CREATE_TIME.field, FieldFill.INSERT))	//基于数据库字段填充
+                            .addTableFills(new Column(BaseEntityEnum.UPDATE_TIME.field, FieldFill.INSERT_UPDATE))	//基于模型属性填充
                             .controllerBuilder()
                             .enableRestStyle()
                             .enableHyphenStyle()
@@ -234,7 +271,7 @@ public class EngineServiceImpl implements IEngineService {
                     ;
                 })
                 // 使用Freemarker引擎模板，默认的是Velocity引擎模板
-                .templateEngine(new FreemarkerTemplateEngine())
+                .templateEngine(new GitEggFreemarkerTemplateEngine())
                 .execute();
         return true;
     }

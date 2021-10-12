@@ -53,7 +53,7 @@ public class Create${entity}DTO implements Serializable {
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list fields as field>
-    <#if field.formAdd == 1>
+    <#if field?? && field.formAdd == true>
 
     <#if field.comment!?length gt 0>
         <#if swagger>
@@ -64,7 +64,7 @@ public class Create${entity}DTO implements Serializable {
      */
         </#if>
     </#if>
-    <#if field.required == 1>
+    <#if field.required == true>
     @NotBlank(message="${field.comment}不能为空")
     </#if>
     private ${field.entityType} ${field.entityName};

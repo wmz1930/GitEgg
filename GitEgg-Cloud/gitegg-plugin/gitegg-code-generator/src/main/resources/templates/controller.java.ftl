@@ -209,7 +209,7 @@ public class ${table.controllerName} {
         }
     }
 
-    <#if exportFlag == 1>
+    <#if config.exportFlag == true>
     /**
     * 批量导出${table.comment!}数据
     * @param response
@@ -234,7 +234,7 @@ public class ${table.controllerName} {
     }
     </#if>
 
-    <#if importFlag == 1>
+    <#if config.importFlag == true>
     /**
     * 批量上传${table.comment!}数据
     * @param file

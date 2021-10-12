@@ -69,10 +69,10 @@ public class QueryConfigDTO extends BaseEntity {
     private String serviceCodePath;
 
     @ApiModelProperty(value = "是否支持导入 1支持 0不支持")
-    private Integer importFlag;
+    private Boolean importFlag;
 
     @ApiModelProperty(value = "是否支持导出 1支持 0不支持")
-    private Integer exportFlag;
+    private Boolean exportFlag;
 
     @ApiModelProperty(value = "配置复制类型 Table只复制table配置  TableField全部复制")
     private String copyType;

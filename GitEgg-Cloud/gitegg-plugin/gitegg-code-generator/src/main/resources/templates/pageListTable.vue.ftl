@@ -5,17 +5,24 @@
         <a-row :gutter="48">
         <#-- ----------  BEGIN 字段循环遍历  ---------->
         <#list fields as field>
-          <#if field.queryTerm == 1>
+          <#if field?? && field.queryTerm == true>
           <a-col :md="6" :sm="24">
             <a-form-model-item label="${field.comment}" prop="${field.entityName}">
-            <#if field.controlType == "Input">
+            <#if field.controlType == "INPUT_TEXT">
               <a-input
                       v-model.trim="listQuery.${field.entityName}"
-                      placeholder="${field.comment}"
+                      placeholder="请输入${field.comment}"
                       :max-length="${field.maxLength}"
                       @keyup.enter.native="handleFilter" />
             </#if>
-            <#if field.controlType == "InputNumber">
+            <#if field.controlType == "TEXTAREA">
+              <a-textarea
+                      v-model.trim="listQuery.${field.entityName}"
+                      placeholder="请输入${field.comment}"
+                      :auto-size="{ minRows: 3, maxRows: 5 }"
+                      @keyup.enter.native="handleFilter" />
+            </#if>
+            <#if field.controlType == "INPUT_NUMBER">
               <a-input-number
                       v-model.trim="listQuery.${field.entityName}"
                       placeholder="${field.comment}"
@@ -23,14 +30,14 @@
                       :max="${field.max}"
                       @keyup.enter.native="handleFilter" />
             </#if>
-            <#if field.controlType == "Radio">
+            <#if field.controlType == "RADIO">
               <#assign dictSelect=true/>
               <a-radio-group v-model="listQuery.${field.entityName}"
                              name="listQueryRadio${field.entityName}">
                 <a-radio :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">{{ item.dictName }}</a-radio>
               </a-radio-group>
             </#if>
-            <#if field.controlType == "Checkbox">
+            <#if field.controlType == "CHECKBOX">
               <#assign dictSelect=true/>
               <a-checkbox-group v-model="value" name="listQueryRadioCheckbox${field.entityName}">
                 <a-checkbox :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">
@@ -38,10 +45,10 @@
                 </a-checkbox>
               </a-checkbox-group>
             </#if>
-            <#if field.controlType == "Select" || field.controlType == "Multiple">
+            <#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI">
               <#assign dictSelect=true/>
               <#macro Multiple controlType>
-                <#if controlType == "Multiple">
+                <#if controlType == "SELECT_MULTI">
                   mode="multiple"
                 <#else>
                   mode="default"
@@ -63,9 +70,9 @@
                 </a-select-option>
               </a-select>
             </#if>
-            <#if field.controlType == "DatePicker" || field.controlType == "DateTimePicker">
+            <#if field.controlType == "DTAE_PICKER" || field.controlType == "DTAE_TIME_PICKER">
               <#macro DateTime controlType>
-                <#if controlType == "DateTimePicker">
+                <#if controlType == "DTAE_TIME_PICKER">
                       show-time
                       valueFormat="YYYY-MM-DD HH:mm:ss"
                 </#if>
@@ -75,7 +82,7 @@
                       <@Multiple controlType="${field.controlType}"/>
                       style="width:100%;"/>
             </#if>
-            <#if field.controlType == "TimePicker">
+            <#if field.controlType == "TIME_PICKER">
               <a-time-picker v-model.trim="listQuery.${field.entityName}"
                              placeholder="${field.comment}"
                              style="width:100%;"/>
@@ -120,12 +127,12 @@
                       :max-length="${field.maxLength}"
                       @keyup.enter.native="handleFilter" />
             </#if>
-            <#if field.controlType == "Rate">
+            <#if field.controlType == "RATE">
               <a-rate v-model.trim="listQuery.${field.entityName}"
                       placeholder="${field.comment}"
                       @keyup.enter.native="handleFilter"/>
             </#if>
-            <#if field.controlType == "Upload">
+            <#if field.controlType == "UPLOAD_FILE">
               <a-upload v-model="listQuery.${field.entityName}"
                         :file-list="file${field.entityName}List"
                         :remove="handle${field.entityName}Remove"
@@ -193,8 +200,8 @@
         </a-button>
       </a-dropdown>
 
-      <#if exportFlag == 1><a-button type="primary" icon="cloud-download" @click="handleDownload" style="margin-left: 8px;">导出</a-button></#if>
-      <#if importFlag == 1>
+      <#if config.exportFlag == true><a-button type="primary" icon="cloud-download" @click="handleDownload" style="margin-left: 8px;">导出</a-button></#if>
+      <#if config.importFlag == true>
       <a-upload
               name="uploadFile"
               :show-upload-list="false"
@@ -219,7 +226,7 @@
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
      <#list table.fields as field>
-     <#if field.annotationColumnName?ends_with("status")>
+     <#if field?? && field.annotationColumnName?ends_with("status")>
       <span slot="status" slot-scope="text, record">
         {{ record.${field.propertyName} | ${field.propertyName}DictFilter }}
       </span>
@@ -237,7 +244,7 @@
           </a>
           <a-menu slot="overlay">
           <#list table.fields as field>
-            <#if field.annotationColumnName?ends_with("status")>
+            <#if field?? && field.annotationColumnName?ends_with("status")>
             <a-menu-item>
               <a href="javascript:;" v-if="record.${field.propertyName}!='1'" size="mini" type="success" @click="handleModifyStatus(record,'1')">启用
               </a>
@@ -254,13 +261,13 @@
       </span>
     </s-table>
 
-    <#if generation.formType = "modal">
+    <#if config.formType = "modal">
     <a-modal :title="textMap[dialogStatus]"
              :maskClosable="false"
              :visible="dialogFormVisible"
              :width="800"
              @cancel="() => dialogFormVisible = false">
-    <#elseif generation.formType == "drawer">
+    <#elseif config.formType == "drawer">
     <a-drawer :title="textMap[dialogStatus]"
               placement="right"
               :visible="dialogFormVisible"
@@ -270,7 +277,7 @@
               :maskClosable="false"
               @cancel="() => dialogFormVisible = false">
     </#if>
-    <#if generation.formType = "modal" || generation.formType == "drawer">
+    <#if config.formType = "modal" || config.formType == "drawer">
       <a-form-model
         ref="${table.entityPath}Form"
         :model="${table.entityPath}Form"
@@ -279,17 +286,17 @@
         :wrapper-col="${table.entityPath}WrapperCol">
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list fields as field>
-    <#if field.queryTerm == 1>
+    <#if field?? && field.queryTerm == true>
         <a-col :md="6" :sm="24">
             <a-form-model-item label="${field.comment}" prop="${field.entityName}">
-                <#if field.controlType == "Input">
+                <#if field.controlType == "INPUT_TEXT">
                     <a-input
                             v-model.trim="listQuery.${field.entityName}"
                             placeholder="${field.comment}"
                             :max-length="${field.maxLength}"
                             @keyup.enter.native="handleFilter" />
                 </#if>
-                <#if field.controlType == "InputNumber">
+                <#if field.controlType == "INPUT_NUMBER">
                     <a-input-number
                             v-model.trim="listQuery.${field.entityName}"
                             placeholder="${field.comment}"
@@ -297,14 +304,14 @@
                             :max="${field.max}"
                             @keyup.enter.native="handleFilter" />
                 </#if>
-                <#if field.controlType == "Radio">
+                <#if field.controlType == "RADIO">
                     <#assign dictSelect=true/>
                     <a-radio-group v-model="listQuery.${field.entityName}"
                                    name="listQueryRadio${field.entityName}">
                         <a-radio v-for="item in ${field.entityName}DictList" :value="item.dictCode">{{ item.dictName }}</a-radio>
                     </a-radio-group>
                 </#if>
-                <#if field.controlType == "Checkbox">
+                <#if field.controlType == "CHECKBOX">
                     <#assign dictSelect=true/>
                     <a-checkbox-group v-model="value" name="listQueryRadioCheckbox${field.entityName}">
                         <a-checkbox  v-for="item in ${field.entityName}DictList" :value="item.dictCode">
@@ -312,10 +319,10 @@
                         </a-checkbox>
                     </a-checkbox-group>
                 </#if>
-                <#if field.controlType == "Select" || field.controlType == "Multiple">
+                <#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI">
                     <#assign dictSelect=true/>
                     <#macro Multiple controlType>
-                        <#if controlType == "Multiple">
+                        <#if controlType == "SELECT_MULTI">
                             mode="multiple"
                         <#else>
                             mode="default"
@@ -337,9 +344,9 @@
                         </a-select-option>
                     </a-select>
                 </#if>
-                <#if field.controlType == "DatePicker" || field.controlType == "DateTimePicker">
+                <#if field.controlType == "DTAE_PICKER" || field.controlType == "DTAE_TIME_PICKER">
                     <#macro DateTime controlType>
-                        <#if controlType == "DateTimePicker">
+                        <#if controlType == "DTAE_TIME_PICKER">
                             show-time
                             valueFormat="YYYY-MM-DD HH:mm:ss"
                         </#if>
@@ -349,7 +356,7 @@
                             <@Multiple controlType="${field.controlType}"/>
                                    style="width:100%;"/>
                 </#if>
-                <#if field.controlType == "TimePicker">
+                <#if field.controlType == "TIME_PICKER">
                     <a-time-picker v-model.trim="listQuery.${field.entityName}"
                                    placeholder="${field.comment}"
                                    style="width:100%;"/>
@@ -394,12 +401,12 @@
                             :max-length="${field.maxLength}"
                             @keyup.enter.native="handleFilter" />
                 </#if>
-                <#if field.controlType == "Rate">
+                <#if field.controlType == "RATE">
                     <a-rate v-model.trim="listQuery.${field.entityName}"
                             placeholder="${field.comment}"
                             @keyup.enter.native="handleFilter"/>
                 </#if>
-                <#if field.controlType == "Upload">
+                <#if field.controlType == "UPLOAD_FILE">
                     <a-upload v-model="listQuery.${field.entityName}"
                               :file-list="file${field.entityName}List"
                               :remove="handle${field.entityName}Remove"
@@ -421,22 +428,22 @@
     </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
-      </a-form-model>
+    </a-form-model>
     </#if>
-    <#if generation.formType = "modal">
+    <#if config.formType = "modal">
       <div slot="footer" class="dialog-footer">
-    <#elseif generation.formType == "drawer">
+    <#elseif config.formType == "drawer">
       <div class="footer-button">
     </#if>
-    <#if generation.formType = "modal" || generation.formType == "drawer">
+    <#if config.formType = "modal" || config.formType == "drawer">
         <a-button @click="dialogFormVisible = false">取消</a-button>
         <a-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</a-button>
         <a-button v-else type="primary" @click="updateData">修改</a-button>
       </div>
     </#if>
-    <#if generation.formType = "modal">
+    <#if config.formType = "modal">
     </a-modal>
-    <#elseif generation.formType == "drawer">
+    <#elseif config.formType == "drawer">
     </a-drawer>
     </#if>
   </a-card>
@@ -444,15 +451,15 @@
 
 <script>
     import { STable } from '@/components'
-    import { query${entity}List, create${entity}, update${entity}, update${entity}Status, batchDelete${entity}, delete${entity}, check${entity}Exist<#if exportFlag == 1>, download${entity}List</#if><#if importFlag == 1>, upload${entity}, download${entity}Template</#if>} from '@/api/${package.ModuleName}/${table.entityPath}'
+    import { query${entity}List, create${entity}, update${entity}, update${entity}Status, batchDelete${entity}, delete${entity}, check${entity}Exist<#if config.exportFlag == true>, download${entity}List</#if><#if config.importFlag == true>, upload${entity}, download${entity}Template</#if>} from '@/api/${package.ModuleName}/${table.entityPath}'
     import moment from 'moment'
-    <#if provinceSelect>
+    <#if provinceSelect?? && provinceSelect == true>
     import Data from '@/api/pcaa'
     </#if>
-    <#if importFlag == 1 || exportFlag == 1>
+    <#if config.importFlag == true || config.exportFlag == true>
     import { handleDownloadBlod } from '@/utils/util'
     </#if>
-    <#if dictSelect>
+    <#if dictSelect?? && dictSelect == true>
     import { listDict } from '@/api/system/base/dict'
     let vm = {}
     </#if>
@@ -462,7 +469,7 @@
         filters: {
             <#-- ----------  所有的字典类型 字段循环遍历  ---------->
             <#list fields as field>
-            <#if field.dictCode !?length gt 0>
+            <#if field?? && field.dictCode !?length gt 0>
             //${field.comment}数据字典展示
             ${field.entityName}DictFilter (dictCode) {
                 return vm.${field.entityName}FilterMap[dictCode]
@@ -475,7 +482,7 @@
             // 增加或更新记录时，判断字段是否已经存在
             <#-- ----------  BEGIN 字段循环遍历  ---------->
             <#list fields as field>
-            <#if field.fieldUnique == 1>
+            <#if field?? && field.fieldUnique == true>
             var valid${field.entityName?cap_first} = (rule, value, callback) => {
                 var keyData = {
                     id: this.${table.entityPath}Form.id,
@@ -497,7 +504,7 @@
                 advanced: false,
                 current${entity}: '',
                 filterText: '',
-                <#if provinceSelect>
+                <#if provinceSelect?? && provinceSelect == true>
                 provinceOptions: null,
                 </#if>
                 tableKey: 0,
@@ -507,7 +514,7 @@
                 listQuery: {
                 <#-- ----------  BEGIN 字段循环遍历  ---------->
                 <#list fields as field>
-                <#if field.queryTerm == 1>
+                <#if field?? && field.queryTerm == true>
                     ${field.entityName}: '', //${field.comment}
                 </#if>
                 </#list>
@@ -517,7 +524,7 @@
                 },
                 <#-- ----------  所有的字典类型 字段循环遍历  ---------->
                 <#list fields as field>
-                <#if field.dictCode !?length gt 0>
+                <#if field?? && field.dictCode !?length gt 0>
                 ${field.entityName}DictList: [], //${field.comment}数据字典列表
                 ${field.entityName}FilterMap: {},
                 </#if>
@@ -531,14 +538,14 @@
                 },
                 ${table.entityPath}Form: {
                     <#list table.fields as field>
-                    ${field.propertyName}: ''<#if field?has_next>,</#if>
+                    ${field.propertyName}: ''<#if field?? && field?has_next>,</#if>
                     </#list>
                 },
                 // 表头
                 columns: [
                     <#-- ----------  BEGIN 字段循环遍历  ---------->
                     <#list fields as field>
-                    <#if field.listShow == 1>
+                    <#if field?? && field.listShow == true>
                     {
                         title: '${field.comment?replace("'","\"")}',
                         align: 'center',
@@ -560,13 +567,13 @@
                 rules: {
                     <#-- ----------  BEGIN 字段循环遍历  ---------->
                     <#list fields as field>
-                    <#if field.required == 1 || field.fieldUnique == 1 || field.max gt 0 || field.maxLength gt 0 || field.validates?size != 0>
+                    <#if field?? && (field.required == true || field.fieldUnique == true || (field.max?? && field.max gt 0) || (field.maxLength?? && field.maxLength gt 0) || (field.validates?? && field.validates?size != 0))>
                     // 字段校验，这里自己选择使用哪些校验
                     ${field.entityName}: [
-                        <#if field.fieldUnique == 1>{ validator: valid${entityName?cap_first}, trigger: 'blur' }</#if>
-                        <#if field.required == 1>{ required: true, message: '请输入${field.comment}', trigger: 'blur' },</#if>
-                        <#if field.maxLength gt 0 >{ min: ${field.minLength}, max: ${field.maxLength}, message: '长度在 ${field.minLength} 到 ${field.maxLength} 个字符', trigger: 'blur' }<#if field.validates?size != 0>,</#if></#if>
-                        <#if field.validates?size != 0>
+                        <#if field.fieldUnique == true>{ validator: valid${field.entityName?cap_first}, trigger: 'blur' }</#if>
+                        <#if field.required == true>{ required: true, message: '请输入${field.comment}', trigger: 'blur' },</#if>
+                        <#if field.maxLength?? && field.maxLength gt 0 >{ min: ${field.minLength}, max: ${field.maxLength}, message: '长度在 ${field.minLength} 到 ${field.maxLength} 个字符', trigger: 'blur' }<#if (field.validates?? && field.validates?size != 0)>,</#if></#if>
+                        <#if field.validates?? && field.validates?size != 0>
                         <#list validates as validate>
                             {
                                 pattern: ${validate.validateRegular},
@@ -616,17 +623,17 @@
         created () {
             <#-- ----------  所有的字典类型 字段循环遍历  ---------->
             <#list fields as field>
-            <#if field.dictCode !?length gt 0>
+            <#if field?? && field.dictCode !?length gt 0>
             this.query${field.entityName}DictList()
             </#if>
             </#list>
             <#------------  END 所有的字典类型 字段循环遍历  ---------->
-            <#if !dictSelect>
+            <#if !(dictSelect?? && dictSelect == true)>
             this.getList()
             </#if>
         },
         methods: {
-          <#if provinceSelect>
+          <#if provinceSelect?? && provinceSelect == true>
             getAreaList () {
               var options = []
               for (var key in Data['86']) {
@@ -648,7 +655,7 @@
           </#if>
           <#-- ----------  所有的字典类型 字段循环遍历  ---------->
           <#list fields as field>
-          <#if field.dictCode !?length gt 0>
+          <#if field?? && field.dictCode !?length gt 0>
             query${field.entityName}DictList () {
                 const that = this
                 that.listLoading = true
@@ -671,7 +678,7 @@
                 this.listQuery = {
                     <#-- ----------  BEGIN 字段循环遍历  ---------->
                     <#list fields as field>
-                    <#if field.queryTerm == 1>
+                    <#if field?? && field.queryTerm == true>
                         ${field.entityName}: '', //${field.comment}
                     </#if>
                     </#list>
@@ -687,7 +694,7 @@
                     </#list>
                     <#-- ----------  BEGIN 字段循环遍历  ---------->
                 <#list fields as field>
-                   <#if field.form_add == 1>
+                   <#if field?? && field.formAdd == true>
                     ${field.entityName}: ''<#if field?has_next>,</#if> //${field.comment}
                    </#if>
                 </#list>
@@ -796,7 +803,7 @@
                 })
             },
             <#list table.fields as field>
-            <#if field.annotationColumnName?ends_with("status")>
+            <#if field?? && field.annotationColumnName?ends_with("status")>
             handleModifyStatus (row, status) {
                 this.listLoading = true
                 update${entity}Status(row.id, status).then(() => {
@@ -807,7 +814,7 @@
             },
             </#if>
             </#list>
-            <#if exportFlag == 1>
+            <#if config.exportFlag == true>
             handleDownload () {
                 this.downloadLoading = true
                 download${entity}List(this.listQuery).then(response => {
@@ -816,7 +823,7 @@
                 })
             },
             </#if>
-            <#if importFlag == 1>
+            <#if config.importFlag == true>
             beforeUpload (file) {
                 this.handleUpload(file)
                 return false
@@ -851,7 +858,7 @@
         }
     }
 </script>
-<#if generation.formType == "drawer">
+<#if config.formType == "drawer">
 <style lang="less" scoped>
   .footer-button {
     position: absolute;

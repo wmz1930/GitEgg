@@ -28,7 +28,7 @@
     <select id="selectGeneratorDictChildren" resultType="com.gitegg.code.generator.dict.entity.GeneratorDict" parameterType="com.gitegg.code.generator.dict.dto.QueryGeneratorDictDTO">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_sys_dict_business
+        FROM t_sys_code_generator_dict
         WHERE del_flag = 0
         <if test="dict.parentId != null and dict.parentId != ''">
             <choose>
@@ -49,7 +49,7 @@
             parameterType="com.gitegg.code.generator.dict.dto.QueryGeneratorDictDTO">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_sys_dict_business
+        FROM t_sys_code_generator_dict
         WHERE del_flag = 0
         <trim prefix="AND (" suffix=")" prefixOverrides="AND">
             <if test="dict.id != null">

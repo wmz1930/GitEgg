@@ -53,8 +53,7 @@ public class Query${entity}DTO implements Serializable {
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list fields as field>
-    <#if field.queryTerm == 1>
-
+    <#if field?? && field.queryTerm?? && field.queryTerm == true>
     <#if field.comment!?length gt 0>
         <#if swagger>
     @ApiModelProperty(value = "${field.comment}")

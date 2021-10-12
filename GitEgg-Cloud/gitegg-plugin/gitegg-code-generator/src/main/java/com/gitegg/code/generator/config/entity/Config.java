@@ -90,11 +90,11 @@ public class Config extends BaseEntity {
 
     @ApiModelProperty(value = "是否支持导入 1支持 0不支持")
     @TableField("import_flag")
-    private Integer importFlag;
+    private Boolean importFlag;
 
     @ApiModelProperty(value = "是否支持导出 1支持 0不支持")
     @TableField("export_flag")
-    private Integer exportFlag;
+    private Boolean exportFlag;
 
 
 }

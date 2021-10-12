@@ -55,23 +55,23 @@ public class ${entity}Export {
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#assign i=0/>
 <#list fields as field>
-    <#if field.exportFlag == 1>
-
-    <#if field.comment!?length gt 0>
-        <#if swagger>
-    @ApiModelProperty(value = "${field.comment}")
-        <#else>
-    /**
-     * ${field.comment}
-     */
-        </#if>
-    </#if>
-    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field.propertyType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)
-    @ColumnWidth(20)
-    <#if field.propertyType == "LocalDateTime">@DateTimeFormat("yyyy-MM-dd HH:mm:ss")</#if>
-    private ${field.entityType} ${field.entityName};
-    <#assign i=i+1/>
-    </#if>
+    ${field}
+<#--    <#if field?? && field.exportFlag == true>-->
+<#--    <#if field?? && field.comment!?length gt 0>-->
+<#--        <#if swagger>-->
+<#--    @ApiModelProperty(value = "${field.comment}")-->
+<#--        <#else>-->
+<#--    /**-->
+<#--     * ${field.comment}-->
+<#--     */-->
+<#--        </#if>-->
+<#--    </#if>-->
+<#--    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.propertyType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)-->
+<#--    @ColumnWidth(20)-->
+<#--    <#if field?? && field.propertyType == "LocalDateTime">@DateTimeFormat("yyyy-MM-dd HH:mm:ss")</#if>-->
+<#--    private ${field.entityType} ${field.entityName};-->
+<#--    <#assign i=i+1/>-->
+<#--    </#if>-->
 </#list>
 <#------------  END 字段循环遍历  ---------->
 }

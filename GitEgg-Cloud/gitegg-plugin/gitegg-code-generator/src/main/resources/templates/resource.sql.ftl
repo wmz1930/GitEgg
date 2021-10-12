@@ -73,7 +73,7 @@ VALUES
       '4',
       'xitongrizhi',
       '${package.ModuleName}/${table.entityPath}/list',
-      '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/list',
+      '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/list',
       2,
       1,
       1,
@@ -118,7 +118,7 @@ VALUES
       '4',
       'xitongrizhi',
       '${package.ModuleName}/${table.entityPath}/create',
-      '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/create',
+      '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/create',
       2,
       1,
       1,
@@ -163,7 +163,7 @@ VALUES
       '4',
       'xitongrizhi',
       '${package.ModuleName}/${table.entityPath}/update',
-      '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/update',
+      '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/update',
       2,
       1,
       1,
@@ -208,7 +208,7 @@ VALUES
       '4',
       'xitongrizhi',
       '${package.ModuleName}/${table.entityPath}/delete',
-      '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/delete/{${table.entityPath}Id}',
+      '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/delete/{${table.entityPath}Id}',
       2,
       1,
       1,
@@ -253,7 +253,7 @@ INSERT INTO `t_sys_resource` (
       '4',
       'xitongrizhi',
       '${package.ModuleName}/${table.entityPath}/batch/delete',
-      '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/batch/delete',
+      '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/batch/delete',
       2,
       1,
       1,
@@ -300,7 +300,7 @@ VALUES
    '4',
    'xitongrizhi',
    '${package.ModuleName}/${table.entityPath}/status',
-   '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/status',
+   '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/status',
    2,
    1,
    1,
@@ -347,7 +347,7 @@ VALUES
    '4',
    'xitongrizhi',
    '${package.ModuleName}/${table.entityPath}/check',
-   '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/check',
+   '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/check',
    2,
    1,
    1,
@@ -360,7 +360,7 @@ VALUES
    1,
    '0'
 );
-<#if exportFlag == 1>
+<#if config.exportFlag == true>
 #数据导出
 INSERT INTO `t_sys_resource` (
    `parent_id`,
@@ -392,7 +392,7 @@ VALUES
    '4',
    'xitongrizhi',
    '${package.ModuleName}/${table.entityPath}/download',
-   '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/download',
+   '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/download',
    2,
    1,
    1,
@@ -407,7 +407,7 @@ VALUES
 );
 </#if>
 
-<#if importFlag == 1>
+<#if config.importFlag == true>
 #下载数据导入模板
 INSERT INTO `t_sys_resource` (
    `parent_id`,
@@ -439,7 +439,7 @@ VALUES
    '4',
    'xitongrizhi',
    '${package.ModuleName}/${table.entityPath}/download/template',
-   '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/download/template',
+   '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/download/template',
    2,
    1,
    1,
@@ -484,7 +484,7 @@ VALUES
    '4',
    'xitongrizhi',
    '${package.ModuleName}/${table.entityPath}/upload',
-   '/${serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/upload',
+   '/${config.serviceName}/${package.ModuleName}/<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>/upload',
    2,
    1,
    1,
