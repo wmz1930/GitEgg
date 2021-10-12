@@ -2,6 +2,7 @@ package com.gitegg.platform.mybatis.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.gitegg.platform.base.domain.GitEggUser;
+import com.gitegg.platform.base.enums.BaseEntityEnum;
 import com.gitegg.platform.boot.util.GitEggAuthUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -19,27 +20,27 @@ public class GitEggMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        Object creator = getFieldValByName("creator", metaObject);
+        Object creator = getFieldValByName(BaseEntityEnum.CREATOR.entity, metaObject);
         GitEggUser gitEggUser = GitEggAuthUtils.getCurrentUser();
         if (null == creator && null != gitEggUser) {
-           setFieldValByName("creator", gitEggUser.getId(), metaObject);
+           setFieldValByName(BaseEntityEnum.CREATOR.entity, gitEggUser.getId(), metaObject);
         }
-        Object createTime = getFieldValByName("createTime", metaObject);
+        Object createTime = getFieldValByName(BaseEntityEnum.CREATE_TIME.entity, metaObject);
         if (null == createTime) {
-            setFieldValByName("createTime", LocalDateTime.now(), metaObject);
+            setFieldValByName(BaseEntityEnum.CREATE_TIME.entity, LocalDateTime.now(), metaObject);
         }
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        Object operator = getFieldValByName("operator", metaObject);
+        Object operator = getFieldValByName(BaseEntityEnum.OPERATOR.entity, metaObject);
         GitEggUser gitEggUser = GitEggAuthUtils.getCurrentUser();
         if (null == operator && null != gitEggUser) {
-            setFieldValByName("operator", gitEggUser.getId(), metaObject);
+            setFieldValByName(BaseEntityEnum.OPERATOR.entity, gitEggUser.getId(), metaObject);
         }
-        Object updateTime = getFieldValByName("updateTime", metaObject);
+        Object updateTime = getFieldValByName(BaseEntityEnum.UPDATE_TIME.entity, metaObject);
         if (null == updateTime) {
-            setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
+            setFieldValByName(BaseEntityEnum.UPDATE_TIME.entity, LocalDateTime.now(), metaObject);
         }
     }
 }

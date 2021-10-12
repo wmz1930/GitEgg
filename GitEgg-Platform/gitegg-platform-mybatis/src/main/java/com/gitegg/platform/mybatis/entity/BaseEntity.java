@@ -21,25 +21,25 @@ public class BaseEntity implements Serializable {
     private Long tenantId;
 
     @ApiModelProperty(value = "创建时间")
-    @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "创建者")
-    @TableField(value = "CREATOR", fill = FieldFill.INSERT)
+    @TableField(value = "creator", fill = FieldFill.INSERT)
     private Long creator;
 
     @ApiModelProperty(value = "更新时间")
-    @TableField(value = "UPDATE_TIME", fill = FieldFill.UPDATE)
+    @TableField(value = "update_time", fill = FieldFill.UPDATE)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "更新者")
-    @TableField(value = "OPERATOR", fill = FieldFill.UPDATE)
+    @TableField(value = "operator", fill = FieldFill.UPDATE)
     private Long operator;
 
     @ApiModelProperty(value = "1:删除 0:不删除")
-    @TableField("DEL_FLAG")
+    @TableField("del_flag")
     @TableLogic
     private Integer delFlag;
 
