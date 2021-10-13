@@ -253,16 +253,19 @@
           </a-col>
         </a-row>
         <a-row>
-          <a-col :md="12">
-            <a-form-model-item label="后端路径" prop="serviceCodePath">
-              <a-input v-model="configForm.serviceCodePath" placeholder="输入后端代码路径" :maxLength="32" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :md="12">
-            <a-form-model-item label="前端路径" prop="frontCodePath">
-              <a-input v-model="configForm.frontCodePath" placeholder="输入前端代码路径" :maxLength="32" />
-            </a-form-model-item>
-          </a-col>
+          <a-form-model-item label="Controller请求路径" prop="tablePrefix">
+            <a-input v-model="configForm.controllerPath" placeholder="输入controller请求路径，例：/system/user" :maxLength="100" />
+          </a-form-model-item>
+        </a-row>
+        <a-row>
+          <a-form-model-item label="后端代码保存路径" prop="serviceCodePath">
+            <a-input v-model="configForm.serviceCodePath" placeholder="输入后端代码路径" :maxLength="255" />
+          </a-form-model-item>
+        </a-row>
+        <a-row>
+          <a-form-model-item label="前端代码保存路径" prop="frontCodePath">
+            <a-input v-model="configForm.frontCodePath" placeholder="输入前端代码路径" :maxLength="255" />
+          </a-form-model-item>
         </a-row>
         <a-row>
           <a-col :md="12">
@@ -385,6 +388,7 @@
                     tableAlias: '',
                     tablePrefix: '',
                     parentPackage: '',
+                    controllerPath: '',
                     formType: undefined,
                     tableType: 'single',
                     tableShowType: undefined,
@@ -392,8 +396,6 @@
                     leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
-                    importFlag: '1',
-                    exportFlag: '1',
                     startDateTime: '',
                     endDateTime: ''
                 },
@@ -417,6 +419,7 @@
                     tableAlias: '',
                     tablePrefix: '',
                     parentPackage: '',
+                    controllerPath: '',
                     formType: undefined,
                     tableType: 'single',
                     tableShowType: undefined,
@@ -424,8 +427,8 @@
                     leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
-                    importFlag: '1',
-                    exportFlag: '1'
+                    importFlag: true,
+                    exportFlag: true
                 },
                 // 表头
                 columns: [
@@ -604,15 +607,12 @@
                         tableAlias: '',
                         tablePrefix: '',
                         parentPackage: '',
+                        controllerPath: '',
                         formType: undefined,
                         tableType: 'single',
                         tableShowType: undefined,
                         formItemCol: undefined,
                         leftTreeType: undefined,
-                        frontCodePath: '',
-                        serviceCodePath: '',
-                        importFlag: '1',
-                        exportFlag: '1',
                         startDateTime: '',
                         endDateTime: ''
                 }
@@ -628,6 +628,7 @@
                     tableAlias: '',
                     tablePrefix: '',
                     parentPackage: '',
+                    controllerPath: '',
                     formType: undefined,
                     tableType: 'single',
                     tableShowType: undefined,
@@ -635,8 +636,8 @@
                     leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
-                    importFlag: '1',
-                    exportFlag: '1'
+                    importFlag: true,
+                    exportFlag: true
                 }
             },
             // 选中 option 调用
