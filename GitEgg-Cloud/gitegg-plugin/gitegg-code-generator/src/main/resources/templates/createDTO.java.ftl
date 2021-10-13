@@ -2,10 +2,13 @@
 package ${dtoPackage?replace("entity","dto")};
 
 <#list table.importPackages as pkg>
-    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") >
+    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") && !pkg?starts_with("java.io.Serializable")>
 import ${pkg};
     </#if>
 </#list>
+
+import javax.validation.constraints.NotBlank;
+
 <#if swagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

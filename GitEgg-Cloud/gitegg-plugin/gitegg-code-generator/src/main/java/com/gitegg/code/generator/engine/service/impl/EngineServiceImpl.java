@@ -151,14 +151,16 @@ public class EngineServiceImpl implements IEngineService {
         queryFieldDTO.setGenerationId(queryConfigDTO.getId());
         List<FieldDTO> fieldDTOS = fieldService.queryFieldList(queryFieldDTO);
 
-
         Map<String, Object> customMap = new HashMap<>();
         customMap.put(GitEggCodeGeneratorConstant.CONFIG, config);
         customMap.put(GitEggCodeGeneratorConstant.FIELDS, fieldDTOS);
 
+        //baseEntity里面有的，DTO中需要排除的字段
+        List<String> baseEntityFieldList = BaseEntityEnum.getBaseEntityFieldList();
+        customMap.put(GitEggCodeGeneratorConstant.BASE_ENTITY_FIELD_LIST, baseEntityFieldList);
+
         //查询数据源配置
         Datasource datasource = datasourceService.getById(config.getDatasourceId());
-
 
         String serviceName = config.getServiceName();
         //前端代码路径
@@ -231,6 +233,8 @@ public class EngineServiceImpl implements IEngineService {
                     customFilePath.put(jsFile, jsPath);
 
                     customMap.put(GitEggCodeGeneratorConstant.CUSTOM_FILE_PATH_MAP, customFilePath);
+
+                    customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
 
                     // 设置自定义输出文件
                     Map<String, String> customFileMap = new HashMap<>();

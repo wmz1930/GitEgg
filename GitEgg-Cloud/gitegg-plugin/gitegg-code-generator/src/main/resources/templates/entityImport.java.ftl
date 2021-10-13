@@ -7,26 +7,28 @@ import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 <#list table.importPackages as pkg>
     <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") >
-        import ${pkg};
+import ${pkg};
     </#if>
 </#list>
 import com.gitegg.platform.boot.excel.LocalDateTimeConverter;
 <#if swagger>
-    import io.swagger.annotations.ApiModel;
-    import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 </#if>
 <#if entityLombokModel>
-    import lombok.Data;
-    import lombok.EqualsAndHashCode;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
     <#if chainModel>
-        import lombok.experimental.Accessors;
+import lombok.experimental.Accessors;
     </#if>
 </#if>
 
+import java.time.LocalDateTime;
+
 /**
 * <p>
-    * ${table.comment!}
-    * </p>
+* ${table.comment!}
+* </p>
 *
 * @author ${author}
 * @since ${date}
@@ -34,20 +36,15 @@ import com.gitegg.platform.boot.excel.LocalDateTimeConverter;
 @HeadRowHeight(20)
 @ContentRowHeight(15)
 <#if entityLombokModel>
-    @Data
-    <#if superEntityClass??>
-        @EqualsAndHashCode(callSuper = true)
-    <#else>
-        @EqualsAndHashCode(callSuper = false)
-    </#if>
+@Data
     <#if chainModel>
-        @Accessors(chain = true)
+@Accessors(chain = true)
     </#if>
 </#if>
 <#if swagger>
-    @ApiModel(value="${entity}对象", description="${table.comment!}数据导入模板")
+@ApiModel(value="${entity}对象", description="${table.comment!}数据导入模板")
 </#if>
-public class ${entity}Export {
+public class ${entity}Import {
 
 <#if entitySerialVersionUID>
     private static final long serialVersionUID = 1L;
@@ -55,23 +52,25 @@ public class ${entity}Export {
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#assign i=0/>
 <#list fields as field>
-    ${field}
-<#--    <#if field?? && field.importFlag == true>-->
-<#--        <#if field?? && field.comment!?length gt 0>-->
-<#--            <#if swagger>-->
-<#--                @ApiModelProperty(value = "${field.comment}")-->
-<#--            <#else>-->
-<#--                /**-->
-<#--                * ${field.comment}-->
-<#--                */-->
-<#--            </#if>-->
-<#--        </#if>-->
-<#--        @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.propertyType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)-->
-<#--        @ColumnWidth(20)-->
-<#--        <#if field?? && field.propertyType == "LocalDateTime">@DateTimeFormat("yyyy-MM-dd HH:mm:ss")</#if>-->
-<#--        private ${field.entityType} ${field.entityName};-->
-<#--        <#assign i=i+1/>-->
-<#--    </#if>-->
+    <#if field?? && field.importFlag == true>
+
+        <#if field?? && field.comment!?length gt 0>
+            <#if swagger>
+    @ApiModelProperty(value = "${field.comment}")
+            <#else>
+    /**
+    * ${field.comment}
+    */
+            </#if>
+        </#if>
+    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.propertyType?? && field.propertyType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)
+    @ColumnWidth(20)
+        <#if field?? && field.propertyType?? && field.propertyType == "LocalDateTime">
+    @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
+        </#if>
+    private ${field.entityType} ${field.entityName};
+        <#assign i=i+1/>
+    </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 }

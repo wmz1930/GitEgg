@@ -32,12 +32,12 @@ public enum CustomFileEnum {
     /**
      * EXPORT
      */
-    EXPORT("EXPORT", "/templates/pathExport.java.ftl"),
+    EXPORT("EXPORT", "/templates/entityExport.java.ftl"),
 
     /**
      * IMPORT
      */
-    IMPORT("IMPORT", "/templates/pathImport.java.ftl"),
+    IMPORT("IMPORT", "/templates/entityImport.java.ftl"),
 
     /**
      * SQL

@@ -7,6 +7,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
+/**
+ * gitegg-oauth 启动类
+ * @author wanglei
+ */
 @EnableFeignClients(basePackages = "com.gitegg")
 @ComponentScan(basePackages = "com.gitegg")
 @EnableDiscoveryClient

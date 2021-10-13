@@ -451,7 +451,7 @@
 
 <script>
     import { STable } from '@/components'
-    import { query${entity}List, create${entity}, update${entity}, update${entity}Status, batchDelete${entity}, delete${entity}, check${entity}Exist<#if config.exportFlag == true>, download${entity}List</#if><#if config.importFlag == true>, upload${entity}, download${entity}Template</#if>} from '@/api/${package.ModuleName}/${table.entityPath}'
+    import { query${entity}List, create${entity}, update${entity}, update${entity}Status, batchDelete${entity}, delete${entity}, check${entity}Exist<#if config.exportFlag == true>, download${entity}List</#if><#if config.importFlag == true>, upload${entity}, download${entity}Template</#if> } from '@/api${vueJsPath}'
     import moment from 'moment'
     <#if provinceSelect?? && provinceSelect == true>
     import Data from '@/api/pcaa'
@@ -470,7 +470,7 @@
             <#-- ----------  所有的字典类型 字段循环遍历  ---------->
             <#list fields as field>
             <#if field?? && field.dictCode !?length gt 0>
-            //${field.comment}数据字典展示
+            // ${field.comment}数据字典展示
             ${field.entityName}DictFilter (dictCode) {
                 return vm.${field.entityName}FilterMap[dictCode]
             }
@@ -515,7 +515,7 @@
                 <#-- ----------  BEGIN 字段循环遍历  ---------->
                 <#list fields as field>
                 <#if field?? && field.queryTerm == true>
-                    ${field.entityName}: '', //${field.comment}
+                    ${field.entityName}: '', // ${field.comment}
                 </#if>
                 </#list>
                 <#------------  END 字段循环遍历  ---------->
@@ -525,7 +525,7 @@
                 <#-- ----------  所有的字典类型 字段循环遍历  ---------->
                 <#list fields as field>
                 <#if field?? && field.dictCode !?length gt 0>
-                ${field.entityName}DictList: [], //${field.comment}数据字典列表
+                ${field.entityName}DictList: [], // ${field.comment}数据字典列表
                 ${field.entityName}FilterMap: {},
                 </#if>
                 </#list>
@@ -566,13 +566,19 @@
                 ],
                 rules: {
                     <#-- ----------  BEGIN 字段循环遍历  ---------->
+                    // 字段校验
                     <#list fields as field>
                     <#if field?? && (field.required == true || field.fieldUnique == true || (field.max?? && field.max gt 0) || (field.maxLength?? && field.maxLength gt 0) || (field.validates?? && field.validates?size != 0))>
-                    // 字段校验，这里自己选择使用哪些校验
                     ${field.entityName}: [
-                        <#if field.fieldUnique == true>{ validator: valid${field.entityName?cap_first}, trigger: 'blur' }</#if>
-                        <#if field.required == true>{ required: true, message: '请输入${field.comment}', trigger: 'blur' },</#if>
-                        <#if field.maxLength?? && field.maxLength gt 0 >{ min: ${field.minLength}, max: ${field.maxLength}, message: '长度在 ${field.minLength} 到 ${field.maxLength} 个字符', trigger: 'blur' }<#if (field.validates?? && field.validates?size != 0)>,</#if></#if>
+                        <#if field.fieldUnique == true>
+                        { validator: valid${field.entityName?cap_first}, trigger: 'blur' },
+                        </#if>
+                        <#if field.required == true>
+                        { required: true, message: '请输入${field.comment}', trigger: 'blur' },
+                        </#if>
+                        <#if field.maxLength?? && field.maxLength gt 0 >
+                        { min: ${field.minLength}, max: ${field.maxLength}, message: '长度在 ${field.minLength} 到 ${field.maxLength} 个字符', trigger: 'blur' }<#if (field.validates?? && field.validates?size != 0)>,</#if>
+                        </#if>
                         <#if field.validates?? && field.validates?size != 0>
                         <#list validates as validate>
                             {
@@ -583,7 +589,7 @@
                             }<#if validate?has_next>,</#if>
                         </#list>
                         </#if>
-                    ]
+                    ]<#if field?has_next>,</#if>
                     </#if>
                     </#list>
                     <#------------  END 字段循环遍历  ---------->
@@ -679,7 +685,7 @@
                     <#-- ----------  BEGIN 字段循环遍历  ---------->
                     <#list fields as field>
                     <#if field?? && field.queryTerm == true>
-                        ${field.entityName}: '', //${field.comment}
+                        ${field.entityName}: '', // ${field.comment}
                     </#if>
                     </#list>
                     <#------------  END 字段循环遍历  ---------->
@@ -688,14 +694,11 @@
                 }
             },
             reset${entity}Form () {
+                <#-- ----------  BEGIN 字段循环遍历  ---------->
                 this.${table.entityPath}Form = {
-                    <#list table.fields as field>
-                    ${field.propertyName}: ''<#if field?has_next>,</#if>
-                    </#list>
-                    <#-- ----------  BEGIN 字段循环遍历  ---------->
                 <#list fields as field>
                    <#if field?? && field.formAdd == true>
-                    ${field.entityName}: ''<#if field?has_next>,</#if> //${field.comment}
+                    ${field.entityName}: ''<#if field?has_next>,</#if> // ${field.comment}
                    </#if>
                 </#list>
                 <#------------  END 字段循环遍历  ---------->

@@ -2,7 +2,7 @@
 package ${dtoPackage?replace("entity","dto")};
 
 <#list table.importPackages as pkg>
-    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") >
+    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") && !pkg?starts_with("java.io.Serializable")>
 import ${pkg};
     </#if>
 </#list>
@@ -53,16 +53,19 @@ public class ${entity}DTO implements Serializable {
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list fields as field>
+  <#if field?? && !baseEntityFieldList?seq_contains(field.fieldName)>
+
     <#if field.comment!?length gt 0>
         <#if swagger>
-            @ApiModelProperty(value = "${field.comment}")
+    @ApiModelProperty(value = "${field.comment}")
         <#else>
-            /**
-            * ${field.comment}
-            */
+    /**
+    * ${field.comment}
+    */
         </#if>
     </#if>
     private ${field.entityType} ${field.entityName};
+  </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 }

@@ -60,7 +60,7 @@
         <if test="field.endDateTime != null and field.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{field.endDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
-        ORDER BY id DESC
+        ORDER BY field_sort,id
     </select>
 
     <!-- 查询字段属性配置表信息 -->
@@ -81,7 +81,7 @@
         <if test="field.endDateTime != null and field.endDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{field.endDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
-        ORDER BY id DESC
+        ORDER BY field_sort,id
     </select>
 
 </mapper>

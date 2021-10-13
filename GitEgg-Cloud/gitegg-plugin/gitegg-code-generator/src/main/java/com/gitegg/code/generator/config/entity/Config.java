@@ -60,6 +60,10 @@ public class Config extends BaseEntity {
     @TableField("parent_package")
     private String parentPackage;
 
+    @ApiModelProperty(value = "controller请求路径")
+    @TableField("controller_path")
+    private String controllerPath;
+
     @ApiModelProperty(value = "表单类型 model弹出框  drawer抽屉  tab新页面")
     @TableField("form_type")
     private String formType;

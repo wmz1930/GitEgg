@@ -8,6 +8,9 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+<#if config.importFlag == true>
+import org.springframework.web.multipart.MultipartFile;
+</#if>
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,12 +18,9 @@ import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import ${package.Entity}.${entity};
+import ${package.Entity}.*;
 <#assign dtoPackage="${package.Entity}"/>
-import ${dtoPackage?replace("entity","dto")}.${entity}DTO;
-import ${dtoPackage?replace("entity","dto")}.Create${entity}DTO;
-import ${dtoPackage?replace("entity","dto")}.Update${entity}DTO;
-import ${dtoPackage?replace("entity","dto")}.Query${entity}DTO;
+import ${dtoPackage?replace("entity","dto")}.*;
 
 import ${package.Service}.${table.serviceName};
 
@@ -29,9 +29,19 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+<#if config.importFlag == true || config.exportFlag == true>
+
+import com.alibaba.excel.EasyExcel;
+import com.gitegg.platform.base.util.BeanCopierUtils;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+</#if>
 
 <#if superControllerClassPackage??>
- import ${superControllerClassPackage};
+import ${superControllerClassPackage};
 </#if>
 
 /**
@@ -47,7 +57,7 @@ import lombok.RequiredArgsConstructor;
 <#else>
 @Controller
 </#if>
-@RequestMapping("<#if package.ModuleName?? && package.ModuleName != "">/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen?replace("-","/")}<#else>${table.entityPath}</#if>")
+@RequestMapping("<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Api(value = "${table.controllerName}|${table.comment!}前端控制器")
 @RefreshScope
@@ -173,7 +183,7 @@ public class ${table.controllerName} {
      public Result<?> updateStatus(@PathVariable("${table.entityPath}Id") ${keyPropertyType} ${table.entityPath}Id,
          @PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}) {
 
-         if (null == ${table.entityPath}Id || StringUtils.isEmpty(${field.propertyName}) {
+         if (null == ${table.entityPath}Id || StringUtils.isEmpty(${field.propertyName})) {
            return Result.error("ID和状态不能为空");
          }
          Update${entity}DTO ${table.entityPath} = new Update${entity}DTO();
@@ -223,10 +233,10 @@ public class ${table.controllerName} {
         // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("${table.comment!}数据列表", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        List<${entity}DTO> ${table.entityPath}List = ${table.entityPath}Service.query${entity}DTOList(query${entity}DTO);
+        List<${entity}DTO> ${table.entityPath}List = ${table.entityPath}Service.query${entity}List(query${entity}DTO);
         List<${entity}Export> ${table.entityPath}ExportList = new ArrayList<>();
         for (${entity}DTO ${table.entityPath}DTO : ${table.entityPath}List) {
-           ${entity}Export ${table.entityPath}Export = BeanCopierUtils.copyByClass(${table.entityPath}DTO, ${table.entityPath}Export.class);
+           ${entity}Export ${table.entityPath}Export = BeanCopierUtils.copyByClass(${table.entityPath}DTO, ${entity}Export.class);
            ${table.entityPath}ExportList.add(${table.entityPath}Export);
         }
         String sheetName = "${table.comment!}数据列表";
@@ -248,7 +258,7 @@ public class ${table.controllerName} {
         {
             List<${entity}> ${table.entityPath}List = new ArrayList<>();
             ${table.entityPath}ImportList.stream().forEach(${table.entityPath}Import-> {
-               ${table.entityPath}ImportList.add(BeanCopierUtils.copyByClass(${table.entityPath}Import, ${entity}.class));
+               ${table.entityPath}List.add(BeanCopierUtils.copyByClass(${table.entityPath}Import, ${entity}.class));
             });
             ${table.entityPath}Service.saveBatch(${table.entityPath}List);
         }

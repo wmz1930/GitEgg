@@ -2,7 +2,7 @@
 package ${dtoPackage?replace("entity","dto")};
 
 <#list table.importPackages as pkg>
-    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") >
+    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") && !pkg?starts_with("java.io.Serializable") >
 import ${pkg};
     </#if>
 </#list>
@@ -51,6 +51,25 @@ public class Update${entity}DTO implements Serializable {
 <#if entitySerialVersionUID>
     private static final long serialVersionUID = 1L;
 </#if>
+<#--找出主键-->
+<#list table.fields as field>
+<#if field.keyFlag>
+    <#assign keyPropertyName="${field.propertyName}"/>
+    <#assign keyPropertyType="${field.propertyType}"/>
+    <#assign keyPropertyComment="${field.comment}"/>
+</#if>
+</#list>
+<#--判断是否存在主键-->
+<#list fields as field>
+<#if field?? && field.formEdit == true && field.entityName == keyPropertyName>
+    <#assign hasKeyFlag=true/>
+</#if>
+</#list>
+<#if !hasKeyFlag??>
+
+    @ApiModelProperty(value = "${keyPropertyComment}")
+    private ${keyPropertyType} ${keyPropertyName};
+</#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list fields as field>
     <#if field?? && field.formEdit == true>
@@ -64,7 +83,7 @@ public class Update${entity}DTO implements Serializable {
      */
         </#if>
     </#if>
-        private ${field.entityType} ${field.entityName};
+    private ${field.entityType} ${field.entityName};
     </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->

@@ -2,7 +2,7 @@
 package ${dtoPackage?replace("entity","dto")};
 
 <#list table.importPackages as pkg>
-    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") >
+    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") && !pkg?starts_with("java.io.Serializable") >
 import ${pkg};
     </#if>
 </#list>
@@ -54,6 +54,7 @@ public class Query${entity}DTO implements Serializable {
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list fields as field>
     <#if field?? && field.queryTerm?? && field.queryTerm == true>
+
     <#if field.comment!?length gt 0>
         <#if swagger>
     @ApiModelProperty(value = "${field.comment}")
@@ -63,10 +64,11 @@ public class Query${entity}DTO implements Serializable {
      */
         </#if>
     </#if>
-        private ${field.entityType} ${field.entityName};
+    private ${field.entityType} ${field.entityName};
     </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
+
     @ApiModelProperty(value = "开始时间")
     private String beginDateTime;
 

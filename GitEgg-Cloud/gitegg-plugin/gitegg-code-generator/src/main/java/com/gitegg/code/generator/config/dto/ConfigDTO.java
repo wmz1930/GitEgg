@@ -1,5 +1,6 @@
 package com.gitegg.code.generator.config.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.gitegg.platform.mybatis.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -49,6 +50,9 @@ public class ConfigDTO extends BaseEntity {
 
     @ApiModelProperty(value = "父级包名")
     private String parentPackage;
+
+    @ApiModelProperty(value = "controller请求路径")
+    private String controllerPath;
 
     @ApiModelProperty(value = "表单类型 model弹出框  drawer抽屉  tab新页面")
     private String formType;

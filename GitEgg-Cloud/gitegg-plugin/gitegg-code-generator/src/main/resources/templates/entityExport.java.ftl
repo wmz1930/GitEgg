@@ -23,6 +23,8 @@ import lombok.experimental.Accessors;
     </#if>
 </#if>
 
+import java.time.LocalDateTime;
+
 /**
  * <p>
  * ${table.comment!}
@@ -35,11 +37,6 @@ import lombok.experimental.Accessors;
 @ContentRowHeight(15)
 <#if entityLombokModel>
 @Data
-    <#if superEntityClass??>
-@EqualsAndHashCode(callSuper = true)
-    <#else>
-@EqualsAndHashCode(callSuper = false)
-    </#if>
     <#if chainModel>
 @Accessors(chain = true)
     </#if>
@@ -55,23 +52,25 @@ public class ${entity}Export {
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#assign i=0/>
 <#list fields as field>
-    ${field}
-<#--    <#if field?? && field.exportFlag == true>-->
-<#--    <#if field?? && field.comment!?length gt 0>-->
-<#--        <#if swagger>-->
-<#--    @ApiModelProperty(value = "${field.comment}")-->
-<#--        <#else>-->
-<#--    /**-->
-<#--     * ${field.comment}-->
-<#--     */-->
-<#--        </#if>-->
-<#--    </#if>-->
-<#--    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.propertyType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)-->
-<#--    @ColumnWidth(20)-->
-<#--    <#if field?? && field.propertyType == "LocalDateTime">@DateTimeFormat("yyyy-MM-dd HH:mm:ss")</#if>-->
-<#--    private ${field.entityType} ${field.entityName};-->
-<#--    <#assign i=i+1/>-->
-<#--    </#if>-->
+    <#if field?? && field.exportFlag == true>
+
+    <#if field?? && field.comment!?length gt 0>
+        <#if swagger>
+    @ApiModelProperty(value = "${field.comment}")
+        <#else>
+    /**
+     * ${field.comment}
+     */
+        </#if>
+    </#if>
+    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.propertyType?? && field.propertyType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)
+    @ColumnWidth(20)
+    <#if field?? && field.propertyType?? && field.propertyType == "LocalDateTime">
+    @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
+    </#if>
+    private ${field.entityType} ${field.entityName};
+    <#assign i=i+1/>
+    </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 }
