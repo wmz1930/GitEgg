@@ -117,6 +117,10 @@ public class Field extends BaseEntity {
     @TableField("max_length")
     private Integer maxLength;
 
+    @ApiModelProperty(value = "正则表达式")
+    @TableField("validate_regular")
+    private String validateRegular;
+
     @ApiModelProperty(value = "显示排序")
     @TableField("field_sort")
     private Integer fieldSort;

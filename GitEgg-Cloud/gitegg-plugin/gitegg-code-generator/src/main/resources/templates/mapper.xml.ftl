@@ -39,7 +39,7 @@
         <include refid="Base_Column_List"/>
         FROM ${table.name}
         WHERE del_flag = 0
-        <#-- ----------  BEGIN 字段循环遍历
+        <#-- ----------  BEGIN 字段循环遍历 ---------->
         <#list fields as field>
             <#if field?? && field.queryTerm == true >
                 ${field.entityName}: '', //${field.comment}
@@ -47,7 +47,7 @@
                     AND ${field.fieldName} = <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
                 </if>
             </#if>
-        </#list>---------->
+        </#list>
         <#------------  END 字段循环遍历  ---------->
         <if test="${table.entityPath}.beginDateTime != null and ${table.entityPath}.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(<#noparse>#{</#noparse>${table.entityPath}.beginDateTime<#noparse>}</#noparse>,'%Y-%m-%d %H:%M:%S')
@@ -64,7 +64,7 @@
         <include refid="Base_Column_List"/>
         FROM ${table.name}
         WHERE del_flag = 0
-        <#-- ----------  BEGIN 字段循环遍历
+        <#-- ----------  BEGIN 字段循环遍历 ---------->
         <#list fields as field>
             <#if field?? && field.queryTerm == true>
                 ${field.entityName}: '', //${field.comment}
@@ -72,7 +72,7 @@
                     AND ${field.fieldName} = <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
                 </if>
             </#if>
-        </#list>---------->
+        </#list>
         <#------------  END 字段循环遍历  ---------->
         <if test="${table.entityPath}.beginDateTime != null and ${table.entityPath}.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(<#noparse>#{</#noparse>${table.entityPath}.beginDateTime<#noparse>}</#noparse>,'%Y-%m-%d %H:%M:%S')

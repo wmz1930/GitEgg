@@ -28,6 +28,7 @@
         <result column="max" property="max" />
         <result column="min_length" property="minLength" />
         <result column="max_length" property="maxLength" />
+        <result column="validate_regular" property="validateRegular" />
         <result column="field_sort" property="fieldSort" />
         <result column="tenant_id" property="tenantId" />
         <result column="create_time" property="createTime" />

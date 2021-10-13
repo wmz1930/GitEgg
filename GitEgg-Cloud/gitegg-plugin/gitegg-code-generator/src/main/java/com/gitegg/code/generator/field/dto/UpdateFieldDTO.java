@@ -93,6 +93,9 @@ public class UpdateFieldDTO extends BaseEntity {
     @ApiModelProperty(value = "字段最大长度")
     private Integer maxLength;
 
+    @ApiModelProperty(value = "正则表达式")
+    private String validateRegular;
+
     @ApiModelProperty(value = "显示排序")
     private Integer fieldSort;
 

@@ -2,14 +2,11 @@ package com.gitegg.code.generator.config.service.impl;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitegg.code.generator.field.entity.Field;
-import com.gitegg.code.generator.field.entity.FieldValidate;
 import com.gitegg.code.generator.field.service.IFieldService;
-import com.gitegg.code.generator.field.service.IFieldValidateService;
 import com.gitegg.code.generator.join.entity.TableJoin;
 import com.gitegg.code.generator.join.service.ITableJoinService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +45,7 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
 
     private final ITableJoinService tableJoinService;
 
-    private final IFieldValidateService fieldValidateService;
+//    private final IFieldValidateService fieldValidateService;
 
     /**
      * 解决循环依赖问题
@@ -167,25 +164,25 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
             {
                 List<Long> fieldIdList = fieldList.stream().map(Field::getId).collect(Collectors.toList());
 
-                QueryWrapper<FieldValidate> fieldValidateQueryWrapper = new QueryWrapper<>();
-                fieldValidateQueryWrapper.in("field_id", fieldIdList);
-                List<FieldValidate> fieldValidateList = fieldValidateService.list(fieldValidateQueryWrapper);
-                Map<Long, List<FieldValidate>> fieldValidateMap = fieldValidateList.stream().collect(Collectors.groupingBy(FieldValidate::getFieldId));
-
-                fieldList.forEach(field -> {
-                    List<FieldValidate> fieldValidates = fieldValidateMap.get(field.getId());
-                    field.setId(null);
-                    field.setGenerationId(config.getId());
-                    fieldService.save(field);
-                    if (!CollectionUtils.isEmpty(fieldValidates))
-                    {
-                        fieldValidates.stream().forEach(fieldValidate -> {
-                            fieldValidate.setId(null);
-                            fieldValidate.setFieldId(field.getId());
-                        });
-                        fieldValidateService.saveBatch(fieldValidates);
-                    }
-                });
+//                QueryWrapper<FieldValidate> fieldValidateQueryWrapper = new QueryWrapper<>();
+//                fieldValidateQueryWrapper.in("field_id", fieldIdList);
+//                List<FieldValidate> fieldValidateList = fieldValidateService.list(fieldValidateQueryWrapper);
+//                Map<Long, List<FieldValidate>> fieldValidateMap = fieldValidateList.stream().collect(Collectors.groupingBy(FieldValidate::getFieldId));
+//
+//                fieldList.forEach(field -> {
+//                    List<FieldValidate> fieldValidates = fieldValidateMap.get(field.getId());
+//                    field.setId(null);
+//                    field.setGenerationId(config.getId());
+//                    fieldService.save(field);
+//                    if (!CollectionUtils.isEmpty(fieldValidates))
+//                    {
+//                        fieldValidates.stream().forEach(fieldValidate -> {
+//                            fieldValidate.setId(null);
+//                            fieldValidate.setFieldId(field.getId());
+//                        });
+//                        fieldValidateService.saveBatch(fieldValidates);
+//                    }
+//                });
             }
         }
         return result;

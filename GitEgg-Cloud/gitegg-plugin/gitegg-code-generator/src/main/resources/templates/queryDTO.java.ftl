@@ -67,7 +67,6 @@ public class Query${entity}DTO implements Serializable {
     </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
-
     @ApiModelProperty(value = "开始时间")
     private String beginDateTime;
 

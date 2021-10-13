@@ -18,7 +18,9 @@ import com.gitegg.code.generator.config.service.IConfigService;
 import com.gitegg.code.generator.datasource.entity.Datasource;
 import com.gitegg.code.generator.datasource.service.IDatasourceService;
 import com.gitegg.code.generator.engine.GitEggDatabaseQuery;
+import com.gitegg.code.generator.engine.constant.CodeGeneratorConstant;
 import com.gitegg.code.generator.engine.dto.TableDTO;
+import com.gitegg.code.generator.engine.enums.CustomFileEnum;
 import com.gitegg.code.generator.engine.service.IEngineService;
 import com.gitegg.code.generator.field.dto.FieldDTO;
 import com.gitegg.code.generator.field.dto.QueryFieldDTO;
@@ -114,10 +116,10 @@ public class EngineServiceImpl implements IEngineService {
         Long id = queryConfigDTO.getId();
 
         // 查询是否有联表
-        if ("multi".equals(queryConfigDTO.getTableType()))
+        if (CodeGeneratorConstant.TABLE_DATA_TYPE_MULTI.equals(queryConfigDTO.getTableType()))
         {
             QueryWrapper<TableJoin> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("generation_id", id);
+            queryWrapper.eq(CodeGeneratorConstant.GENERATION_ID, id);
             List<TableJoin> tableJoinList = tableJoinService.list(queryWrapper);
             if(!CollectionUtils.isEmpty(tableJoinList))
             {
@@ -181,43 +183,43 @@ public class EngineServiceImpl implements IEngineService {
                 .packageConfig(builder -> {
                     //包配置
                     Map<OutputFile, String> pathInfoMap = new HashMap<>();
-                    pathInfoMap.put(OutputFile.mapperXml, serviceCodePath + GitEggCodeGeneratorConstant.RESOURCES_PATH + codeDirPath + GitEggCodeGeneratorConstant.MAPPER);
+                    pathInfoMap.put(OutputFile.mapperXml, serviceCodePath + GitEggCodeGeneratorConstant.RESOURCES_PATH + codeDirPath + CodeGeneratorConstant.MAPPER);
                     builder.parent(parent) // 设置父包名
-                    .moduleName(moduleName) // 设置父包模块名
-                    .pathInfo(pathInfoMap); // 自定义生成路径
+                            .moduleName(moduleName) // 设置父包模块名
+                            .pathInfo(pathInfoMap); // 自定义生成路径
                 })
                 .injectionConfig(builder -> {
 
                     String dtoName = StrUtil.upperFirst(config.getModuleCode());
 
                     //dto
-                    String dtoFile = dtoName + GitEggCodeGeneratorConstant.DTO_JAVA;
-                    String createDtoFile = GitEggCodeGeneratorConstant.CREATE + dtoFile;
-                    String updateDtoFile = GitEggCodeGeneratorConstant.UPDATE + dtoFile;
-                    String queryDtoFile = GitEggCodeGeneratorConstant.QUERY + dtoFile;
+                    String dtoFile = dtoName + CodeGeneratorConstant.DTO_JAVA;
+                    String createDtoFile = CodeGeneratorConstant.CREATE + dtoFile;
+                    String updateDtoFile = CodeGeneratorConstant.UPDATE + dtoFile;
+                    String queryDtoFile = CodeGeneratorConstant.QUERY + dtoFile;
                     //Export and Import
-                    String exportFile = dtoName + GitEggCodeGeneratorConstant.EXPORT_JAVA;
-                    String importFile = dtoName + GitEggCodeGeneratorConstant.IMPORT_JAVA;
+                    String exportFile = dtoName + CodeGeneratorConstant.EXPORT_JAVA;
+                    String importFile = dtoName + CodeGeneratorConstant.IMPORT_JAVA;
                     // SQL
-                    String sqlFile = dtoName + GitEggCodeGeneratorConstant.RESOURCE_SQL;
+                    String sqlFile = dtoName + CodeGeneratorConstant.RESOURCE_SQL;
                     // vue and js
-                    String vueFile = config.getModuleCode() + GitEggCodeGeneratorConstant.TABLE_VUE;
-                    String jsFile = config.getModuleCode() + GitEggCodeGeneratorConstant.JS;
+                    String vueFile = config.getModuleCode() + CodeGeneratorConstant.TABLE_VUE;
+                    String jsFile = config.getModuleCode() + CodeGeneratorConstant.JS;
 
                     //因为目前版本框架只支持自定义输出到other目录，所以这里利用重写AbstractTemplateEngine的outputCustomFile方法支持所有自定义文件输出目录
                     Map<String, String> customFilePath = new HashMap<>();
                     //dto
-                    String dtoPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + GitEggCodeGeneratorConstant.DTO;
+                    String dtoPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + CodeGeneratorConstant.DTO;
                     customFilePath.put(dtoFile, dtoPath);
                     customFilePath.put(createDtoFile, dtoPath);
                     customFilePath.put(updateDtoFile, dtoPath);
                     customFilePath.put(queryDtoFile, dtoPath);
                     // Export and Import
-                    String entityPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + GitEggCodeGeneratorConstant.ENTITY;
+                    String entityPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + CodeGeneratorConstant.ENTITY;
                     customFilePath.put(exportFile, entityPath);
                     customFilePath.put(importFile, entityPath);
                     // SQL
-                    String sqlPath = serviceCodePath + GitEggCodeGeneratorConstant.RESOURCES_PATH + codeDirPath + GitEggCodeGeneratorConstant.MAPPER;
+                    String sqlPath = serviceCodePath + GitEggCodeGeneratorConstant.RESOURCES_PATH + codeDirPath + CodeGeneratorConstant.MAPPER;
                     customFilePath.put(sqlFile, sqlPath);
                     // VUE AND JS
                     int start = serviceName.indexOf(StrUtil.DASHED);
@@ -232,22 +234,22 @@ public class EngineServiceImpl implements IEngineService {
 
                     // 设置自定义输出文件
                     Map<String, String> customFileMap = new HashMap<>();
-                    customFileMap.put(dtoFile, "/templates/dto.java.ftl");
-                    customFileMap.put(createDtoFile, "/templates/createDTO.java.ftl");
-                    customFileMap.put(updateDtoFile, "/templates/updateDTO.java.ftl");
-                    customFileMap.put(queryDtoFile, "/templates/queryDTO.java.ftl");
+                    customFileMap.put(dtoFile, CustomFileEnum.DTO_FILE.path);
+                    customFileMap.put(createDtoFile, CustomFileEnum.CREATE_DTO.path);
+                    customFileMap.put(updateDtoFile, CustomFileEnum.UPDATE_DTO.path);
+                    customFileMap.put(queryDtoFile, CustomFileEnum.QUERY_DTO.path);
                     // Export and Import
-                    customFileMap.put(exportFile, "/templates/entityExport.java.ftl");
-                    customFileMap.put(importFile, "/templates/entityImport.java.ftl");
+                    customFileMap.put(exportFile, CustomFileEnum.EXPORT.path);
+                    customFileMap.put(importFile, CustomFileEnum.IMPORT.path);
                     // SQL
-                    customFileMap.put(sqlFile, "/templates/resource.sql.ftl");
+                    customFileMap.put(sqlFile, CustomFileEnum.SQL.path);
                     // VUE AND JS
                     // TODO 要支持树形表、左树右表、左表右表、左表右树、左树右树形表、左树右树
-                    customFileMap.put(vueFile, "/templates/pageListTable.vue.ftl");
-                    customFileMap.put(jsFile, "/templates/pageListTable.js.ftl");
+                    customFileMap.put(vueFile, CustomFileEnum.VUE.path);
+                    customFileMap.put(jsFile, CustomFileEnum.JS.path);
 
                     builder.customMap(customMap)
-                    .customFile(customFileMap);
+                            .customFile(customFileMap);
                 })
                 .strategyConfig(builder -> {
                     builder
