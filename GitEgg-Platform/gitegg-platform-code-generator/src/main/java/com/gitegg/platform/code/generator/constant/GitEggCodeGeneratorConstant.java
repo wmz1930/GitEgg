@@ -21,6 +21,11 @@ public class GitEggCodeGeneratorConstant {
     public static final String FIELDS = "fields";
 
     /**
+     * BASE_ENTITY_FIELD_LIST
+     */
+    public static final String BASE_ENTITY_FIELD_LIST = "baseEntityFieldList";
+
+    /**
      * Author
      */
     public static final String AUTHOR = "GitEgg";
@@ -44,6 +49,11 @@ public class GitEggCodeGeneratorConstant {
      * JS_PATH
      */
     public static final String JS_PATH = File.separator + "src" + File.separator + "api" + File.separator;
+
+    /**
+     * VUE_JS_PATH
+     */
+    public static final String VUE_JS_PATH = "vueJsPath";
 
     /**
      * CUSTOM_FILE_PATH_MAP

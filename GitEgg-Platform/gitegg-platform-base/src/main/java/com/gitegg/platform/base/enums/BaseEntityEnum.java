@@ -1,6 +1,9 @@
 package com.gitegg.platform.base.enums;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @ClassName: BaseEntityEnum
  * @Description: BaseEntityEnum
@@ -47,6 +50,17 @@ public enum BaseEntityEnum {
         this.field = field;
         this.entity = entity;
     }
+
+    public static List<String> getBaseEntityFieldList() {
+        //获取枚举值转list集合
+        //这个model是自定义的一个类  放了两个字段，一个枚举值  一个枚举名称
+        List<String> list = new ArrayList<>();
+        for (BaseEntityEnum baseEntityEnum : values()) {
+            list.add(baseEntityEnum.getField());
+        }
+        return list;
+    }
+
 
     public String getField() {
         return field;
