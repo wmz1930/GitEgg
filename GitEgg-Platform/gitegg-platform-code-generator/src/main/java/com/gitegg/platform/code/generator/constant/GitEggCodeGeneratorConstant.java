@@ -21,6 +21,11 @@ public class GitEggCodeGeneratorConstant {
     public static final String FIELDS = "fields";
 
     /**
+     * FORM_FIELDS
+     */
+    public static final String FORM_FIELDS = "formFields";
+
+    /**
      * BASE_ENTITY_FIELD_LIST
      */
     public static final String BASE_ENTITY_FIELD_LIST = "baseEntityFieldList";

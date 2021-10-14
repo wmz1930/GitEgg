@@ -29,6 +29,11 @@ public class GitEggConstant {
     public static final int COUNT_ZERO = 0;
 
     /**
+     * 设置查询不分页
+     */
+    public static final long NO_PAGE = -1;
+
+    /**
      * 数组取值
      */
     public class Number {
