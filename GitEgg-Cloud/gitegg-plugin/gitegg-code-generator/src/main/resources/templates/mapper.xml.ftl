@@ -41,11 +41,44 @@
         WHERE del_flag = 0
         <#-- ----------  BEGIN 字段循环遍历 ---------->
         <#list fields as field>
-            <#if field?? && field.queryTerm == true >
-                ${field.entityName}: '', //${field.comment}
-                <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
-                    AND ${field.fieldName} = <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
-                </if>
+            <#if field?? && field.queryTerm == true>
+    <#if field?? && field.queryType == "EQUAL">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} = <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+    <#elseif field?? && field.queryType == "NOT_EQUAL">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} != <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+    <#elseif field?? && field.queryType == "GREATER">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} &gt; <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+    <#elseif field?? && field.queryType == "GREATER_EQUAL">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} &gt;= <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+    <#elseif field?? && field.queryType == "LESS">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} &lt; <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+    <#elseif field?? && field.queryType == "LESS_EQUAL">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} &lt;= <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+    <#elseif field?? && field.queryType == "LIKE">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} like concat('%', <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>, '%')
+        </if>
+    <#elseif field?? && field.queryType == "LIKE_LEFT">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} like concat(<#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>, '%')
+        </if>
+    <#elseif field?? && field.queryType == "LIKE_RIGHT">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} like concat('%', <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>)
+        </if>
+    </#if>
             </#if>
         </#list>
         <#------------  END 字段循环遍历  ---------->
@@ -57,7 +90,7 @@
         </if>
         ORDER BY id DESC
     </select>
-
+    <#if config?? && config.queryReuse == false>
     <!-- 查询${table.comment!}信息 -->
     <select id="query${entity}" resultType="${dtoPackage?replace("entity","dto")}.${entity}DTO" parameterType="${dtoPackage?replace("entity","dto")}.Query${entity}DTO">
         SELECT
@@ -67,10 +100,43 @@
         <#-- ----------  BEGIN 字段循环遍历 ---------->
         <#list fields as field>
             <#if field?? && field.queryTerm == true>
-                ${field.entityName}: '', //${field.comment}
-                <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
-                    AND ${field.fieldName} = <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
-                </if>
+                <#if field?? && field.queryType == "EQUAL">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} = <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+                <#elseif field?? && field.queryType == "NOT_EQUAL">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} != <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+                <#elseif field?? && field.queryType == "GREATER">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} &gt; <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+                <#elseif field?? && field.queryType == "GREATER_EQUAL">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} &gt;= <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+                <#elseif field?? && field.queryType == "LESS">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} &lt; <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+                <#elseif field?? && field.queryType == "LESS_EQUAL">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} &lt;= <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>
+        </if>
+                <#elseif field?? && field.queryType == "LIKE">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} like concat('%', <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>, '%')
+        </if>
+                <#elseif field?? && field.queryType == "LIKE_LEFT">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} like concat(<#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>, '%')
+        </if>
+                <#elseif field?? && field.queryType == "LIKE_RIGHT">
+        <if test="${table.entityPath}.${field.entityName} != null and ${table.entityPath}.${field.entityName} != ''">
+            AND ${field.fieldName} like concat('%', <#noparse>#{</#noparse>${table.entityPath}.${field.entityName}<#noparse>}</#noparse>)
+        </if>
+                </#if>
             </#if>
         </#list>
         <#------------  END 字段循环遍历  ---------->
@@ -82,5 +148,5 @@
         </if>
         ORDER BY id DESC
     </select>
-
+    </#if>
 </mapper>

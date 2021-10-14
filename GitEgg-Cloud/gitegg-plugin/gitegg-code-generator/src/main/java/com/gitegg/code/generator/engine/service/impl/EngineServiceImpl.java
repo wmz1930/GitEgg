@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 代码生成器接口类
@@ -136,9 +137,6 @@ public class EngineServiceImpl implements IEngineService {
         StrategyConfig strategyConfig = new StrategyConfig.Builder().addInclude(tableNames.toArray(new String[]{})).build();
         ConfigBuilder configBuilder = new ConfigBuilder(null, dataSourceConfig, strategyConfig, null, null, null);
         List<TableInfo> tableInfoList = configBuilder.getTableInfoList();
-        tableInfoList.forEach(tableInfo -> {
-            System.out.println(tableInfo.getComment());
-        });
         return tableInfoList;
     }
 
@@ -151,9 +149,13 @@ public class EngineServiceImpl implements IEngineService {
         queryFieldDTO.setGenerationId(queryConfigDTO.getId());
         List<FieldDTO> fieldDTOS = fieldService.queryFieldList(queryFieldDTO);
 
+        //提取表单的字段
+        List<FieldDTO> formFieldDTOS = fieldDTOS.stream().filter(f->f.getFormAdd() || f.getFormEdit()).collect(Collectors.toList());
+
         Map<String, Object> customMap = new HashMap<>();
         customMap.put(GitEggCodeGeneratorConstant.CONFIG, config);
         customMap.put(GitEggCodeGeneratorConstant.FIELDS, fieldDTOS);
+        customMap.put(GitEggCodeGeneratorConstant.FORM_FIELDS, formFieldDTOS);
 
         //baseEntity里面有的，DTO中需要排除的字段
         List<String> baseEntityFieldList = BaseEntityEnum.getBaseEntityFieldList();

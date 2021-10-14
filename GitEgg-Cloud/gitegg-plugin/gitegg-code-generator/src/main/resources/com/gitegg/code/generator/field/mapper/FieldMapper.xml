@@ -28,6 +28,7 @@
         <result column="max" property="max" />
         <result column="min_length" property="minLength" />
         <result column="max_length" property="maxLength" />
+        <result column="default_value" property="defaultValue" />
         <result column="validate_regular" property="validateRegular" />
         <result column="field_sort" property="fieldSort" />
         <result column="tenant_id" property="tenantId" />
@@ -39,7 +40,7 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, generation_id, join_id, join_table_name, field_name, field_type, comment, entity_type, entity_name, form_add, form_edit, query_term, list_show, import_flag, export_flag, required, field_unique, query_type, control_type, dict_code, min, max, min_length, max_length, field_sort, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, generation_id, join_id, join_table_name, field_name, field_type, comment, entity_type, entity_name, form_add, form_edit, query_term, list_show, import_flag, export_flag, required, field_unique, query_type, control_type, dict_code, min, max, min_length, max_length, default_value, field_sort, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 分页查询字段属性配置表列表 -->

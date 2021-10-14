@@ -100,5 +100,8 @@ public class Config extends BaseEntity {
     @TableField("export_flag")
     private Boolean exportFlag;
 
+    @ApiModelProperty(value = "查询复用： 查询复用：分页查询和单条记录查询公用同一个sql语句")
+    @TableField("export_flag")
+    private Boolean queryReuse;
 
 }

@@ -2,6 +2,10 @@ package ${package.ServiceImpl};
 
 import java.util.List;
 
+<#if config?? && config.queryReuse == true>
+import com.alibaba.excel.util.CollectionUtils;
+import com.gitegg.platform.base.constant.GitEggConstant;
+</#if>
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import ${package.Entity}.${entity};
@@ -64,6 +68,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         return ${table.entityPath}InfoList;
     }
 
+    <#if config?? && config.queryReuse == false>
     /**
     * 查询${table.comment!}详情
     * @param query${entity}DTO
@@ -74,6 +79,24 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         ${entity}DTO ${table.entityPath}DTO = ${table.entityPath}Mapper.query${entity}(query${entity}DTO);
         return ${table.entityPath}DTO;
     }
+    <#else>
+    /**
+    * 查询${table.comment!}详情
+    * @param query${entity}DTO
+    * @return
+    */
+    @Override
+    public ${entity}DTO query${entity}(Query${entity}DTO query${entity}DTO) {
+        Page<${entity}DTO> page = new Page<>();
+        page.setSize(GitEggConstant.Number.ONE);
+        Page<${entity}DTO> ${table.entityPath}InfoPage = this.query${entity}List(page, query${entity}DTO);
+        if (!CollectionUtils.isEmpty(${table.entityPath}InfoPage.getRecords()))
+        {
+            return ${table.entityPath}InfoPage.getRecords().get(GitEggConstant.Number.ZERO);
+        }
+        return null;
+    }
+    </#if>
 
     /**
     * 创建${table.comment!}

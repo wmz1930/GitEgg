@@ -3,32 +3,31 @@
     <div class="table-page-search-wrapper">
       <a-form-model layout="inline">
         <a-row :gutter="48">
-        <#-- ----------  BEGIN 字段循环遍历  ---------->
         <#list fields as field>
           <#if field?? && field.queryTerm == true>
           <a-col :md="6" :sm="24">
             <a-form-model-item label="${field.comment}" prop="${field.entityName}">
             <#if field.controlType == "INPUT_TEXT">
               <a-input
-                      v-model.trim="listQuery.${field.entityName}"
-                      placeholder="请输入${field.comment}"
-                      :max-length="${field.maxLength}"
-                      @keyup.enter.native="handleFilter" />
+                v-model.trim="listQuery.${field.entityName}"
+                placeholder="请输入${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
             </#if>
             <#if field.controlType == "TEXTAREA">
               <a-textarea
-                      v-model.trim="listQuery.${field.entityName}"
-                      placeholder="请输入${field.comment}"
-                      :auto-size="{ minRows: 3, maxRows: 5 }"
-                      @keyup.enter.native="handleFilter" />
+                v-model.trim="listQuery.${field.entityName}"
+                placeholder="请输入${field.comment}"
+                :auto-size="{ minRows: 3, maxRows: 5 }"
+                @keyup.enter.native="handleFilter" />
             </#if>
             <#if field.controlType == "INPUT_NUMBER">
               <a-input-number
-                      v-model.trim="listQuery.${field.entityName}"
-                      placeholder="${field.comment}"
-                      :min="${field.min}"
-                      :max="${field.max}"
-                      @keyup.enter.native="handleFilter" />
+                v-model.trim="listQuery.${field.entityName}"
+                placeholder="${field.comment}"
+                :min="${field.min}"
+                :max="${field.max}"
+                @keyup.enter.native="handleFilter" />
             </#if>
             <#if field.controlType == "RADIO">
               <#assign dictSelect=true/>
@@ -153,7 +152,6 @@
           </a-col>
           </#if>
         </#list>
-        <#------------  END 字段循环遍历  ---------->
           <template v-if="advanced">
             <a-col :md="6" :sm="24">
               <a-form-model-item label="开始时间">
@@ -202,12 +200,8 @@
 
       <#if config.exportFlag == true><a-button type="primary" icon="cloud-download" @click="handleDownload" style="margin-left: 8px;">导出</a-button></#if>
       <#if config.importFlag == true>
-      <a-upload
-              name="uploadFile"
-              :show-upload-list="false"
-              :before-upload="beforeUpload"
-      >
-          <a-button> <a-icon type="upload" /> 导入 </a-button>
+      <a-upload name="uploadFile" :show-upload-list="false" :before-upload="beforeUpload">
+        <a-button> <a-icon type="upload" /> 导入 </a-button>
       </a-upload>
       <a href="javascript:;" @click="handleDownloadTemplate" style="margin-left: 8px;">下载导入模板</a>
       </#if>
@@ -479,6 +473,9 @@
             <#------------  END 所有的字典类型 字段循环遍历  ---------->
         },
         data () {
+            <#if dictSelect?? && dictSelect == true>
+            vm = this
+            </#if>
             // 增加或更新记录时，判断字段是否已经存在
             <#-- ----------  BEGIN 字段循环遍历  ---------->
             <#list fields as field>
@@ -511,11 +508,11 @@
                 list: null,
                 total: 0,
                 listLoading: true,
-                listQuery: {
+                list${entity}Query: {
                 <#-- ----------  BEGIN 字段循环遍历  ---------->
                 <#list fields as field>
                 <#if field?? && field.queryTerm == true>
-                    ${field.entityName}: '', // ${field.comment}
+                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">${field.defaultValue}<#else>undefined</#if>, // ${field.comment}
                 </#if>
                 </#list>
                 <#------------  END 字段循环遍历  ---------->
@@ -537,8 +534,8 @@
                     create: '添加'
                 },
                 ${table.entityPath}Form: {
-                    <#list table.fields as field>
-                    ${field.propertyName}: ''<#if field?? && field?has_next>,</#if>
+                    <#list formFields as field>
+                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">${field.defaultValue}<#else>undefined</#if><#if field?? && field?has_next>,</#if>
                     </#list>
                 },
                 // 表头
@@ -622,9 +619,7 @@
             }
         },
         watch: {
-            // filterText (val) {
-            //   this.$refs['${table.entityPath}Tree'].filter(val)
-            // }
+
         },
         created () {
             <#-- ----------  所有的字典类型 字段循环遍历  ---------->
@@ -680,12 +675,12 @@
             </#if>
             </#list>
             <#------------  END 所有的字典类型 字段循环遍历  ---------->
-            resetQuery () {
-                this.listQuery = {
+            reset${entity}Query () {
+                this.list${entity}Query = {
                     <#-- ----------  BEGIN 字段循环遍历  ---------->
                     <#list fields as field>
                     <#if field?? && field.queryTerm == true>
-                        ${field.entityName}: '', // ${field.comment}
+                        ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">${field.defaultValue}<#else>undefined</#if>, // ${field.comment}
                     </#if>
                     </#list>
                     <#------------  END 字段循环遍历  ---------->
@@ -696,10 +691,8 @@
             reset${entity}Form () {
                 <#-- ----------  BEGIN 字段循环遍历  ---------->
                 this.${table.entityPath}Form = {
-                <#list fields as field>
-                   <#if field?? && field.formAdd == true>
-                    ${field.entityName}: ''<#if field?has_next>,</#if> // ${field.comment}
-                   </#if>
+                <#list formFields as field>
+                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">${field.defaultValue}<#else>undefined</#if><#if field?has_next>,</#if> // ${field.comment}
                 </#list>
                 <#------------  END 字段循环遍历  ---------->
                 }

@@ -23,6 +23,7 @@
         <result column="service_code_path" property="serviceCodePath" />
         <result column="import_flag" property="importFlag" />
         <result column="export_flag" property="exportFlag" />
+        <result column="query_reuse" property="queryReuse" />
         <result column="tenant_id" property="tenantId" />
         <result column="create_time" property="createTime" />
         <result column="creator" property="creator" />

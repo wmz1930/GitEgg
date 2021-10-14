@@ -50,6 +50,7 @@ public class Field extends BaseEntity {
     private String fieldType;
 
     @ApiModelProperty(value = "字段描述")
+    @TableField("comment")
     private String comment;
 
     @ApiModelProperty(value = "实体类型")
@@ -85,6 +86,7 @@ public class Field extends BaseEntity {
     private Boolean exportFlag;
 
     @ApiModelProperty(value = "是否必填")
+    @TableField("required")
     private Boolean required;
 
     @ApiModelProperty(value = "是否唯一")
@@ -104,9 +106,11 @@ public class Field extends BaseEntity {
     private String dictCode;
 
     @ApiModelProperty(value = "最小值")
+    @TableField("min")
     private Long min;
 
     @ApiModelProperty(value = "最大值")
+    @TableField("max")
     private Long max;
 
     @ApiModelProperty(value = "最小长度")
@@ -116,6 +120,10 @@ public class Field extends BaseEntity {
     @ApiModelProperty(value = "字段最大长度")
     @TableField("max_length")
     private Integer maxLength;
+
+    @ApiModelProperty(value = "默认值")
+    @TableField("default_value")
+    private String defaultValue;
 
     @ApiModelProperty(value = "正则表达式")
     @TableField("validate_regular")

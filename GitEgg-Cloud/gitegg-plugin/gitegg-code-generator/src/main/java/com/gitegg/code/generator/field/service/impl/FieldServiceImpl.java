@@ -126,6 +126,7 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
                 fieldDTO.setEntityType(field.getPropertyType());
                 fieldDTO.setMinLength(1);
                 fieldDTO.setMaxLength(field.getMetaInfo().getLength());
+                fieldDTO.setDefaultValue(field.getMetaInfo().getDefaultValue());
 
                 // 页面控件默认都是单文本框
                 fieldDTO.setControlType("INPUT_TEXT");

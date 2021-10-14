@@ -77,4 +77,7 @@ public class UpdateConfigDTO extends BaseEntity {
     @ApiModelProperty(value = "是否支持导出 1支持 0不支持")
     private Boolean exportFlag;
 
+    @ApiModelProperty(value = "查询复用： 查询复用：分页查询和单条记录查询公用同一个sql语句")
+    private Boolean queryReuse;
+
 }
