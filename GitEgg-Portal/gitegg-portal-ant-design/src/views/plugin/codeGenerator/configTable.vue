@@ -16,7 +16,6 @@
               ></select-asyn>
             </a-form-model-item>
           </a-col>
-
           <a-col :md="6" :sm="24">
             <a-form-model-item label="模块名称">
               <a-input
