@@ -80,4 +80,10 @@ public class CreateConfigDTO extends BaseEntity {
     @ApiModelProperty(value = "查询复用： 查询复用：分页查询和单条记录查询公用同一个sql语句")
     private Boolean queryReuse;
 
+    @ApiModelProperty(value = "状态处理")
+    private Boolean statusHandling;
+
+    @ApiModelProperty(value = "代码生成类型")
+    private String codeType;
+
 }

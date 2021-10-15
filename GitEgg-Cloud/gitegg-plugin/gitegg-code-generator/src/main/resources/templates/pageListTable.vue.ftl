@@ -9,21 +9,21 @@
             <a-form-model-item label="${field.comment}" prop="${field.entityName}">
 <#if field.controlType == "INPUT_TEXT">
               <a-input
-                v-model.trim="listQuery.${field.entityName}"
+                v-model.trim="list${entity}Query.${field.entityName}"
                 placeholder="请输入${field.comment}"
                 :max-length="${field.maxLength}"
                 @keyup.enter.native="handleFilter" />
 </#if>
 <#if field.controlType == "TEXTAREA">
               <a-textarea
-                v-model.trim="listQuery.${field.entityName}"
+                v-model.trim="list${entity}Query.${field.entityName}"
                 placeholder="请输入${field.comment}"
                 :auto-size="{ minRows: 3, maxRows: 5 }"
                 @keyup.enter.native="handleFilter" />
 </#if>
 <#if field.controlType == "INPUT_NUMBER">
               <a-input-number
-                v-model.trim="listQuery.${field.entityName}"
+                v-model.trim="list${entity}Query.${field.entityName}"
                 placeholder="${field.comment}"
                 :min="${field.min}"
                 :max="${field.max}"
@@ -31,14 +31,14 @@
 </#if>
 <#if field.controlType == "RADIO">
 <#assign dictSelect=true/>
-              <a-radio-group v-model="listQuery.${field.entityName}"
-                             name="listQueryRadio${field.entityName}">
+              <a-radio-group v-model="list${entity}Query.${field.entityName}"
+                             name="list${entity}Query.Radio${field.entityName}">
                 <a-radio :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">{{ item.dictName }}</a-radio>
               </a-radio-group>
 </#if>
 <#if field.controlType == "CHECKBOX">
 <#assign dictSelect=true/>
-              <a-checkbox-group v-model="value" name="listQueryRadioCheckbox${field.entityName}">
+              <a-checkbox-group v-model="value" name="list${entity}Query.RadioCheckbox${field.entityName}">
                 <a-checkbox :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">
                   {{ item.dictName }}
                 </a-checkbox>
@@ -48,19 +48,17 @@
 <#assign dictSelect=true/>
 <#macro Multiple controlType>
 <#if controlType == "SELECT_MULTI">
-                  mode="multiple"
+mode="multiple"
 <#else>
-                  mode="default"
+mode="default"
 </#if>
 </#macro>
-              <a-select
-                      v-model.trim="listQuery.${field.entityName}"
-                      placeholder="${field.comment}"
-                      show-search
-                      mode="multiple"
-                      <@Multiple controlType="${field.controlType}"/>
-                      :filter-option="filterOption"
-                      @keyup.enter.native="handleFilter" >
+              <a-select v-model.trim="list${entity}Query.${field.entityName}"
+                        placeholder="${field.comment}"
+                        show-search
+                        <@Multiple controlType="${field.controlType}"/>
+                        :filter-option="filterOption"
+                        @keyup.enter.native="handleFilter" >
                 <a-select-option :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList"
                                  :key="item.dictCode"
                                  :label="item.dictName"
@@ -76,19 +74,19 @@
                       valueFormat="YYYY-MM-DD HH:mm:ss"
 </#if>
 </#macro>
-              <a-date-picker v-model.trim="listQuery.${field.entityName}"
-                      placeholder="${field.comment}"
-                      <@Multiple controlType="${field.controlType}"/>
-                      style="width:100%;"/>
+              <a-date-picker v-model.trim="list${entity}Query.${field.entityName}"
+                             placeholder="${field.comment}"
+                             <@Multiple controlType="${field.controlType}"/>
+                             style="width:100%;"/>
 </#if>
 <#if field.controlType == "TIME_PICKER">
-              <a-time-picker v-model.trim="listQuery.${field.entityName}"
+              <a-time-picker v-model.trim="list${entity}Query.${field.entityName}"
                              placeholder="${field.comment}"
                              style="width:100%;"/>
 </#if>
 <#if field.controlType == "ProvinceSelect">
 <#assign provinceSelect=true/>
-              <a-cascader v-model="listQuery.${field.entityName}"
+              <a-cascader v-model="list${entity}Query.${field.entityName}"
                           :options="provinceOptions"
                           placeholder="输选择${field.comment}"
                           style="width:100%;"
@@ -97,53 +95,53 @@
 <#if field.controlType == "OrganizationTreeSelect">
 <#assign organizationTree=true/>
               <a-input
-                      v-model.trim="listQuery.${field.entityName}"
-                      placeholder="${field.comment}"
-                      :max-length="${field.maxLength}"
-                      @keyup.enter.native="handleFilter" />
+                v-model.trim="list${entity}Query.${field.entityName}"
+                placeholder="${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
 </#if>
 <#if field.controlType == "RoleSelect">
 <#assign roleTree=true/>
               <a-input
-                      v-model.trim="listQuery.${field.entityName}"
-                      placeholder="${field.comment}"
-                      :max-length="${field.maxLength}"
-                      @keyup.enter.native="handleFilter" />
+                v-model.trim="list${entity}Query.${field.entityName}"
+                placeholder="${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
 </#if>
 <#if field.controlType == "ResourceTreeSelect">
 <#assign resourceTree=true/>
               <a-input
-                      v-model.trim="listQuery.${field.entityName}"
-                      placeholder="${field.comment}"
-                      :max-length="${field.maxLength}"
-                      @keyup.enter.native="handleFilter" />
+                v-model.trim="list${entity}Query.${field.entityName}"
+                placeholder="${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
 </#if>
 <#if field.controlType == "MenuTreeSelect">
 <#assign menuTree=true/>
               <a-input
-                      v-model.trim="listQuery.${field.entityName}"
-                      placeholder="${field.comment}"
-                      :max-length="${field.maxLength}"
-                      @keyup.enter.native="handleFilter" />
+                v-model.trim="list${entity}Query.${field.entityName}"
+                placeholder="${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
 </#if>
 <#if field.controlType == "RATE">
-              <a-rate v-model.trim="listQuery.${field.entityName}"
+              <a-rate v-model.trim="list${entity}Query.${field.entityName}"
                       placeholder="${field.comment}"
                       @keyup.enter.native="handleFilter"/>
 </#if>
 <#if field.controlType == "UPLOAD_FILE">
-              <a-upload v-model="listQuery.${field.entityName}"
+              <a-upload v-model="list${entity}Query.${field.entityName}"
                         :file-list="file${field.entityName}List"
                         :remove="handle${field.entityName}Remove"
                         :before-upload="before${field.entityName}Upload">
-                <a-button> <a-icon type="upload" /> 选择文件 </a-button>
+                 <a-button> <a-icon type="upload" /> 选择文件 </a-button>
               </a-upload>
               <a-button
-                      type="primary"
-                      :disabled="file${field.entityName}List.length === 0"
-                      :loading="uploading"
-                      style="margin-top: 16px"
-                      @click="handle${field.entityName}Upload"
+                type="primary"
+                :disabled="file${field.entityName}List.length === 0"
+                :loading="uploading"
+                style="margin-top: 16px"
+                @click="handle${field.entityName}Upload"
               >
                 <a-icon type="caret-right" />{{ uploading ? 'Uploading' : '开始上传' }}
               </a-button>
@@ -155,7 +153,7 @@
           <template v-if="advanced">
             <a-col :md="6" :sm="24">
               <a-form-model-item label="开始时间">
-                <a-date-picker v-model.trim="listQuery.beginDateTime"
+                <a-date-picker v-model.trim="list${entity}Query.beginDateTime"
                                placeholder="开始时间"
                                show-time
                                valueFormat="YYYY-MM-DD HH:mm:ss"
@@ -164,7 +162,7 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-model-item label="结束时间">
-                <a-date-picker v-model.trim="listQuery.endDateTime"
+                <a-date-picker v-model.trim="list${entity}Query.endDateTime"
                                placeholder="结束时间"
                                show-time
                                valueFormat="YYYY-MM-DD HH:mm:ss"
@@ -175,7 +173,7 @@
           <a-col :md="!advanced && 6 || 24" :sm="24">
             <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
               <a-button type="primary" @click="handleFilter">查询</a-button>
-              <a-button style="margin-left: 8px" @click="resetQuery">重置</a-button>
+              <a-button style="margin-left: 8px" @click="reset${entity}Query">重置</a-button>
               <a @click="toggleAdvanced" style="margin-left: 8px">
                 {{ advanced ? '收起' : '展开' }}
                 <a-icon :type="advanced ? 'up' : 'down'"/>
@@ -188,7 +186,6 @@
 
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="handleCreate">新建</a-button>
-      <a-button type="primary" icon="cloud-download" @click="handleDownload" style="margin-left: 8px">导出</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="handleBatchDelete"><a-icon type="delete" />删除</a-menu-item>
@@ -207,7 +204,12 @@
       <a href="javascript:;" @click="handleDownloadTemplate" style="margin-left: 8px;">下载导入模板</a>
 </#if>
     </div>
-
+<#list table.fields as field>
+    <#if field?? && field.annotationColumnName?ends_with("status") && config.statusHandling == true>
+        <#assign hasStatus=true/>
+        <#assign statusName=field.propertyName/>
+    </#if>
+</#list>
     <s-table
       ref="${table.entityPath}Table"
       size="default"
@@ -220,13 +222,11 @@
       :pagination="${table.entityPath}Pagination"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
-     <#list table.fields as field>
-     <#if field?? && field.annotationColumnName?ends_with("status")>
-      <span slot="status" slot-scope="text, record">
-        {{ record.${field.propertyName} | ${field.propertyName}DictFilter }}
+<#if hasStatus?? && hasStatus == true>
+      <span slot="${statusName}Status" slot-scope="text, record">
+        {{ record.${statusName} | ${statusName}DictFilter }}
       </span>
-     </#if>
-     </#list>
+</#if>
       <span slot="createTime" slot-scope="text, record">
         <span>{{ record.createTime | moment }}</span>
       </span>
@@ -238,16 +238,14 @@
             更多 <a-icon type="down" />
           </a>
           <a-menu slot="overlay">
-          <#list table.fields as field>
-            <#if field?? && field.annotationColumnName?ends_with("status")>
+<#if hasStatus?? && hasStatus == true>
             <a-menu-item>
-              <a href="javascript:;" v-if="record.${field.propertyName}!='1'" size="mini" type="success" @click="handleModifyStatus(record,'1')">启用
+              <a href="javascript:;" v-if="record.${statusName}!='1'" size="mini" type="success" @click="handleModifyStatus(record,'1')">启用
               </a>
-              <a href="javascript:;" v-if="record.${field.propertyName}!='0' && record.${field.propertyName}!='2'" size="mini" @click="handleModifyStatus(record,'0')">禁用
+              <a href="javascript:;" v-if="record.${statusName}!='0' && record.${statusName}!='2'" size="mini" @click="handleModifyStatus(record,'0')">禁用
               </a>
             </a-menu-item>
-             </#if>
-          </#list>
+</#if>
             <a-menu-item>
               <a href="javascript:;" @click="handleDelete(record)">删除</a>
             </a-menu-item>
@@ -280,150 +278,153 @@
         :label-col="${table.entityPath}LabelCol"
         :wrapper-col="${table.entityPath}WrapperCol">
 <#-- ----------  BEGIN 字段循环遍历  ---------->
-<#list fields as field>
-    <#if field?? && field.queryTerm == true>
-        <a-col :md="6" :sm="24">
+<#list formFields as field>
+<#if (field_index + 1)%2 != 0>
+        <a-row>
+</#if>
+          <a-col :md="${config.formItemCol}" :sm="24">
             <a-form-model-item label="${field.comment}" prop="${field.entityName}">
-                <#if field.controlType == "INPUT_TEXT">
-                    <a-input
-                            v-model.trim="listQuery.${field.entityName}"
-                            placeholder="${field.comment}"
-                            :max-length="${field.maxLength}"
-                            @keyup.enter.native="handleFilter" />
+<#if field.controlType == "INPUT_TEXT">
+              <a-input
+                v-model.trim="${table.entityPath}Form.${field.entityName}"
+                placeholder="${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
+</#if>
+<#if field.controlType == "INPUT_NUMBER">
+              <a-input-number
+                v-model.trim="${table.entityPath}Form.${field.entityName}"
+                placeholder="${field.comment}"
+                :min="${field.min}"
+                :max="${field.max}"
+                @keyup.enter.native="handleFilter" />
+</#if>
+<#if field.controlType == "RADIO">
+            <#assign dictSelect=true/>
+              <a-radio-group v-model="${table.entityPath}Form.${field.entityName}"
+                             name="${table.entityPath}Form.Radio${field.entityName}">
+                <a-radio :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">{{ item.dictName }}</a-radio>
+              </a-radio-group>
+</#if>
+<#if field.controlType == "CHECKBOX">
+            <#assign dictSelect=true/>
+              <a-checkbox-group v-model="value" name="${table.entityPath}Form.RadioCheckbox${field.entityName}">
+                <a-checkbox :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-checkbox>
+              </a-checkbox-group>
+</#if>
+<#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI">
+            <#assign dictSelect=true/>
+            <#macro Multiple controlType>
+                <#if controlType == "SELECT_MULTI">
+                    mode="multiple"
+                <#else>
+                    mode="default"
                 </#if>
-                <#if field.controlType == "INPUT_NUMBER">
-                    <a-input-number
-                            v-model.trim="listQuery.${field.entityName}"
-                            placeholder="${field.comment}"
-                            :min="${field.min}"
-                            :max="${field.max}"
-                            @keyup.enter.native="handleFilter" />
+            </#macro>
+              <a-select
+                v-model.trim="${table.entityPath}Form.${field.entityName}"
+                placeholder="${field.comment}"
+                show-search
+                <@Multiple controlType="${field.controlType}"/>
+                :filter-option="filterOption"
+                @keyup.enter.native="handleFilter" >
+                <a-select-option v-for="item in ${field.entityName}DictList"
+                                 :key="item.dictCode"
+                                 :label="item.dictName"
+                                 :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-select-option>
+              </a-select>
+</#if>
+<#if field.controlType == "DTAE_PICKER" || field.controlType == "DTAE_TIME_PICKER">
+            <#macro DateTime controlType>
+                <#if controlType == "DTAE_TIME_PICKER">
+                    show-time
+                    valueFormat="YYYY-MM-DD HH:mm:ss"
                 </#if>
-                <#if field.controlType == "RADIO">
-                    <#assign dictSelect=true/>
-                    <a-radio-group v-model="listQuery.${field.entityName}"
-                                   name="listQueryRadio${field.entityName}">
-                        <a-radio v-for="item in ${field.entityName}DictList" :value="item.dictCode">{{ item.dictName }}</a-radio>
-                    </a-radio-group>
-                </#if>
-                <#if field.controlType == "CHECKBOX">
-                    <#assign dictSelect=true/>
-                    <a-checkbox-group v-model="value" name="listQueryRadioCheckbox${field.entityName}">
-                        <a-checkbox  v-for="item in ${field.entityName}DictList" :value="item.dictCode">
-                            {{ item.dictName }}
-                        </a-checkbox>
-                    </a-checkbox-group>
-                </#if>
-                <#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI">
-                    <#assign dictSelect=true/>
-                    <#macro Multiple controlType>
-                        <#if controlType == "SELECT_MULTI">
-                            mode="multiple"
-                        <#else>
-                            mode="default"
-                        </#if>
-                    </#macro>
-                    <a-select
-                            v-model.trim="listQuery.${field.entityName}"
-                            placeholder="${field.comment}"
-                            show-search
-                            mode="multiple"
-                            <@Multiple controlType="${field.controlType}"/>
-                            :filter-option="filterOption"
-                            @keyup.enter.native="handleFilter" >
-                        <a-select-option v-for="item in ${field.entityName}DictList"
-                                         :key="item.dictCode"
-                                         :label="item.dictName"
-                                         :value="item.dictCode">
-                            {{ item.dictName }}
-                        </a-select-option>
-                    </a-select>
-                </#if>
-                <#if field.controlType == "DTAE_PICKER" || field.controlType == "DTAE_TIME_PICKER">
-                    <#macro DateTime controlType>
-                        <#if controlType == "DTAE_TIME_PICKER">
-                            show-time
-                            valueFormat="YYYY-MM-DD HH:mm:ss"
-                        </#if>
-                    </#macro>
-                    <a-date-picker v-model.trim="listQuery.${field.entityName}"
-                                   placeholder="${field.comment}"
-                            <@Multiple controlType="${field.controlType}"/>
-                                   style="width:100%;"/>
-                </#if>
-                <#if field.controlType == "TIME_PICKER">
-                    <a-time-picker v-model.trim="listQuery.${field.entityName}"
-                                   placeholder="${field.comment}"
-                                   style="width:100%;"/>
-                </#if>
-                <#if field.controlType == "ProvinceSelect">
-                    <#assign provinceSelect=true/>
-                    <a-cascader v-model="listQuery.${field.entityName}"
-                                :options="provinceOptions"
-                                placeholder="输选择${field.comment}"
-                                style="width:100%;"
-                                @keyup.enter.native="handleFilter" />
-                </#if>
-                <#if field.controlType == "OrganizationTreeSelect">
-                    <#assign organizationTree=true/>
-                    <a-input
-                            v-model.trim="listQuery.${field.entityName}"
-                            placeholder="${field.comment}"
-                            :max-length="${field.maxLength}"
-                            @keyup.enter.native="handleFilter" />
-                </#if>
-                <#if field.controlType == "RoleSelect">
-                    <#assign roleTree=true/>
-                    <a-input
-                            v-model.trim="listQuery.${field.entityName}"
-                            placeholder="${field.comment}"
-                            :max-length="${field.maxLength}"
-                            @keyup.enter.native="handleFilter" />
-                </#if>
-                <#if field.controlType == "ResourceTreeSelect">
-                    <#assign resourceTree=true/>
-                    <a-input
-                            v-model.trim="listQuery.${field.entityName}"
-                            placeholder="${field.comment}"
-                            :max-length="${field.maxLength}"
-                            @keyup.enter.native="handleFilter" />
-                </#if>
-                <#if field.controlType == "MenuTreeSelect">
-                    <#assign menuTree=true/>
-                    <a-input
-                            v-model.trim="listQuery.${field.entityName}"
-                            placeholder="${field.comment}"
-                            :max-length="${field.maxLength}"
-                            @keyup.enter.native="handleFilter" />
-                </#if>
-                <#if field.controlType == "RATE">
-                    <a-rate v-model.trim="listQuery.${field.entityName}"
-                            placeholder="${field.comment}"
-                            @keyup.enter.native="handleFilter"/>
-                </#if>
-                <#if field.controlType == "UPLOAD_FILE">
-                    <a-upload v-model="listQuery.${field.entityName}"
-                              :file-list="file${field.entityName}List"
-                              :remove="handle${field.entityName}Remove"
-                              :before-upload="before${field.entityName}Upload">
-                        <a-button> <a-icon type="upload" /> 选择文件 </a-button>
-                    </a-upload>
-                    <a-button
-                            type="primary"
-                            :disabled="file${field.entityName}List.length === 0"
-                            :loading="uploading"
-                            style="margin-top: 16px"
-                            @click="handle${field.entityName}Upload"
-                    >
-                        <a-icon type="caret-right" />{{ uploading ? 'Uploading' : '开始上传' }}
-                    </a-button>
-                </#if>
+            </#macro>
+              <a-date-picker v-model.trim="${table.entityPath}Form.${field.entityName}"
+                             placeholder="${field.comment}"
+                      <@Multiple controlType="${field.controlType}"/>
+                             style="width:100%;"/>
+</#if>
+<#if field.controlType == "TIME_PICKER">
+              <a-time-picker v-model.trim="${table.entityPath}Form.${field.entityName}"
+                             placeholder="${field.comment}"
+                             style="width:100%;"/>
+</#if>
+<#if field.controlType == "ProvinceSelect">
+            <#assign provinceSelect=true/>
+              <a-cascader v-model="${table.entityPath}Form.${field.entityName}"
+                          :options="provinceOptions"
+                          placeholder="输选择${field.comment}"
+                          style="width:100%;"
+                          @keyup.enter.native="handleFilter" />
+</#if>
+<#if field.controlType == "OrganizationTreeSelect">
+            <#assign organizationTree=true/>
+              <a-input
+                v-model.trim="${table.entityPath}Form.${field.entityName}"
+                placeholder="${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
+</#if>
+<#if field.controlType == "RoleSelect">
+            <#assign roleTree=true/>
+              <a-input
+                v-model.trim="${table.entityPath}Form.${field.entityName}"
+                placeholder="${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
+</#if>
+<#if field.controlType == "ResourceTreeSelect">
+            <#assign resourceTree=true/>
+              <a-input
+                v-model.trim="${table.entityPath}Form.${field.entityName}"
+                placeholder="${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
+</#if>
+<#if field.controlType == "MenuTreeSelect">
+            <#assign menuTree=true/>
+              <a-input
+                v-model.trim="${table.entityPath}Form.${field.entityName}"
+                placeholder="${field.comment}"
+                :max-length="${field.maxLength}"
+                @keyup.enter.native="handleFilter" />
+</#if>
+<#if field.controlType == "RATE">
+              <a-rate v-model.trim="${table.entityPath}Form.${field.entityName}"
+                      placeholder="${field.comment}"
+                      @keyup.enter.native="handleFilter"/>
+</#if>
+<#if field.controlType == "UPLOAD_FILE">
+              <a-upload v-model="${table.entityPath}Form.${field.entityName}"
+                        :file-list="file${field.entityName}List"
+                        :remove="handle${field.entityName}Remove"
+                        :before-upload="before${field.entityName}Upload">
+                <a-button> <a-icon type="upload" /> 选择文件 </a-button>
+              </a-upload>
+              <a-button
+                type="primary"
+                :disabled="file${field.entityName}List.length === 0"
+                :loading="uploading"
+                style="margin-top: 16px"
+                @click="handle${field.entityName}Upload"
+              >
+                <a-icon type="caret-right" />{{ uploading ? 'Uploading' : '开始上传' }}
+              </a-button>
+</#if>
             </a-form-model-item>
-        </a-col>
-    </#if>
+          </a-col>
+<#if (field_index + 1)%2 == 0 || !field?has_next>
+        </a-row>
+</#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
-    </a-form-model>
+      </a-form-model>
     </#if>
     <#if config.formType = "modal">
       <div slot="footer" class="dialog-footer">
@@ -446,7 +447,7 @@
 
 <script>
     import { STable } from '@/components'
-    import { query${entity}List, create${entity}, update${entity}, update${entity}Status, batchDelete${entity}, delete${entity}, check${entity}Exist<#if config.exportFlag == true>, download${entity}List</#if><#if config.importFlag == true>, upload${entity}, download${entity}Template</#if> } from '@/api${vueJsPath}'
+    import { query${entity}List, create${entity}, update${entity}, <#if hasStatus?? && hasStatus == true>update${entity}Status, </#if>delete${entity}, check${entity}Exist<#if config.exportFlag == true>, batchDelete${entity}, download${entity}List</#if><#if config.importFlag == true>, upload${entity}, download${entity}Template</#if> } from '@/api${vueJsPath}'
     import moment from 'moment'
     <#if provinceSelect?? && provinceSelect == true>
     import Data from '@/api/pcaa'
@@ -484,7 +485,7 @@
             var valid${field.entityName?cap_first} = (rule, value, callback) => {
                 var keyData = {
                     id: this.${table.entityPath}Form.id,
-                    checkField: '${field.entityName}',
+                    checkField: '${field.fieldName}',
                     checkValue: value
                 }
                 check${entity}Exist(keyData).then(response => {
@@ -513,7 +514,7 @@
                 <#-- ----------  BEGIN 字段循环遍历  ---------->
                 <#list fields as field>
                 <#if field?? && field.queryTerm == true>
-                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">${field.defaultValue}<#else>undefined</#if>, // ${field.comment}
+                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">'${field.defaultValue}'<#else>undefined</#if>, // ${field.comment}
                 </#if>
                 </#list>
                 <#------------  END 字段循环遍历  ---------->
@@ -536,7 +537,7 @@
                 },
                 ${table.entityPath}Form: {
                     <#list formFields as field>
-                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">${field.defaultValue}<#else>undefined</#if><#if field?? && field?has_next>,</#if>
+                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">'${field.defaultValue}'<#else>undefined</#if><#if field?? && field?has_next>,</#if>
                     </#list>
                 },
                 // 表头
@@ -549,6 +550,9 @@
                         align: 'center',
                         width: 200,
                         ellipsis: true,
+<#if field?? && field.entityName?ends_with("status")>
+                        scopedSlots: { customRender: '${field.entityName}Status' },
+</#if>
                         dataIndex: '${field.entityName}'
                     },
                     </#if>
@@ -611,7 +615,7 @@
                 },
                 // 加载数据方法 必须为 Promise 对象
                 loadData: parameter => {
-                    return query${entity}List(Object.assign(parameter, this.listQuery))
+                    return query${entity}List(Object.assign(parameter, this.list${entity}Query))
                         .then(res => {
                             this.list = res.data
                             return res
@@ -681,7 +685,7 @@
                     <#-- ----------  BEGIN 字段循环遍历  ---------->
                     <#list fields as field>
                     <#if field?? && field.queryTerm == true>
-                        ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">${field.defaultValue}<#else>undefined</#if>, // ${field.comment}
+                        ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">'${field.defaultValue}'<#else>undefined</#if>, // ${field.comment}
                     </#if>
                     </#list>
                     <#------------  END 字段循环遍历  ---------->
@@ -693,7 +697,7 @@
                 <#-- ----------  BEGIN 字段循环遍历  ---------->
                 this.${table.entityPath}Form = {
                 <#list formFields as field>
-                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">${field.defaultValue}<#else>undefined</#if><#if field?has_next>,</#if> // ${field.comment}
+                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">'${field.defaultValue}'<#else>undefined</#if><#if field?has_next>,</#if> // ${field.comment}
                 </#list>
                 <#------------  END 字段循环遍历  ---------->
                 }
@@ -707,7 +711,7 @@
             },
             getList () {
                 this.listLoading = true
-                query${entity}List(this.listQuery).then(response => {
+                query${entity}List(this.list${entity}Query).then(response => {
                     this.list = response.data
                     this.total = response.count
                     this.listLoading = false
@@ -799,22 +803,20 @@
                     }
                 })
             },
-            <#list table.fields as field>
-            <#if field?? && field.annotationColumnName?ends_with("status")>
+            <#if hasStatus?? && hasStatus == true>
             handleModifyStatus (row, status) {
                 this.listLoading = true
                 update${entity}Status(row.id, status).then(() => {
                     this.listLoading = false
-                    row.${field.propertyName} = status
+                    row.${statusName} = status
                     this.$message.success('状态修改成功')
                 })
             },
             </#if>
-            </#list>
             <#if config.exportFlag == true>
             handleDownload () {
                 this.downloadLoading = true
-                download${entity}List(this.listQuery).then(response => {
+                download${entity}List(this.list${entity}Query).then(response => {
                     handleDownloadBlod('${table.comment!}数据列表.xlsx', response)
                     this.listLoading = false
                 })
@@ -841,7 +843,7 @@
             },
             handleDownloadTemplate () {
                 this.downloadLoading = true
-                download${entity}Template(this.listQuery).then(response => {
+                download${entity}Template(this.list${entity}Query).then(response => {
                     handleDownloadBlod('${table.comment!}批量上传模板.xlsx', response)
                     this.listLoading = false
                 })

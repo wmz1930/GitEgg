@@ -82,4 +82,19 @@ public class CodeGeneratorConstant {
      * ENTITY
      */
     public static final String ENTITY = "entity";
+
+    /**
+     * 全部代码
+     */
+    public static final String CODE_ALL = "ALL";
+
+    /**
+     * 前端代码
+     */
+    public static final String CODE_FRONT = "FRONT";
+
+    /**
+     * 后端代码
+     */
+    public static final String CODE_SERVICE = "SERVICE";
 }

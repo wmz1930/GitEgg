@@ -164,35 +164,40 @@ public class ${table.controllerName} {
          <#assign keyPropertySet="set${field.capitalName}"/>
       </#if>
     </#list>
-
-     <#list table.fields as field>
-     <#if field.annotationColumnName?contains("status")>
+<#list table.fields as field>
+    <#if field?? && field.annotationColumnName?ends_with("status") && config.statusHandling == true>
+        <#assign hasStatus=true/>
+        <#assign statusName=field.propertyName/>
+        <#assign statusType=field.propertyType/>
+        <#assign statusCapitalName=field.capitalName/>
+    </#if>
+</#list>
+<#if hasStatus?? && hasStatus == true>
      /**
      * 修改${table.comment!}状态
      *
      * @param ${table.entityPath}Id
-     * @param ${field.propertyName}
+     * @param ${statusName}
      * @return
      */
-     @PostMapping("/status/{${table.entityPath}Id}/{${field.propertyName}}")
+     @PostMapping("/status/{${table.entityPath}Id}/{${statusName}}")
      @ApiOperation(value = "修改${table.comment!}状态")
      @ApiImplicitParams({
      @ApiImplicitParam(name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataType = "${keyPropertyType}", paramType = "path"),
-     @ApiImplicitParam(name = "${field.propertyName}", value = "${table.comment!}状态", required = true, dataType = "${field.propertyType}", paramType = "path") })
+     @ApiImplicitParam(name = "${statusName}", value = "${table.comment!}状态", required = true, dataType = "${statusType}", paramType = "path") })
      public Result<?> updateStatus(@PathVariable("${table.entityPath}Id") ${keyPropertyType} ${table.entityPath}Id,
-         @PathVariable("${field.propertyName}") ${field.propertyType} ${field.propertyName}) {
+         @PathVariable("${statusName}") ${statusType} ${statusName}) {
 
-         if (null == ${table.entityPath}Id || StringUtils.isEmpty(${field.propertyName})) {
+         if (null == ${table.entityPath}Id || StringUtils.isEmpty(${statusName})) {
            return Result.error("ID和状态不能为空");
          }
          Update${entity}DTO ${table.entityPath} = new Update${entity}DTO();
          ${table.entityPath}.${keyPropertySet}(${table.entityPath}Id);
-         ${table.entityPath}.set${field.capitalName}(${field.propertyName});
+         ${table.entityPath}.set${statusCapitalName}(${statusName});
          boolean result = ${table.entityPath}Service.update${entity}(${table.entityPath});
          return Result.result(result);
      }
-     </#if>
-     </#list>
+</#if>
 
     /**
     * 校验${table.comment!}是否存在

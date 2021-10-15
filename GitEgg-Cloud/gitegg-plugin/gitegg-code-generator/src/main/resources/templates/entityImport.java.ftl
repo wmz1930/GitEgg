@@ -73,9 +73,9 @@ public class ${entity}Import implements Serializable {
     */
             </#if>
 </#if>
-    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.propertyType?? && field.propertyType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)
+    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.entityType?? && field.entityType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)
     @ColumnWidth(20)
-<#if field?? && field.propertyType?? && field.propertyType == "LocalDateTime">
+<#if field?? && field.entityType?? && field.entityType == "LocalDateTime">
     @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
 </#if>
     private ${field.entityType} ${field.entityName};

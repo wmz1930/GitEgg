@@ -104,4 +104,12 @@ public class Config extends BaseEntity {
     @TableField("query_reuse")
     private Boolean queryReuse;
 
+    @ApiModelProperty(value = "状态处理")
+    @TableField("status_handling")
+    private Boolean statusHandling;
+
+    @ApiModelProperty(value = "代码生成类型")
+    @TableField("code_type")
+    private String codeType;
+
 }

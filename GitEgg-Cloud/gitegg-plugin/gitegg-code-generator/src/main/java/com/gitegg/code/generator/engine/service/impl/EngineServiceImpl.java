@@ -206,37 +206,6 @@ public class EngineServiceImpl implements IEngineService {
                     String importFile = dtoName + CodeGeneratorConstant.IMPORT_JAVA;
                     // SQL
                     String sqlFile = dtoName + CodeGeneratorConstant.RESOURCE_SQL;
-                    // vue and js
-                    String vueFile = config.getModuleCode() + CodeGeneratorConstant.TABLE_VUE;
-                    String jsFile = config.getModuleCode() + CodeGeneratorConstant.JS;
-
-                    //因为目前版本框架只支持自定义输出到other目录，所以这里利用重写AbstractTemplateEngine的outputCustomFile方法支持所有自定义文件输出目录
-                    Map<String, String> customFilePath = new HashMap<>();
-                    //dto
-                    String dtoPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + CodeGeneratorConstant.DTO;
-                    customFilePath.put(dtoFile, dtoPath);
-                    customFilePath.put(createDtoFile, dtoPath);
-                    customFilePath.put(updateDtoFile, dtoPath);
-                    customFilePath.put(queryDtoFile, dtoPath);
-                    // Export and Import
-                    String entityPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + CodeGeneratorConstant.ENTITY;
-                    customFilePath.put(exportFile, entityPath);
-                    customFilePath.put(importFile, entityPath);
-                    // SQL
-                    String sqlPath = serviceCodePath + GitEggCodeGeneratorConstant.RESOURCES_PATH + codeDirPath + CodeGeneratorConstant.MAPPER;
-                    customFilePath.put(sqlFile, sqlPath);
-                    // VUE AND JS
-                    int start = serviceName.indexOf(StrUtil.DASHED);
-                    int end = serviceName.length();
-                    String servicePath = serviceName.substring(start, end).replace(StrUtil.DASHED, File.separator);
-                    String vuePath = frontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + servicePath + File.separator + config.getModuleCode();
-                    String jsPath = frontCodePath + GitEggCodeGeneratorConstant.JS_PATH + servicePath + File.separator + config.getModuleCode();
-                    customFilePath.put(vueFile, vuePath);
-                    customFilePath.put(jsFile, jsPath);
-
-                    customMap.put(GitEggCodeGeneratorConstant.CUSTOM_FILE_PATH_MAP, customFilePath);
-
-                    customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
 
                     // 设置自定义输出文件
                     Map<String, String> customFileMap = new HashMap<>();
@@ -249,10 +218,53 @@ public class EngineServiceImpl implements IEngineService {
                     customFileMap.put(importFile, CustomFileEnum.IMPORT.path);
                     // SQL
                     customFileMap.put(sqlFile, CustomFileEnum.SQL.path);
-                    // VUE AND JS
-                    // TODO 要支持树形表、左树右表、左表右表、左表右树、左树右树形表、左树右树
-                    customFileMap.put(vueFile, CustomFileEnum.VUE.path);
-                    customFileMap.put(jsFile, CustomFileEnum.JS.path);
+
+                    //因为目前版本框架只支持自定义输出到other目录，所以这里利用重写AbstractTemplateEngine的outputCustomFile方法支持所有自定义文件输出目录
+                    Map<String, String> customFilePath = new HashMap<>();
+
+                    int start = serviceName.indexOf(StrUtil.DASHED);
+                    int end = serviceName.length();
+                    String servicePath = serviceName.substring(start, end).replace(StrUtil.DASHED, File.separator);
+
+                    //判断是否生成后端代码
+                    if (config.getCodeType().equals(CodeGeneratorConstant.CODE_ALL) || config.getCodeType().equals(CodeGeneratorConstant.CODE_SERVICE))
+                    {
+                        //dto
+                        String dtoPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + CodeGeneratorConstant.DTO;
+                        customFilePath.put(dtoFile, dtoPath);
+                        customFilePath.put(createDtoFile, dtoPath);
+                        customFilePath.put(updateDtoFile, dtoPath);
+                        customFilePath.put(queryDtoFile, dtoPath);
+                        // Export and Import
+                        String entityPath = serviceCodePath + GitEggCodeGeneratorConstant.JAVA_PATH + codeDirPath + CodeGeneratorConstant.ENTITY;
+                        customFilePath.put(exportFile, entityPath);
+                        customFilePath.put(importFile, entityPath);
+                        // SQL
+                        String sqlPath = serviceCodePath + GitEggCodeGeneratorConstant.RESOURCES_PATH + codeDirPath + CodeGeneratorConstant.MAPPER;
+                        customFilePath.put(sqlFile, sqlPath);
+
+
+                    }
+
+                    //判断是否生成后端代码
+                    if (config.getCodeType().equals(CodeGeneratorConstant.CODE_ALL) || config.getCodeType().equals(CodeGeneratorConstant.CODE_FRONT))
+                    {
+                        // vue and js
+                        String vueFile = config.getModuleCode() + CodeGeneratorConstant.TABLE_VUE;
+                        String jsFile = config.getModuleCode() + CodeGeneratorConstant.JS;
+
+                        String vuePath = frontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + servicePath + File.separator + config.getModuleCode();
+                        String jsPath = frontCodePath + GitEggCodeGeneratorConstant.JS_PATH + servicePath + File.separator + config.getModuleCode();
+                        customFilePath.put(vueFile, vuePath);
+                        customFilePath.put(jsFile, jsPath);
+                        // VUE AND JS
+                        // TODO 要支持树形表、左树右表、左表右表、左表右树、左树右树形表、左树右树
+                        customFileMap.put(vueFile, CustomFileEnum.VUE.path);
+                        customFileMap.put(jsFile, CustomFileEnum.JS.path);
+                        customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
+                    }
+
+                    customMap.put(GitEggCodeGeneratorConstant.CUSTOM_FILE_PATH_MAP, customFilePath);
 
                     builder.customMap(customMap)
                             .customFile(customFileMap);
@@ -263,6 +275,7 @@ public class EngineServiceImpl implements IEngineService {
                             .addTablePrefix(config.getTablePrefix())
                             .entityBuilder()
                             .enableLombok()
+                            .enableTableFieldAnnotation() // 实体字段注解
                             .superClass(BaseEntity.class)
                             .addSuperEntityColumns(BaseEntityEnum.TENANT_ID.field, BaseEntityEnum.CREATE_TIME.field,
                                     BaseEntityEnum.CREATOR.field, BaseEntityEnum.UPDATE_TIME.field, BaseEntityEnum.OPERATOR.field, BaseEntityEnum.DEL_FLAG.field)
@@ -277,6 +290,11 @@ public class EngineServiceImpl implements IEngineService {
                             .enableBaseResultMap()
                             .enableBaseColumnList()
                     ;
+                })
+                .templateConfig(builder -> {
+                    if (config.getCodeType().equals(CodeGeneratorConstant.CODE_FRONT)) {
+                        builder.disable();
+                    }
                 })
                 // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .templateEngine(new GitEggFreemarkerTemplateEngine())

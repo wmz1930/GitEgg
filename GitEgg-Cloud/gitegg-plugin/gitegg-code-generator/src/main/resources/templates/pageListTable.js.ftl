@@ -23,9 +23,14 @@ export function update${entity} (data) {
     data
   })
 }
-
 <#list table.fields as field>
-<#if field.annotationColumnName?contains("status")>
+  <#if field?? && field.annotationColumnName?ends_with("status") && config.statusHandling == true>
+    <#assign hasStatus=true/>
+    <#assign statusName=field.propertyName/>
+  </#if>
+</#list>
+<#if hasStatus?? && hasStatus == true>
+
 export function update${entity}Status (${table.entityPath}Id, status) {
   return request({
     url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/status/' + ${table.entityPath}Id + '/' + status,
@@ -33,7 +38,6 @@ export function update${entity}Status (${table.entityPath}Id, status) {
   })
 }
 </#if>
-</#list>
 
 export function batchDelete${entity} (data) {
   return request({
