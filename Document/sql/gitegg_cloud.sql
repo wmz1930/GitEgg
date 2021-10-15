@@ -11,7 +11,7 @@
  Target Server Version : 50711
  File Encoding         : 65001
 
- Date: 25/04/2021 17:42:13
+ Date: 15/10/2021 18:54:54
 */
 
 SET NAMES utf8mb4;
@@ -409,30 +409,72 @@ CREATE TABLE `t_oauth_client_details`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Table structure for t_sys_data_permission
+-- Table structure for t_sys_code_generator_config
 -- ----------------------------
-DROP TABLE IF EXISTS `t_sys_data_permission`;
-CREATE TABLE `t_sys_data_permission`  (
+DROP TABLE IF EXISTS `t_sys_code_generator_config`;
+CREATE TABLE `t_sys_code_generator_config`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `user_id` bigint(20) NOT NULL COMMENT '用户id',
-  `organization_id` bigint(20) NOT NULL COMMENT '机构id',
+  `datasource_id` bigint(20) NULL DEFAULT NULL COMMENT '数据源',
+  `module_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模块名称',
+  `module_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模块代码',
+  `service_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '服务名称',
+  `table_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表名',
+  `table_alias` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表别名',
+  `table_prefix` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表前缀',
+  `parent_package` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '父级包名',
+  `controller_path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'controller路径',
+  `form_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表单类型 modal弹出框  drawer抽屉  tab新窗口',
+  `table_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表类型 single单表  multi多表',
+  `table_show_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '展示类型 table数据表格 tree_table 树表格 3 left_tree_table左树右表  tree数据树  table_table左表右表  left_table_tree左表右树',
+  `form_item_col` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表单字段排列 1一列一行  2 两列一行',
+  `left_tree_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '左树类型 organization机构树 resource资源权限树 ',
+  `front_code_path` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '前端代码路径',
+  `service_code_path` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '后端代码路径',
+  `import_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否支持导入 1支持 0不支持',
+  `export_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否支持导出 1支持 0不支持',
+  `query_reuse` tinyint(1) NOT NULL DEFAULT 1 COMMENT '查询复用：分页查询和单条记录查询公用同一个sql语句',
+  `status_handling` tinyint(1) NOT NULL DEFAULT 1 COMMENT '状态处理',
+  `code_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '代码生成类型  全部  仅后端代码  仅前端代码',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成配置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for t_sys_dict
+-- Table structure for t_sys_code_generator_datasource
 -- ----------------------------
-DROP TABLE IF EXISTS `t_sys_dict`;
-CREATE TABLE `t_sys_dict`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `t_sys_code_generator_datasource`;
+CREATE TABLE `t_sys_code_generator_datasource`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `datasource_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据源名称',
+  `url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '连接地址',
+  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户名',
+  `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `driver` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据库驱动',
+  `db_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据库类型',
+  `comments` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 75 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据源配置表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_sys_code_generator_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_code_generator_dict`;
+CREATE TABLE `t_sys_code_generator_dict`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
   `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '字典上级',
+  `ancestors` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所有上级字典id的集合，便于查找',
   `dict_name` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典名称',
   `dict_code` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典值',
   `dict_order` int(11) NULL DEFAULT NULL COMMENT '排序',
@@ -444,8 +486,261 @@ CREATE TABLE `t_sys_dict`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '操作人',
   `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `INDEX_DICT_NAME`(`dict_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典表' ROW_FORMAT = Dynamic;
+  INDEX `INDEX_DICT_NAME`(`dict_name`) USING BTREE,
+  INDEX `INDEX_DICT_CODE`(`dict_code`) USING BTREE,
+  INDEX `INDEX_PARENT_ID`(`parent_id`) USING BTREE,
+  INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 113 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_sys_code_generator_field
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_code_generator_field`;
+CREATE TABLE `t_sys_code_generator_field`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `generation_id` bigint(20) NOT NULL COMMENT '代码生成主键',
+  `join_id` bigint(20) NOT NULL COMMENT '关联表主键',
+  `join_table_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表名',
+  `field_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '字段名称',
+  `field_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '字段类型',
+  `comment` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '字段描述',
+  `entity_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '实体类型',
+  `entity_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '实体名称',
+  `form_add` tinyint(1) NOT NULL DEFAULT 0 COMMENT '表单新增',
+  `form_edit` tinyint(1) NOT NULL DEFAULT 0 COMMENT '表单编辑',
+  `query_term` tinyint(1) NOT NULL DEFAULT 0 COMMENT '查询条件',
+  `list_show` tinyint(1) NOT NULL DEFAULT 0 COMMENT '列表展示',
+  `import_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否支持导入 1支持 0不支持',
+  `export_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否支持导出 1支持 0不支持',
+  `required` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否必填',
+  `field_unique` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否唯一',
+  `query_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '查询类型',
+  `control_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '组件类型',
+  `dict_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '字典编码',
+  `min` bigint(20) NULL DEFAULT NULL COMMENT '最小值',
+  `max` bigint(20) NULL DEFAULT NULL COMMENT '最大值',
+  `min_length` int(11) NULL DEFAULT NULL COMMENT '最小长度',
+  `max_length` int(11) NULL DEFAULT NULL COMMENT '字段最大长度',
+  `default_value` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '默认值',
+  `validate_regular` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '自定义正则表达式校验规则',
+  `field_sort` int(11) NOT NULL DEFAULT 1 COMMENT '显示排序',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `unique_field`(`generation_id`, `join_id`, `join_table_name`, `field_name`) USING BTREE COMMENT '联合约束'
+) ENGINE = InnoDB AUTO_INCREMENT = 516 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段属性配置表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_sys_code_generator_field_validate
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_code_generator_field_validate`;
+CREATE TABLE `t_sys_code_generator_field_validate`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `field_id` bigint(20) NOT NULL COMMENT '字段主键',
+  `validate_id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '校验类型',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段校验规则配置表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_sys_code_generator_table_join
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_code_generator_table_join`;
+CREATE TABLE `t_sys_code_generator_table_join`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `generation_id` bigint(20) NOT NULL COMMENT '代码生成主键',
+  `datasource_id` bigint(20) NULL DEFAULT NULL COMMENT '数据源和主表一致',
+  `join_table_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表名',
+  `join_table_alias` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表别名',
+  `join_table_prefix` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表前缀',
+  `join_table_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'left左连接 right右连接 inner等值连接 union联合查询',
+  `join_table_select` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '自定义查询字段',
+  `join_table_on` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '自定义on条件',
+  `table_sort` int(11) NULL DEFAULT NULL COMMENT '显示排序',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '多表查询时的联合表配置' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_sys_code_generator_validate
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_code_generator_validate`;
+CREATE TABLE `t_sys_code_generator_validate`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `validate_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '校验名称',
+  `validate_regular` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '正则表达式校验规则',
+  `status` tinyint(2) NOT NULL DEFAULT 1 COMMENT '\'0\'禁用，\'1\' 启用',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段校验规则配置表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_sys_data_permission_role
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_data_permission_role`;
+CREATE TABLE `t_sys_data_permission_role`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `resource_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '功能权限id',
+  `data_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据权限名称',
+  `data_mapper_function` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据权限对应的mapper方法全路径',
+  `data_table_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '需要做数据权限主表',
+  `data_table_alias` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '需要做数据权限表的别名',
+  `data_column_exclude` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据权限需要排除的字段',
+  `data_column_include` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据权限需要保留的字段',
+  `inner_table_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据权限表,默认t_sys_organization',
+  `inner_table_alias` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据权限表的别名,默认organization',
+  `data_permission_type` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1' COMMENT '数据权限类型:1只能查看本人 2只能查看本部门 3只能查看本部门及子部门 4可以查看所有数据',
+  `custom_expression` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '自定义数据权限（增加 where条件）',
+  `status` tinyint(2) NOT NULL DEFAULT 1 COMMENT '状态 0禁用，1 启用,',
+  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据权限配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_sys_data_permission_user
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_data_permission_user`;
+CREATE TABLE `t_sys_data_permission_user`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `organization_id` bigint(20) NOT NULL COMMENT '机构id',
+  `status` tinyint(2) NULL DEFAULT 1 COMMENT '状态 0禁用，1 启用,',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据权限多部门' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_sys_dfs
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_dfs`;
+CREATE TABLE `t_sys_dfs`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `dfs_type` bigint(20) NULL DEFAULT NULL COMMENT '分布式存储分类',
+  `dfs_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分布式存储编号',
+  `access_url_prefix` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件访问地址前缀',
+  `upload_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分布式存储上传地址',
+  `bucket` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '空间名称',
+  `app_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '应用ID',
+  `region` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '区域',
+  `access_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'accessKey',
+  `secret_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'secretKey',
+  `dfs_default` tinyint(2) NOT NULL DEFAULT 0 COMMENT '是否默认存储 0否，1是',
+  `dfs_status` tinyint(2) NOT NULL DEFAULT 1 COMMENT '状态 0禁用，1 启用',
+  `access_control` tinyint(2) NOT NULL DEFAULT 0 COMMENT '访问控制 0私有，1公开',
+  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '分布式存储配置表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_sys_dfs_file
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_dfs_file`;
+CREATE TABLE `t_sys_dfs_file`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `dfs_id` bigint(20) NULL DEFAULT NULL COMMENT '分布式存储配置id',
+  `access_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件访问地址',
+  `original_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '原文件名',
+  `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '存储文件名',
+  `file_extension` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件类型',
+  `file_size` bigint(20) NULL DEFAULT 0 COMMENT '文件大小',
+  `file_status` tinyint(2) NOT NULL DEFAULT 1 COMMENT '状态 0上传成功失败，1 上传成功',
+  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '分布式存储文件记录表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_sys_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_dict`;
+CREATE TABLE `t_sys_dict`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '字典上级',
+  `ancestors` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所有上级字典id的集合，便于查找',
+  `dict_name` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典名称',
+  `dict_code` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典值',
+  `dict_order` int(11) NULL DEFAULT NULL COMMENT '排序',
+  `dict_status` tinyint(2) NULL DEFAULT 1 COMMENT '1有效，0禁用',
+  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '操作人',
+  `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `INDEX_DICT_NAME`(`dict_name`) USING BTREE,
+  INDEX `INDEX_DICT_CODE`(`dict_code`) USING BTREE,
+  INDEX `INDEX_PARENT_ID`(`parent_id`) USING BTREE,
+  INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 68 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_sys_dict_business
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_dict_business`;
+CREATE TABLE `t_sys_dict_business`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '字典上级',
+  `ancestors` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所有上级字典id的集合，便于查找',
+  `dict_name` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典名称',
+  `dict_code` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '字典值',
+  `dict_order` int(11) NULL DEFAULT NULL COMMENT '排序',
+  `dict_status` tinyint(2) NULL DEFAULT 1 COMMENT '1有效，0禁用',
+  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建人',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '操作人',
+  `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `INDEX_DICT_NAME`(`dict_name`) USING BTREE,
+  INDEX `INDEX_DICT_CODE`(`dict_code`) USING BTREE,
+  INDEX `INDEX_PARENT_ID`(`parent_id`) USING BTREE,
+  INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_sys_district
@@ -492,6 +787,7 @@ CREATE TABLE `t_sys_organization`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
   `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '父组织id',
+  `ancestors` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所有上级组织id的集合，便于机构查找',
   `organization_type` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组织类型：1：事业部  2：机构  3：盐城',
   `organization_name` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组织名称',
   `organization_key` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组织编码',
@@ -510,7 +806,7 @@ CREATE TABLE `t_sys_organization`  (
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `INDEX_ORG_NAME`(`organization_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '组织表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '组织表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_sys_organization_role
@@ -544,7 +840,7 @@ CREATE TABLE `t_sys_organization_user`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_sys_resource
@@ -552,10 +848,11 @@ CREATE TABLE `t_sys_organization_user`  (
 DROP TABLE IF EXISTS `t_sys_resource`;
 CREATE TABLE `t_sys_resource`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '父id',
   `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '父id',
+  `ancestors` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所有上级资源id的集合，便于查找',
   `resource_name` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '资源名称',
-  `resource_key` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '资源标识',
+  `resource_key` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '资源标识',
   `resource_type` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '资源类型 1、模块 2、菜单 3、按钮 4、链接',
   `resource_icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '资源图标',
   `resource_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '资源路径',
@@ -574,7 +871,7 @@ CREATE TABLE `t_sys_resource`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `INDEX_PERM_NAME`(`resource_name`) USING BTREE,
   INDEX `INDEX_PERM_PID`(`parent_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 92 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 196 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_sys_role
@@ -588,6 +885,7 @@ CREATE TABLE `t_sys_role`  (
   `role_key` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色标识',
   `role_level` int(11) NULL DEFAULT NULL COMMENT '角色级别',
   `role_status` tinyint(2) NULL DEFAULT 1 COMMENT '1有效，0禁用',
+  `data_permission_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'DATA_PERMISSION_SELF' COMMENT '角色数据权限类型,默认只能查询本人数据',
   `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
@@ -596,7 +894,24 @@ CREATE TABLE `t_sys_role`  (
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `INDEX_ROLE_NAME`(`role_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 92 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_sys_role_data_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_role_data_permission`;
+CREATE TABLE `t_sys_role_data_permission`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `role_id` bigint(20) NOT NULL COMMENT '角色id',
+  `data_permission_id` bigint(20) NOT NULL COMMENT '资源id',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 136 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和数据权限关联表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for t_sys_role_resource
@@ -613,7 +928,7 @@ CREATE TABLE `t_sys_role_resource`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 155 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和权限关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 270 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和权限关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_sys_sms_channel
@@ -715,7 +1030,7 @@ CREATE TABLE `t_sys_user`  (
   INDEX `INDEX_USER_NAME`(`real_name`) USING BTREE,
   INDEX `INDEX_USER_PHONE`(`mobile`) USING BTREE,
   INDEX `INDEX_USER_EMAIL`(`email`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_sys_user_info
@@ -773,7 +1088,7 @@ CREATE TABLE `t_sys_user_role`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `INDEX_USER_ID`(`user_id`) USING BTREE,
   INDEX `INDEX_ROLE_ID`(`role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户和角色关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户和角色关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_sys_wechat
@@ -813,240 +1128,5 @@ CREATE TABLE `undo_log`  (
   `log_modified` datetime(6) NOT NULL COMMENT 'modify datetime',
   UNIQUE INDEX `ux_undo_log`(`xid`, `branch_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'AT transaction mode undo table' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Procedure structure for curDictList
--- ----------------------------
-DROP PROCEDURE IF EXISTS `curDictList`;
-delimiter ;;
-CREATE PROCEDURE `curDictList`(IN rootId INT, IN nDepth INT, IN parentId INT)
-BEGIN
-DECLARE done INT DEFAULT 0;
-DECLARE DictNo INT;
-
-DECLARE curDict CURSOR FOR SELECT id FROM t_sys_dict WHERE parent_id = rootId AND del_flag = 0;
-DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-
-UPDATE tmp_dict_list SET IS_LEAF = 0 WHERE RID = parentId;
-INSERT INTO tmp_dict_list VALUES (NULL, rootId, nDepth, 1);
-SET @@max_sp_recursion_depth = 100;
-OPEN curDict;
-FETCH curDict INTO DictNo;
-
-WHILE done = 0 DO
-CALL curDictList (DictNo, nDepth + 1, rootId);
-FETCH curDict INTO DictNo;
-
-END WHILE;
-CLOSE curDict;
-END
-;;
-delimiter ;
-
--- ----------------------------
--- Procedure structure for curOrganizationList
--- ----------------------------
-DROP PROCEDURE IF EXISTS `curOrganizationList`;
-delimiter ;;
-CREATE PROCEDURE `curOrganizationList`(IN rootId INT, IN nDepth INT, IN parentId INT)
-BEGIN
-DECLARE done INT DEFAULT 0;
-DECLARE OrganizationNo INT;
-
-DECLARE curOrganization CURSOR FOR SELECT id FROM t_sys_organization WHERE PARENT_ID = rootId AND DEL_FLAG = 0;
-DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-
-UPDATE tmp_Organization_list SET IS_LEAF = 0 WHERE RID = parentId;
-INSERT INTO tmp_Organization_list VALUES (NULL, rootId, nDepth, 1);
-SET @@max_sp_recursion_depth = 100;
-OPEN curOrganization;
-FETCH curOrganization INTO OrganizationNo;
-
-WHILE done = 0 DO
-CALL curOrganizationList (OrganizationNo, nDepth + 1, rootId);
-FETCH curOrganization INTO OrganizationNo;
-
-END WHILE;
-CLOSE curOrganization;
-END
-;;
-delimiter ;
-
--- ----------------------------
--- Procedure structure for curResourceList
--- ----------------------------
-DROP PROCEDURE IF EXISTS `curResourceList`;
-delimiter ;;
-CREATE PROCEDURE `curResourceList`(IN rootId INT, IN nDepth INT, IN parentId INT)
-BEGIN
-DECLARE done INT DEFAULT 0;
-DECLARE ResourceNo INT;
-
-DECLARE curResource CURSOR FOR SELECT id FROM t_sys_resource WHERE PARENT_ID = rootId AND DEL_FLAG = 0;
-DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-
-UPDATE tmp_Resource_list SET IS_LEAF = 0 WHERE RID = parentId;
-INSERT INTO tmp_Resource_list VALUES (NULL, rootId, nDepth, 1);
-SET @@max_sp_recursion_depth = 100;
-OPEN curResource;
-FETCH curResource INTO ResourceNo;
-
-WHILE done = 0 DO
-CALL curResourceList (ResourceNo, nDepth + 1, rootId);
-FETCH curResource INTO ResourceNo;
-
-END WHILE;
-CLOSE curResource;
-END
-;;
-delimiter ;
-
--- ----------------------------
--- Procedure structure for curRoleList
--- ----------------------------
-DROP PROCEDURE IF EXISTS `curRoleList`;
-delimiter ;;
-CREATE PROCEDURE `curRoleList`(IN rootId INT, IN nDepth INT, IN parentId INT)
-BEGIN
-DECLARE done INT DEFAULT 0;
-DECLARE roleNo INT;
-
-DECLARE curRole CURSOR FOR SELECT id FROM t_sys_role WHERE PARENT_ID = rootId and DEL_FLAG = 0;
-DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-
-UPDATE tmp_role_list SET IS_LEAF = 0 WHERE RID = parentId;
-INSERT INTO tmp_role_list VALUES (NULL, rootId, nDepth, 1);
-SET @@max_sp_recursion_depth = 100;
-OPEN curRole;
-FETCH curRole INTO roleNo;
-
-WHILE done = 0 DO
-CALL curRoleList (roleNo, nDepth + 1, rootId);
-FETCH curRole INTO roleNo;
-
-END WHILE;
-CLOSE curRole;
-END
-;;
-delimiter ;
-
--- ----------------------------
--- Procedure structure for queryDictList
--- ----------------------------
-DROP PROCEDURE IF EXISTS `queryDictList`;
-delimiter ;;
-CREATE PROCEDURE `queryDictList`(IN rootId INT)
-BEGIN
-
-CREATE TEMPORARY TABLE
-IF NOT EXISTS tmp_dict_list (
-sno INT PRIMARY KEY auto_increment,
-rid INT,
-depth INT,
-is_leaf INT
-);
-
-DELETE FROM tmp_dict_list;
-
-CALL curDictList (rootId, 0, 0);
-
-SELECT A.sno,A.rid,A.depth,A.is_leaf,B.id, B.tenant_id, B.parent_id, B.dict_name, B.dict_code, B.dict_order, B.dict_status, B.COMMENTS, B.create_time, B.creator, B.update_time, B.operator
-FROM tmp_dict_list A, t_sys_dict B
-WHERE A.rid = B.id AND B.del_flag = 0
-ORDER BY
-A.sno;
-END
-;;
-delimiter ;
-
--- ----------------------------
--- Procedure structure for queryOrganizationList
--- ----------------------------
-DROP PROCEDURE IF EXISTS `queryOrganizationList`;
-delimiter ;;
-CREATE PROCEDURE `queryOrganizationList`(IN rootId INT)
-BEGIN
-
-CREATE TEMPORARY TABLE
-IF NOT EXISTS tmp_Organization_list (
-SNO INT PRIMARY KEY auto_increment,
-RID INT,
-DEPTH INT,
-IS_LEAF INT
-);
-
-DELETE FROM tmp_Organization_list;
-
-CALL curOrganizationList (rootId, 0, 0);
-
-SELECT A.SNO,A.RID,A.DEPTH,A.IS_LEAF,B.ID,B.TENANT_ID,B.ORGANIZATION_NAME,B.ORGANIZATION_TYPE,B.ORGANIZATION_KEY,B.PROVINCE,B.CITY,B.AREA,B.STREET,B.ORGANIZATION_ICON,B.ORGANIZATION_STATUS,
-B.ORGANIZATION_LEVEL,B.PARENT_ID,B.CREATE_TIME,B.UPDATE_TIME,B.OPERATOR,B.COMMENTS 
-FROM tmp_Organization_list A, t_sys_organization B
-WHERE A.RID = B.ID AND B.DEL_FLAG = 0
-ORDER BY
-A.SNO;
-END
-;;
-delimiter ;
-
--- ----------------------------
--- Procedure structure for queryResourceList
--- ----------------------------
-DROP PROCEDURE IF EXISTS `queryResourceList`;
-delimiter ;;
-CREATE PROCEDURE `queryResourceList`(IN rootId INT)
-BEGIN
-
-SET AUTOCOMMIT = 1;
-
-CREATE TEMPORARY TABLE
-IF NOT EXISTS tmp_Resource_list (
-SNO INT PRIMARY KEY auto_increment,
-RID INT,
-DEPTH INT,
-IS_LEAF INT
-);
-
-DELETE FROM tmp_Resource_list;
-
-CALL curResourceList (rootId, 0, 0);
-
-SELECT A.SNO,A.RID,A.DEPTH,A.IS_LEAF,B.ID,B.TENANT_ID,B.RESOURCE_NAME,B.RESOURCE_KEY,B.RESOURCE_PATH,B.PARENT_ID,B.RESOURCE_TYPE,B.RESOURCE_LEVEL,B.RESOURCE_SHOW,B.RESOURCE_CACHE,B.RESOURCE_ICON,B.RESOURCE_URL,B.RESOURCE_PAGE_NAME,B.RESOURCE_STATUS, B.CREATE_TIME,B.UPDATE_TIME,B.OPERATOR,B.COMMENTS 
-FROM tmp_Resource_list A, t_sys_resource B
-WHERE A.RID = B.ID AND B.DEL_FLAG = 0
-ORDER BY
-A.SNO;
-END
-;;
-delimiter ;
-
--- ----------------------------
--- Procedure structure for queryRoleList
--- ----------------------------
-DROP PROCEDURE IF EXISTS `queryRoleList`;
-delimiter ;;
-CREATE PROCEDURE `queryRoleList`(IN rootId INT)
-BEGIN
-
-CREATE TEMPORARY TABLE
-IF NOT EXISTS tmp_role_list (
-SNO INT PRIMARY KEY auto_increment,
-RID INT,
-DEPTH INT,
-IS_LEAF INT
-);
-
-DELETE FROM tmp_role_list;
-
-CALL curRoleList (rootId, 0, 0);
-
-SELECT A.SNO,A.RID,A.DEPTH,A.IS_LEAF,B.ID,B.TENANT_ID,B.ROLE_NAME,B.ROLE_KEY,B.PARENT_ID,B.CREATE_TIME,B.UPDATE_TIME,B.OPERATOR,B.COMMENTS 
-FROM tmp_role_list A, t_sys_role B
-WHERE A.RID = B.ID AND B.DEL_FLAG = 0
-ORDER BY
-A.SNO;
-END
-;;
-delimiter ;
 
 SET FOREIGN_KEY_CHECKS = 1;
