@@ -1,29 +1,39 @@
 package ${package.Entity};
 
+<#list fields as field>
+<#if field?? && field.exportFlag == true && field.entityType == "LocalDateTime">
+    <#assign hasDateTime=true />
+</#if>
+</#list>
 import com.alibaba.excel.annotation.ExcelProperty;
+<#if hasDateTime?? && hasDateTime == true>
 import com.alibaba.excel.annotation.format.DateTimeFormat;
+</#if>
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 <#list table.importPackages as pkg>
-    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") >
+    <#if !pkg?starts_with("com.baomidou.mybatisplus.annotation.") && !pkg?starts_with("com.gitegg.platform.mybatis.entity.BaseEntity") >
 import ${pkg};
     </#if>
 </#list>
+<#if hasDateTime?? && hasDateTime == true>
 import com.gitegg.platform.boot.excel.LocalDateTimeConverter;
+</#if>
 <#if swagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 <#if entityLombokModel>
 import lombok.Data;
-import lombok.EqualsAndHashCode;
     <#if chainModel>
 import lombok.experimental.Accessors;
     </#if>
 </#if>
 
+<#if hasDateTime?? && hasDateTime == true>
 import java.time.LocalDateTime;
+</#if>
 
 /**
  * <p>
@@ -44,7 +54,7 @@ import java.time.LocalDateTime;
 <#if swagger>
 @ApiModel(value="${entity}对象", description="${table.comment!}数据导出")
 </#if>
-public class ${entity}Export {
+public class ${entity}Export implements Serializable {
 
 <#if entitySerialVersionUID>
     private static final long serialVersionUID = 1L;
@@ -65,9 +75,9 @@ public class ${entity}Export {
     </#if>
     @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.propertyType?? && field.propertyType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)
     @ColumnWidth(20)
-    <#if field?? && field.propertyType?? && field.propertyType == "LocalDateTime">
+<#if field?? && field.propertyType?? && field.propertyType == "LocalDateTime">
     @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
-    </#if>
+</#if>
     private ${field.entityType} ${field.entityName};
     <#assign i=i+1/>
     </#if>

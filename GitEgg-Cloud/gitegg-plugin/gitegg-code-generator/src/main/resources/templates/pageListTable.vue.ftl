@@ -3,56 +3,56 @@
     <div class="table-page-search-wrapper">
       <a-form-model layout="inline">
         <a-row :gutter="48">
-        <#list fields as field>
-          <#if field?? && field.queryTerm == true>
+<#list fields as field>
+<#if field?? && field.queryTerm == true>
           <a-col :md="6" :sm="24">
             <a-form-model-item label="${field.comment}" prop="${field.entityName}">
-            <#if field.controlType == "INPUT_TEXT">
+<#if field.controlType == "INPUT_TEXT">
               <a-input
                 v-model.trim="listQuery.${field.entityName}"
                 placeholder="请输入${field.comment}"
                 :max-length="${field.maxLength}"
                 @keyup.enter.native="handleFilter" />
-            </#if>
-            <#if field.controlType == "TEXTAREA">
+</#if>
+<#if field.controlType == "TEXTAREA">
               <a-textarea
                 v-model.trim="listQuery.${field.entityName}"
                 placeholder="请输入${field.comment}"
                 :auto-size="{ minRows: 3, maxRows: 5 }"
                 @keyup.enter.native="handleFilter" />
-            </#if>
-            <#if field.controlType == "INPUT_NUMBER">
+</#if>
+<#if field.controlType == "INPUT_NUMBER">
               <a-input-number
                 v-model.trim="listQuery.${field.entityName}"
                 placeholder="${field.comment}"
                 :min="${field.min}"
                 :max="${field.max}"
                 @keyup.enter.native="handleFilter" />
-            </#if>
-            <#if field.controlType == "RADIO">
-              <#assign dictSelect=true/>
+</#if>
+<#if field.controlType == "RADIO">
+<#assign dictSelect=true/>
               <a-radio-group v-model="listQuery.${field.entityName}"
                              name="listQueryRadio${field.entityName}">
                 <a-radio :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">{{ item.dictName }}</a-radio>
               </a-radio-group>
-            </#if>
-            <#if field.controlType == "CHECKBOX">
-              <#assign dictSelect=true/>
+</#if>
+<#if field.controlType == "CHECKBOX">
+<#assign dictSelect=true/>
               <a-checkbox-group v-model="value" name="listQueryRadioCheckbox${field.entityName}">
                 <a-checkbox :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">
                   {{ item.dictName }}
                 </a-checkbox>
               </a-checkbox-group>
-            </#if>
-            <#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI">
-              <#assign dictSelect=true/>
-              <#macro Multiple controlType>
-                <#if controlType == "SELECT_MULTI">
+</#if>
+<#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI">
+<#assign dictSelect=true/>
+<#macro Multiple controlType>
+<#if controlType == "SELECT_MULTI">
                   mode="multiple"
-                <#else>
+<#else>
                   mode="default"
-                </#if>
-              </#macro>
+</#if>
+</#macro>
               <a-select
                       v-model.trim="listQuery.${field.entityName}"
                       placeholder="${field.comment}"
@@ -68,70 +68,70 @@
                   {{ item.dictName }}
                 </a-select-option>
               </a-select>
-            </#if>
-            <#if field.controlType == "DTAE_PICKER" || field.controlType == "DTAE_TIME_PICKER">
-              <#macro DateTime controlType>
-                <#if controlType == "DTAE_TIME_PICKER">
+</#if>
+<#if field.controlType == "DTAE_PICKER" || field.controlType == "DTAE_TIME_PICKER">
+<#macro DateTime controlType>
+<#if controlType == "DTAE_TIME_PICKER">
                       show-time
                       valueFormat="YYYY-MM-DD HH:mm:ss"
-                </#if>
-              </#macro>
+</#if>
+</#macro>
               <a-date-picker v-model.trim="listQuery.${field.entityName}"
                       placeholder="${field.comment}"
                       <@Multiple controlType="${field.controlType}"/>
                       style="width:100%;"/>
-            </#if>
-            <#if field.controlType == "TIME_PICKER">
+</#if>
+<#if field.controlType == "TIME_PICKER">
               <a-time-picker v-model.trim="listQuery.${field.entityName}"
                              placeholder="${field.comment}"
                              style="width:100%;"/>
-            </#if>
-            <#if field.controlType == "ProvinceSelect">
-              <#assign provinceSelect=true/>
+</#if>
+<#if field.controlType == "ProvinceSelect">
+<#assign provinceSelect=true/>
               <a-cascader v-model="listQuery.${field.entityName}"
                           :options="provinceOptions"
                           placeholder="输选择${field.comment}"
                           style="width:100%;"
                           @keyup.enter.native="handleFilter" />
-            </#if>
-            <#if field.controlType == "OrganizationTreeSelect">
-              <#assign organizationTree=true/>
+</#if>
+<#if field.controlType == "OrganizationTreeSelect">
+<#assign organizationTree=true/>
               <a-input
                       v-model.trim="listQuery.${field.entityName}"
                       placeholder="${field.comment}"
                       :max-length="${field.maxLength}"
                       @keyup.enter.native="handleFilter" />
-            </#if>
-            <#if field.controlType == "RoleSelect">
-              <#assign roleTree=true/>
+</#if>
+<#if field.controlType == "RoleSelect">
+<#assign roleTree=true/>
               <a-input
                       v-model.trim="listQuery.${field.entityName}"
                       placeholder="${field.comment}"
                       :max-length="${field.maxLength}"
                       @keyup.enter.native="handleFilter" />
-            </#if>
-            <#if field.controlType == "ResourceTreeSelect">
-              <#assign resourceTree=true/>
+</#if>
+<#if field.controlType == "ResourceTreeSelect">
+<#assign resourceTree=true/>
               <a-input
                       v-model.trim="listQuery.${field.entityName}"
                       placeholder="${field.comment}"
                       :max-length="${field.maxLength}"
                       @keyup.enter.native="handleFilter" />
-            </#if>
-            <#if field.controlType == "MenuTreeSelect">
-              <#assign menuTree=true/>
+</#if>
+<#if field.controlType == "MenuTreeSelect">
+<#assign menuTree=true/>
               <a-input
                       v-model.trim="listQuery.${field.entityName}"
                       placeholder="${field.comment}"
                       :max-length="${field.maxLength}"
                       @keyup.enter.native="handleFilter" />
-            </#if>
-            <#if field.controlType == "RATE">
+</#if>
+<#if field.controlType == "RATE">
               <a-rate v-model.trim="listQuery.${field.entityName}"
                       placeholder="${field.comment}"
                       @keyup.enter.native="handleFilter"/>
-            </#if>
-            <#if field.controlType == "UPLOAD_FILE">
+</#if>
+<#if field.controlType == "UPLOAD_FILE">
               <a-upload v-model="listQuery.${field.entityName}"
                         :file-list="file${field.entityName}List"
                         :remove="handle${field.entityName}Remove"
@@ -147,11 +147,11 @@
               >
                 <a-icon type="caret-right" />{{ uploading ? 'Uploading' : '开始上传' }}
               </a-button>
-            </#if>
+</#if>
             </a-form-model-item>
           </a-col>
-          </#if>
-        </#list>
+</#if>
+</#list>
           <template v-if="advanced">
             <a-col :md="6" :sm="24">
               <a-form-model-item label="开始时间">
@@ -197,14 +197,15 @@
           批量操作 <a-icon type="down" />
         </a-button>
       </a-dropdown>
-
-      <#if config.exportFlag == true><a-button type="primary" icon="cloud-download" @click="handleDownload" style="margin-left: 8px;">导出</a-button></#if>
-      <#if config.importFlag == true>
+<#if config.exportFlag == true>
+      <a-button type="primary" icon="cloud-download" @click="handleDownload" style="margin-left: 8px;">导出</a-button>
+</#if>
+<#if config.importFlag == true>
       <a-upload name="uploadFile" :show-upload-list="false" :before-upload="beforeUpload">
         <a-button> <a-icon type="upload" /> 导入 </a-button>
       </a-upload>
       <a href="javascript:;" @click="handleDownloadTemplate" style="margin-left: 8px;">下载导入模板</a>
-      </#if>
+</#if>
     </div>
 
     <s-table

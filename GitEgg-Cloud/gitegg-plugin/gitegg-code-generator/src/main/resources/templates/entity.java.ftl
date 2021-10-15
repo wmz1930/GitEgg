@@ -1,7 +1,9 @@
 package ${package.Entity};
 
 <#list table.importPackages as pkg>
+<#if !pkg?starts_with("java.io.Serializable") && superEntityClass??>
 import ${pkg};
+</#if>
 </#list>
 <#if swagger>
 import io.swagger.annotations.ApiModel;

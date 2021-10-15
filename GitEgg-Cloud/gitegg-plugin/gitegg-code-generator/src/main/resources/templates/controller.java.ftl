@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 </#if>
 
 <#if superControllerClassPackage??>
@@ -243,8 +242,8 @@ public class ${table.controllerName} {
         EasyExcel.write(response.getOutputStream(), ${entity}Export.class).sheet(sheetName).doWrite(${table.entityPath}ExportList);
     }
     </#if>
-
     <#if config.importFlag == true>
+
     /**
     * 批量上传${table.comment!}数据
     * @param file
@@ -281,6 +280,5 @@ public class ${table.controllerName} {
         EasyExcel.write(response.getOutputStream(), ${entity}Import.class).sheet(sheetName).doWrite(null);
     }
     </#if>
-
  }
 </#if>

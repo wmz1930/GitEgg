@@ -57,8 +57,8 @@ export function check${entity}Exist (data) {
     params: data
   })
 }
-
 <#if config.exportFlag == true>
+
 export function download${entity}List (query) {
   return request({
     url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/download',
@@ -68,8 +68,8 @@ export function download${entity}List (query) {
   })
 }
 </#if>
-
 <#if config.importFlag == true>
+
 export function upload${entity} (formData) {
   return request({
     url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/upload',
