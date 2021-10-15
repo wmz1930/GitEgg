@@ -44,14 +44,14 @@
           </template>
           <template slot="validateTypeRender" slot-scope="text, record" >
             <a-select :value="text"
-                      placeholder="请选择展示类型"
+                      placeholder="请选择校验规则"
                       show-search
                       style="width:100%;"
                       :default-value="text"
                       :filter-option="filterOption"
                       v-model="record.validateType">
-              <a-select-option v-for="item in entityTypeDict.dictList" :key="item.id" :value="item.dictCode">
-                {{ item.dictName }}
+              <a-select-option v-for="item in validateList" :key="item.id" :value="item.id">
+                {{ item.validateName }}
               </a-select-option>
             </a-select>
           </template>
@@ -66,6 +66,7 @@
 
 <script>
     import { batchListGeneratorDict } from '@/api/plugin/codeGenerator/dict/dict'
+    import { queryValidateListAll } from '@/api/plugin/codeGenerator/validate/validate'
     export default {
         name: 'FormValidTable',
         components: { },
@@ -105,6 +106,7 @@
                     generationId: '',
                     joinId: ''
                 },
+                validateList: [],
                 // 表头
                 columnsField: [
                    {
@@ -209,6 +211,7 @@
         },
         created () {
             const that = this
+            this.getValidateList()
             const dictList = [this.entityTypeDict, this.controlTypeDict, this.queryTypeDict]
             const dictCodeList = dictList.map(function (n) {
               return n.dictCode
@@ -234,6 +237,13 @@
                 that.listLoading = false
               })
               return result
+            },
+            getValidateList () {
+                this.listLoading = true
+                queryValidateListAll().then(response => {
+                    this.validateList = response.data
+                    this.listLoading = false
+                })
             },
             onChange (field, record) {
               if (record[field]) {

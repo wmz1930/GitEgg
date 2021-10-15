@@ -268,6 +268,26 @@
         </a-row>
         <a-row>
           <a-col :md="12">
+            <a-form-model-item label="生成类型" prop="codeType">
+              <a-select v-model="configForm.codeType" placeholder="生成类型" :filter-option="filterOption">
+                <a-select-option v-for="item in codeTypeDict.dictList" :key="item.id" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="12">
+            <a-form-model-item label="状态处理" prop="statusHandling">
+              <a-radio-group v-model="configForm.statusHandling" default-value="true">
+                <a-radio v-for="item in yesOrNoDict.dictList" :key="item.id" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-radio>
+              </a-radio-group>
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :md="12">
             <a-form-model-item label="支持导出" prop="exportFlag">
               <a-radio-group v-model="configForm.exportFlag" :default-value="true">
                 <a-radio v-for="item in yesOrNoDict.dictList" :key="item.id" :value="item.dictCode">
@@ -322,7 +342,7 @@
     import { generateCode } from '@/api/plugin/codeGenerator/engine/engine'
     import { queryDatasourceList } from '@/api/plugin/codeGenerator/datasource/datasource'
     import moment from 'moment'
-    import { batchListDict } from '@/api/system/base/dict'
+    import { batchListGeneratorDict } from '@/api/plugin/codeGenerator/dict/dict'
     let vm = {}
     export default {
         name: 'ConfigTable',
@@ -342,6 +362,9 @@
             },
             tableShowTypeFilter (tableShowType) {
               return vm.tableShowTypeDict.filterMap[tableShowType]
+            },
+            codeTypeFilter (codeType) {
+              return vm.codeTypeDict.filterMap[codeType]
             }
         },
         data () {
@@ -384,6 +407,11 @@
                   dictList: [],
                   filterMap: {}
                 },
+                codeTypeDict: {
+                  dictCode: 'CODE_TYPE',
+                  dictList: [],
+                  filterMap: {}
+                },
                 listQuery: {
                     datasourceId: '',
                     moduleName: '',
@@ -394,7 +422,6 @@
                     tablePrefix: '',
                     parentPackage: '',
                     controllerPath: '',
-                    formType: undefined,
                     tableType: 'single',
                     tableShowType: undefined,
                     formItemCol: undefined,
@@ -425,7 +452,7 @@
                     tablePrefix: '',
                     parentPackage: '',
                     controllerPath: '',
-                    formType: undefined,
+                    formType: 'modal',
                     tableType: 'single',
                     tableShowType: undefined,
                     formItemCol: undefined,
@@ -434,7 +461,9 @@
                     serviceCodePath: '',
                     importFlag: true,
                     exportFlag: true,
-                    queryReuse: true
+                    queryReuse: true,
+                    statusHandling: true,
+                    codeType: 'ALL'
                 },
                 // 表头
                 columns: [
@@ -547,7 +576,7 @@
             //   that.yesOrNoDict = result
             // })
 
-            const dictList = [this.formTypeDict, this.treeTypeDict, this.tableTypeDict, this.tableShowTypeDict, this.formColDict, this.yesOrNoDict]
+            const dictList = [this.formTypeDict, this.treeTypeDict, this.tableTypeDict, this.tableShowTypeDict, this.formColDict, this.yesOrNoDict, this.codeTypeDict]
 
             // const dictCodeList = [this.formTypeDict.dictCode, this.treeTypeDict.dictCode,
             // this.tableTypeDict.dictCode, this.tableShowTypeDict.dictCode, this.formColDict.dictCode,
@@ -596,7 +625,7 @@
               const that = this
               let result = {}
               that.listLoading = true
-              await batchListDict(dictParams).then(response => {
+              await batchListGeneratorDict(dictParams).then(response => {
                 result = response.data
                 that.listLoading = false
               })
@@ -614,7 +643,6 @@
                         tablePrefix: '',
                         parentPackage: '',
                         controllerPath: '',
-                        formType: undefined,
                         tableType: 'single',
                         tableShowType: undefined,
                         formItemCol: undefined,
@@ -635,7 +663,7 @@
                     tablePrefix: '',
                     parentPackage: '',
                     controllerPath: '',
-                    formType: undefined,
+                    formType: 'modal',
                     tableType: 'single',
                     tableShowType: undefined,
                     formItemCol: undefined,
@@ -644,7 +672,9 @@
                     serviceCodePath: '',
                     importFlag: true,
                     exportFlag: true,
-                    queryReuse: true
+                    queryReuse: true,
+                    statusHandling: true,
+                    codeType: 'ALL'
                 }
             },
             // 选中 option 调用
@@ -700,6 +730,7 @@
                 this.configForm.importFlag = this.configForm.importFlag + ''
                 this.configForm.exportFlag = this.configForm.exportFlag + ''
                 this.configForm.queryReuse = this.configForm.queryReuse + ''
+                this.configForm.statusHandling = this.configForm.statusHandling + ''
                 this.dialogStatus = 'update'
                 this.dialogFormVisible = true
                 this.$nextTick(() => {
