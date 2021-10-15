@@ -269,7 +269,7 @@
         <a-row>
           <a-col :md="12">
             <a-form-model-item label="支持导出" prop="exportFlag">
-              <a-radio-group v-model="configForm.exportFlag" :default-value="1">
+              <a-radio-group v-model="configForm.exportFlag" :default-value="true">
                 <a-radio v-for="item in yesOrNoDict.dictList" :key="item.id" :value="item.dictCode">
                   {{ item.dictName }}
                 </a-radio>
@@ -278,7 +278,7 @@
           </a-col>
           <a-col :md="12">
             <a-form-model-item label="支持导入" prop="importFlag">
-              <a-radio-group v-model="configForm.importFlag" :default-value="1">
+              <a-radio-group v-model="configForm.importFlag" :default-value="true">
                 <a-radio v-for="item in yesOrNoDict.dictList" :key="item.id" :value="item.dictCode">
                   {{ item.dictName }}
                 </a-radio>
@@ -297,7 +297,13 @@
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
-
+            <a-form-model-item label="查询复用" prop="queryReuse">
+              <a-radio-group v-model="configForm.queryReuse" :default-value="true">
+                <a-radio v-for="item in yesOrNoDict.dictList" :key="item.id" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-radio>
+              </a-radio-group>
+            </a-form-model-item>
           </a-col>
         </a-row>
       </a-form-model>
@@ -427,7 +433,8 @@
                     frontCodePath: '',
                     serviceCodePath: '',
                     importFlag: true,
-                    exportFlag: true
+                    exportFlag: true,
+                    queryReuse: true
                 },
                 // 表头
                 columns: [
@@ -636,7 +643,8 @@
                     frontCodePath: '',
                     serviceCodePath: '',
                     importFlag: true,
-                    exportFlag: true
+                    exportFlag: true,
+                    queryReuse: true
                 }
             },
             // 选中 option 调用
@@ -691,6 +699,7 @@
                 // 数据字典存的是字符串，数据库存的是tinyint，这里需要转换一下
                 this.configForm.importFlag = this.configForm.importFlag + ''
                 this.configForm.exportFlag = this.configForm.exportFlag + ''
+                this.configForm.queryReuse = this.configForm.queryReuse + ''
                 this.dialogStatus = 'update'
                 this.dialogFormVisible = true
                 this.$nextTick(() => {
@@ -795,10 +804,20 @@
                 })
             },
             processGenerateCode (row) {
-                this.$loading.show()
-                generateCode({ id: row.id }).then(response => {
-                    this.$loading.hide()
-                    this.$message.success('执行成功')
+              const that = this
+               this.$confirm({
+                    title: '生成代码将覆盖旧的代码，是否继续?',
+                    content: '如果已经存在该模块代码，那么新生成的代码将会覆盖旧代码，请确认是否存在影响。',
+                    onOk () {
+                        that.$loading.show()
+                        generateCode({ id: row.id }).then(response => {
+                            that.$loading.hide()
+                            that.$message.success('执行成功')
+                        })
+                    },
+                    onCancel () {
+                        that.$message.info('已取消执行')
+                    }
                 })
             },
             filterOption (input, option) {
