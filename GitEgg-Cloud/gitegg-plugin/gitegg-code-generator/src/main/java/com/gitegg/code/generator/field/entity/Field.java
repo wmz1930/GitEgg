@@ -125,6 +125,10 @@ public class Field extends BaseEntity {
     @TableField("default_value")
     private String defaultValue;
 
+    @ApiModelProperty(value = "校验规则主键")
+    @TableField("validate_id")
+    private Long validateId;
+
     @ApiModelProperty(value = "正则表达式")
     @TableField("validate_regular")
     private String validateRegular;

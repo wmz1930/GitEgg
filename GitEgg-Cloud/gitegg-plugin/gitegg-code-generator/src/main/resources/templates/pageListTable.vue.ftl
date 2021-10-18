@@ -572,24 +572,20 @@ mode="default"
                     <#list fields as field>
                     <#if field?? && (field.required == true || field.fieldUnique == true || (field.max?? && field.max gt 0) || (field.maxLength?? && field.maxLength gt 0) || (field.validates?? && field.validates?size != 0))>
                     ${field.entityName}: [
+                        <#if field.maxLength?? && field.maxLength gt 0 >
+                        { min: ${field.minLength}, max: ${field.maxLength}, message: '长度在 ${field.minLength} 到 ${field.maxLength} 个字符', trigger: 'blur' }
+                        </#if>
                         <#if field.fieldUnique == true>
-                        { validator: valid${field.entityName?cap_first}, trigger: 'blur' },
+                        ,{ validator: valid${field.entityName?cap_first}, trigger: 'blur' }
                         </#if>
                         <#if field.required == true>
-                        { required: true, message: '请输入${field.comment}', trigger: 'blur' },
+                        ,{ required: true, message: '请输入${field.comment}', trigger: 'blur' }
                         </#if>
-                        <#if field.maxLength?? && field.maxLength gt 0 >
-                        { min: ${field.minLength}, max: ${field.maxLength}, message: '长度在 ${field.minLength} 到 ${field.maxLength} 个字符', trigger: 'blur' }<#if (field.validates?? && field.validates?size != 0)>,</#if>
+                        <#if field.validateValue??>
+                        ,{ pattern: /${field.validateValue}/, required: true, message: '请输入正确的${field.comment}', trigger: 'blur' }
                         </#if>
-                        <#if field.validates?? && field.validates?size != 0>
-                        <#list validates as validate>
-                            {
-                                pattern: ${validate.validateRegular},
-                                required: true,
-                                message: '请输入正确的${field.comment}',
-                                trigger: 'blur'
-                            }<#if validate?has_next>,</#if>
-                        </#list>
+                        <#if field.validateRegular??>
+                        ,{ pattern: /${field.validateRegular}/, required: true, message: '请输入正确的${field.comment}', trigger: 'blur' }
                         </#if>
                     ]<#if field?has_next>,</#if>
                     </#if>

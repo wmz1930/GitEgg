@@ -148,7 +148,14 @@
       </span>
     </s-table>
 
-    <a-modal :title="textMap[dialogStatus]" :maskClosable="false" :visible="dialogFormVisible" :width="800" @cancel="() => dialogFormVisible = false">
+    <a-drawer :title="textMap[dialogStatus]"
+              placement="right"
+              :closable="false"
+              :destroyOnClose="true"
+              :maskClosable="false"
+              :visible="dialogFormVisible"
+              :width="800"
+              @close="dialogResourceVisible = false">
       <a-form-model
         ref="configForm"
         :model="configForm"
@@ -242,7 +249,7 @@
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
-            <a-form-model-item label="左树类型" prop="leftTreeType">
+            <a-form-model-item v-show="configForm.tableShowType === 'left_tree_table' || configForm.tableShowType === 'left_tree_tree_table' || configForm.tableShowType === 'tree_tree'" label="左树类型" prop="leftTreeType">
               <a-select v-model="configForm.leftTreeType" placeholder="请选择左树类型" allow-clear show-search :filter-option="filterOption">
                 <a-select-option v-for="item in treeTypeDict.dictList" :key="item.id" :value="item.dictCode">
                   {{ item.dictName }}
@@ -327,12 +334,12 @@
           </a-col>
         </a-row>
       </a-form-model>
-      <div slot="footer" class="dialog-footer">
+      <div class="footer-button">
         <a-button @click="dialogFormVisible = false">取消</a-button>
         <a-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</a-button>
         <a-button v-else type="primary" @click="updateData">修改</a-button>
       </div>
-    </a-modal>
+    </a-drawer>
   </a-card>
 </template>
 
@@ -859,3 +866,20 @@
         }
     }
 </script>
+<style lang="less" scoped>
+.footer-button {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: right;
+  left: 0;
+  background: #fff;
+  border-radius: 0 0 2px 2px;
+}
+
+.footer-button button {
+  margin-left: 10px;
+}
+</style>

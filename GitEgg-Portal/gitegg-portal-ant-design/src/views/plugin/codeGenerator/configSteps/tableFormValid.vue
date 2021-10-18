@@ -11,12 +11,14 @@
           <template slot="maxRender" slot-scope="text, record" >
             <a-input
               :value="text"
+              placeholder="最大值"
               v-model="record.max"
             />
           </template>
           <template slot="minRender" slot-scope="text, record" >
             <a-input
               :value="text"
+              placeholder="最小值"
               v-model="record.min"
             />
           </template>
@@ -47,16 +49,15 @@
                       placeholder="请选择校验规则"
                       show-search
                       style="width:100%;"
-                      :default-value="text"
                       :filter-option="filterOption"
-                      v-model="record.validateType">
+                      v-model="record.validateId">
               <a-select-option v-for="item in validateList" :key="item.id" :value="item.id">
                 {{ item.validateName }}
               </a-select-option>
             </a-select>
           </template>
           <template slot="validateRegularRender" slot-scope="text, record" >
-            <a-input :value="text" v-model="record.validateRegular"/>
+            <a-input :value="text" placeholder="自定义校验规则" v-model="record.validateRegular"/>
           </template>
         </a-table>
       </a-tab-pane>
@@ -244,13 +245,6 @@
                     this.validateList = response.data
                     this.listLoading = false
                 })
-            },
-            onChange (field, record) {
-              if (record[field]) {
-                record[field] = 1
-              } else {
-                record[field] = 0
-              }
             },
             filterOption (input, option) {
               return (

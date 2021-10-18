@@ -19,8 +19,12 @@
     </div>
     <div class="steps-action">
 
-      <a-button :disabled="current <= 0" style="margin-right: 12px" @click="prev">
+      <a-button :disabled="current <= 0" style="margin-right: 18px" @click="prev">
         上一步
+      </a-button>
+
+      <a-button v-if="current > 0 && current < steps.length - 1" style="margin-right: 18px" type="primary" ghost @click="createFieldList">
+        保存
       </a-button>
 
       <a-button

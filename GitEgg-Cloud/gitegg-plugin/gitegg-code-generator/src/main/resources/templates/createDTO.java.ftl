@@ -8,6 +8,10 @@ import ${pkg};
 </#list>
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Max;
+import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Pattern;
 
 <#if swagger>
 import io.swagger.annotations.ApiModel;
@@ -69,6 +73,21 @@ public class Create${entity}DTO implements Serializable {
     </#if>
     <#if field.required == true>
     @NotBlank(message="${field.comment}不能为空")
+    </#if>
+    <#if field.min??>
+    @Min(${field.min})
+    </#if>
+    <#if field.max??>
+    @Max(${field.max})
+    </#if>
+    <#if field.maxLength??>
+    @Length(min=${field.minLength},max=${field.maxLength})
+    </#if>
+    <#if field.validateValue??>
+    @Pattern(regexp="${field.validateValue}",message="${field.comment}格式错误")
+    </#if>
+    <#if field.validateRegular??>
+    @Pattern(regexp="${field.validateRegular}",message="${field.comment}格式错误")
     </#if>
     private ${field.entityType} ${field.entityName};
     </#if>

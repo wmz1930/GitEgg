@@ -96,6 +96,12 @@ public class UpdateFieldDTO extends BaseEntity {
     @ApiModelProperty(value = "默认值")
     private String defaultValue;
 
+    @ApiModelProperty(value = "校验规则主键")
+    private Long validateId;
+
+    @ApiModelProperty(value = "基础校验规则")
+    private String validateValue;
+
     @ApiModelProperty(value = "正则表达式")
     private String validateRegular;
 

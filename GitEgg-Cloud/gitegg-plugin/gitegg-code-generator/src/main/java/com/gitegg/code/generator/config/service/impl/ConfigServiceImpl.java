@@ -45,8 +45,6 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
 
     private final ITableJoinService tableJoinService;
 
-//    private final IFieldValidateService fieldValidateService;
-
     /**
      * 解决循环依赖问题
      */
@@ -162,27 +160,11 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
             List<Field> fieldList = fieldService.list(fieldQueryWrapper);
             if (!CollectionUtils.isEmpty(fieldList))
             {
-                List<Long> fieldIdList = fieldList.stream().map(Field::getId).collect(Collectors.toList());
-
-//                QueryWrapper<FieldValidate> fieldValidateQueryWrapper = new QueryWrapper<>();
-//                fieldValidateQueryWrapper.in("field_id", fieldIdList);
-//                List<FieldValidate> fieldValidateList = fieldValidateService.list(fieldValidateQueryWrapper);
-//                Map<Long, List<FieldValidate>> fieldValidateMap = fieldValidateList.stream().collect(Collectors.groupingBy(FieldValidate::getFieldId));
-//
-//                fieldList.forEach(field -> {
-//                    List<FieldValidate> fieldValidates = fieldValidateMap.get(field.getId());
-//                    field.setId(null);
-//                    field.setGenerationId(config.getId());
-//                    fieldService.save(field);
-//                    if (!CollectionUtils.isEmpty(fieldValidates))
-//                    {
-//                        fieldValidates.stream().forEach(fieldValidate -> {
-//                            fieldValidate.setId(null);
-//                            fieldValidate.setFieldId(field.getId());
-//                        });
-//                        fieldValidateService.saveBatch(fieldValidates);
-//                    }
-//                });
+                fieldList.stream().forEach(field -> {
+                    field.setId(null);
+                    field.setGenerationId(config.getId());
+                });
+                result = fieldService.saveBatch(fieldList);
             }
         }
         return result;

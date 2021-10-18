@@ -29,6 +29,7 @@
         <result column="min_length" property="minLength" />
         <result column="max_length" property="maxLength" />
         <result column="default_value" property="defaultValue" />
+        <result column="validate_id" property="validateId" />
         <result column="validate_regular" property="validateRegular" />
         <result column="field_sort" property="fieldSort" />
         <result column="tenant_id" property="tenantId" />
@@ -40,49 +41,60 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, generation_id, join_id, join_table_name, field_name, field_type, comment, entity_type, entity_name, form_add, form_edit, query_term, list_show, import_flag, export_flag, required, field_unique, query_type, control_type, dict_code, min, max, min_length, max_length, default_value, field_sort, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, generation_id, join_id, join_table_name, field_name, field_type, comment, entity_type, entity_name, form_add, form_edit, query_term, list_show, import_flag, export_flag, required, field_unique, query_type, control_type, dict_code, min, max, min_length, max_length, default_value, validate_id, validate_regular, field_sort, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 通用查询结果列_Field -->
+    <sql id="Base_Column_List_Field">
+        field.id, field.generation_id, field.join_id, field.join_table_name, field.field_name, field.field_type, field.comment, field.entity_type, field.entity_name, field.form_add, field.form_edit, field.query_term, field.list_show, field.import_flag, field.export_flag, field.required, field.field_unique, field.query_type, field.control_type, field.dict_code, field.min, field.max, field.min_length, field.max_length, field.default_value, field.validate_id, field.validate_regular, field.field_sort, field.tenant_id, field.create_time, field.creator, field.update_time, field.operator, field.del_flag
     </sql>
 
     <!-- 分页查询字段属性配置表列表 -->
     <select id="queryFieldList" resultType="com.gitegg.code.generator.field.dto.FieldDTO" parameterType="com.gitegg.code.generator.field.dto.QueryFieldDTO">
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_sys_code_generator_field
-        WHERE del_flag = 0
+        DISTINCT
+        <include refid="Base_Column_List_Field"/>,
+        validate.validate_regular validate_value
+        FROM t_sys_code_generator_field field
+        left join t_sys_code_generator_validate validate on field.validate_id = validate.id and validate.del_flag = 0
+        WHERE field.del_flag = 0
         <if test="field.id != null and field.id != ''">
-            AND id = #{field.id}
+            AND field.id = #{field.id}
         </if>
         <if test="field.generationId != null and field.generationId != ''">
-            AND generation_id = #{field.generationId}
+            AND field.generation_id = #{field.generationId}
         </if>
         <if test="field.startDateTime != null and field.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{field.startDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(field.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{field.startDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="field.endDateTime != null and field.endDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{field.endDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(field.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{field.endDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
-        ORDER BY field_sort,id
+        ORDER BY field.field_sort,field.id
     </select>
 
     <!-- 查询字段属性配置表信息 -->
     <select id="queryField" resultType="com.gitegg.code.generator.field.dto.FieldDTO" parameterType="com.gitegg.code.generator.field.dto.QueryFieldDTO">
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_sys_code_generator_field
-        WHERE del_flag = 0
+        DISTINCT
+        <include refid="Base_Column_List_Field"/>,
+        validate.validate_regular validate_value
+        FROM t_sys_code_generator_field field
+        left join t_sys_code_generator_validate validate on field.validate_id = validate.id and validate.del_flag = 0
+        WHERE field.del_flag = 0
         <if test="field.id != null and field.id != ''">
-            AND id = #{field.id}
+            AND field.id = #{field.id}
         </if>
         <if test="field.generationId != null and field.generationId != ''">
-            AND generation_id = #{field.generationId}
+            AND field.generation_id = #{field.generationId}
         </if>
         <if test="field.startDateTime != null and field.startDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{field.startDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(field.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{field.startDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="field.endDateTime != null and field.endDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{field.endDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(field.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{field.endDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
-        ORDER BY field_sort,id
+        ORDER BY field.field_sort,field.id
     </select>
 
 </mapper>

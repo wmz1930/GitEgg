@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * <p>
  * 字段属性配置表
@@ -96,11 +98,16 @@ public class FieldDTO extends BaseEntity {
     @ApiModelProperty(value = "默认值")
     private String defaultValue;
 
-    @ApiModelProperty(value = "正则表达式")
+    @ApiModelProperty(value = "校验规则主键")
+    private Long validateId;
+
+    @ApiModelProperty(value = "基础校验规则")
+    private String validateValue;
+
+    @ApiModelProperty(value = "自定义正则表达式")
     private String validateRegular;
 
     @ApiModelProperty(value = "显示排序")
     private Integer fieldSort;
-
 
 }
