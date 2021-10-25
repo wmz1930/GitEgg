@@ -2,38 +2,61 @@ spring:
   jackson:
     time-zone: Asia/Shanghai
     date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 2048MB
+      max-request-size: 2048MB
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: 'http://127.0.0.1/gitegg-oauth/oauth/public_key'
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://127.0.0.1/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
-    username: root
-    password: root
-    initialSize: 1
-    minIdle: 3
-    maxActive: 20
-    # 配置获取连接等待超时的时间
-    maxWait: 60000
-    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-    timeBetweenEvictionRunsMillis: 60000
-    # 配置一个连接在池中最小生存的时间，单位是毫秒
-    minEvictableIdleTimeMillis: 30000
-    validationQuery: select 'x'
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
-    # 打开PSCache，并且指定每个连接上PSCache的大小
-    poolPreparedStatements: true
-    maxPoolPreparedStatementPerConnectionSize: 20
-    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-    filters: config,stat,slf4j
-    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
-    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;
-    # 合并多个DruidDataSource的监控数据
-    useGlobalDataSourceStat: true
+  autoconfigure:
+    # 动态数据源排除默认配置
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource: 
+    druid:
+      stat-view-servlet:
+        enabled: true
+        loginUsername: admin
+        loginPassword: 123456
+    dynamic:
+      # 设置默认的数据源或者数据源组,默认值即为master
+      primary: master
+      # 设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+      strict: false
+      # 开启seata代理，开启后默认每个数据源都代理，如果某个不需要代理可单独关闭
+      seata: false
+      #支持XA及AT模式,默认AT
+      seata-mode: AT
+      druid:
+        initialSize: 1
+        minIdle: 3
+        maxActive: 20
+        # 配置获取连接等待超时的时间
+        maxWait: 60000
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        minEvictableIdleTimeMillis: 30000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        # 打开PSCache，并且指定每个连接上PSCache的大小
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+        filters: config,stat,slf4j
+        # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+        connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;
+        # 合并多个DruidDataSource的监控数据
+        useGlobalDataSourceStat: true
+      datasource: 
+        master: 
+          url: jdbc:mysql://127.0.0.1/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&all owMultiQueries=true&serverTimezone=Asia/Shanghai
+          username: root
+          password: root
   cloud:
     sentinel:
       filter:
@@ -50,6 +73,74 @@ spring:
             dataId: ${spring.application.name}-sentinel
             groupId: DEFAULT_GROUP
             rule-type: flow
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: gitegg-oauth
+          uri: lb://gitegg-oauth
+          predicates:
+            - Path=/gitegg-oauth/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-service-system
+          uri: lb://gitegg-service-system
+          predicates:
+            - Path=/gitegg-system/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-service-extension
+          uri: lb://gitegg-service-extension
+          predicates:
+            - Path=/gitegg-extension/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-service-base
+          uri: lb://gitegg-service-base
+          predicates:
+            - Path=/gitegg-base/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-code-generator
+          uri: lb://gitegg-code-generator
+          predicates:
+            - Path=/gitegg-code/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-mall-user
+          uri: lb://gitegg-mall-user
+          predicates:
+            - Path=/mall-user/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-mall-goods
+          uri: lb://gitegg-mall-goods
+          predicates:
+            - Path=/mall-goods/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-mall-order
+          uri: lb://gitegg-mall-order
+          predicates:
+            - Path=/mall-order/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: gitegg-mall-pay
+          uri: lb://gitegg-mall-pay
+          predicates:
+            - Path=/mall-pay/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
   redis:
     database: 1
     host: 127.0.0.1
@@ -65,7 +156,7 @@ spring:
         timeout: 3000
         retryAttempts: 3
         retryInterval: 1500
-        password: myredis4Hisc
+        password: 123456
         subscriptionsPerConnection: 5
         clientName: null
         address: "redis://127.0.0.1:6312"
@@ -100,18 +191,37 @@ system:
 feign:
   hystrix:
     enabled: false
+  compression:
+    # 配置响应 GZIP 压缩
+    response: 
+      enabled: true
+    # 配置请求 GZIP 压缩
+    request:
+      enabled: true
+      # 支持压缩的mime types
+      mime-types: text/xml,application/xml,application/json
+      # 配置压缩数据大小的最小阀值，默认 2048
+      min-request-size: 2048
+  client:
+    config:
+      default:
+        connectTimeout: 8000
+        readTimeout: 8000
+        loggerLevel: FULL
 #Ribbon配置
 ribbon:
   #请求连接的超时时间
-  ConnectTimeout: 5000
+  ConnectTimeout: 50000
   #请求处理/响应的超时时间
-  ReadTimeout: 5000
-  #对所有操作请求都进行重试
-  OkToRetryOnAllOperations: true
+  ReadTimeout: 50000
+  #对所有操作请求都进行重试，如果没有实现幂等的情况下是很危险的,所以这里设置为false
+  OkToRetryOnAllOperations: false
   #切换实例的重试次数
   MaxAutoRetriesNextServer: 5
   #当前实例的重试次数
   MaxAutoRetries: 5
+  #负载均衡策略
+  NFLoadBalancerRuleClassName: com.alibaba.cloud.nacos.ribbon.NacosRule
 #Sentinel端点配置
 management:
   endpoints:
@@ -153,11 +263,20 @@ tenant:
     - "oauth_client_details"
   # 租户字段名称
   column: tenant_id
+# 数据权限
+data-permission:
+  # 注解方式默认关闭，否则影响性能
+  annotation-enable: true
 seata:
-  enabled: true
+  enabled: false
   application-id: ${spring.application.name}
   tx-service-group: gitegg_seata_tx_group
-  enable-auto-data-source-proxy: true
+  # 一定要是false
+  enable-auto-data-source-proxy: false
+  service:
+    vgroup-mapping:
+      #key与上面的gitegg_seata_tx_group的值对应
+      gitegg_seata_tx_group: default
   config:
     type: nacos
     nacos:
@@ -255,11 +374,8 @@ oauth-list:
     - "/gitegg-oauth/oauth/captcha/check"
     - "/gitegg-oauth/oauth/captcha/image"
     - "/gitegg-oauth/oauth/sms/captcha/send"
+    - "/gitegg-service-base/dict/list/{dictCode}"
   authUrls:
-    - "/gitegg-oauth/oauth/user/info"
     - "/gitegg-oauth/oauth/logout"
-    - "/gitegg-mall-goods/mall/goods/stock/reduce"
-    - "/gitegg-mall-goods/mall/goods/list/by/id"
-    - "/gitegg-mall-user/mall/user/account/deduction"
-    - "/gitegg-mall-pay/mall/pay/pay"
-    - "/gitegg-mall-order/mall/order/order"
+    - "/gitegg-oauth/oauth/user/info"
+    - "/gitegg-service-extension/extension/upload/file"
