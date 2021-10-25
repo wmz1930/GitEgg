@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function queryValidateList (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/list',
+    url: '/gitegg-code-generator/code/generator/validate/list',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function queryValidateList (query) {
 
 export function queryValidateListAll (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/list/all',
+    url: '/gitegg-code-generator/code/generator/validate/list/all',
     method: 'get',
     params: query
   })
@@ -18,7 +18,7 @@ export function queryValidateListAll (query) {
 
 export function createValidate (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/create',
+    url: '/gitegg-code-generator/code/generator/validate/create',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createValidate (data) {
 
 export function updateValidate (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/update',
+    url: '/gitegg-code-generator/code/generator/validate/update',
     method: 'post',
     data
   })
@@ -34,14 +34,14 @@ export function updateValidate (data) {
 
 export function updateValidateStatus (validateId, status) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/status/' + validateId + '/' + status,
+    url: '/gitegg-code-generator/code/generator/validate/status/' + validateId + '/' + status,
     method: 'post'
   })
 }
 
 export function batchDeleteValidate (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/batch/delete',
+    url: '/gitegg-code-generator/code/generator/validate/batch/delete',
     method: 'post',
     data
   })
@@ -49,14 +49,14 @@ export function batchDeleteValidate (data) {
 
 export function deleteValidate (id) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/delete/' + id,
+    url: '/gitegg-code-generator/code/generator/validate/delete/' + id,
     method: 'post'
   })
 }
 
 export function checkValidateExist (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/check',
+    url: '/gitegg-code-generator/code/generator/validate/check',
     method: 'post',
     params: data
   })
@@ -64,7 +64,7 @@ export function checkValidateExist (data) {
 
 export function downloadValidateList (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/download',
+    url: '/gitegg-code-generator/code/generator/validate/download',
     method: 'get',
     responseType: 'blob',
     params: query
@@ -73,7 +73,7 @@ export function downloadValidateList (query) {
 
 export function uploadValidate (formData) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/upload',
+    url: '/gitegg-code-generator/code/generator/validate/upload',
     method: 'post',
     data: formData
   })
@@ -81,7 +81,7 @@ export function uploadValidate (formData) {
 
 export function downloadValidateTemplate (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/validate/download/template',
+    url: '/gitegg-code-generator/code/generator/validate/download/template',
     method: 'get',
     responseType: 'blob',
     params: query

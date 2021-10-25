@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchGeneratorDictList (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/list',
+    url: '/gitegg-code-generator/code/generator/dict/list',
     method: 'get',
     params: data
   })
@@ -10,7 +10,7 @@ export function fetchGeneratorDictList (data) {
 
 export function queryGeneratorDictList (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/list/all',
+    url: '/gitegg-code-generator/code/generator/dict/list/all',
     method: 'get',
     params: data
   })
@@ -18,7 +18,7 @@ export function queryGeneratorDictList (data) {
 
 export function createGeneratorDict (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/create',
+    url: '/gitegg-code-generator/code/generator/dict/create',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createGeneratorDict (data) {
 
 export function updateGeneratorDict (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/update',
+    url: '/gitegg-code-generator/code/generator/dict/update',
     method: 'post',
     data
   })
@@ -34,21 +34,21 @@ export function updateGeneratorDict (data) {
 
 export function updateGeneratorDictStatus (generatorDictId, generatorDictStatus) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/status/' + generatorDictId + '/' + generatorDictStatus,
+    url: '/gitegg-code-generator/code/generator/dict/status/' + generatorDictId + '/' + generatorDictStatus,
     method: 'post'
   })
 }
 
 export function deleteGeneratorDict (id) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/delete/' + id,
+    url: '/gitegg-code-generator/code/generator/dict/delete/' + id,
     method: 'post'
   })
 }
 
 export function batchDeleteGeneratorDict (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/batch/delete',
+    url: '/gitegg-code-generator/code/generator/dict/batch/delete',
     method: 'post',
     data
   })
@@ -56,14 +56,14 @@ export function batchDeleteGeneratorDict (data) {
 
 export function listGeneratorDict (generatorDictCode) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/query/' + generatorDictCode,
+    url: '/gitegg-code-generator/code/generator/dict/query/' + generatorDictCode,
     method: 'post'
   })
 }
 
 export function batchListGeneratorDict (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/batch/query',
+    url: '/gitegg-code-generator/code/generator/dict/batch/query',
     method: 'post',
     data
   })
@@ -71,7 +71,7 @@ export function batchListGeneratorDict (data) {
 
 export function checkGeneratorDictExist (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/dict/check',
+    url: '/gitegg-code-generator/code/generator/dict/check',
     method: 'post',
     params: data
   })

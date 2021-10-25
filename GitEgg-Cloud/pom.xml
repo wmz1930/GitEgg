@@ -89,8 +89,21 @@
     <build>
         <finalName>${project.name}</finalName>
         <resources>
+            <!-- 增加分环境读取配置 -->
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>**/*.jks</exclude>
+                </excludes>
+            </resource>
+            <!-- 解决jks被过滤掉的问题 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.jks</include>
+                </includes>
             </resource>
             <resource>
                 <directory>src/main/java</directory>
@@ -101,6 +114,20 @@
         </resources>
         <pluginManagement>
             <plugins>
+                <!-- 用于在编译（compile）阶段加入定制化参数，比如设置项目源码的jdk版本、编译的jdk版本，以及项目编码等 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>${maven.compiler.encoding}</encoding>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
                 <!-- 能够将Spring Boot应用打包为可执行的jar或war文件，然后以通常的方式运行Spring Boot应用 -->
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
@@ -118,25 +145,6 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!-- 复制jar包到指定目录,复制文件到服务器,连接服务器执行命令 -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                            <configuration>
-                                <tasks>
-                                    <!--suppress UnresolvedMavenProperty -->
-                                    <copy overwrite="true" tofile="${session.executionRootDirectory}/target/${project.artifactId}.jar" file="${project.build.directory}/${project.artifactId}.jar"/>
-                                </tasks>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -145,66 +153,42 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.plugin.version}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>UTF-8</encoding>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
             </plugin>
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>aliyun-repos</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>gitegg-release</id>
-            <name>Release Repository</name>
-            <url>https://packages.aliyun.com/maven/repository/2020515-release-dpxo1j/</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aliyun-plugin</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
     <profiles>
         <profile>
-            <id>dev</id>
-            <properties>
-                <profileActive>dev</profileActive>
-            </properties>
             <activation>
                 <!--默认为dev环境打包方式-->
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <id>dev</id>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+                <nacos.addr>172.16.20.188:8848</nacos.addr>
+                <nacos.config.prefix>gitegg-cloud-config</nacos.config.prefix>
+                <nacos.config.group>GITEGG_CLOUD</nacos.config.group>
+            </properties>
         </profile>
         <profile>
             <id>test</id>
             <properties>
-                <profileActive>test</profileActive>
+                <spring.profiles.active>test</spring.profiles.active>
+                <nacos.addr>172.16.20.188:8848</nacos.addr>
+                <nacos.config.prefix>gitegg-cloud-config</nacos.config.prefix>
+                <nacos.config.group>GITEGG_CLOUD</nacos.config.group>
             </properties>
         </profile>
         <profile>
-            <id>pro</id>
+            <id>prod</id>
             <properties>
-                <profileActive>pro</profileActive>
+                <spring.profiles.active>prod</spring.profiles.active>
+                <nacos.addr>172.16.20.188:8848</nacos.addr>
+                <nacos.config.prefix>gitegg-cloud-config</nacos.config.prefix>
+                <nacos.config.group>GITEGG_CLOUD</nacos.config.group>
             </properties>
         </profile>
     </profiles>

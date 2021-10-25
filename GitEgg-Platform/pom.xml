@@ -11,25 +11,14 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>gitegg-platform-bom</module>
-        <module>gitegg-platform-db</module>
-        <module>gitegg-platform-mybatis</module>
-        <module>gitegg-platform-swagger</module>
-        <module>gitegg-platform-boot</module>
-        <module>gitegg-platform-cloud</module>
         <module>gitegg-platform-base</module>
-        <module>gitegg-platform-redis</module>
-        <module>gitegg-platform-oauth2</module>
-        <module>gitegg-platform-captcha</module>
-        <module>gitegg-platform-sms</module>
-        <module>gitegg-platform-sms-aliyun</module>
-        <module>gitegg-platform-sms-tencent</module>
-        <module>gitegg-platform-sms-qiniu</module>
-        <module>gitegg-platform-push</module>
-        <module>gitegg-platform-sms-starter</module>
-        <module>gitegg-platform-wechat</module>
-        <module>gitegg-platform-pay</module>
+        <module>gitegg-platform-bom</module>
+        <module>gitegg-platform-boot</module>
         <module>gitegg-platform-cache</module>
+        <module>gitegg-platform-captcha</module>
+        <module>gitegg-platform-cloud</module>
+        <module>gitegg-platform-code-generator</module>
+        <module>gitegg-platform-db</module>
         <module>gitegg-platform-dev</module>
         <module>gitegg-platform-dfs</module>
         <module>gitegg-platform-dfs-qiniu</module>
@@ -37,7 +26,18 @@
         <module>gitegg-platform-dfs-aliyun</module>
         <module>gitegg-platform-dfs-starter</module>
         <module>gitegg-platform-dfs-tencent</module>
-        <module>gitegg-platform-code-generator</module>
+        <module>gitegg-platform-mybatis</module>
+        <module>gitegg-platform-oauth2</module>
+        <module>gitegg-platform-pay</module>
+        <module>gitegg-platform-push</module>
+        <module>gitegg-platform-redis</module>
+        <module>gitegg-platform-sms</module>
+        <module>gitegg-platform-sms-aliyun</module>
+        <module>gitegg-platform-sms-tencent</module>
+        <module>gitegg-platform-sms-qiniu</module>
+        <module>gitegg-platform-sms-starter</module>
+        <module>gitegg-platform-swagger</module>
+        <module>gitegg-platform-wechat</module>
     </modules>
 
     <properties>
@@ -51,12 +51,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- 项目统一字符集编码UTF-8 -->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
         <!-- SpringBoot版本号 -->
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
         <!-- SpringCloud版本号 -->
         <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
-
     </properties>
 
     <dependencies>
@@ -122,55 +120,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>aliyun-repos</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>gitegg-release</id>
-            <name>Release Repository</name>
-            <url>https://packages.aliyun.com/maven/repository/2020515-release-dpxo1j/</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aliyun-plugin</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <profileActive>dev</profileActive>
-            </properties>
-            <activation>
-                <!--默认为dev环境打包方式-->
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <profileActive>test</profileActive>
-            </properties>
-        </profile>
-        <profile>
-            <id>pro</id>
-            <properties>
-                <profileActive>pro</profileActive>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>

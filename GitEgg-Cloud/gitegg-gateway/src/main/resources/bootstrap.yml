@@ -1,76 +1,17 @@
 server:
   port: 80
 spring:
+  profiles:
+    active: @spring.profiles.active@
   application:
-    name: gitegg-service-gateway
+    name: @artifactId@
   cloud:
     nacos:
       discovery:
-        server-addr: 172.16.20.188:8848
+        server-addr: ${spring.nacos.addr}
       config:
-        server-addr: 172.16.20.188:8848
+        server-addr: ${spring.nacos.addr}
         file-extension: yaml
-        prefix: gitegg-service-system
-        group: DEFAULT_GROUP
+        prefix: ${spring.nacos.config.prefix}
+        group: ${spring.nacos.config.group}
         enabled: true
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-      routes:
-        - id: gitegg-oauth
-          uri: lb://gitegg-oauth
-          predicates:
-            - Path=/gitegg-oauth/**
-          filters:
-            - SwaggerHeaderFilter
-            - StripPrefix=1
-        - id: gitegg-service-system
-          uri: lb://gitegg-service-system
-          predicates:
-            - Path=/gitegg-system/**
-          filters:
-            - SwaggerHeaderFilter
-            - StripPrefix=1
-        - id: gitegg-service-extension
-          uri: lb://gitegg-service-extension
-          predicates:
-            - Path=/gitegg-extension/**
-          filters:
-            - SwaggerHeaderFilter
-            - StripPrefix=1
-        - id: gitegg-service-base
-          uri: lb://gitegg-service-base
-          predicates:
-            - Path=/gitegg-base/**
-          filters:
-            - SwaggerHeaderFilter
-            - StripPrefix=1
-        - id: gitegg-mall-user
-          uri: lb://gitegg-mall-user
-          predicates:
-            - Path=/mall-user/**
-          filters:
-            - SwaggerHeaderFilter
-            - StripPrefix=1
-        - id: gitegg-mall-goods
-          uri: lb://gitegg-mall-goods
-          predicates:
-            - Path=/mall-goods/**
-          filters:
-            - SwaggerHeaderFilter
-            - StripPrefix=1
-        - id: gitegg-mall-order
-          uri: lb://gitegg-mall-order
-          predicates:
-            - Path=/mall-order/**
-          filters:
-            - SwaggerHeaderFilter
-            - StripPrefix=1
-        - id: gitegg-mall-pay
-          uri: lb://gitegg-mall-pay
-          predicates:
-            - Path=/mall-pay/**
-          filters:
-            - SwaggerHeaderFilter
-            - StripPrefix=1

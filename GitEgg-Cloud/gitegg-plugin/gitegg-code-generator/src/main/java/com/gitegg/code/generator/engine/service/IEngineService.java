@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 代码生成器接口
  *
- * @author wanglei
+ * @author GitEgg
  */
 public interface IEngineService {
 

@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 /**
  * 代码生成器接口类
  *
- * @author wanglei
+ * @author GitEgg
  */
 @Slf4j
 @Service

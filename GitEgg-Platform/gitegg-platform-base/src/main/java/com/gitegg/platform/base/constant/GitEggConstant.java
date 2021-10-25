@@ -4,7 +4,7 @@ package com.gitegg.platform.base.constant;
  * @ClassName: GitEggConstant
  * @Description: 常量类
  * @author gitegg
- * @date 2019年5月18日 下午11:49:21
+ * @since 2021-10-12
  */
 public class GitEggConstant {
 

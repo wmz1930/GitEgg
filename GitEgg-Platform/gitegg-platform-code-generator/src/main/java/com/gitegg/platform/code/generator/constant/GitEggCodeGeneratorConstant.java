@@ -3,7 +3,7 @@ package com.gitegg.platform.code.generator.constant;
 import java.io.File;
 
 /**
- * @ClassName: GitEggConstant
+ * @ClassName: GitEggCodeGeneratorConstant
  * @Description: 常量类
  * @author gitegg
  * @date 2019年5月18日 下午11:49:21

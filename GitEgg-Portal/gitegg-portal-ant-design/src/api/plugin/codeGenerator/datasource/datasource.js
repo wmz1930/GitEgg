@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function queryDatasourceList (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/list',
+    url: '/gitegg-code-generator/code/generator/datasource/list',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function queryDatasourceList (query) {
 
 export function createDatasource (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/create',
+    url: '/gitegg-code-generator/code/generator/datasource/create',
     method: 'post',
     data
   })
@@ -18,7 +18,7 @@ export function createDatasource (data) {
 
 export function updateDatasource (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/update',
+    url: '/gitegg-code-generator/code/generator/datasource/update',
     method: 'post',
     data
   })
@@ -26,14 +26,14 @@ export function updateDatasource (data) {
 
 export function updateDatasourceStatus (datasourceId, status) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/status/' + datasourceId + '/' + status,
+    url: '/gitegg-code-generator/code/generator/datasource/status/' + datasourceId + '/' + status,
     method: 'post'
   })
 }
 
 export function batchDeleteDatasource (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/batch/delete',
+    url: '/gitegg-code-generator/code/generator/datasource/batch/delete',
     method: 'post',
     data
   })
@@ -41,14 +41,14 @@ export function batchDeleteDatasource (data) {
 
 export function deleteDatasource (id) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/delete/' + id,
+    url: '/gitegg-code-generator/code/generator/datasource/delete/' + id,
     method: 'post'
   })
 }
 
 export function checkDatasourceExist (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/check',
+    url: '/gitegg-code-generator/code/generator/datasource/check',
     method: 'post',
     params: data
   })
@@ -56,7 +56,7 @@ export function checkDatasourceExist (data) {
 
 export function downloadDatasourceList (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/download',
+    url: '/gitegg-code-generator/code/generator/datasource/download',
     method: 'get',
     responseType: 'blob',
     params: query
@@ -65,7 +65,7 @@ export function downloadDatasourceList (query) {
 
 export function downloadDatasourceTemplate (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/download/template',
+    url: '/gitegg-code-generator/code/generator/datasource/download/template',
     method: 'get',
     responseType: 'blob',
     params: query
@@ -74,7 +74,7 @@ export function downloadDatasourceTemplate (query) {
 
 export function uploadDatasource (formData) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/datasource/upload',
+    url: '/gitegg-code-generator/code/generator/datasource/upload',
     method: 'post',
     data: formData
   })

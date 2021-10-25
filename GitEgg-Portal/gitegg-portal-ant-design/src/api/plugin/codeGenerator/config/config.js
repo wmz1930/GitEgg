@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function queryConfigList (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/config/list',
+    url: '/gitegg-code-generator/code/generator/config/list',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function queryConfigList (query) {
 
 export function queryConfig (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/config/query',
+    url: '/gitegg-code-generator/code/generator/config/query',
     method: 'get',
     params: query
   })
@@ -18,7 +18,7 @@ export function queryConfig (query) {
 
 export function createConfig (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/config/create',
+    url: '/gitegg-code-generator/code/generator/config/create',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createConfig (data) {
 
 export function updateConfig (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/config/update',
+    url: '/gitegg-code-generator/code/generator/config/update',
     method: 'post',
     data
   })
@@ -34,14 +34,14 @@ export function updateConfig (data) {
 
 export function updateConfigStatus (configId, status) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/config/status/' + configId + '/' + status,
+    url: '/gitegg-code-generator/code/generator/config/status/' + configId + '/' + status,
     method: 'post'
   })
 }
 
 export function batchDeleteConfig (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/config/batch/delete',
+    url: '/gitegg-code-generator/code/generator/config/batch/delete',
     method: 'post',
     data
   })
@@ -49,14 +49,14 @@ export function batchDeleteConfig (data) {
 
 export function deleteConfig (id) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/config/delete/' + id,
+    url: '/gitegg-code-generator/code/generator/config/delete/' + id,
     method: 'post'
   })
 }
 
 export function checkConfigExist (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/config/check',
+    url: '/gitegg-code-generator/code/generator/config/check',
     method: 'post',
     params: data
   })
@@ -64,7 +64,7 @@ export function checkConfigExist (data) {
 
 export function copyConfig (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/config/copy',
+    url: '/gitegg-code-generator/code/generator/config/copy',
     method: 'get',
     params: query
   })

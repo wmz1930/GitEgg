@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function queryFieldList (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/field/list',
+    url: '/gitegg-code-generator/code/generator/field/list',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function queryFieldList (query) {
 
 export function queryFieldListAll (query) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/field/list/all',
+    url: '/gitegg-code-generator/code/generator/field/list/all',
     method: 'get',
     params: query
   })
@@ -18,7 +18,7 @@ export function queryFieldListAll (query) {
 
 export function createField (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/field/create',
+    url: '/gitegg-code-generator/code/generator/field/create',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createField (data) {
 
 export function editField (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/field/edit',
+    url: '/gitegg-code-generator/code/generator/field/edit',
     method: 'post',
     data
   })
@@ -34,7 +34,7 @@ export function editField (data) {
 
 export function updateField (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/field/update',
+    url: '/gitegg-code-generator/code/generator/field/update',
     method: 'post',
     data
   })
@@ -42,14 +42,14 @@ export function updateField (data) {
 
 export function updateFieldStatus (fieldId, status) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/field/status/' + fieldId + '/' + status,
+    url: '/gitegg-code-generator/code/generator/field/status/' + fieldId + '/' + status,
     method: 'post'
   })
 }
 
 export function batchDeleteField (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/field/batch/delete',
+    url: '/gitegg-code-generator/code/generator/field/batch/delete',
     method: 'post',
     data
   })
@@ -57,14 +57,14 @@ export function batchDeleteField (data) {
 
 export function deleteField (id) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/field/delete/' + id,
+    url: '/gitegg-code-generator/code/generator/field/delete/' + id,
     method: 'post'
   })
 }
 
 export function checkFieldExist (data) {
   return request({
-    url: '/gitegg-plugin-code/code/generator/field/check',
+    url: '/gitegg-code-generator/code/generator/field/check',
     method: 'post',
     params: data
   })
