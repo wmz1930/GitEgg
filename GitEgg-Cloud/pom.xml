@@ -24,6 +24,8 @@
         <java.version>1.8</java.version>
         <!-- maven-compiler-plugin插件版本，Java代码编译 -->
         <maven.plugin.version>3.8.1</maven.plugin.version>
+        <!-- jib-maven-plugin插件版本，代码打包docker -->
+        <jib.maven.plugin.version>3.1.4</jib.maven.plugin.version>
         <!-- maven编译时指定编码UTF-8 -->
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <!-- 项目统一字符集编码UTF-8 -->
@@ -145,16 +147,61 @@
                         </execution>
                     </executions>
                 </plugin>
+                <!-- Docker 打包插件 -->
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>${jib.maven.plugin.version}</version>
+                    <!-- 绑定到Maven的install生命周期 ，此处如果不使用https，会有问题，需要设置sendCredentialsOverHttp=true-->
+                    <executions>
+                        <execution>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!--允许非https-->
+                        <allowInsecureRegistries>true</allowInsecureRegistries>
+                        <!-- 相当于Docerkfile中的FROM -->
+                        <from>
+                            <image>openjdk:8-jdk-alpine</image>
+                        </from>
+                        <to>
+                            <image>${docker.harbor.addr}/${docker.harbor.project}/${project.artifactId}:${project.version}</image>
+                            <auth>
+                                <username>${docker.harbor.username}</username>
+                                <password>${docker.harbor.password}</password>
+                            </auth>
+                        </to>
+                        <container>
+                            <!--jvm内存参数-->
+                            <jvmFlags>
+                                <jvmFlag>-Xms512m</jvmFlag>
+                                <jvmFlag>-Xmx4g</jvmFlag>
+                            </jvmFlags>
+                            <volumes>/giteggData</volumes>
+                            <workingDirectory>/gitegg</workingDirectory>
+                            <environment>
+                                <TZ>Asia/Shanghai</TZ>
+                            </environment>
+                            <!--使用该参数保证镜像的创建时间与系统时间一致-->
+                            <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                            <format>OCI</format>
+                        </container>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -171,6 +218,10 @@
                 <nacos.addr>172.16.20.188:8848</nacos.addr>
                 <nacos.config.prefix>gitegg-cloud-config</nacos.config.prefix>
                 <nacos.config.group>GITEGG_CLOUD</nacos.config.group>
+                <docker.harbor.addr>172.16.20.175</docker.harbor.addr>
+                <docker.harbor.project>gitegg</docker.harbor.project>
+                <docker.harbor.username>robot$gitegg</docker.harbor.username>
+                <docker.harbor.password>Jqazyv7vvZiL6TXuNcv7TrZeRdL8U9n3</docker.harbor.password>
             </properties>
         </profile>
         <profile>
@@ -180,6 +231,10 @@
                 <nacos.addr>172.16.20.188:8848</nacos.addr>
                 <nacos.config.prefix>gitegg-cloud-config</nacos.config.prefix>
                 <nacos.config.group>GITEGG_CLOUD</nacos.config.group>
+                <docker.harbor.addr>172.16.20.175</docker.harbor.addr>
+                <docker.harbor.project>gitegg</docker.harbor.project>
+                <docker.harbor.username>robot$gitegg</docker.harbor.username>
+                <docker.harbor.password>Jqazyv7vvZiL6TXuNcv7TrZeRdL8U9n3</docker.harbor.password>
             </properties>
         </profile>
         <profile>
@@ -189,6 +244,10 @@
                 <nacos.addr>172.16.20.188:8848</nacos.addr>
                 <nacos.config.prefix>gitegg-cloud-config</nacos.config.prefix>
                 <nacos.config.group>GITEGG_CLOUD</nacos.config.group>
+                <docker.harbor.addr>172.16.20.175</docker.harbor.addr>
+                <docker.harbor.project>gitegg</docker.harbor.project>
+                <docker.harbor.username>robot$gitegg</docker.harbor.username>
+                <docker.harbor.password>Jqazyv7vvZiL6TXuNcv7TrZeRdL8U9n3</docker.harbor.password>
             </properties>
         </profile>
     </profiles>

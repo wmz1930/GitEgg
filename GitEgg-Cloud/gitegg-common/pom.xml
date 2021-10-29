@@ -12,11 +12,18 @@
     <artifactId>gitegg-common</artifactId>
 
     <build>
-        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!--此模块不打可执行的jar包，打普通jar包即可-->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
                 <configuration>
                     <!--common模块不打可执行的jar包，打普通jar包即可-->
                     <skip>true</skip>
