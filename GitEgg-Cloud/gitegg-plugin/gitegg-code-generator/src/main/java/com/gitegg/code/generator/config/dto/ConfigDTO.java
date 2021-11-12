@@ -75,6 +75,9 @@ public class ConfigDTO extends BaseEntity {
     @ApiModelProperty(value = "后端代码路径")
     private String serviceCodePath;
 
+    @ApiModelProperty(value = "页面代码目录")
+    private String frontCodeDir;
+
     @ApiModelProperty(value = "是否支持导入 1支持 0不支持")
     private Boolean importFlag;
 

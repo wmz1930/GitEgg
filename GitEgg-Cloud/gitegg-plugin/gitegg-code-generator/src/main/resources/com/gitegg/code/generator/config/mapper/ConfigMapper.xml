@@ -21,6 +21,7 @@
         <result column="left_tree_type" property="leftTreeType" />
         <result column="front_code_path" property="frontCodePath" />
         <result column="service_code_path" property="serviceCodePath" />
+        <result column="front_code_dir" property="frontCodeDir" />
         <result column="import_flag" property="importFlag" />
         <result column="export_flag" property="exportFlag" />
         <result column="query_reuse" property="queryReuse" />
@@ -35,12 +36,12 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, datasource_id, module_name, module_code, service_name, table_name, table_alias, table_prefix, parent_package, controller_path, form_type, table_type, table_show_type, form_item_col, left_tree_type, front_code_path, service_code_path, import_flag, export_flag, query_reuse, status_handling, code_type, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, datasource_id, module_name, module_code, service_name, table_name, table_alias, table_prefix, parent_package, controller_path, form_type, table_type, table_show_type, form_item_col, left_tree_type, front_code_path, service_code_path, front_code_dir, import_flag, export_flag, query_reuse, status_handling, code_type, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 通用查询结果列 Config -->
     <sql id="Base_Column_List_Config">
-        config.id, config.datasource_id, config.module_name, config.module_code, config.service_name, config.table_name, config.table_alias, config.table_prefix, config.parent_package, config.controller_path, config.form_type, config.table_type, config.table_show_type, config.form_item_col, config.left_tree_type, config.front_code_path, config.service_code_path, config.import_flag, config.export_flag, config.query_reuse, config.status_handling, config.code_type, config.tenant_id, config.create_time, config.creator, config.update_time, config.operator, config.del_flag
+        config.id, config.datasource_id, config.module_name, config.module_code, config.service_name, config.table_name, config.table_alias, config.table_prefix, config.parent_package, config.controller_path, config.form_type, config.table_type, config.table_show_type, config.form_item_col, config.left_tree_type, config.front_code_path, config.service_code_path, front_code_dir, config.import_flag, config.export_flag, config.query_reuse, config.status_handling, config.code_type, config.tenant_id, config.create_time, config.creator, config.update_time, config.operator, config.del_flag
     </sql>
 
     <!-- 分页查询代码生成配置表列表 -->

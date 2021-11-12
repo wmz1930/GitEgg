@@ -199,6 +199,12 @@ public class ${table.controllerName} {
      }
 </#if>
 
+<#list fields as field>
+    <#if field?? && field.fieldUnique == true>
+        <#assign checkExist=true/>
+    </#if>
+</#list>
+<#if checkExist?? && checkExist == true>
     /**
     * 校验${table.comment!}是否存在
     *
@@ -222,6 +228,7 @@ public class ${table.controllerName} {
             return Result.data(false);
         }
     }
+</#if>
 
     <#if config.exportFlag == true>
     /**

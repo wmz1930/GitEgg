@@ -48,9 +48,9 @@
 <#assign dictSelect=true/>
 <#macro Multiple controlType>
 <#if controlType == "SELECT_MULTI">
-mode="multiple"
+                        mode="multiple"
 <#else>
-mode="default"
+                        mode="default"
 </#if>
 </#macro>
               <a-select v-model.trim="list${entity}Query.${field.entityName}"
@@ -59,8 +59,8 @@ mode="default"
                         <@Multiple controlType="${field.controlType}"/>
                         :filter-option="filterOption"
                         @keyup.enter.native="handleFilter" >
-                <a-select-option :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList"
-                                 :key="item.dictCode"
+                <a-select-option :key="item.id + index"
+                                 v-for="(item,index) in ${field.entityName}DictList"
                                  :label="item.dictName"
                                  :value="item.dictCode">
                   {{ item.dictName }}
@@ -318,9 +318,9 @@ mode="default"
             <#assign dictSelect=true/>
             <#macro Multiple controlType>
                 <#if controlType == "SELECT_MULTI">
-                    mode="multiple"
+                mode="multiple"
                 <#else>
-                    mode="default"
+                mode="default"
                 </#if>
             </#macro>
               <a-select
@@ -444,10 +444,14 @@ mode="default"
     </#if>
   </a-card>
 </template>
-
+<#list fields as field>
+   <#if field?? && field.fieldUnique == true>
+       <#assign checkExist=true/>
+   </#if>
+</#list>
 <script>
     import { STable } from '@/components'
-    import { query${entity}List, create${entity}, update${entity}, <#if hasStatus?? && hasStatus == true>update${entity}Status, </#if>delete${entity}, check${entity}Exist<#if config.exportFlag == true>, batchDelete${entity}, download${entity}List</#if><#if config.importFlag == true>, upload${entity}, download${entity}Template</#if> } from '@/api${vueJsPath}'
+    import { query${entity}List, create${entity}, update${entity}, <#if hasStatus?? && hasStatus == true>update${entity}Status, </#if>delete${entity}<#if checkExist?? && checkExist == true>, check${entity}Exist</#if><#if config.exportFlag == true>, batchDelete${entity}, download${entity}List</#if><#if config.importFlag == true>, upload${entity}, download${entity}Template</#if> } from '@/api/${vueJsPath}'
     import moment from 'moment'
     <#if provinceSelect?? && provinceSelect == true>
     import Data from '@/api/pcaa'
@@ -469,7 +473,7 @@ mode="default"
             // ${field.comment}数据字典展示
             ${field.entityName}DictFilter (dictCode) {
                 return vm.${field.entityName}FilterMap[dictCode]
-            }
+            },
             </#if>
             </#list>
             <#------------  END 所有的字典类型 字段循环遍历  ---------->
@@ -478,6 +482,7 @@ mode="default"
             <#if dictSelect?? && dictSelect == true>
             vm = this
             </#if>
+            <#if checkExist?? && checkExist == true>
             // 增加或更新记录时，判断字段是否已经存在
             <#-- ----------  BEGIN 字段循环遍历  ---------->
             <#list fields as field>
@@ -499,6 +504,7 @@ mode="default"
             </#if>
             </#list>
             <#------------  END 字段循环遍历  ---------->
+            </#if>
             return {
                 advanced: false,
                 current${entity}: '',
@@ -573,19 +579,19 @@ mode="default"
                     <#if field?? && (field.required == true || field.fieldUnique == true || (field.max?? && field.max gt 0) || (field.maxLength?? && field.maxLength gt 0) || (field.validates?? && field.validates?size != 0))>
                     ${field.entityName}: [
                         <#if field.maxLength?? && field.maxLength gt 0 >
-                        { min: ${field.minLength}, max: ${field.maxLength}, message: '长度在 ${field.minLength} 到 ${field.maxLength} 个字符', trigger: 'blur' }
+                        { min: ${field.minLength}, max: ${field.maxLength}, message: '长度在 ${field.minLength} 到 ${field.maxLength} 个字符', trigger: 'blur' },
                         </#if>
                         <#if field.fieldUnique == true>
-                        ,{ validator: valid${field.entityName?cap_first}, trigger: 'blur' }
+                        { validator: valid${field.entityName?cap_first}, trigger: 'blur' },
                         </#if>
                         <#if field.required == true>
-                        ,{ required: true, message: '请输入${field.comment}', trigger: 'blur' }
+                        { required: true, message: '请输入${field.comment}', trigger: 'blur' },
                         </#if>
                         <#if field.validateValue??>
-                        ,{ pattern: /${field.validateValue}/, required: true, message: '请输入正确的${field.comment}', trigger: 'blur' }
+                        { pattern: /${field.validateValue}/, required: true, message: '请输入正确的${field.comment}', trigger: 'blur' },
                         </#if>
                         <#if field.validateRegular??>
-                        ,{ pattern: /${field.validateRegular}/, required: true, message: '请输入正确的${field.comment}', trigger: 'blur' }
+                        { pattern: /${field.validateRegular}/, required: true, message: '请输入正确的${field.comment}', trigger: 'blur' },
                         </#if>
                     ]<#if field?has_next>,</#if>
                     </#if>

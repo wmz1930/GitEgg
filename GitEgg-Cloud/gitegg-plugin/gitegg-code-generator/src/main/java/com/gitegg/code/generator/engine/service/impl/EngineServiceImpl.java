@@ -28,15 +28,18 @@ import com.gitegg.code.generator.field.service.IFieldService;
 import com.gitegg.code.generator.join.entity.TableJoin;
 import com.gitegg.code.generator.join.service.ITableJoinService;
 import com.gitegg.platform.base.enums.BaseEntityEnum;
+import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.code.generator.constant.GitEggCodeGeneratorConstant;
 import com.gitegg.platform.code.generator.engine.GitEggFreemarkerTemplateEngine;
 import com.gitegg.platform.mybatis.entity.BaseEntity;
+import com.gitegg.service.system.client.feign.IResourceFeign;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,6 +63,8 @@ public class EngineServiceImpl implements IEngineService {
     private final IDatasourceService datasourceService;
 
     private final ITableJoinService tableJoinService;
+
+    private final IResourceFeign resourceFeign;
 
     /**
      * 解决循环依赖问题
@@ -167,6 +172,7 @@ public class EngineServiceImpl implements IEngineService {
         String serviceName = config.getServiceName();
         //前端代码路径
         String frontCodePath = config.getFrontCodePath();
+        String frontCodeDir = config.getFrontCodeDir();
         //后端代码路径
         String serviceCodePath = config.getServiceCodePath();
         //自定义路径
@@ -174,6 +180,14 @@ public class EngineServiceImpl implements IEngineService {
         String moduleName = config.getModuleCode();
         String codeDirPath =  (parent + StrUtil.DOT + moduleName).replace(StrUtil.DOT, File.separator) + File.separator;
 
+        // 查询资源权限表最大的id，用于生成资源权限脚本
+        Long maxId = 0L;
+        Result<Object> result = resourceFeign.queryResourceMaxId();
+        if (null != result && result.isSuccess())
+        {
+            maxId = Long.parseLong(result.getData().toString()) + 1L;
+        }
+        Long finalMaxId = maxId;
         FastAutoGenerator.create(datasource.getUrl(), datasource.getUsername(), datasource.getPassword())
                 .globalConfig(builder -> {
                     //全局配置
@@ -194,8 +208,14 @@ public class EngineServiceImpl implements IEngineService {
                 })
                 .injectionConfig(builder -> {
 
-                    String dtoName = StrUtil.upperFirst(config.getModuleCode());
+                    String tableName = config.getTableName();
+                    String tablePrefix = config.getTablePrefix();
+                    if (!StringUtils.isEmpty(tablePrefix))
+                    {
+                        tableName = tableName.replaceFirst(tablePrefix,"");
+                    }
 
+                    String dtoName = StrUtil.upperFirst(StrUtil.toCamelCase(tableName));
                     //dto
                     String dtoFile = dtoName + CodeGeneratorConstant.DTO_JAVA;
                     String createDtoFile = CodeGeneratorConstant.CREATE + dtoFile;
@@ -226,6 +246,11 @@ public class EngineServiceImpl implements IEngineService {
                     int end = serviceName.length();
                     String servicePath = serviceName.substring(start, end).replace(StrUtil.DASHED, File.separator);
 
+                    if (!StringUtils.isEmpty(frontCodeDir))
+                    {
+                        servicePath = frontCodeDir + servicePath ;
+                    }
+
                     //判断是否生成后端代码
                     if (config.getCodeType().equals(CodeGeneratorConstant.CODE_ALL) || config.getCodeType().equals(CodeGeneratorConstant.CODE_SERVICE))
                     {
@@ -243,10 +268,9 @@ public class EngineServiceImpl implements IEngineService {
                         String sqlPath = serviceCodePath + GitEggCodeGeneratorConstant.RESOURCES_PATH + codeDirPath + CodeGeneratorConstant.MAPPER;
                         customFilePath.put(sqlFile, sqlPath);
 
-
                     }
 
-                    //判断是否生成后端代码
+                    //判断是否生成前端代码
                     if (config.getCodeType().equals(CodeGeneratorConstant.CODE_ALL) || config.getCodeType().equals(CodeGeneratorConstant.CODE_FRONT))
                     {
                         // vue and js
@@ -261,10 +285,12 @@ public class EngineServiceImpl implements IEngineService {
                         // TODO 要支持树形表、左树右表、左表右表、左表右树、左树右树形表、左树右树
                         customFileMap.put(vueFile, CustomFileEnum.VUE.path);
                         customFileMap.put(jsFile, CustomFileEnum.JS.path);
+                        customMap.put("vueTablePath", servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFile);
                         customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
                     }
 
                     customMap.put(GitEggCodeGeneratorConstant.CUSTOM_FILE_PATH_MAP, customFilePath);
+                    customMap.put("maxId", finalMaxId);
 
                     builder.customMap(customMap)
                             .customFile(customFileMap);
