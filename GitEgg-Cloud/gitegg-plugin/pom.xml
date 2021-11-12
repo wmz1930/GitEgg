@@ -52,6 +52,12 @@
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-redis</artifactId>
         </dependency>
+        <!-- gitegg-service-system 的fegin公共调用方法 -->
+        <dependency>
+            <groupId>com.gitegg.cloud</groupId>
+            <artifactId>gitegg-service-system-client</artifactId>
+            <version>${gitegg.project.version}</version>
+        </dependency>
         <!-- spring boot web核心包 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

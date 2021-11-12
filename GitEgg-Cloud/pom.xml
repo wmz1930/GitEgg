@@ -215,7 +215,7 @@
             <id>dev</id>
             <properties>
                 <spring.profiles.active>dev</spring.profiles.active>
-                <nacos.addr>172.16.20.188:8848</nacos.addr>
+                <nacos.addr>127.0.0.1:8848</nacos.addr>
                 <nacos.config.prefix>gitegg-cloud-config</nacos.config.prefix>
                 <nacos.config.group>GITEGG_CLOUD</nacos.config.group>
                 <docker.harbor.addr>172.16.20.175</docker.harbor.addr>
@@ -228,7 +228,7 @@
             <id>test</id>
             <properties>
                 <spring.profiles.active>test</spring.profiles.active>
-                <nacos.addr>172.16.20.188:8848</nacos.addr>
+                <nacos.addr>127.0.0.1:8848</nacos.addr>
                 <nacos.config.prefix>gitegg-cloud-config</nacos.config.prefix>
                 <nacos.config.group>GITEGG_CLOUD</nacos.config.group>
                 <docker.harbor.addr>172.16.20.175</docker.harbor.addr>
@@ -241,7 +241,7 @@
             <id>prod</id>
             <properties>
                 <spring.profiles.active>prod</spring.profiles.active>
-                <nacos.addr>172.16.20.188:8848</nacos.addr>
+                <nacos.addr>127.0.0.1:8848</nacos.addr>
                 <nacos.config.prefix>gitegg-cloud-config</nacos.config.prefix>
                 <nacos.config.group>GITEGG_CLOUD</nacos.config.group>
                 <docker.harbor.addr>172.16.20.175</docker.harbor.addr>
