@@ -177,20 +177,21 @@
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
+            <a-form-model-item label="服务名称" prop="serviceName">
+              <a-input v-model="configForm.serviceName" placeholder="例：gitegg-service-system" :maxLength="64" />
+            </a-form-model-item>
+          </a-col>
+
+        </a-row>
+        <a-row>
+          <a-col :md="12">
             <a-form-model-item label="模块名称" prop="moduleName">
               <a-input v-model="configForm.moduleName" placeholder="输入模块名称，例：系统管理" :maxLength="32" />
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
           <a-col :md="12">
             <a-form-model-item label="模块代码" prop="moduleCode">
               <a-input v-model="configForm.moduleCode" placeholder="输入模块代码，例：system" :maxLength="32" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :md="12">
-            <a-form-model-item label="服务名称" prop="serviceName">
-              <a-input v-model="configForm.serviceName" placeholder="例：gitegg-service-system" :maxLength="64" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -249,9 +250,17 @@
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
-            <a-form-model-item v-show="configForm.tableShowType === 'left_tree_table' || configForm.tableShowType === 'left_tree_tree_table' || configForm.tableShowType === 'tree_tree'" label="左树类型" prop="leftTreeType">
-              <a-select v-model="configForm.leftTreeType" placeholder="请选择左树类型" allow-clear show-search :filter-option="filterOption">
-                <a-select-option v-for="item in treeTypeDict.dictList" :key="item.id" :value="item.dictCode">
+            <a-form-model-item label="左树类型" prop="leftTreeType">
+              <a-select v-model="configForm.leftTreeType"
+                        placeholder="请选择左树类型"
+                        :disabled="!(configForm.tableShowType === 'left_tree_table' || configForm.tableShowType === 'left_tree_tree_table' || configForm.tableShowType === 'tree_tree')"
+                        allow-clear
+                        show-search
+                        :filter-option="filterOption">
+                <a-select-option
+                  v-for="item in treeTypeDict.dictList"
+                  :key="item.id"
+                  :value="item.dictCode">
                   {{ item.dictName }}
                 </a-select-option>
               </a-select>
@@ -265,12 +274,17 @@
         </a-row>
         <a-row>
           <a-form-model-item label="后端代码保存路径" prop="serviceCodePath">
-            <a-input v-model="configForm.serviceCodePath" placeholder="输入后端代码路径" :maxLength="255" />
+            <a-input v-model="configForm.serviceCodePath" placeholder="输入后端代码路径" :maxLength="1000" />
           </a-form-model-item>
         </a-row>
         <a-row>
           <a-form-model-item label="前端代码保存路径" prop="frontCodePath">
-            <a-input v-model="configForm.frontCodePath" placeholder="输入前端代码路径" :maxLength="255" />
+            <a-input v-model="configForm.frontCodePath" placeholder="输入前端代码路径" :maxLength="1000" />
+          </a-form-model-item>
+        </a-row>
+        <a-row>
+          <a-form-model-item label="页面文件目录自定义" prop="frontCodeDir">
+            <a-input v-model="configForm.frontCodeDir" placeholder="存放.vue页面文件的目录，用于区分不同系统，例如：system" :maxLength="100" />
           </a-form-model-item>
         </a-row>
         <a-row>
@@ -466,6 +480,7 @@
                     leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
+                    frontCodeDir: '',
                     importFlag: true,
                     exportFlag: true,
                     queryReuse: true,
@@ -677,6 +692,7 @@
                     leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
+                    frontCodeDir: '',
                     importFlag: true,
                     exportFlag: true,
                     queryReuse: true,

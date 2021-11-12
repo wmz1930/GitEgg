@@ -114,14 +114,14 @@
                         scopedSlots: { customRender: 'commentRender' }
                     },
                     {
-                        title: '实体类型',
+                        title: '字段类型',
                         align: 'center',
                         width: '130px',
                         dataIndex: 'entityType',
                         scopedSlots: { customRender: 'entityTypeRender' }
                     },
                     {
-                        title: '实体名称',
+                        title: '字段名称',
                         align: 'center',
                         width: '130px',
                         dataIndex: 'entityName',
