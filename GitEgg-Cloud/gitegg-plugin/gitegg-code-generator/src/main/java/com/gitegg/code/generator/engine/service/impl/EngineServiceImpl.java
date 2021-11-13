@@ -27,6 +27,7 @@ import com.gitegg.code.generator.field.dto.QueryFieldDTO;
 import com.gitegg.code.generator.field.service.IFieldService;
 import com.gitegg.code.generator.join.entity.TableJoin;
 import com.gitegg.code.generator.join.service.ITableJoinService;
+import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.enums.BaseEntityEnum;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.code.generator.constant.GitEggCodeGeneratorConstant;
@@ -181,11 +182,11 @@ public class EngineServiceImpl implements IEngineService {
         String codeDirPath =  (parent + StrUtil.DOT + moduleName).replace(StrUtil.DOT, File.separator) + File.separator;
 
         // 查询资源权限表最大的id，用于生成资源权限脚本
-        Long maxId = 0L;
+        Long maxId = GitEggConstant.ZERO_LONG;
         Result<Object> result = resourceFeign.queryResourceMaxId();
         if (null != result && result.isSuccess())
         {
-            maxId = Long.parseLong(result.getData().toString()) + 1L;
+            maxId = Long.parseLong(result.getData().toString()) + GitEggConstant.ONE_LONG;
         }
         Long finalMaxId = maxId;
         FastAutoGenerator.create(datasource.getUrl(), datasource.getUsername(), datasource.getPassword())
@@ -285,12 +286,12 @@ public class EngineServiceImpl implements IEngineService {
                         // TODO 要支持树形表、左树右表、左表右表、左表右树、左树右树形表、左树右树
                         customFileMap.put(vueFile, CustomFileEnum.VUE.path);
                         customFileMap.put(jsFile, CustomFileEnum.JS.path);
-                        customMap.put("vueTablePath", servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFile);
+                        customMap.put(GitEggCodeGeneratorConstant.VUE_TABLE_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFile);
                         customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
                     }
 
                     customMap.put(GitEggCodeGeneratorConstant.CUSTOM_FILE_PATH_MAP, customFilePath);
-                    customMap.put("maxId", finalMaxId);
+                    customMap.put(GitEggCodeGeneratorConstant.RESOURCE_MAX_ID, finalMaxId);
 
                     builder.customMap(customMap)
                             .customFile(customFileMap);

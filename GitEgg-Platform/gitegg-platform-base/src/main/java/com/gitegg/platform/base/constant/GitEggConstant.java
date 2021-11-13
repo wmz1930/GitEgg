@@ -34,6 +34,36 @@ public class GitEggConstant {
     public static final long NO_PAGE = -1;
 
     /**
+     * ZERO_LONG
+     */
+    public static final Long ZERO_LONG = 0L;
+
+    /**
+     * ONE_LONG
+     */
+    public static final Long ONE_LONG = 1L;
+
+    /**
+     * TWO_LONG
+     */
+    public static final Long TWO_LONG = 2L;
+
+    /**
+     * THREE_LONG
+     */
+    public static final Long THREE_LONG = 3L;
+
+    /**
+     * FOUR_LONG
+     */
+    public static final Long FOUR_LONG = 4L;
+
+    /**
+     * FIVE_LONG
+     */
+    public static final Long FIVE_LONG = 5L;
+
+    /**
      * 数组取值
      */
     public class Number {
@@ -55,6 +85,7 @@ public class GitEggConstant {
         public static final int HUNDRED = 100;
 
         public static final int THOUSAND = 1000;
+
     }
 
     /**

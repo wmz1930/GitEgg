@@ -61,6 +61,16 @@ public class GitEggCodeGeneratorConstant {
     public static final String VUE_JS_PATH = "vueJsPath";
 
     /**
+     * VUE_JS_PATH
+     */
+    public static final String VUE_TABLE_PATH = "vueTablePath";
+
+    /**
+     * RESOURCE_MAX_ID
+     */
+    public static final String RESOURCE_MAX_ID = "maxId";
+
+    /**
      * CUSTOM_FILE_PATH_MAP
      */
     public static final String CUSTOM_FILE_PATH_MAP = "customFilePathMap";
