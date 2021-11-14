@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import javax.naming.AuthenticationException;
 
+/**
+ * @author GitEgg
+ */
 @Component
 public class GitEggOAuth2ExceptionTranslator implements WebResponseExceptionTranslator {
     @Override

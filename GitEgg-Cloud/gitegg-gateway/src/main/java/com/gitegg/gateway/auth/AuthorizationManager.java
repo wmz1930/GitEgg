@@ -35,6 +35,7 @@ import reactor.core.publisher.Mono;
 
 /**
  * 网关鉴权管理器
+ * @author GitEgg
  */
 @Slf4j
 @Component

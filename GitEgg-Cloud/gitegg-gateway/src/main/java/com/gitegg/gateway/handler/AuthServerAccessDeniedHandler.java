@@ -18,6 +18,7 @@ import java.nio.charset.Charset;
 
 /**
  * 无权限访问自定义响应
+ * @author GitEgg
  */
 @Component
 public class AuthServerAccessDeniedHandler implements ServerAccessDeniedHandler {

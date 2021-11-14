@@ -42,11 +42,15 @@ public class GitEggUserDetailsServiceImpl implements UserDetailsService {
 
     private final RedisTemplate redisTemplate;
 
-    // 密码最大尝试次数
+    /**
+     * 密码最大尝试次数
+     */
     @Value("${system.maxTryTimes}")
     private int maxTryTimes;
 
-    // 不需要验证码登录的最大尝试次数
+    /**
+     * 不需要验证码登录的最大尝试次数
+     */
     @Value("${system.maxNonCaptchaTimes}")
     private int maxNonCaptchaTimes;
 

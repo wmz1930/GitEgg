@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 自定义Oauth异常拦截处理器
+ * @author GitEgg
  */
 @Slf4j
 @RestControllerAdvice
