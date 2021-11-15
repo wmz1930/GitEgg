@@ -5,10 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.exception.BusinessException;
+import com.gitegg.service.system.dto.QueryUserResourceDTO;
 import com.gitegg.service.system.entity.Organization;
 import com.gitegg.service.system.entity.Resource;
+import com.gitegg.service.system.enums.ResourceEnum;
 import com.gitegg.service.system.mapper.ResourceMapper;
 import com.gitegg.service.system.service.IResourceService;
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,23 +129,19 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 
     @Override
     public List<Resource> queryMenuTreeByUserId(Long userId) {
-        List<Resource> resourceList = resourceMapper.queryResourceByUserId(userId);
+        QueryUserResourceDTO queryUserResourceDTO = new QueryUserResourceDTO();
+        queryUserResourceDTO.setUserId(userId);
+        queryUserResourceDTO.setResourceTypeList(Lists.newArrayList(ResourceEnum.MENU.getCode()));
+        List<Resource> resourceList = resourceMapper.queryResourceByUserId(queryUserResourceDTO);
         Map<Long, Resource> resourceMap = new HashMap<>();
         List<Resource> menus = this.assembleResourceTree(resourceList,resourceMap);
         return menus;
     }
 
     @Override
-    public List<String> queryMenuListByUserId(Long userId) {
-        List<Resource> resourceList = resourceMapper.queryResourceByUserId(userId);
-        if (!StringUtils.isEmpty(resourceList))
-        {
-            return resourceList.stream().map(Resource::getResourceKey).collect(Collectors.toList());
-        }
-        else
-        {
-            return null;
-        }
+    public List<Resource> queryResourceListByUserId(QueryUserResourceDTO queryUserResourceDTO) {
+        List<Resource> resourceList = resourceMapper.queryResourceByUserId(queryUserResourceDTO);
+        return resourceList;
     }
 
     @Override
@@ -165,8 +164,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     }
 
     @Override
-    public List<Resource> queryResourceRoleIds() {
-        List<Resource> resourceList = resourceMapper.queryResourceRoleIds();
+    public List<Resource> queryResourceRoles() {
+        List<Resource> resourceList = resourceMapper.queryResourceRoles();
         return resourceList;
     }
 

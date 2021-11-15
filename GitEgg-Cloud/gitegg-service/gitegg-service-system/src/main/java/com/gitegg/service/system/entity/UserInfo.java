@@ -65,6 +65,10 @@ public class UserInfo extends User {
     @ApiModelProperty(value = "资源列表字符串")
     private List<String> resourceKeyList;
 
+    @ApiModelProperty(value = "资源请求列表")
+    private List<String> resourceUrlList;
+
     @ApiModelProperty(value = "前端展示的用户菜单树")
     private List<Resource> menuTree;
+
 }

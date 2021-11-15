@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 容器启动完成加载资源权限数据到缓存
+ * @author GitEgg
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = @Autowired)

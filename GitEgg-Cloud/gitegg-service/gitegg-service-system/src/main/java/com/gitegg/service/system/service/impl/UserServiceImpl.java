@@ -9,11 +9,9 @@ import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import com.gitegg.platform.mybatis.enums.DataPermissionTypeEnum;
-import com.gitegg.service.system.dto.CreateUserDTO;
-import com.gitegg.service.system.dto.QueryUserDTO;
-import com.gitegg.service.system.dto.RolePermissionSort;
-import com.gitegg.service.system.dto.UpdateUserDTO;
+import com.gitegg.service.system.dto.*;
 import com.gitegg.service.system.entity.*;
+import com.gitegg.service.system.enums.ResourceEnum;
 import com.gitegg.service.system.mapper.UserMapper;
 import com.gitegg.service.system.service.*;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName: UserServiceImpl
@@ -376,9 +375,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userInfo.setOrganizationIdList(Arrays.asList(organizationIdArray));
         }
 
+        QueryUserResourceDTO queryUserResourceDTO = new QueryUserResourceDTO();
+        queryUserResourceDTO.setUserId(userInfo.getId());
+        List<Resource> resourceList = resourceService.queryResourceListByUserId(queryUserResourceDTO);
+
         // 查询用户菜单的列表，用于前端页面鉴权
-        List<String> menuList = resourceService.queryMenuListByUserId(userInfo.getId());
+        List<String> menuList = resourceList.stream().filter(s-> ResourceEnum.MENU.getCode().equals(s.getResourceType())).map(Resource::getResourceKey).collect(Collectors.toList());
         userInfo.setResourceKeyList(menuList);
+
+        // 查询用户资源列表，用于SpringSecurity鉴权
+        List<String> resourceUrlList = resourceList.stream().filter(s-> !ResourceEnum.MODULE.getCode().equals(s.getResourceType()) && !ResourceEnum.MENU.getCode().equals(s.getResourceType())).map(Resource::getResourceUrl).collect(Collectors.toList());
+        userInfo.setResourceUrlList(resourceUrlList);
 
         // 查询用户菜单树，用于页面展示
         List<Resource> menuTree = resourceService.queryMenuTreeByUserId(userInfo.getId());

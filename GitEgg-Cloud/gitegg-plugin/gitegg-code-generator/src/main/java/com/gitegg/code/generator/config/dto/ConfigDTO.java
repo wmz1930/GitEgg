@@ -1,6 +1,5 @@
 package com.gitegg.code.generator.config.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.gitegg.platform.mybatis.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

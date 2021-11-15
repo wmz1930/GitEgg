@@ -31,33 +31,43 @@
     <sql id="Base_Column_List">
         id, tenant_id, parent_id, ancestors, resource_name, resource_key, resource_type, resource_icon, resource_path, resource_url, resource_level, resource_show, resource_cache, resource_page_name, resource_status, comments, create_time, creator, update_time, operator, del_flag
     </sql>
-    
-    <!-- 根据用户名查询用户权限 -->
-	<select id="queryResourceByUserId" resultType="com.gitegg.service.system.entity.Resource" parameterType="Long">
-		SELECT DISTINCT
-		sysResource.id,
-		sysResource.tenant_id,
-		sysResource.parent_id,
-		sysResource.ancestors,
-		sysResource.resource_name,
-		sysResource.resource_key,
-		sysResource.resource_type,
-		sysResource.resource_icon,
-		sysResource.resource_path,
-		sysResource.resource_url,
-		sysResource.resource_cache,
-		sysResource.resource_show,
-		sysResource.resource_level,
-		sysResource.resource_page_name,
-		sysResource.resource_status
-		FROM t_sys_user sysUser
-		INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
-		INNER JOIN t_sys_role_resource roleResource ON userRole.role_id = roleResource.role_id AND roleResource.del_flag = 0
-		INNER JOIN t_sys_resource sysResource ON roleResource.resource_id = sysResource.id AND sysResource.resource_type = 2 AND sysResource.del_flag = 0
-		WHERE sysUser.id = #{userId} AND sysUser.del_flag = 0 ORDER BY resource_level
-	</select>
 
-    <!-- 查询拥有某个资源权限的角色id列表-->
+    <!-- 根据用户名查询用户权限 -->
+    <select id="queryResourceByUserId" resultType="com.gitegg.service.system.entity.Resource" parameterType="com.gitegg.service.system.dto.QueryUserResourceDTO">
+        SELECT DISTINCT
+        sysResource.id,
+        sysResource.tenant_id,
+        sysResource.parent_id,
+        sysResource.ancestors,
+        sysResource.resource_name,
+        sysResource.resource_key,
+        sysResource.resource_type,
+        sysResource.resource_icon,
+        sysResource.resource_path,
+        sysResource.resource_url,
+        sysResource.resource_cache,
+        sysResource.resource_show,
+        sysResource.resource_level,
+        sysResource.resource_page_name,
+        sysResource.resource_status
+        FROM t_sys_user sysUser
+        INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
+        INNER JOIN t_sys_role_resource roleResource ON userRole.role_id = roleResource.role_id AND roleResource.del_flag = 0
+        INNER JOIN t_sys_resource sysResource ON roleResource.resource_id = sysResource.id AND sysResource.del_flag = 0
+        WHERE sysUser.del_flag = 0
+        <if test="userResource.userId != null and userResource.userId != ''">
+            AND sysUser.id = #{userResource.userId}
+        </if>
+        <if test="userResource.resourceTypeList != null and userResource.resourceTypeList.size > 0 ">
+            and sysResource.resource_type in
+            <foreach collection="userResource.resourceTypeList" item ="resourceType" index="i" open="(" close=")" separator=",">
+                #{resourceType}
+            </foreach>
+        </if>
+        ORDER BY resource_level
+    </select>
+
+    <!-- 查询拥有某个资源权限的角色key列表-->
     <resultMap id="resourceRoleMap" type="com.gitegg.service.system.entity.Resource" extends="BaseResultMap">
         <!--
             property： 集合属性的名称，如User的card_one和card_many
@@ -66,16 +76,20 @@
             column： 传给子查询的参数
             javaType： 一般为ArrayList
         -->
-        <collection property="roleIds" ofType="Long" column="{resourceId = id}" select="queryRoleIdsByResourceId">
+        <collection property="roles" ofType="com.gitegg.service.system.entity.Role" column="{resourceId = id}" select="queryRolesByResourceId">
         </collection>
     </resultMap>
-    <select id="queryResourceRoleIds"  resultMap="resourceRoleMap">
+    <select id="queryResourceRoles"  resultMap="resourceRoleMap">
             select
             <include refid="Base_Column_List" />
-        from t_sys_resource where resource_type = 4 and del_flag = 0
+        from t_sys_resource where (resource_type = 3 or resource_type = 4 ) and del_flag = 0
     </select>
-    <select id="queryRoleIdsByResourceId" resultType="Long">
-        select role_id from t_sys_role_resource where resource_id = #{resourceId} and del_flag = 0
+    <select id="queryRolesByResourceId" resultType="com.gitegg.service.system.entity.Role">
+        select distinct role.id, role.role_key
+        from t_sys_role_resource roleResource
+        inner join t_sys_role role on roleResource.role_id = role.id and role.del_flag = 0
+        where roleResource.resource_id = #{resourceId}
+        and roleResource.del_flag = 0
     </select>
 
     <!-- 通过parentId查询所有子资源 -->

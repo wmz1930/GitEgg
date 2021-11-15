@@ -101,9 +101,21 @@ public class Resource extends BaseEntity {
     private List<Resource> children;
 
     /**
+     * 拥有资源权限角色集合
+     */
+    @TableField(exist = false)
+    private List<Role> roles;
+
+    /**
      * 拥有资源权限角色id集合
      */
     @TableField(exist = false)
     private List<Long> roleIds;
+
+    /**
+     * 拥有资源权限角色key集合
+     */
+    @TableField(exist = false)
+    private List<String> roleKeys;
 
 }

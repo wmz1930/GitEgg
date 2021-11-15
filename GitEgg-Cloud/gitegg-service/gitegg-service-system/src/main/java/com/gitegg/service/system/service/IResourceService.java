@@ -2,6 +2,7 @@ package com.gitegg.service.system.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gitegg.service.system.dto.QueryUserResourceDTO;
 import com.gitegg.service.system.entity.Resource;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -28,10 +29,10 @@ public interface IResourceService extends IService<Resource> {
 
     /**
      * 查询用户菜单列表
-     * @param userId
+     * @param queryUserResourceDTO
      * @return
      */
-    List<String> queryMenuListByUserId(Long userId);
+    List<Resource> queryResourceListByUserId(QueryUserResourceDTO queryUserResourceDTO);
 
     /**
      * 查询资源权限列表
@@ -66,5 +67,5 @@ public interface IResourceService extends IService<Resource> {
      * @param
      * @return
      */
-    List<Resource> queryResourceRoleIds();
+    List<Resource> queryResourceRoles();
 }

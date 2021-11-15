@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthorizationException;
@@ -26,6 +28,10 @@ import com.gitegg.service.system.client.feign.IUserFeign;
 
 import cn.hutool.core.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *  实现SpringSecurity获取用户信息接口
@@ -132,10 +138,31 @@ public class GitEggUserDetailsServiceImpl implements UserDetailsService {
                 gitEggUser.getRoleIdList(), gitEggUser.getRoleKeyList(), gitEggUser.getResourceKeyList(),
                 gitEggUser.getDataPermissionTypeList(), gitEggUser.getOrganizationIdList(),
                 gitEggUser.getAvatar(), gitEggUser.getAccount(), gitEggUser.getPassword(), !String.valueOf(GitEggConstant.DISABLE).equals(gitEggUser.getStatus()), true, true, true,
-                AuthorityUtils.createAuthorityList(gitEggUser.getRoleIdList().toArray(new String[gitEggUser.getRoleIdList().size()])));
+                this.getPrivileges(gitEggUser.getRoleKeyList(), gitEggUser.getResourceUrlList()));
         } else {
             throw new UsernameNotFoundException(result.getMsg());
         }
+    }
+
+    /**
+     * 设置SpringSecurity需要的role和resource
+     * @param roles
+     * @param resources
+     * @return
+     */
+    private final List<GrantedAuthority> getPrivileges(final Collection<String> roles, final Collection<String> resources) {
+        final List<GrantedAuthority> authorities = new ArrayList<>();
+
+        for (final String role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+
+        //不将resource权限加入token，这样会导致请求头很大
+//        for (final String resource : resources) {
+//            authorities.add(new SimpleGrantedAuthority(resource));
+//        }
+
+        return authorities;
     }
 
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.service.system.dto.UpdateRoleResourceDTO;
 import com.gitegg.service.system.entity.Resource;
+import com.gitegg.service.system.entity.Role;
 import com.gitegg.service.system.entity.RoleResource;
 import com.gitegg.service.system.mapper.RoleResourceMapper;
 import com.gitegg.service.system.service.IResourceService;
@@ -86,7 +87,7 @@ public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, Rol
     @Override
     public void initResourceRoles() {
         // 查询系统角色和权限的关系
-        List<Resource> resourceList = resourceService.queryResourceRoleIds();
+        List<Resource> resourceList = resourceService.queryResourceRoles();
         // 判断是否开启了租户模式，如果开启了，那么角色权限需要按租户进行分类存储
         if (enable) {
             Map<Long, List<Resource>> resourceListMap =
@@ -105,11 +106,11 @@ public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, Rol
     private void addRoleResource(String key, List<Resource> resourceList) {
         Map<String, List<String>> resourceRolesMap = new TreeMap<>();
         Optional.ofNullable(resourceList).orElse(new ArrayList<>()).forEach(resource -> {
-            // roleId -> ROLE_{roleId}
-            List<String> roles = Optional.ofNullable(resource.getRoleIds()).orElse(new ArrayList<>()).stream()
-                    .map(roleId -> AuthConstant.AUTHORITY_PREFIX + roleId).collect(Collectors.toList());
-            if (CollectionUtil.isNotEmpty(roles)) {
-                resourceRolesMap.put(resource.getResourceUrl(), roles);
+            // roleKey -> ROLE_{roleKey}
+            List<String> roleKeys = Optional.ofNullable(resource.getRoles()).orElse(new ArrayList<>()).stream().map(Role::getRoleKey)
+                    .distinct().map(roleKey -> AuthConstant.AUTHORITY_PREFIX + roleKey).collect(Collectors.toList());
+            if (CollectionUtil.isNotEmpty(roleKeys)) {
+                resourceRolesMap.put(resource.getResourceUrl(), roleKeys);
             }
         });
         redisTemplate.opsForHash().putAll(key, resourceRolesMap);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.gitegg.service.system.dto.QueryUserResourceDTO;
 import com.gitegg.service.system.entity.Resource;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,10 +20,10 @@ public interface ResourceMapper extends BaseMapper<Resource> {
 
     /**
      * 查询用户权限资源
-     * @param userId
+     * @param queryUserResourceDTO
      * @return
      */
-    List<Resource> queryResourceByUserId(Long userId);
+    List<Resource> queryResourceByUserId(@Param("userResource") QueryUserResourceDTO queryUserResourceDTO);
 
     /**
      *
@@ -39,5 +40,5 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @return
      */
     @InterceptorIgnore(tenantLine = "true")
-    List<Resource> queryResourceRoleIds();
+    List<Resource> queryResourceRoles();
 }
