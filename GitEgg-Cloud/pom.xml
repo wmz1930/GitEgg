@@ -181,6 +181,9 @@
                                 <jvmFlag>-Xms512m</jvmFlag>
                                 <jvmFlag>-Xmx4g</jvmFlag>
                             </jvmFlags>
+                            <args>
+                                <arg>--spring.profiles.active=${spring.profiles.active}</arg>
+                            </args>
                             <volumes>/giteggData</volumes>
                             <workingDirectory>/gitegg</workingDirectory>
                             <environment>

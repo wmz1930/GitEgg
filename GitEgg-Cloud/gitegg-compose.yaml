@@ -1,0 +1,68 @@
+version: '3'
+services:
+  gitegg-service-system:
+    image: 172.16.20.175/gitegg/gitegg-service-system:1.0-SNAPSHOT
+    container_name: gitegg-service-system
+    ports:
+      - 8001:8001
+    volumes:
+      - "/data/gitegg/gateway/gitegg-service-system.jar:/app.jar"
+      - "/data/gitegg/gateway/logs:/logs"
+    logging:
+      options:
+        max-size: "100m"
+    networks:
+      - giteggNetworks
+  gitegg-service-base:
+    image: 172.16.20.175/gitegg/gitegg-service-base:1.0-SNAPSHOT
+    container_name: gitegg-service-base
+    ports:
+      - 8002:8002
+    volumes:
+      - "/data/gitegg/base/gitegg-service-base.jar:/app.jar"
+      - "/data/gitegg/base/logs:/logs"
+    networks:
+      - giteggNetworks
+  gitegg-oauth:
+    image: 172.16.20.175/gitegg/gitegg-oauth:1.0-SNAPSHOT
+    container_name: gitegg-oauth
+    ports:
+      - 8003:8003
+    volumes:
+      - "/data/gitegg/oauth/gitegg-oauth.jar:/app.jar"
+      - "/data/gitegg/oauth/logs:/logs"
+    networks:
+      - giteggNetworks
+  gitegg-service-extension:
+    image: 172.16.20.175/gitegg/gitegg-service-extension:1.0-SNAPSHOT
+    container_name: gitegg-service-extension
+    ports:
+      - 8005:8005
+    volumes:
+      - "/data/gitegg/extension/gitegg-service-extension.jar:/app.jar"
+      - "/data/gitegg/extension/logs:/logs"
+    networks:
+      - giteggNetworks
+  gitegg-code-generator:
+    image: 172.16.20.175/gitegg/gitegg-code-generator:1.0-SNAPSHOT
+    container_name: gitegg-code-generator
+    ports:
+      - 8006:8006
+    volumes:
+      - "/data/gitegg/generator/gitegg-code-generator:/app.jar"
+      - "/data/gitegg/generator/logs:/logs"
+    networks:
+      - giteggNetworks
+  gitegg-gateway:
+    image: 172.16.20.175/gitegg/gitegg-gateway:1.0-SNAPSHOT
+    container_name: gitegg-gateway
+    ports:
+      - 80:80
+    volumes:
+      - "/data/gitegg/gateway/gitegg-gateway:/app.jar"
+      - "/data/gitegg/gateway/logs:/logs"
+    networks:
+      - giteggNetworks
+networks:
+  giteggNetworks:
+    driver: bridge

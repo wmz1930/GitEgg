@@ -2,10 +2,12 @@ server:
   port: 8006
 spring:
   profiles:
-    active: @spring.profiles.active@
+    active: '@spring.profiles.active@'
   application:
-    name: @artifactId@
+    name: '@artifactId@'
   cloud:
+    inetutils:
+      ignored-interfaces: docker0
     nacos:
       discovery:
         server-addr: ${spring.nacos.addr}

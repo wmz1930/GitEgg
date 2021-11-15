@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {APP_NAME}-deployment
+  labels:
+    app: {APP_NAME}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: {APP_NAME}
+  template:
+    metadata:
+      labels:
+        app: {APP_NAME}
+    spec:
+      hostNetwork: true
+      containers:
+      - name: {APP_NAME}
+        image: {IMAGE_URL}/{IMAGE_PROGECT}/{APP_NAME}:{IMAGE_TAG}
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 300m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: {APP_PORT}
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: {SPRING_PROFILE}
+      imagePullSecrets:
+        - name: harbor-key
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {APP_NAME}-service
+  labels:
+     app: {APP_NAME}
+spec:
+  selector:
+    app: {APP_NAME}
+  ports:
+    - protocol: TCP
+      port: {APP_PORT}
+      targetPort: {APP_PORT}        
