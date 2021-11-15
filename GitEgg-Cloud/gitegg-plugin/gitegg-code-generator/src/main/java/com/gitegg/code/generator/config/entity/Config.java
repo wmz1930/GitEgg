@@ -92,6 +92,10 @@ public class Config extends BaseEntity {
     @TableField("service_code_path")
     private String serviceCodePath;
 
+    @ApiModelProperty(value = "页面代码目录")
+    @TableField("front_code_dir")
+    private String frontCodeDir;
+
     @ApiModelProperty(value = "是否支持导入 1支持 0不支持")
     @TableField("import_flag")
     private Boolean importFlag;

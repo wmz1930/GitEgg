@@ -10,6 +10,9 @@ import springfox.documentation.swagger.web.*;
 
 import java.util.Optional;
 
+/**
+ * @author GitEgg
+ */
 @RestController
 public class SwaggerHandler {
 

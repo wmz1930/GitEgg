@@ -116,4 +116,7 @@ public class GitEggUser implements Serializable {
     @ApiModelProperty(value = "资源列表字符串")
     private List<String> resourceKeyList;
 
+    @ApiModelProperty(value = "资源请求列表")
+    private List<String> resourceUrlList;
+
 }

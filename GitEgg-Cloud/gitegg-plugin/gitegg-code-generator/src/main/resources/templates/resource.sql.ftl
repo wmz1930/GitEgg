@@ -22,14 +22,14 @@ INSERT INTO `t_sys_resource` (
   )
 VALUES
   (
-      3,
+      0,
       0,
       '${table.comment!}',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:table',
+      '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:table',
       '2',
       'jiaoseguanli',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/table',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/${table.entityPath}Table',
+      '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/table',
+      '${vueTablePath}',
       2,
       1,
       1,
@@ -66,13 +66,13 @@ INSERT INTO `t_sys_resource` (
   )
 VALUES
   (
-      4,
+      ${maxId},
       0,
       '获取${table.comment!}列表',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:list',
+      '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:list',
       '4',
       'xitongrizhi',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/list',
+      '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/list',
       '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/list',
       2,
       1,
@@ -111,13 +111,13 @@ INSERT INTO `t_sys_resource` (
   )
 VALUES
   (
-      4,
+      ${maxId},
       0,
       '添加${table.comment!}',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:create',
+      '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:create',
       '4',
       'xitongrizhi',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/create',
+      '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/create',
       '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/create',
       2,
       1,
@@ -156,13 +156,13 @@ INSERT INTO `t_sys_resource` (
   )
 VALUES
   (
-      4,
+      ${maxId},
       0,
       '更新${table.comment!}',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:update',
+      '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:update',
       '4',
       'xitongrizhi',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/update',
+      '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/update',
       '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/update',
       2,
       1,
@@ -201,13 +201,13 @@ INSERT INTO `t_sys_resource` (
   )
 VALUES
   (
-      4,
+      ${maxId},
       0,
       '删除${table.comment!}',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:delete',
+      '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:delete',
       '4',
       'xitongrizhi',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/delete',
+      '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/delete',
       '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/delete/{${table.entityPath}Id}',
       2,
       1,
@@ -246,13 +246,13 @@ INSERT INTO `t_sys_resource` (
   )
   VALUES
   (
-      4,
+      ${maxId},
       0,
       '批量删除${table.comment!}',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:batch:delete',
+      '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:batch:delete',
       '4',
       'xitongrizhi',
-      '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/batch/delete',
+      '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/batch/delete',
       '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/batch/delete',
       2,
       1,
@@ -293,13 +293,13 @@ INSERT INTO `t_sys_resource` (
 )
 VALUES
 (
-   4,
+   ${maxId},
    0,
    '${table.comment!}状态修改',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:status',
+   '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:status',
    '4',
    'xitongrizhi',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/status',
+   '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/status',
    '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/status/{${table.entityPath}Id}/{${table.entityPath}Status}',
    2,
    1,
@@ -340,13 +340,13 @@ INSERT INTO `t_sys_resource` (
 )
 VALUES
 (
-   4,
+   ${maxId},
    0,
    '${table.comment!}字段校验是否存在',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:check',
+   '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:check',
    '4',
    'xitongrizhi',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/check',
+   '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/check',
    '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/check',
    2,
    1,
@@ -385,13 +385,13 @@ INSERT INTO `t_sys_resource` (
 )
 VALUES
 (
-   4,
+   ${maxId},
    0,
    '${table.comment!}数据导出',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:download',
+   '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:download',
    '4',
    'xitongrizhi',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/download',
+   '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/download',
    '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/download',
    2,
    1,
@@ -432,13 +432,13 @@ INSERT INTO `t_sys_resource` (
 )
 VALUES
 (
-   4,
+   ${maxId},
    0,
    '${table.comment!}数据导入模板下载',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:download:template',
+   '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:download:template',
    '4',
    'xitongrizhi',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/download/template',
+   '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/download/template',
    '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/download/template',
    2,
    1,
@@ -477,13 +477,13 @@ INSERT INTO `t_sys_resource` (
 )
 VALUES
 (
-   4,
+   ${maxId},
    0,
    '${table.comment!}数据导入',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:upload',
+   '${config.serviceName?replace("-",":")}:<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")?replace("/",":")}<#else>/${table.entityPath}</#if>:upload',
    '4',
    'xitongrizhi',
-   '<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/upload',
+   '${config.serviceName?replace("-","/")}/<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/upload',
    '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/upload',
    2,
    1,

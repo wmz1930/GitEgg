@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import java.io.IOException;
 
+/**
+ * @author GitEgg
+ */
 public class GitEggOAuth2ExceptionSerializer extends StdSerializer<GitEggOAuth2Exception> {
 
     protected GitEggOAuth2ExceptionSerializer() {

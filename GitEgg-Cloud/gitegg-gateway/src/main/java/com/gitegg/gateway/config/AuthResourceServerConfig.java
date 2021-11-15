@@ -26,10 +26,14 @@ import reactor.core.publisher.Mono;
 
 /**
  * 资源服务器配置
+ * 注解需要使用@EnableWebFluxSecurity而非@EnableWebSecurity,因为SpringCloud Gateway基于WebFlux
+ *
+ * @author Administrator
+ * @author GitEgg
+ *
  */
 @AllArgsConstructor
 @Configuration
-// 注解需要使用@EnableWebFluxSecurity而非@EnableWebSecurity,因为SpringCloud Gateway基于WebFlux
 @EnableWebFluxSecurity
 public class AuthResourceServerConfig {
 
@@ -57,8 +61,14 @@ public class AuthResourceServerConfig {
                 .anyExchange().access(authorizationManager)
                 .and()
                 .exceptionHandling()
-                .accessDeniedHandler(authServerAccessDeniedHandler) // 处理未授权
-                .authenticationEntryPoint(authServerAuthenticationEntryPoint) //处理未认证
+                /**
+                 * 处理未授权
+                 */
+                .accessDeniedHandler(authServerAccessDeniedHandler)
+                /**
+                 * 处理未认证
+                 */
+                .authenticationEntryPoint(authServerAuthenticationEntryPoint)
                 .and()
                 .cors()
                 .and().csrf().disable();

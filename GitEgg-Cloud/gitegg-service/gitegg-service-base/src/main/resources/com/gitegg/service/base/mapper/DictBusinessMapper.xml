@@ -3,7 +3,7 @@
 <mapper namespace="com.gitegg.service.base.mapper.DictBusinessMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.gitegg.service.base.entity.Dict">
+    <resultMap id="BaseResultMap" type="com.gitegg.service.base.entity.DictBusiness">
         <id column="id" property="id"/>
         <result column="tenant_id" property="tenantId"/>
         <result column="parent_id" property="parentId"/>

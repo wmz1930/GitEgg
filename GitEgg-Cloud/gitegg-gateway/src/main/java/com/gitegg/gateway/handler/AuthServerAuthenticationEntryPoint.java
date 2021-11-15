@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 
 /**
  * 无效token/token过期 自定义响应
+ * @author GitEgg
  */
 @Component
 public class AuthServerAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {

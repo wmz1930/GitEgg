@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 /**
  * 白名单路径访问时需要移除JWT请求头
+ * @author GitEgg
  */
 @AllArgsConstructor
 @Component

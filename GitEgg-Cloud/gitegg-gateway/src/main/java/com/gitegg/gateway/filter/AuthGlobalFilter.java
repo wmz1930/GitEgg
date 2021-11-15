@@ -25,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 /**
  * 将登录用户的JWT转化成用户信息的全局过滤器
+ * @author GitEgg
  */
 @Slf4j
 @Component
@@ -55,32 +56,32 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         }
 
         if (!StrUtil.isEmpty(token)) {
-        try {
-            //从token中解析用户信息并设置到Header中去
-            String realToken = token.replace(AuthConstant.JWT_TOKEN_PREFIX, "");
-            JWSObject jwsObject = JWSObject.parse(realToken);
-            String userStr = jwsObject.getPayload().toString();
-            log.info("AuthGlobalFilter.filter() User:{}", userStr);
-            addHeaders.put(AuthConstant.HEADER_USER, URLEncoder.encode(userStr, "UTF-8"));
+            try {
+                //从token中解析用户信息并设置到Header中去
+                String realToken = token.replace(AuthConstant.JWT_TOKEN_PREFIX, "");
+                JWSObject jwsObject = JWSObject.parse(realToken);
+                String userStr = jwsObject.getPayload().toString();
+                log.info("AuthGlobalFilter.filter() User:{}", userStr);
+                addHeaders.put(AuthConstant.HEADER_USER, URLEncoder.encode(userStr, "UTF-8"));
 
-        } catch (ParseException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
+            } catch (ParseException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+         }
 
-    Consumer<HttpHeaders> httpHeaders = httpHeader -> {
-        addHeaders.forEach((k, v) -> {
-            httpHeader.set(k, v);
-        });
-    };
+         Consumer<HttpHeaders> httpHeaders = httpHeader -> {
+             addHeaders.forEach((k, v) -> {
+                 httpHeader.set(k, v);
+             });
+         };
 
-    ServerHttpRequest request = exchange.getRequest().mutate().headers(httpHeaders).build();
-    exchange = exchange.mutate().request(request).build();
-        return chain.filter(exchange);
-    }
+         ServerHttpRequest request = exchange.getRequest().mutate().headers(httpHeaders).build();
+         exchange = exchange.mutate().request(request).build();
+             return chain.filter(exchange);
+         }
 
-    @Override
-    public int getOrder() {
+         @Override
+         public int getOrder() {
         return 0;
     }
 }
