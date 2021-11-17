@@ -172,9 +172,11 @@
         </a-form-model-item>
         <a-form-model-item label="背景图片"
                            prop="backgroundImage">
-          <a-input v-model="tenantForm.backgroundImage"
-                   placeholder="输入背景图片"
-                   :maxLength="32" />
+          <upload-image
+            v-model.trim="tenantForm.backgroundImage"
+            uploadBtnName="上传背景图片"
+            :imgNumber="1"
+          ></upload-image>
         </a-form-model-item>
         <a-form-model-item label="联系人"
                            prop="contacts">
@@ -243,11 +245,12 @@
 
 <script>
 import { STable } from '@/components'
+import UploadImage from '@/components/Upload/UploadImage'
 import { queryTenantList, createTenant, updateTenant, updateTenantStatus, batchDeleteTenant, deleteTenant, checkTenantExist } from '@/api/system/base/tenant'
 import moment from 'moment'
 export default {
   name: 'TenantTable',
-  components: { moment, STable },
+  components: { moment, STable, UploadImage },
   filters: {
     statusFilter (status) {
       const statusMap = {
