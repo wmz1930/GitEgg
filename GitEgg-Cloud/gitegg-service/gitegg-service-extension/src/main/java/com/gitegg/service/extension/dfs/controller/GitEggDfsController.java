@@ -1,7 +1,9 @@
 package com.gitegg.service.extension.dfs.controller;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gitegg.platform.base.constant.GitEggConstant;
+import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.dfs.domain.GitEggDfsFile;
 import com.gitegg.service.extension.dfs.dto.DfsDTO;
@@ -26,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -52,14 +56,22 @@ public class GitEggDfsController {
      */
     @PostMapping("/upload/file")
     public Result<?> uploadFile(@RequestParam("uploadFile") MultipartFile[] uploadFile, String dfsCode) {
-        GitEggDfsFile gitEggDfsFile = null;
+        List<GitEggDfsFile> gitEggDfsFiles = new ArrayList<>();
         if (ArrayUtils.isNotEmpty(uploadFile))
         {
             for (MultipartFile file : uploadFile) {
-                gitEggDfsFile = gitEggDfsService.uploadFile(dfsCode, file);
+                GitEggDfsFile gitEggDfsFile = gitEggDfsService.uploadFile(dfsCode, file);
+                // 查询文件访问链接
+                String fileUrl = gitEggDfsService.getFileUrl(dfsCode, gitEggDfsFile.getEncodedFileName());
+                gitEggDfsFile.setFileUrl(fileUrl);
+                gitEggDfsFiles.add(gitEggDfsFile);
             }
         }
-        return Result.data(gitEggDfsFile);
+        else
+        {
+            throw new BusinessException("没有选择上传文件");
+        }
+        return Result.data(gitEggDfsFiles);
     }
 
 
@@ -71,6 +83,26 @@ public class GitEggDfsController {
     public Result<?> query(String dfsCode, String fileName) {
         String fileUrl = gitEggDfsService.getFileUrl(dfsCode, fileName);
         return Result.data(fileUrl);
+    }
+
+    /**
+     * 通过批量文件名获取文件访问链接
+     */
+    @GetMapping("/batch/get/file/url")
+    @ApiOperation(value = "查询分布式存储配置表详情")
+    public Result<?> queryBatch(String dfsCode, @RequestParam("fileNames") String[] fileNames) {
+        List<GitEggDfsFile> gitEggDfsFiles = new ArrayList<>();
+        if (ArrayUtil.isNotEmpty(fileNames))
+        {
+            for (String fileName : fileNames) {
+                String fileUrl = gitEggDfsService.getFileUrl(dfsCode, fileName);
+                GitEggDfsFile gitEggDfsFile = new GitEggDfsFile();
+                gitEggDfsFile.setFileName(fileName);
+                gitEggDfsFile.setFileUrl(fileUrl);
+                gitEggDfsFiles.add(gitEggDfsFile);
+            }
+        }
+        return Result.data(gitEggDfsFiles);
     }
 
     /**

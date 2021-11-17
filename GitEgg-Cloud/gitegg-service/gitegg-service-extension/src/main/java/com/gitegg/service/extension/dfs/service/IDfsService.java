@@ -71,4 +71,10 @@ public interface IDfsService extends IService<Dfs> {
     * @return
     */
     boolean batchDeleteDfs(List<Long> dfsIds);
+
+    /**
+     * 查询默认配置
+     * @return
+     */
+    DfsDTO queryDefaultDfs();
 }

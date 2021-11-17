@@ -33,4 +33,10 @@ public interface DfsMapper extends BaseMapper<Dfs> {
     * @return
     */
     DfsDTO queryDfs(@Param("dfs") QueryDfsDTO dfsDTO);
+
+    /**
+     * 查询默认配置
+     * @return
+     */
+    DfsDTO queryDefaultDfs();
 }

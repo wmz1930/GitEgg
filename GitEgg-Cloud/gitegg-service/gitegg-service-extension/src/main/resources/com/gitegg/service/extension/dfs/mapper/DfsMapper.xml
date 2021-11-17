@@ -72,4 +72,12 @@
         ORDER BY id DESC
     </select>
 
+    <!-- 查询默认配置 -->
+    <select id="queryDefaultDfs" resultType="com.gitegg.service.extension.dfs.dto.DfsDTO">
+        SELECT
+        id, dfs_type, dfs_code, access_url_prefix, upload_url
+        FROM t_sys_dfs
+        WHERE del_flag = 0 AND dfs_default = '1'
+    </select>
+
 </mapper>

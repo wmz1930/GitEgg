@@ -174,4 +174,14 @@ public class DfsController {
             return Result.data(false);
         }
     }
+
+    /**
+     * 查询分布式存储配置的默认配置
+     */
+    @GetMapping("/query/default")
+    @ApiOperation(value = "查询分布式存储配置表详情")
+    public Result<?> queryDefaultConfig() {
+        DfsDTO dfsDTO = dfsService.queryDefaultDfs();
+        return Result.data(dfsDTO);
+    }
  }

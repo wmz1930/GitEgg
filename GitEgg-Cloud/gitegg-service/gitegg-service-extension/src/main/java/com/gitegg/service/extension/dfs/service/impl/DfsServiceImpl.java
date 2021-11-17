@@ -126,4 +126,14 @@ public class DfsServiceImpl extends ServiceImpl<DfsMapper, Dfs> implements IDfsS
         boolean result = this.removeByIds(dfsIds);
         return result;
     }
+
+    /**
+     * 查询默认配置
+     * @return
+     */
+    @Override
+    public DfsDTO queryDefaultDfs() {
+        DfsDTO dfsDTO = dfsMapper.queryDefaultDfs();
+        return dfsDTO;
+    }
 }
