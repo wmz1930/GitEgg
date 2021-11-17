@@ -55,7 +55,10 @@
 
 </template>
 <script>
+import { queryDefaultDfs } from '@/api/system/extension/dfs/dfs'
+import { dfsUpload } from '@/api/system/extension/dfs/dfs_upload'
 export default {
+  name: 'AvatarModal',
   data () {
     return {
       visible: false,
@@ -64,17 +67,40 @@ export default {
       fileList: [],
       uploading: false,
       options: {
-        // img: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
         img: '',
         autoCrop: true,
         autoCropWidth: 200,
         autoCropHeight: 200,
         fixedBox: true
       },
-      previews: {}
+      previews: {},
+      dfsConfig: {
+        dfsType: '',
+        dfsCode: ''
+      },
+      uploadForm: {
+        dfsType: '',
+        dfsCode: '',
+        uploadFile: null
+      }
     }
   },
+  created () {
+    this.getDefaultDfs()
+  },
   methods: {
+    async getDefaultDfs () {
+      await queryDefaultDfs().then(response => {
+        this.dfsConfig = response.data
+      })
+    },
+    async handlePreview (file) {
+      if (!file.url && !file.preview) {
+        file.preview = await this.getBase64(file.originFileObj)
+      }
+      this.previewImage = file.url || file.preview
+      this.previewVisible = true
+    },
     edit (id) {
       this.visible = true
       this.id = id
@@ -113,38 +139,64 @@ export default {
 
     // 上传图片（点击上传按钮）
     finish (type) {
+      debugger
       console.log('finish')
-      const _this = this
-      const formData = new FormData()
+      const that = this
       // 输出
       if (type === 'blob') {
-        this.$refs.cropper.getCropBlob((data) => {
+        that.$refs.cropper.getCropBlob((data) => {
           const img = window.URL.createObjectURL(data)
-          this.model = true
-          this.modelSrc = img
-          formData.append('file', data, this.fileName)
-          this.$http.post('https://www.mocky.io/v2/5cc8019d300000980a055e76', formData, { contentType: false, processData: false, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-            .then((response) => {
-              console.log('upload response:', response)
-              // var res = response.data
-              // if (response.status === 'done') {
-              //   _this.imgFile = ''
-              //   _this.headImg = res.realPathList[0] // 完整路径
-              //   _this.uploadImgRelaPath = res.relaPathList[0] // 非完整路径
-              //   _this.$message.success('上传成功')
-              //   this.visible = false
-              // }
-              _this.$message.success('上传成功')
-              _this.$emit('ok', response.url)
-              _this.visible = false
-            })
+          const file = new window.File([data], data.name, { type: data.type })
+          that.model = true
+          that.modelSrc = img
+          that.uploadForm.dfsType = that.dfsConfig.dfsType
+          that.uploadForm.dfsCode = that.dfsConfig.dfsCode
+          const formData = new FormData()
+          formData.append('dfsCode', that.uploadForm.dfsCode)
+          formData.append('uploadFile', file)
+          that.uploading = true
+          dfsUpload(formData).then(response => {
+              that.uploading = false
+              if (response.data && response.data.length > 0) {
+                  that.$emit('ok', response.data[0].fileUrl)
+                  that.visible = false
+                  that.$message.success('上传成功')
+              }
+          }).catch(err => {
+            console.log('uploading', err)
+            that.$message.error('上传失败')
+          })
         })
       } else {
-        this.$refs.cropper.getCropData((data) => {
-          this.model = true
-          this.modelSrc = data
+        that.$refs.cropper.getCropData((data) => {
+          that.model = true
+          that.modelSrc = data
         })
       }
+    },
+    handleUpload () {
+        this.uploadForm.dfsType = this.dfsConfig.dfsType
+        this.uploadForm.dfsCode = this.dfsConfig.dfsCode
+        this.uploadedFileName = ''
+        const { fileList } = this
+        const file = fileList[fileList.length - 1]
+        const formData = new FormData()
+        formData.append('dfsCode', this.uploadForm.dfsCode)
+        formData.append('uploadFile', file)
+        this.uploading = true
+        dfsUpload(formData).then(response => {
+            this.uploading = false
+            console.log(formData)
+            if (response.data && response.data.length > 0) {
+                file.url = response.data[0].fileUrl
+                this.imgUrlList.push(file.url)
+                this.emitInput(this.imgUrlList.join())
+                this.$message.success('上传成功')
+            }
+        }).catch(err => {
+          console.log('uploading', err)
+          this.$message.error('上传失败')
+        })
     },
     okHandel () {
       const vm = this

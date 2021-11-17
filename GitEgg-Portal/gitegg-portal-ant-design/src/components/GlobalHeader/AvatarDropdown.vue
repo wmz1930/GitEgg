@@ -6,10 +6,10 @@
     </span>
     <template v-slot:overlay>
       <a-menu class="ant-pro-drop-down menu" :selected-keys="[]">
-        <a-menu-item v-if="menu" key="center" @click="handleToCenter">
+        <!-- <a-menu-item v-if="menu" key="center" @click="handleToCenter">
           <a-icon type="user" />
           {{ $t('menu.account.center') }}
-        </a-menu-item>
+        </a-menu-item> -->
         <a-menu-item v-if="menu" key="settings" @click="handleToSettings">
           <a-icon type="setting" />
           {{ $t('menu.account.settings') }}
