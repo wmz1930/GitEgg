@@ -32,6 +32,7 @@ export function login (parameter) {
   return request({
     url: userApi.Login,
     method: 'post',
+    skipAuthRefresh: true,
     data: parameter
   })
 }

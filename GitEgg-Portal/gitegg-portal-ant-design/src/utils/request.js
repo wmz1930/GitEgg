@@ -35,7 +35,7 @@ const refreshAuthLogic = failedRequest =>
         failedRequest.response.config.headers['Authorization'] = result.tokenHead + result.token
       } else if (tokenRefreshResponse.status === 200 && tokenRefreshResponse.data &&
         !tokenRefreshResponse.data.success && tokenRefreshResponse.data.code === 401) {
-          store.dispatch('Timeout').then(() => {
+          store.dispatch('Timeout').then(async () => {
             window.location.reload()
         })
       }
