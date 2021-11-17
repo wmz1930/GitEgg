@@ -1,12 +1,5 @@
 package com.gitegg.service.system.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
@@ -18,13 +11,18 @@ import com.gitegg.service.system.dto.UpdateResourceDTO;
 import com.gitegg.service.system.entity.Resource;
 import com.gitegg.service.system.entity.User;
 import com.gitegg.service.system.service.IResourceService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 /**
  * <p>
@@ -115,10 +113,10 @@ public class ResourceController {
      * 修改资源权限状态
      */
     @PostMapping("/status/{resourceId}/{resourceStatus}")
-    @ApiOperation(value = "修改角色状态")
+    @ApiOperation(value = "修改权限状态")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "resourceId", value = "角色ID", required = true, dataType = "Long", paramType = "path"),
-        @ApiImplicitParam(name = "resourceStatus", value = "角色状态", required = true, dataType = "Integer",
+        @ApiImplicitParam(name = "resourceId", value = "权限ID", required = true, dataType = "Long", paramType = "path"),
+        @ApiImplicitParam(name = "resourceStatus", value = "权限状态", required = true, dataType = "Integer",
             paramType = "path")})
     public Result<?> updateStatus(@PathVariable("resourceId") Long resourceId,
         @PathVariable("resourceStatus") Integer resourceStatus) {

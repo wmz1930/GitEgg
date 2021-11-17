@@ -11,10 +11,12 @@ import com.gitegg.service.system.entity.Resource;
 import com.gitegg.service.system.enums.ResourceEnum;
 import com.gitegg.service.system.mapper.ResourceMapper;
 import com.gitegg.service.system.service.IResourceService;
+import com.gitegg.service.system.service.IRoleResourceService;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -34,6 +36,16 @@ import java.util.stream.Collectors;
 public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> implements IResourceService {
 
     private final ResourceMapper resourceMapper;
+
+    /**
+     * 解决循环依赖问题
+     */
+    private IRoleResourceService roleResourceService;
+
+    @Autowired
+    public void setRoleResourceService(@Lazy IRoleResourceService roleResourceService) {
+        this.roleResourceService = roleResourceService;
+    }
 
     @Override
     public boolean createResource(Resource resource) {
@@ -100,6 +112,10 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             this.updateBatchById(resourceChildrenList);
         }
         boolean result = this.updateById(resource);
+
+        //更新权限资源后，重新更新缓存内容
+        roleResourceService.initResourceRoles();
+
         return result;
     }
 
@@ -117,6 +133,9 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         {
             List<Long> resourceIds = resourceChildrenList.stream().map(Resource::getId).collect(Collectors.toList());
             result = removeByIds(resourceIds);
+
+            //更新权限资源后，重新更新缓存内容
+            roleResourceService.initResourceRoles();
         }
         return result;
     }
