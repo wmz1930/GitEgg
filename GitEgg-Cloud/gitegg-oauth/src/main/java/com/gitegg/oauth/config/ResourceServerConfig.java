@@ -58,7 +58,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		//获取不需要鉴权的白名单配置，因为Gateway需要配置服务名，这里需要将服务名去掉/gitegg-oauth
 		Arrays.stream(ArrayUtil.toArray(authUrlWhiteListProperties.getWhiteUrls(), String.class)).forEach(whiteUrl -> {
 		    try {
-				whiteUrlList.add(whiteUrl.substring(whiteUrl.indexOf("/", 2)));
+		    	if (whiteUrl.indexOf("/", 2) != -1)
+				{
+					whiteUrlList.add(whiteUrl.substring(whiteUrl.indexOf("/", 2)));
+				}
 		     } catch (Exception e) {
 		            e.printStackTrace();
 		    }

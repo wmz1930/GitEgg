@@ -22,6 +22,7 @@ import com.gitegg.platform.base.constant.AuthConstant;
 
 import cn.hutool.core.util.ArrayUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Mono;
 
 /**
@@ -52,14 +53,21 @@ public class AuthResourceServerConfig {
 
         http.oauth2ResourceServer().jwt()
                 .jwtAuthenticationConverter(jwtAuthenticationConverter());
+
         // 自定义处理JWT请求头过期或签名错误的结果
         http.oauth2ResourceServer().authenticationEntryPoint(authServerAuthenticationEntryPoint);
+
         // 对白名单路径，直接移除JWT请求头，不移除的话，后台会校验jwt
         http.addFilterBefore(whiteListRemoveJwtFilter, SecurityWebFiltersOrder.AUTHENTICATION);
+
+        // 判断是否有静态文件
+        if (!CollectionUtils.isEmpty(authUrlWhiteListProperties.getStaticFiles()))
+        {
+            http.authorizeExchange().pathMatchers(ArrayUtil.toArray(authUrlWhiteListProperties.getStaticFiles(), String.class)).permitAll();
+        }
+
         http.authorizeExchange()
             .pathMatchers(ArrayUtil.toArray(authUrlWhiteListProperties.getWhiteUrls(), String.class)).permitAll()
-            // 放行swagger2
-            .pathMatchers("/doc.html","/webjars/**","/favicon.ico","/swagger-resources/**").permitAll()
                 .anyExchange().access(authorizationManager)
                 .and()
                 .exceptionHandling()
