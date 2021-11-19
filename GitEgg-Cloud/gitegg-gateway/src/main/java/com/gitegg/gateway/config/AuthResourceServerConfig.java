@@ -58,6 +58,8 @@ public class AuthResourceServerConfig {
         http.addFilterBefore(whiteListRemoveJwtFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         http.authorizeExchange()
             .pathMatchers(ArrayUtil.toArray(authUrlWhiteListProperties.getWhiteUrls(), String.class)).permitAll()
+            // 放行swagger2
+            .pathMatchers("/doc.html","/webjars/**","/favicon.ico","/swagger-resources/**").permitAll()
                 .anyExchange().access(authorizationManager)
                 .and()
                 .exceptionHandling()

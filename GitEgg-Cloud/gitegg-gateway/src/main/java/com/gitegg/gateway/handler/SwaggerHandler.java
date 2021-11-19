@@ -29,7 +29,6 @@ public class SwaggerHandler {
         this.swaggerResources = swaggerResources;
     }
 
-
     @GetMapping("/swagger-resources/configuration/security")
     public Mono<ResponseEntity<SecurityConfiguration>> securityConfiguration() {
         return Mono.just(new ResponseEntity<>(
