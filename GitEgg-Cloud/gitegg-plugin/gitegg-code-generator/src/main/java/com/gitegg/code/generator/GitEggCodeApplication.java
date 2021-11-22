@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 /**
  * gitegg-code-generator 启动类
- * @author Administrator
+ * @author GitEgg
  */
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.gitegg")

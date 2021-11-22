@@ -29,6 +29,11 @@ public class CaptchaUtils {
             if (captchaCode == null || !captchaCode.equalsIgnoreCase(redisCode)) {
                 return false;
             }
+            else
+            {
+                // 验证成功后，删除保存在缓存的验证码
+                redisTemplate.delete(CaptchaConstant.IMAGE_CAPTCHA_KEY + captchaKey);
+            }
         } else {
             // 滑动验证码验证
             String captchaVerification = parameters.get(CaptchaConstant.CAPTCHA_VERIFICATION);
