@@ -540,7 +540,9 @@ export default {
     createData () {
       this.$refs['roleForm'].validate(valid => {
         if (valid) {
+          this.$loading.show()
           createRole(this.roleForm).then(() => {
+            this.$loading.hide()
             this.dialogFormVisible = false
             this.handleFilter()
             this.$message.success('创建成功')
@@ -560,7 +562,9 @@ export default {
     updateData () {
       this.$refs['roleForm'].validate(valid => {
         if (valid) {
+          this.$loading.show()
           updateRole(this.roleForm).then(() => {
+            this.$loading.hide()
             for (const v of this.list) {
               if (v.id === this.roleForm.id) {
                 const index = this.list.indexOf(v)
@@ -672,6 +676,7 @@ export default {
       // })
     },
     updateRoleResource () {
+      this.$loading.show()
       this.listLoading = true
       var ids = []
       var keysChecked = this.checkedKeys
@@ -708,6 +713,7 @@ export default {
 
       this.resourceData.roleId = this.currentRole
       updateRoleResources(this.resourceData).then(response => {
+        this.$loading.hide()
         this.dialogResourceVisible = false
         this.listLoading = false
         this.$message.success('角色资源修改成功')

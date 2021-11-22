@@ -422,6 +422,7 @@ export default {
       })
     },
     createData () {
+      this.$loading.show()
       if (this.selectedResourceOptions.length > 0) {
         this.resourceForm.parentId = this.selectedResourceOptions[this.selectedResourceOptions.length - 1]
       } else {
@@ -430,6 +431,7 @@ export default {
       this.$refs['resourceForm'].validate(valid => {
         if (valid) {
           createResource(this.resourceForm).then(response => {
+            this.$loading.hide()
             this.dialogFormVisible = false
             this.getList()
             this.$message.success('创建成功')
@@ -460,6 +462,7 @@ export default {
       })
     },
     updateData () {
+      this.$loading.show()
       if (this.selectedResourceOptions.length > 0) {
         this.resourceForm.parentId = this.selectedResourceOptions[this.selectedResourceOptions.length - 1]
       } else {
@@ -468,6 +471,7 @@ export default {
       this.$refs['resourceForm'].validate(valid => {
         if (valid) {
           updateResource(this.resourceForm).then(() => {
+            this.$loading.hide()
             this.dialogFormVisible = false
             this.getList()
             this.$message.success('更新成功')
