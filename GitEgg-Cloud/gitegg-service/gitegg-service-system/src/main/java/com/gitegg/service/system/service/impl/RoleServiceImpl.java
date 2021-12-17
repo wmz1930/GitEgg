@@ -1,8 +1,12 @@
 package com.gitegg.service.system.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.ArrayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -40,6 +44,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     private IUserRoleService userRoleService;
 
+    @Lazy
     private IRoleResourceService roleResourceService;
 
     @Override
@@ -81,6 +86,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     public boolean deleteRole(Long roleId) {
+        Role role = this.getById(roleId);
         boolean result = removeById(roleId);
         if (result) {
             // 删除用户和角色的关联关系
@@ -92,13 +98,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             wpdr.eq("role_id", roleId);
             roleResourceService.remove(wpdr);
             //重新初始化角色和权限的对应关系
-            roleResourceService.initResourceRoles();
+            roleResourceService.removeBatchRoles(Arrays.asList(role));
         }
         return result;
     }
 
     @Override
     public boolean batchDeleteRole(List<Long> roleIds) {
+        List<Role> roles = this.listByIds(roleIds);
         boolean result = removeByIds(roleIds);
         if (result) {
             // 删除用户和角色的关联关系
@@ -111,6 +118,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             roleResourceService.remove(wpdr);
             //重新初始化角色和权限的对应关系
             roleResourceService.initResourceRoles();
+            roleResourceService.removeBatchRoles(roles);
         }
         return result;
     }

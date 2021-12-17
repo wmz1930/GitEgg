@@ -82,10 +82,10 @@ public class UpdateFieldDTO extends BaseEntity {
     private String dictCode;
 
     @ApiModelProperty(value = "最小值")
-    private Long min;
+    private String min;
 
     @ApiModelProperty(value = "最大值")
-    private Long max;
+    private String max;
 
     @ApiModelProperty(value = "最小长度")
     private Integer minLength;

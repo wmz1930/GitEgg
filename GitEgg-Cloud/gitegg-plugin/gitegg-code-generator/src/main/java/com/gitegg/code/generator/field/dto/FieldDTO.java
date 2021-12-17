@@ -35,6 +35,9 @@ public class FieldDTO extends BaseEntity {
     @ApiModelProperty(value = "表名")
     private String joinTableName;
 
+    @ApiModelProperty(value = "表别名")
+    private String joinTableAlias;
+
     @ApiModelProperty(value = "字段名称")
     private String fieldName;
 
@@ -84,10 +87,10 @@ public class FieldDTO extends BaseEntity {
     private String dictCode;
 
     @ApiModelProperty(value = "最小值")
-    private Long min;
+    private String min;
 
     @ApiModelProperty(value = "最大值")
-    private Long max;
+    private String max;
 
     @ApiModelProperty(value = "最小长度")
     private Integer minLength;
@@ -109,5 +112,8 @@ public class FieldDTO extends BaseEntity {
 
     @ApiModelProperty(value = "显示排序")
     private Integer fieldSort;
+
+    @ApiModelProperty(value = "主表实体名称")
+    private String mainEntityName;
 
 }

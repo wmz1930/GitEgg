@@ -28,6 +28,15 @@ public class UpdateTableJoinDTO extends BaseEntity {
     @ApiModelProperty(value = "数据源和主表一致")
     private Long datasourceId;
 
+    @ApiModelProperty(value = "模块名称")
+    private String moduleName;
+
+    @ApiModelProperty(value = "模块代码")
+    private String moduleCode;
+
+    @ApiModelProperty(value = "controller请求路径")
+    private String controllerPath;
+
     @ApiModelProperty(value = "表名")
     private String joinTableName;
 
@@ -45,6 +54,9 @@ public class UpdateTableJoinDTO extends BaseEntity {
 
     @ApiModelProperty(value = "自定义on条件")
     private String joinTableOn;
+
+    @ApiModelProperty(value = "和主表关联的id")
+    private String associationId;
 
     @ApiModelProperty(value = "显示排序")
     private Integer tableSort;

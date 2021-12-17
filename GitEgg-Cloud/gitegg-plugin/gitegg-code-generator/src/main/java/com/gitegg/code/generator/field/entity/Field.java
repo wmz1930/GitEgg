@@ -107,11 +107,11 @@ public class Field extends BaseEntity {
 
     @ApiModelProperty(value = "最小值")
     @TableField("min")
-    private Long min;
+    private String min;
 
     @ApiModelProperty(value = "最大值")
     @TableField("max")
-    private Long max;
+    private String max;
 
     @ApiModelProperty(value = "最小长度")
     @TableField("min_length")

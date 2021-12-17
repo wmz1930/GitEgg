@@ -36,6 +36,18 @@ public class TableJoin extends BaseEntity {
     @TableField("datasource_id")
     private Long datasourceId;
 
+    @ApiModelProperty(value = "模块名称")
+    @TableField("module_name")
+    private String moduleName;
+
+    @ApiModelProperty(value = "模块代码")
+    @TableField("module_code")
+    private String moduleCode;
+
+    @ApiModelProperty(value = "controller请求路径")
+    @TableField("controller_path")
+    private String controllerPath;
+
     @ApiModelProperty(value = "表名")
     @TableField("join_table_name")
     private String joinTableName;
@@ -59,6 +71,10 @@ public class TableJoin extends BaseEntity {
     @ApiModelProperty(value = "自定义on条件")
     @TableField("join_table_on")
     private String joinTableOn;
+
+    @ApiModelProperty(value = "和主表关联的id")
+    @TableField("association_id")
+    private String associationId;
 
     @ApiModelProperty(value = "显示排序")
     @TableField("table_sort")

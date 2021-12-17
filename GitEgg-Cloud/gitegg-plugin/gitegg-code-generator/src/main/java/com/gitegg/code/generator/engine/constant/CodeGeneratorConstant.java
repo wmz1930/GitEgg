@@ -9,19 +9,29 @@ package com.gitegg.code.generator.engine.constant;
 public class CodeGeneratorConstant {
 
     /**
-     * 数据库类型，多表 multi
-     */
-    public static final String TABLE_DATA_TYPE_MULTI = "multi";
-
-    /**
      * 数据库类型，单表 single
      */
     public static final String TABLE_DATA_TYPE_SINGLE = "single";
 
     /**
+     * 数据库类型，多表查询
+     */
+    public static final String TABLE_DATA_TYPE_JOIN_QUERY = "join_query";
+
+    /**
+     * 数据库类型，主表子表
+     */
+    public static final String TABLE_DATA_TYPE_MAIN_SUB = "main_sub";
+
+    /**
      * 数据库，代码生成配置主键
      */
     public static final String GENERATION_ID = "generation_id";
+
+    /**
+     * FILE_JAVA
+     */
+    public static final String FILE_JAVA = ".java";
 
     /**
      * DTO_JAVA
@@ -82,6 +92,11 @@ public class CodeGeneratorConstant {
      * ENTITY
      */
     public static final String ENTITY = "entity";
+
+    /**
+     * SERVICE
+     */
+    public static final String SERVICE = "service";
 
     /**
      * 全部代码

@@ -104,10 +104,10 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     * @return
     */
     @Override
-    public boolean create${entity}(Create${entity}DTO ${table.entityPath}) {
+    public ${entity} create${entity}(Create${entity}DTO ${table.entityPath}) {
         ${entity} ${table.entityPath}Entity = BeanCopierUtils.copyByClass(${table.entityPath}, ${entity}.class);
-        boolean result = this.save(${table.entityPath}Entity);
-        return result;
+        this.save(${table.entityPath}Entity);
+        return ${table.entityPath}Entity;
     }
 
     /**

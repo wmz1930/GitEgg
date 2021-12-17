@@ -379,8 +379,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         queryUserResourceDTO.setUserId(userInfo.getId());
         List<Resource> resourceList = resourceService.queryResourceListByUserId(queryUserResourceDTO);
 
-        // 查询用户菜单的列表，用于前端页面鉴权
-        List<String> menuList = resourceList.stream().filter(s-> ResourceEnum.MENU.getCode().equals(s.getResourceType())).map(Resource::getResourceKey).collect(Collectors.toList());
+        // 查询用户权限列表key，用于前端页面鉴权
+        List<String> menuList = resourceList.stream().map(Resource::getResourceKey).collect(Collectors.toList());
         userInfo.setResourceKeyList(menuList);
 
         // 查询用户资源列表，用于SpringSecurity鉴权

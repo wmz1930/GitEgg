@@ -53,8 +53,11 @@ public class QueryConfigDTO extends BaseEntity {
     @ApiModelProperty(value = "表单类型 model弹出框  drawer抽屉  tab新页面")
     private String formType;
 
-    @ApiModelProperty(value = "表类型 single单表  multi多表")
+    @ApiModelProperty(value = "表类型 single单表 join_query多表查询 main_sub主表子表")
     private String tableType;
+
+    @ApiModelProperty(value = "主表子表时是否使用继承 1使用 0不使用")
+    private Boolean extendsFlag;
 
     @ApiModelProperty(value = "展示类型 table数据表格 tree_table 树表格 3 left_tree_table左树右表  tree数据树")
     private String tableShowType;

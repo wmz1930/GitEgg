@@ -114,7 +114,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         boolean result = this.updateById(resource);
 
         //更新权限资源后，重新更新缓存内容
-        roleResourceService.initResourceRoles();
+        roleResourceService.updateResourceRoles(resourceOld, resource);
 
         return result;
     }
@@ -133,9 +133,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         {
             List<Long> resourceIds = resourceChildrenList.stream().map(Resource::getId).collect(Collectors.toList());
             result = removeByIds(resourceIds);
-
             //更新权限资源后，重新更新缓存内容
-            roleResourceService.initResourceRoles();
+            roleResourceService.removeBatchResourceRoles(resourceChildrenList);
         }
         return result;
     }

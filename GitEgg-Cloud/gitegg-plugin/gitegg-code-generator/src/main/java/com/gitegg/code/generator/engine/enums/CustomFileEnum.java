@@ -10,49 +10,79 @@ package com.gitegg.code.generator.engine.enums;
 public enum CustomFileEnum {
 
     /**
+     * ENTITY_FILE
+     */
+    ENTITY_FILE("ENTITY", "/templates/singleTable/entity.java"),
+
+    /**
+     * SERVICE_FILE
+     */
+    SERVICE_FILE("SERVICE", "/templates/singleTable/service.java"),
+
+    /**
+     * SERVICE_IMPL_FILE
+     */
+    SERVICE_IMPL_FILE("SERVICE_IMPL", "/templates/singleTable/serviceImpl.java"),
+
+    /**
+     * MAPPER_FILE
+     */
+    MAPPER_FILE("MAPPER", "/templates/singleTable/mapper.java"),
+
+    /**
+     * CONTROLLER_FILE
+     */
+    CONTROLLER_FILE("CONTROLLER", "/templates/singleTable/controller.java"),
+
+    /**
+     * MAPPER_XML_FILE
+     */
+    MAPPER_XML_FILE("MAPPER_XML", "/templates/singleTable/mapper.xml"),
+
+    /**
      * DTO_FILE
      */
-    DTO_FILE("DTO", "/templates/dto.java.ftl"),
+    DTO_FILE("DTO", "/templates/singleTable/dto.java.ftl"),
 
     /**
      * CREATE_DTO
      */
-    CREATE_DTO("CREATE_DTO", "/templates/createDTO.java.ftl"),
+    CREATE_DTO("CREATE_DTO", "/templates/singleTable/createDTO.java.ftl"),
 
     /**
      * UPDATE_DTO
      */
-    UPDATE_DTO("UPDATE_DTO", "/templates/updateDTO.java.ftl"),
+    UPDATE_DTO("UPDATE_DTO", "/templates/singleTable/updateDTO.java.ftl"),
 
     /**
      * QUERY_DTO
      */
-    QUERY_DTO("QUERY_DTO", "/templates/queryDTO.java.ftl"),
+    QUERY_DTO("QUERY_DTO", "/templates/singleTable/queryDTO.java.ftl"),
 
     /**
      * EXPORT
      */
-    EXPORT("EXPORT", "/templates/entityExport.java.ftl"),
+    EXPORT("EXPORT", "/templates/singleTable/entityExport.java.ftl"),
 
     /**
      * IMPORT
      */
-    IMPORT("IMPORT", "/templates/entityImport.java.ftl"),
+    IMPORT("IMPORT", "/templates/singleTable/entityImport.java.ftl"),
 
     /**
      * SQL
      */
-    SQL("SQL", "/templates/resource.sql.ftl"),
+    SQL("SQL", "/templates/singleTable/resource.sql.ftl"),
 
     /**
      * VUE
      */
-    VUE("VUE", "/templates/pageListTable.vue.ftl"),
+    VUE("VUE", "/templates/singleTable/pageListTable.vue.ftl"),
 
     /**
      * JS
      */
-    JS("JS", "/templates/pageListTable.js.ftl");
+    JS("JS", "/templates/singleTable/pageListTable.js.ftl");
 
     public String name;
 

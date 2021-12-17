@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.gitegg.code.generator.config.entity.Config;
 import com.gitegg.code.generator.config.service.IConfigService;
 import com.gitegg.code.generator.engine.service.IEngineService;
+import com.gitegg.code.generator.enums.NumberMaxEnum;
+import com.gitegg.code.generator.enums.NumberMinEnum;
 import com.gitegg.code.generator.field.dto.*;
 import com.gitegg.code.generator.field.entity.Field;
 import com.gitegg.code.generator.field.mapper.FieldMapper;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -127,6 +130,17 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
                 fieldDTO.setMinLength(1);
                 fieldDTO.setMaxLength(field.getMetaInfo().getLength());
                 fieldDTO.setDefaultValue(field.getMetaInfo().getDefaultValue());
+
+                //如果为数值类型，则处理最大值和最小值
+                if (!StringUtils.isEmpty(NumberMinEnum.getRange(field.getPropertyType())))
+                {
+                    fieldDTO.setMin(NumberMinEnum.getRange(field.getPropertyType()));
+                }
+
+                if (!StringUtils.isEmpty(NumberMaxEnum.getRange(field.getPropertyType())))
+                {
+                    fieldDTO.setMax(NumberMaxEnum.getRange(field.getPropertyType()));
+                }
 
                 // 页面控件默认都是单文本框
                 fieldDTO.setControlType("INPUT_TEXT");

@@ -5,6 +5,9 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.gitegg.code.generator.join.entity.TableJoin">
         <id column="id" property="id" />
+        <result column="module_name" property="moduleName" />
+        <result column="module_code" property="moduleCode" />
+        <result column="controller_path" property="controllerPath" />
         <result column="generation_id" property="generationId" />
         <result column="datasource_id" property="datasourceId" />
         <result column="join_table_name" property="joinTableName" />
@@ -13,6 +16,7 @@
         <result column="join_table_type" property="joinTableType" />
         <result column="join_table_select" property="joinTableSelect" />
         <result column="join_table_on" property="joinTableOn" />
+        <result column="association_id" property="associationId" />
         <result column="table_sort" property="tableSort" />
         <result column="tenant_id" property="tenantId" />
         <result column="create_time" property="createTime" />
@@ -23,7 +27,7 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, generation_id, datasource_id, join_table_name, join_table_alias, join_table_prefix, join_table_type, join_table_select, join_table_on, table_sort, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, generation_id, datasource_id, module_name, module_code, controller_path, join_table_name, join_table_alias, join_table_prefix, join_table_type, join_table_select, join_table_on, association_id, table_sort, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 分页查询多表查询时的联合表配置列表 -->
