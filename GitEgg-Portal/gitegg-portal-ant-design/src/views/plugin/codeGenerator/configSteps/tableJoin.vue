@@ -27,6 +27,7 @@
       :columns="columns"
       :data="loadData"
       showPagination="auto"
+      :scroll="{x:1500}"
       :pagination="tableJoinPagination"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
@@ -39,22 +40,7 @@
       <span slot="action" slot-scope="text, record">
         <a @click="handleUpdate(record)">编辑</a>
         <a-divider type="vertical" />
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;" v-if="record.tableJoinStatus!='1'" size="mini" type="success" @click="handleModifyStatus(record,'1')">启用
-              </a>
-              <a href="javascript:;" v-if="record.tableJoinStatus!='0' && record.tableJoinStatus!='2'" size="mini" @click="handleModifyStatus(record,'0')">禁用
-              </a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;" @click="handleDelete(record)">删除</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
+        <a href="javascript:;" @click="handleDelete(record)">删除</a>
       </span>
     </s-table>
 
@@ -80,6 +66,15 @@
         <a-form-model-item label="别名" prop="joinTableAlias">
           <a-input v-model="tableJoinForm.joinTableAlias" placeholder="组成SQL语句时表的别名" :maxLength="64" />
         </a-form-model-item>
+        <a-form-model-item label="模块名称" prop="moduleName">
+          <a-input v-model="tableJoinForm.moduleName" placeholder="主表字表，字表的模块名称" :maxLength="64" />
+        </a-form-model-item>
+        <a-form-model-item label="模块代码" prop="moduleCode">
+          <a-input v-model="tableJoinForm.moduleCode" placeholder="主表字表，字表的模块代码" :maxLength="64" />
+        </a-form-model-item>
+        <a-form-model-item label="Controller请求路径" prop="controllerPath">
+          <a-input v-model="tableJoinForm.controllerPath" placeholder="主表字表，字表的Controller请求路径" :maxLength="64" />
+        </a-form-model-item>
         <a-form-model-item label="表前缀" prop="joinTablePrefix">
           <a-input v-model="tableJoinForm.joinTablePrefix" placeholder="输入表前缀" :maxLength="64" />
         </a-form-model-item>
@@ -97,6 +92,17 @@
           <a-select mode="multiple"
                     v-model="tableJoinForm.joinTableSelect"
                     placeholder="请选择自定义查询字段"
+                    allow-clear
+                    show-search
+                    :filter-option="filterOption">
+            <a-select-option v-for="item in tableFieldList" :key="item.name" :value="item.name">
+              {{ item.name }} : [{{ item.comment }}]
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item label="关联主键" prop="associationId">
+          <a-select v-model="tableJoinForm.associationId"
+                    placeholder="请选择关联主键"
                     allow-clear
                     show-search
                     :filter-option="filterOption">
@@ -174,11 +180,15 @@
                     id: '',
                     generationId: '',
                     datasourceId: '',
+                    moduleName: undefined,
+                    moduleCode: undefined,
+                    controllerPath: undefined,
                     joinTableName: undefined,
                     joinTableAlias: '',
                     joinTablePrefix: '',
                     joinTableType: undefined,
                     joinTableSelect: undefined,
+                    associationId: undefined,
                     joinTableOn: '',
                     startDateTime: '',
                     endDateTime: ''
@@ -194,12 +204,16 @@
                     id: '',
                     generationId: '',
                     datasourceId: '',
+                    moduleName: undefined,
+                    moduleCode: undefined,
+                    controllerPath: undefined,
                     joinTableName: undefined,
                     joinTableAlias: '',
                     joinTablePrefix: '',
                     tableSort: '',
                     joinTableType: undefined,
                     joinTableSelect: undefined,
+                    associationId: undefined,
                     joinTableOn: ''
                 },
                 // 表头
@@ -212,11 +226,15 @@
                     {
                         title: '表名',
                         align: 'center',
+                        width: '250px',
+                        ellipsis: true,
                         dataIndex: 'joinTableName'
                     },
                     {
                         title: '别名',
                         align: 'center',
+                        ellipsis: true,
+                        width: '180px',
                         dataIndex: 'joinTableAlias'
                     },
                     {
@@ -232,17 +250,23 @@
                     {
                         title: '自定义查询字段',
                         align: 'center',
+                        ellipsis: true,
+                        width: '250px',
                         dataIndex: 'joinTableSelect'
                     },
                     {
                         title: '自定义on条件',
                         align: 'center',
+                        ellipsis: true,
+                        width: '250px',
                         dataIndex: 'joinTableOn'
                     },
                     {
                         title: '操作',
+                        align: 'center',
                         dataIndex: 'action',
                         width: '180px',
+                        fixed: 'right',
                         scopedSlots: { customRender: 'action' }
                     }
                 ],
@@ -327,17 +351,22 @@
             },
             resetQuery () {
                 this.listQuery = {
-                        id: '',
-                        generationId: '',
-                        datasourceId: '',
-                        joinTableName: undefined,
-                        joinTableAlias: '',
-                        joinTablePrefix: '',
-                        joinTableType: undefined,
-                        joinTableSelect: undefined,
-                        joinTableOn: '',
-                        startDateTime: '',
-                        endDateTime: ''
+                    id: '',
+                    generationId: '',
+                    datasourceId: '',
+                    moduleName: undefined,
+                    moduleCode: undefined,
+                    controllerPath: undefined,
+                    joinTableName: undefined,
+                    joinTableAlias: '',
+                    joinTablePrefix: '',
+                    tableSort: '',
+                    joinTableType: undefined,
+                    joinTableSelect: undefined,
+                    associationId: undefined,
+                    joinTableOn: '',
+                    startDateTime: '',
+                    endDateTime: ''
                 }
             },
             resetTableJoinForm () {
@@ -345,12 +374,16 @@
                     id: '',
                     generationId: '',
                     datasourceId: '',
+                    moduleName: undefined,
+                    moduleCode: undefined,
+                    controllerPath: undefined,
                     joinTableName: undefined,
                     joinTableAlias: '',
-                    tableSort: '',
                     joinTablePrefix: '',
+                    tableSort: '',
                     joinTableType: undefined,
                     joinTableSelect: undefined,
+                    associationId: undefined,
                     joinTableOn: ''
                 }
             },
@@ -423,6 +456,7 @@
                 })
             },
             updateData () {
+                this.tableJoinForm.joinTableSelect = this.tableJoinForm.joinTableSelect.join(',')
                 this.$refs['tableJoinForm'].validate(valid => {
                     if (valid) {
                         updateTableJoin(this.tableJoinForm).then(() => {

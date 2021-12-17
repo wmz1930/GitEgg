@@ -68,11 +68,11 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const result = response.data
-          if (result.roleIdList && result.roleIdList.length > 0 && result.resourceKeyList && result.resourceKeyList.length > 0 && result.menuTree && result.menuTree.length > 0) {
-            const roleIdList = result.roleIdList
+          if (result.roleKeyList && result.roleKeyList.length > 0 && result.resourceKeyList && result.resourceKeyList.length > 0 && result.menuTree && result.menuTree.length > 0) {
+            const roleKeyList = result.roleKeyList
             const resourceKeyList = result.resourceKeyList
             const menuTree = result.menuTree
-            commit('SET_ROLES', roleIdList)
+            commit('SET_ROLES', roleKeyList)
             commit('SET_PERMISSIONS', resourceKeyList)
             commit('SET_MENU_TREE', menuTree)
             commit('SET_INFO', result)

@@ -6,6 +6,7 @@
           :rowKey="row=>row.id + row.fieldName"
           :columns="columnsField"
           :data-source="fieldData.fieldDTOList"
+          :scroll="{x:1500}"
           :pagination="false"
           bordered>
           <template slot="formAddRender" slot-scope="text, record" >
@@ -23,6 +24,7 @@
                       placeholder="请选择组件类型"
                       show-search
                       style="width:100%;"
+                      @change="handleChange(record)"
                       :filter-option="filterOption"
                       v-model="record.controlType">
               <a-select-option v-for="item in controlTypeDict.dictList" :key="item.id" :value="item.dictCode">
@@ -106,32 +108,35 @@
                     {
                         title: '字段描述',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
+                        ellipsis: true,
                         dataIndex: 'comment'
                     },
                     {
                         title: '实体类型',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
+                        ellipsis: true,
                         dataIndex: 'entityType'
                     },
                     {
                         title: '实体名称',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
+                        ellipsis: true,
                         dataIndex: 'entityName'
                     },
                     {
                         title: '表单新增',
                         align: 'center',
-                        width: '130px',
+                        width: '70px',
                         dataIndex: 'formAdd',
                         scopedSlots: { customRender: 'formAddRender' }
                     },
                     {
                         title: '表单编辑',
                         align: 'center',
-                        width: '130px',
+                        width: '70px',
                         dataIndex: 'formEdit',
                         scopedSlots: { customRender: 'formEditRender' }
                     },
@@ -215,6 +220,17 @@
               return (
                       option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )
+            },
+            handleChange (item) {
+                const type = item.controlType
+                if (type &&
+                     (type === 'SELECT' || type === 'RADIO' || type === 'CHECKBOX' || type === 'SELECT_MULTI' || type === 'SWITCH') &&
+                     (item.dictCode === null || item.dictCode === undefined || item.dictCode === '')) {
+                    item.dictCode = undefined
+                } else if (!(type &&
+                     (type === 'SELECT' || type === 'RADIO' || type === 'CHECKBOX' || type === 'SELECT_MULTI' || type === 'SWITCH'))) {
+                    item.dictCode = null
+                }
             }
         }
     }

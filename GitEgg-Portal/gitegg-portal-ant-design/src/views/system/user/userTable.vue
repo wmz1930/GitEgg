@@ -97,7 +97,8 @@
                   <span class="table-page-search-submitButtons"
                         :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                     <a-button type="primary"
-                              @click="handleFilter">查询</a-button>
+                              @click="handleFilter"
+                              v-hasAnyPerms="['system:user:list']">查询</a-button>
                     <a-button style="margin-left: 8px"
                               @click="resetListQuery">重置</a-button>
                     <a @click="toggleAdvanced"
@@ -114,12 +115,13 @@
           <div class="table-operator">
             <a-button type="primary"
                       icon="plus"
-                      @click="handleCreate">新建</a-button>
+                      @click="handleCreate"
+                      v-hasAnyPerms="['system:user:create']">新建</a-button>
             <a-button type="primary"
                       icon="cloud-download"
                       @click="handleDownload"
                       style="margin-left: 8px">导出</a-button>
-            <a-dropdown v-if="selectedRowKeys.length > 0">
+            <a-dropdown v-if="selectedRowKeys.length > 0" v-hasAnyPerms="['system:user:delete', 'system:user:batch:delete']">
               <a-menu slot="overlay">
                 <a-menu-item key="1"
                              @click="handleBatchDelete">
@@ -157,10 +159,11 @@
             </span>
             <span slot="action"
                   slot-scope="text, record">
-              <a @click="handleUpdate(record)">编辑</a>
+              <a @click="handleUpdate(record)" v-hasAnyPerms="['system:user:update']">编辑</a>
               <a-divider type="vertical" />
               <a href="javascript:;"
-                 @click="handleDataPermission(record)">机构权限</a>
+                 @click="handleDataPermission(record)"
+                 v-hasAnyPerms="['system:user:update:organization:data:permission']">机构权限</a>
               <a-divider type="vertical" />
               <a-dropdown>
                 <a class="ant-dropdown-link">
@@ -170,9 +173,10 @@
                 <a-menu slot="overlay">
                   <a-menu-item>
                     <a href="javascript:;"
-                       @click="handleResetUserPassword(record)">重置密码</a>
+                       @click="handleResetUserPassword(record)"
+                       v-hasAnyPerms="['system:user:password:reset']">重置密码</a>
                   </a-menu-item>
-                  <a-menu-item>
+                  <a-menu-item v-hasAnyPerms="['system:user:status']">
                     <a href="javascript:;"
                        v-if="record.status!=1"
                        size="mini"
@@ -185,7 +189,7 @@
                        @click="handleModifyStatus(record,0)">禁用
                     </a>
                   </a-menu-item>
-                  <a-menu-item>
+                  <a-menu-item v-hasAnyPerms="['system:user:delete', 'system:user:batch:delete']">
                     <a href="javascript:;"
                        @click="handleDelete(record)">删除</a>
                   </a-menu-item>
@@ -300,8 +304,8 @@
             </a-form-model>
             <div class="footer-button">
               <a-button @click="dialogFormVisible = false">取消</a-button>
-              <a-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</a-button>
-              <a-button v-else type="primary" @click="updateData">修改</a-button>
+              <a-button v-if="dialogStatus=='create'" type="primary" @click="createData" v-hasAnyPerms="['system:user:create']">确定</a-button>
+              <a-button v-else type="primary" @click="updateData" v-hasAnyPerms="['system:user:update']">修改</a-button>
             </div>
           </a-drawer>
 
@@ -324,7 +328,8 @@
             <div class="footer-button">
               <a-button @click="dialogDataPermissionVisible = false">取消</a-button>
               <a-button type="primary"
-                        @click="updateDataPermission">确定</a-button>
+                        @click="updateDataPermission"
+                        v-hasAnyPerms="['system:user:update:organization:data:permission']">确定</a-button>
             </div>
           </a-drawer>
         </a-card>

@@ -6,6 +6,7 @@
           :rowKey="row=>row.id + row.fieldName"
           :columns="columnsField"
           :data-source="fieldData.fieldDTOList"
+          :scroll="{x:1500}"
           :pagination="false"
           bordered>
           <template slot="requiredRender" slot-scope="text, record" >
@@ -97,19 +98,22 @@
                     {
                         title: '字段名称',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
+                        ellipsis: true,
                         dataIndex: 'fieldName'
                     },
                     {
                         title: '字段类型',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
+                        ellipsis: true,
                         dataIndex: 'fieldType'
                     },
                     {
                         title: '字段描述',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
+                        ellipsis: true,
                         dataIndex: 'comment',
                         scopedSlots: { customRender: 'commentRender' }
                     },
@@ -117,6 +121,7 @@
                         title: '字段类型',
                         align: 'center',
                         width: '130px',
+                        ellipsis: true,
                         dataIndex: 'entityType',
                         scopedSlots: { customRender: 'entityTypeRender' }
                     },
@@ -124,6 +129,7 @@
                         title: '字段名称',
                         align: 'center',
                         width: '130px',
+                        ellipsis: true,
                         dataIndex: 'entityName',
                         scopedSlots: { customRender: 'entityNameRender' }
                     }

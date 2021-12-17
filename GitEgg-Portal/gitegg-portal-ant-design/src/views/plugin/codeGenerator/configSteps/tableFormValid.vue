@@ -6,6 +6,7 @@
           :rowKey="row=>row.id + row.fieldName"
           :columns="columnsField"
           :data-source="fieldData.fieldDTOList"
+          :scroll="{x:1500}"
           :pagination="false"
           bordered>
           <template slot="maxRender" slot-scope="text, record" >
@@ -121,25 +122,29 @@
                     {
                         title: '字段描述',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
+                        ellipsis: true,
                         dataIndex: 'comment'
                     },
                     {
                         title: '实体类型',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
+                        ellipsis: true,
                         dataIndex: 'entityType'
                     },
                     {
                         title: '实体名称',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
+                        ellipsis: true,
                         dataIndex: 'entityName'
                     },
                     {
                         title: '最小长度',
                         align: 'center',
                         width: '80px',
+                        ellipsis: true,
                         dataIndex: 'minLength',
                         scopedSlots: { customRender: 'minLengthRender' }
                     },
@@ -147,6 +152,7 @@
                         title: '最大长度',
                         align: 'center',
                         width: '80px',
+                        ellipsis: true,
                         dataIndex: 'maxLength',
                         scopedSlots: { customRender: 'maxLengthRender' }
                     },
@@ -154,6 +160,7 @@
                         title: '是否必填',
                         align: 'center',
                         width: '80px',
+                        ellipsis: true,
                         dataIndex: 'required',
                         scopedSlots: { customRender: 'requiredRender' }
                     },
@@ -161,13 +168,15 @@
                         title: '是否唯一',
                         align: 'center',
                         width: '80px',
+                        ellipsis: true,
                         dataIndex: 'fieldUnique',
                         scopedSlots: { customRender: 'fieldUniqueRender' }
                     },
                     {
                         title: '校验类型',
                         align: 'center',
-                        width: '130px',
+                        width: '200px',
+                        ellipsis: true,
                         dataIndex: 'validateType',
                         scopedSlots: { customRender: 'validateTypeRender' }
                     },
@@ -175,6 +184,7 @@
                         title: '正则表达式',
                         align: 'center',
                         width: '130px',
+                        ellipsis: true,
                         dataIndex: 'validateRegular',
                         scopedSlots: { customRender: 'validateRegularRender' }
                     },
@@ -182,6 +192,7 @@
                         title: '最大值',
                         align: 'center',
                         width: '80px',
+                        ellipsis: true,
                         dataIndex: 'max',
                         scopedSlots: { customRender: 'maxRender' }
                     },
@@ -189,6 +200,7 @@
                         title: '最小值',
                         align: 'center',
                         width: '80px',
+                        ellipsis: true,
                         dataIndex: 'min',
                         scopedSlots: { customRender: 'minRender' }
                     }

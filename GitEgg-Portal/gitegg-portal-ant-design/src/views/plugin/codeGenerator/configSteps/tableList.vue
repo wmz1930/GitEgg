@@ -9,7 +9,12 @@
           :pagination="false"
           bordered>
           <template slot="queryTermRender" slot-scope="text, record" >
-            <a-switch :value="text" checked-children="是" un-checked-children="否" default-checked v-model="record.queryTerm"/>
+            <a-switch :value="text"
+                      checked-children="是"
+                      un-checked-children="否"
+                      default-checked
+                      v-model="record.queryTerm"
+                      @change="onChange(record)"/>
           </template>
           <template slot="queryTypeRender" slot-scope="text, record" >
             <a-select :value="text"
@@ -214,6 +219,15 @@
               return (
                       option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )
+            },
+            onChange (item, checked) {
+              if (item.queryTerm && (item.queryType === null || item.queryType === undefined || item.queryType === '')) {
+                item.queryType = 'EQUAL'
+              }
+              if (!item.queryTerm) {
+                item.queryType = null
+              }
+              console.log(`a-switch to ${checked}`)
             }
         }
     }

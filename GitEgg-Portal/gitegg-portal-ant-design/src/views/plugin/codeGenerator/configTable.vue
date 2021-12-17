@@ -160,6 +160,7 @@
         ref="configForm"
         :model="configForm"
         :rules="rules"
+        class="model-config"
         :label-col="configLabelCol"
         :wrapper-col="configWrapperCol">
         <a-row>
@@ -330,16 +331,27 @@
         <a-row>
           <a-col :md="12">
             <a-form-model-item label="联表类型" prop="tableType">
-              <a-radio-group v-model="configForm.tableType" default-value="single">
-                <a-radio v-for="item in tableTypeDict.dictList" :key="item.id" :value="item.dictCode">
+              <a-select v-model="configForm.tableType" placeholder="请选择联表类型" show-search :filter-option="filterOption">
+                <a-select-option v-for="item in tableTypeDict.dictList" :key="item.id" :value="item.dictCode">
                   {{ item.dictName }}
-                </a-radio>
-              </a-radio-group>
+                </a-select-option>
+              </a-select>
             </a-form-model-item>
           </a-col>
           <a-col :md="12">
             <a-form-model-item label="查询复用" prop="queryReuse">
               <a-radio-group v-model="configForm.queryReuse" :default-value="true">
+                <a-radio v-for="item in yesOrNoDict.dictList" :key="item.id" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-radio>
+              </a-radio-group>
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row v-show="configForm.tableType === 'main_sub'">
+          <a-col :md="12">
+            <a-form-model-item label="是否继承" prop="extendsFlag">
+              <a-radio-group v-model="configForm.extendsFlag" :default-value="true">
                 <a-radio v-for="item in yesOrNoDict.dictList" :key="item.id" :value="item.dictCode">
                   {{ item.dictName }}
                 </a-radio>
@@ -475,16 +487,17 @@
                     controllerPath: '',
                     formType: 'modal',
                     tableType: 'single',
+                    extendsFlag: 'false',
                     tableShowType: undefined,
                     formItemCol: undefined,
                     leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
                     frontCodeDir: '',
-                    importFlag: true,
-                    exportFlag: true,
-                    queryReuse: true,
-                    statusHandling: true,
+                    importFlag: 'true',
+                    exportFlag: 'true',
+                    queryReuse: 'true',
+                    statusHandling: 'true',
                     codeType: 'ALL'
                 },
                 // 表头
@@ -687,16 +700,17 @@
                     controllerPath: '',
                     formType: 'modal',
                     tableType: 'single',
+                    extendsFlag: 'false',
                     tableShowType: undefined,
                     formItemCol: undefined,
                     leftTreeType: undefined,
                     frontCodePath: '',
                     serviceCodePath: '',
                     frontCodeDir: '',
-                    importFlag: true,
-                    exportFlag: true,
-                    queryReuse: true,
-                    statusHandling: true,
+                    importFlag: 'true',
+                    exportFlag: 'true',
+                    queryReuse: 'true',
+                    statusHandling: 'true',
                     codeType: 'ALL'
                 }
             },
@@ -754,6 +768,7 @@
                 this.configForm.exportFlag = this.configForm.exportFlag + ''
                 this.configForm.queryReuse = this.configForm.queryReuse + ''
                 this.configForm.statusHandling = this.configForm.statusHandling + ''
+                this.configForm.extendsFlag = this.configForm.extendsFlag + ''
                 this.dialogStatus = 'update'
                 this.dialogFormVisible = true
                 this.$nextTick(() => {
@@ -883,6 +898,11 @@
     }
 </script>
 <style lang="less" scoped>
+
+.model-config{
+ padding-bottom: 20px;
+}
+
 .footer-button {
   position: absolute;
   bottom: 0;

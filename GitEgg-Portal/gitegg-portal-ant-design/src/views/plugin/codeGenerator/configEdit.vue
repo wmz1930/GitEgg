@@ -6,7 +6,7 @@
       </a-step>
     </a-steps>
     <div class="steps-content">
-      <table-join :configForm="configForm" v-show="steps[current] && steps[current].content === 'union-table' && configForm.tableType === 'multi'" ref="tableJoin"></table-join>
+      <table-join :configForm="configForm" v-show="steps[current] && steps[current].content === 'union-table' && (configForm.tableType === 'join_query' || configForm.tableType === 'main_sub')" ref="tableJoin"></table-join>
       <table-field :configForm="configForm" :fields="fieldList" v-show="steps[current] && steps[current].content === 'filed-config'" ref="tableConfig"></table-field>
       <table-form :configForm="configForm" :fields="fieldList" v-show="steps[current] && steps[current].content === 'form-config'" ref="tableForm"></table-form>
       <table-form-valid :configForm="configForm" :fields="fieldList" v-show="steps[current] && steps[current].content === 'form-valid'" ref="tableFormValid"></table-form-valid>
@@ -308,7 +308,7 @@
                 queryConfig(this.listQuery).then(response => {
                     this.configForm = response.data
                     this.$loading.hide()
-                    if (this.configForm.tableType === 'multi') {
+                    if (this.configForm.tableType === 'join_query' || this.configForm.tableType === 'main_sub') {
                         this.steps = this.steps.concat(this.stepsMulti)
                     } else {
                         this.getFieldList()

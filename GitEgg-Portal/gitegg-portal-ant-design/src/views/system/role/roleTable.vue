@@ -54,7 +54,8 @@
             <span class="table-page-search-submitButtons"
                   :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
               <a-button type="primary"
-                        @click="handleFilter">查询</a-button>
+                        @click="handleFilter"
+                        v-hasAnyPerms="['system:role:list']">查询</a-button>
               <a-button style="margin-left: 8px"
                         @click="resetQuery">重置</a-button>
               <a @click="toggleAdvanced"
@@ -71,12 +72,14 @@
     <div class="table-operator">
       <a-button type="primary"
                 icon="plus"
-                @click="handleCreate">新建</a-button>
+                @click="handleCreate"
+                v-hasAnyPerms="['system:role:create']">新建</a-button>
       <a-button type="primary"
                 icon="cloud-download"
                 @click="handleDownload"
                 style="margin-left: 8px">导出</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+      <a-dropdown v-if="selectedRowKeys.length > 0"
+                  v-hasAnyPerms="['system:role:delete', 'system:role:batch:delete']">
         <a-menu slot="overlay">
           <a-menu-item key="1"
                        @click="handleBatchDelete">
@@ -112,18 +115,19 @@
       </span>
       <span slot="action"
             slot-scope="text, record">
-        <a @click="handleUpdate(record)">编辑</a>
+        <a @click="handleUpdate(record)" v-hasAnyPerms="['system:role:update']">编辑</a>
         <a-divider type="vertical" />
         <a href="javascript:;"
-           @click="handleUpdateResource(record)">资源</a>
+           @click="handleUpdateResource(record)"
+           v-hasAnyPerms="['system:role:resource:update']">资源</a>
         <a-divider type="vertical" />
-        <a-dropdown>
+        <a-dropdown v-hasAnyPerms="['system:role:delete', 'system:role:batch:delete', 'system:role:status']">
           <a class="ant-dropdown-link">
             更多
             <a-icon type="down" />
           </a>
           <a-menu slot="overlay">
-            <a-menu-item>
+            <a-menu-item v-hasAnyPerms="['system:role:status']">
               <a href="javascript:;"
                  v-if="record.roleStatus!=1"
                  size="mini"
@@ -136,7 +140,7 @@
                  @click="handleModifyStatus(record,0)">禁用
               </a>
             </a-menu-item>
-            <a-menu-item>
+            <a-menu-item v-hasAnyPerms="['system:role:delete', 'system:role:batch:delete']">
               <a href="javascript:;"
                  @click="handleDelete(record)">删除</a>
             </a-menu-item>
@@ -201,10 +205,12 @@
         <a-button @click="dialogFormVisible = false">取消</a-button>
         <a-button v-if="dialogStatus=='create'"
                   type="primary"
-                  @click="createData">确定</a-button>
+                  @click="createData"
+                  v-hasAnyPerms="['system:role:create']">确定</a-button>
         <a-button v-else
                   type="primary"
-                  @click="updateData">修改</a-button>
+                  @click="updateData"
+                  v-hasAnyPerms="['system:role:update']">修改</a-button>
       </div>
     </a-modal>
     <a-drawer :title="drawerTitle"
@@ -243,7 +249,8 @@
       <div class="footer-button">
         <a-button @click="dialogResourceVisible = false">取消</a-button>
         <a-button type="primary"
-                  @click="updateRoleResource">确定</a-button>
+                  @click="updateRoleResource"
+                  v-hasAnyPerms="['system:role:resource:update']">确定</a-button>
       </div>
     </a-drawer>
   </a-card>
