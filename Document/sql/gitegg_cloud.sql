@@ -4,14 +4,14 @@
  Source Server         : 测试
  Source Server Type    : MySQL
  Source Server Version : 50711
- Source Host           : 127.0.0.1:3306
+ Source Host           : 172.16.20.188:3306
  Source Schema         : gitegg_cloud
 
  Target Server Type    : MySQL
  Target Server Version : 50711
  File Encoding         : 65001
 
- Date: 27/10/2021 10:19:48
+ Date: 17/12/2021 17:06:16
 */
 
 SET NAMES utf8mb4;
@@ -691,12 +691,14 @@ CREATE TABLE `t_sys_code_generator_config`  (
   `parent_package` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '父级包名',
   `controller_path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'controller路径',
   `form_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表单类型 modal弹出框  drawer抽屉  tab新窗口',
-  `table_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表类型 single单表  multi多表',
+  `table_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表类型 single单表  join_query连接查询 main_sub主表子表',
+  `extends_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '主表子表时，是否使用继承',
   `table_show_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '展示类型 table数据表格 tree_table 树表格 3 left_tree_table左树右表  tree数据树  table_table左表右表  left_table_tree左表右树',
   `form_item_col` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表单字段排列 1一列一行  2 两列一行',
   `left_tree_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '左树类型 organization机构树 resource资源权限树 ',
-  `front_code_path` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '前端代码路径',
   `service_code_path` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '后端代码路径',
+  `front_code_path` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '前端代码路径',
+  `front_code_dir` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'view代码系统目录',
   `import_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否支持导入 1支持 0不支持',
   `export_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否支持导出 1支持 0不支持',
   `query_reuse` tinyint(1) NOT NULL DEFAULT 1 COMMENT '查询复用：分页查询和单条记录查询公用同一个sql语句',
@@ -708,25 +710,25 @@ CREATE TABLE `t_sys_code_generator_config`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_config
 -- ----------------------------
-INSERT INTO `t_sys_code_generator_config` VALUES (1, 0, 1, '12', '12', '12', '12', '12', '12', '12', NULL, '12', '12', '12', '12', '12', '12', '12', 12, 12, 1, 1, 'ALL', '2021-09-03 09:52:49', 1, '2021-09-03 09:53:10', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (2, 0, 1, '字段配置', 'field', 'gitegg-plugin-code', 't_sys_code_generator_field', 'genField', 't_sys_code_', 'com.gitegg.code.generator', NULL, 'modal', 'multi', 'table', '12', NULL, 'D:\\', 'D:\\', 1, 1, 1, 1, 'ALL', '2021-09-14 09:28:53', 1, '2021-09-14 16:44:27', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (3, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 'table', '24', NULL, 'E:\\', 'E:\\', 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (4, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 'table', '24', NULL, 'E:\\', 'E:\\', 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (5, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 'table', '24', NULL, 'E:\\', 'E:\\', 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (6, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 'table', '24', NULL, 'E:\\', 'E:\\', 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (7, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 'table', '24', NULL, 'E:\\', 'E:\\', 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (8, 0, 1, '测试模块-复制', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 'table', '24', NULL, 'E:\\', 'E:\\', 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (9, 0, 1, '测试模块-复制', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 'table', '24', NULL, 'E:\\', 'E:\\', 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (10, 0, 1, '字段配置-复制', 'field', 'gitegg-plugin-code', 't_sys_code_generator_field', 'genField', 't_sys_code_', 'com.gitegg.code.generator', NULL, 'drawer', 'multi', 'table', '12', NULL, 'D:\\newBackground', 'D:\\newService', 1, 1, 1, 1, 'ALL', '2021-09-14 09:28:53', 1, '2021-09-14 16:44:27', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (11, 0, 1, '校验配置', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 'table', '24', NULL, 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Portal\\gitegg-portal-ant-design', 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Cloud\\gitegg-plugin\\gitegg-code-generator', 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (13, 0, 1, '校验配置-复制', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 'table', '24', NULL, 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Portal\\gitegg-portal-ant-design', 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Cloud\\gitegg-plugin\\gitegg-code-generator', 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (14, 0, 1, '校验配置-复制-复制', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 'table', '24', NULL, 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Portal\\gitegg-portal-ant-design', 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Cloud\\gitegg-plugin\\gitegg-code-generator', 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (15, 0, 1, '校验配置-复制', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 'table', '24', NULL, 'D:\\newBackground', 'D:\\newService', 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
+INSERT INTO `t_sys_code_generator_config` VALUES (1, 0, 75, '12', '12', '12', '12', '12', '12', '12', NULL, '12', '12', 0, '12', '12', '12', '12', '12', NULL, 1, 1, 1, 1, 'ALL', '2021-09-03 09:52:49', 1, '2021-09-03 09:53:10', 1, 0);
+INSERT INTO `t_sys_code_generator_config` VALUES (2, 0, 75, '字段配置', 'field', 'gitegg-plugin-code', 't_sys_code_generator_field', 'genField', 't_sys_code_', 'com.gitegg.code.generator', NULL, 'modal', 'multi', 0, 'table', '12', NULL, 'D:\\', 'D:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-09-14 09:28:53', 1, '2021-09-14 16:44:27', 1, 0);
+INSERT INTO `t_sys_code_generator_config` VALUES (3, 0, 75, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 0);
+INSERT INTO `t_sys_code_generator_config` VALUES (4, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
+INSERT INTO `t_sys_code_generator_config` VALUES (5, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
+INSERT INTO `t_sys_code_generator_config` VALUES (6, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
+INSERT INTO `t_sys_code_generator_config` VALUES (7, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
+INSERT INTO `t_sys_code_generator_config` VALUES (8, 0, 1, '测试模块-复制', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
+INSERT INTO `t_sys_code_generator_config` VALUES (9, 0, 75, '测试模块-复制', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 0);
+INSERT INTO `t_sys_code_generator_config` VALUES (10, 0, 75, '字段配置-复制', 'field', 'gitegg-plugin-code', 't_sys_code_generator_field', 'genField', 't_sys_code_', 'com.gitegg.code.generator', NULL, 'drawer', 'multi', 0, 'table', '12', NULL, 'D:\\newService', 'D:\\newBackground', NULL, 1, 1, 1, 1, 'ALL', '2021-09-14 09:28:53', 1, '2021-09-14 16:44:27', 1, 0);
+INSERT INTO `t_sys_code_generator_config` VALUES (11, 0, 75, '校验配置', 'validate111', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 0, 'table', '24', NULL, 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Cloud\\gitegg-plugin\\gitegg-code-generator', 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Portal\\gitegg-portal-ant-design', 'validateTest', 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
+INSERT INTO `t_sys_code_generator_config` VALUES (13, 0, 75, '校验配置-复制', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 0, 'table', '24', NULL, 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Cloud\\gitegg-plugin\\gitegg-code-generator', 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Portal\\gitegg-portal-ant-design', NULL, 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
+INSERT INTO `t_sys_code_generator_config` VALUES (14, 0, 75, '校验配置-复制-复制', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 0, 'table', '24', NULL, 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Cloud\\gitegg-plugin\\gitegg-code-generator', 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Portal\\gitegg-portal-ant-design', NULL, 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
+INSERT INTO `t_sys_code_generator_config` VALUES (15, 0, 75, '校验配置-复制', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 0, 'table', '24', NULL, 'D:\\newService', 'D:\\newBackground', NULL, 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_code_generator_datasource
@@ -748,85 +750,13 @@ CREATE TABLE `t_sys_code_generator_datasource`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 75 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据源配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 76 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据源配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_datasource
 -- ----------------------------
-INSERT INTO `t_sys_code_generator_datasource` VALUES (1, 0, '测试数据库', 'jdbc:mysql://127.0.0.1/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&all owMultiQueries=true&serverTimezone=Asia/Shanghai', 'root', 'root', '', 'mysql', '', '2021-08-26 11:49:27', 1, '2021-08-26 13:49:26', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (2, 0, '21', '21', '31', '41', '21', 'mysql', '331', '2021-08-26 13:52:41', 1, '2021-08-26 13:57:01', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (3, 0, '222', '222', '222', '333', '2323', 'mariadb', '222', '2021-08-26 13:57:24', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (4, 0, '666', '666', '666', '666', '666', '666', '66666', '2021-08-27 19:43:07', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (5, 0, '666', '666', '666', '666', '666', '666', '66666', '2021-08-27 19:43:34', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (6, 0, '666', '666', '666', '666', '666', '666', '66666', '2021-08-27 19:44:16', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (7, 0, '121', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (8, 0, '12sd', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (9, 0, '12sdf', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (10, 0, 's', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (11, 0, '12dh', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (12, 0, '12s', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (13, 0, '12dd', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (14, 0, '12dfg', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (15, 0, '12tyu', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (16, 0, '12545dfh', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (17, 0, '12456fgh', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (18, 0, '1264dd', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (19, 0, '1277', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (20, 0, '12665', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (21, 0, '1245r', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (22, 0, '1256', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (23, 0, '125', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (24, 0, '124', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (25, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (26, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (27, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (28, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (29, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (30, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (31, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (32, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (33, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (34, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (35, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (36, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (37, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (38, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (39, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (40, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (41, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (42, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (43, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (44, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (45, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (46, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (47, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (48, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (49, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (50, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (51, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (52, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (53, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (54, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (55, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (56, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (57, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (58, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (59, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (60, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (61, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (62, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (63, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (64, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (65, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (66, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (67, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (68, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (69, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (70, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (71, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (72, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (73, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (74, 0, '12', '12', '12', '12', '12', 'mysql', '12', '2021-09-02 18:40:11', 1, '2021-09-02 18:40:18', 1, 0);
+INSERT INTO `t_sys_code_generator_datasource` VALUES (1, 0, '测试数据库', 'jdbc:mysql://172.16.20.188/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&all owMultiQueries=true&serverTimezone=Asia/Shanghai', 'myHisc', 'root4Hisc', '', 'mysql', '测试数据库', '2021-08-26 11:49:27', 1, '2021-08-26 13:49:26', 1, 1);
+INSERT INTO `t_sys_code_generator_datasource` VALUES (75, 0, '测试数据库001', 'jdbc:mysql://172.16.20.188/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&all owMultiQueries=true&serverTimezone=Asia/Shanghai', 'myHisc', 'root4Hisc', '', 'mysql', '', '2021-11-11 19:06:11', 1, '2021-11-11 19:15:29', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_code_generator_dict
@@ -852,7 +782,7 @@ CREATE TABLE `t_sys_code_generator_dict`  (
   INDEX `INDEX_DICT_CODE`(`dict_code`) USING BTREE,
   INDEX `INDEX_PARENT_ID`(`parent_id`) USING BTREE,
   INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 113 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 118 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_dict
@@ -888,7 +818,7 @@ INSERT INTO `t_sys_code_generator_dict` VALUES (39, 0, 37, '0,37', '抽屉', 'dr
 INSERT INTO `t_sys_code_generator_dict` VALUES (40, 0, 37, '0,37', '新窗口', 'tab', 3, 1, '新窗口', '2021-09-10 15:49:28', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (41, 0, 0, '0', '表数据类型', 'TABLE_DATA_TYPE', 5, 1, '表数据类型 single单表  multi多表', '2021-09-10 15:50:39', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (42, 0, 41, '0,41', '单表', 'single', 1, 1, '单表', '2021-09-10 15:51:01', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_dict` VALUES (43, 0, 41, '0,41', '多表', 'multi', 2, 1, '多表', '2021-09-10 15:51:14', 1, '2021-09-24 10:32:23', 1, 0);
+INSERT INTO `t_sys_code_generator_dict` VALUES (43, 0, 41, '0,41', '连接查询表', 'join_query', 2, 1, '多表', '2021-09-10 15:51:14', 1, '2021-12-03 22:13:15', 1, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (44, 0, 0, '0', '数据列表展现类型', 'TABLE_DATA_SHOW_TYPE', 6, 1, '数据列表展现类型 table数据表格 tree_table 树表格 3 left_tree_table左树右表  tree数据树', '2021-09-10 15:53:30', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (45, 0, 44, '0,44', '数据表格', 'table', 1, 1, '普通数据表格', '2021-09-10 15:56:55', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (46, 0, 44, '0,44', '树表格', 'tree_table', 2, 1, '树形表格', '2021-09-10 15:57:31', 1, NULL, NULL, 0);
@@ -930,9 +860,9 @@ INSERT INTO `t_sys_code_generator_dict` VALUES (81, 0, 73, '0,73', '日期选择
 INSERT INTO `t_sys_code_generator_dict` VALUES (82, 0, 73, '0,73', '日期范围框', 'DATE_PICKER_RANAGE', 9, 1, '日期范围框', '2021-09-27 09:28:38', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (83, 0, 73, '0,73', '时间选择框（时分秒）', 'TIME_PICKER', 10, 1, '时间选择框（时分秒）', '2021-09-27 09:29:34', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (84, 0, 73, '0,73', '单图片上传', 'UPLOAD_IMG', 11, 1, '单图片上传', '2021-09-27 09:36:08', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_dict` VALUES (85, 0, 73, '0,73', '多图片上传', 'UPLOAD_IMG_MULTI', 12, 1, '多图片上传', '2021-09-27 09:36:36', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_dict` VALUES (85, 0, 73, '0,73', '多图片上传', 'UPLOAD_IMG_MULTI', 12, 1, '多图片上传', '2021-09-27 09:36:36', 1, NULL, NULL, 1);
 INSERT INTO `t_sys_code_generator_dict` VALUES (86, 0, 73, '0,73', '单文件上传', 'UPLOAD_FILE', 13, 1, '单文件上传', '2021-09-27 09:36:55', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_dict` VALUES (87, 0, 73, '0,73', '多文件上传', 'UPLOAD_FILE_MULTI', 14, 1, '多文件上传', '2021-09-27 09:37:16', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_dict` VALUES (87, 0, 73, '0,73', '多文件上传', 'UPLOAD_FILE_MULTI', 14, 1, '多文件上传', '2021-09-27 09:37:16', 1, NULL, NULL, 1);
 INSERT INTO `t_sys_code_generator_dict` VALUES (88, 0, 73, '0,73', '组织下拉树', 'ORG_SELECT_TREE', 15, 1, '组织下拉树', '2021-09-27 09:38:11', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (89, 0, 73, '0,73', '富文本', 'RICH_TEXT', 16, 1, '富文本', '2021-09-27 09:39:00', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (90, 0, 0, '0', '查询类型', 'QUERY_TYPE', 13, 1, '查询类型', '2021-09-27 10:28:40', 1, NULL, NULL, 0);
@@ -985,8 +915,8 @@ CREATE TABLE `t_sys_code_generator_field`  (
   `query_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '查询类型',
   `control_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '组件类型',
   `dict_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '字典编码',
-  `min` bigint(20) NULL DEFAULT NULL COMMENT '最小值',
-  `max` bigint(20) NULL DEFAULT NULL COMMENT '最大值',
+  `min` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最小值',
+  `max` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '最大值',
   `min_length` int(11) NOT NULL DEFAULT 0 COMMENT '最小长度',
   `max_length` int(11) NULL DEFAULT NULL COMMENT '字段最大长度',
   `default_value` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '默认值',
@@ -1000,7 +930,7 @@ CREATE TABLE `t_sys_code_generator_field`  (
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_field`(`generation_id`, `join_id`, `join_table_name`, `field_name`) USING BTREE COMMENT '联合约束'
-) ENGINE = InnoDB AUTO_INCREMENT = 529 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段属性配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1154 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段属性配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_field
@@ -1238,12 +1168,16 @@ CREATE TABLE `t_sys_code_generator_table_join`  (
   `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
   `generation_id` bigint(20) NOT NULL COMMENT '代码生成主键',
   `datasource_id` bigint(20) NULL DEFAULT NULL COMMENT '数据源和主表一致',
+  `module_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模块名称',
+  `module_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模块代码',
+  `controller_path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'controller路径',
   `join_table_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表名',
   `join_table_alias` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表别名',
   `join_table_prefix` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '表前缀',
   `join_table_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'left左连接 right右连接 inner等值连接 union联合查询',
   `join_table_select` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '自定义查询字段',
   `join_table_on` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '自定义on条件',
+  `association_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联主键id',
   `table_sort` int(11) NULL DEFAULT NULL COMMENT '显示排序',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
@@ -1251,17 +1185,17 @@ CREATE TABLE `t_sys_code_generator_table_join`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '多表查询时的联合表配置' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '多表查询时的联合表配置' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_table_join
 -- ----------------------------
-INSERT INTO `t_sys_code_generator_table_join` VALUES (1, 0, 2, NULL, 't_mall_goods_brand', 'brand', 't_mall_goods_', 'left', 'name,image,letter', 'on a.id = b.id and a.del_flag = 0', 1, '2021-09-18 18:00:30', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (2, 0, 2, NULL, 't_mall_goods_brand', '234', '234', 'left', 'letter,image,name', '222', 2, '2021-09-18 18:04:01', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (3, 0, 2, NULL, 't_mall_goods_brand', '345', '345', 'right', 'name,tenant_id,create_time,creator,image', '4534', 345, '2021-09-22 09:08:49', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (4, 0, 10, NULL, 't_mall_goods_brand', 'brand', 't_mall_goods_', 'left', 'name,image,letter', 'on a.id = b.id and a.del_flag = 0', 1, '2021-09-18 18:00:30', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (5, 0, 10, NULL, 't_mall_goods_brand', '234', '234', 'left', 'letter,image,name', '222', 2, '2021-09-18 18:04:01', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (6, 0, 10, NULL, 't_mall_goods_brand', '345', '345', 'right', 'name,tenant_id,create_time,creator,image', '4534', 345, '2021-09-22 09:08:49', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_table_join` VALUES (1, 0, 2, NULL, NULL, NULL, NULL, 't_mall_goods_brand', 'brand', 't_mall_goods_', 'left', 'name,image,letter', 'on a.id = b.id and a.del_flag = 0', NULL, 1, '2021-09-18 18:00:30', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_table_join` VALUES (2, 0, 2, NULL, NULL, NULL, NULL, 't_mall_goods_brand', '234', '234', 'left', 'letter,image,name', '222', NULL, 2, '2021-09-18 18:04:01', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_table_join` VALUES (3, 0, 2, NULL, NULL, NULL, NULL, 't_mall_goods_brand', '345', '345', 'right', 'name,tenant_id,create_time,creator,image', '4534', NULL, 345, '2021-09-22 09:08:49', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_table_join` VALUES (4, 0, 10, NULL, NULL, NULL, NULL, 't_mall_goods_brand', 'brand', 't_mall_goods_', 'left', 'name,image,letter', 'on a.id = b.id and a.del_flag = 0', NULL, 1, '2021-09-18 18:00:30', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_table_join` VALUES (5, 0, 10, NULL, NULL, NULL, NULL, 't_mall_goods_brand', '234', '234', 'left', 'letter,image,name', '222', NULL, 2, '2021-09-18 18:04:01', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_table_join` VALUES (6, 0, 10, NULL, NULL, NULL, NULL, 't_mall_goods_brand', '345', '345', 'right', 'name,tenant_id,create_time,creator,image', '4534', NULL, 345, '2021-09-22 09:08:49', 1, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_code_generator_validate
@@ -1279,13 +1213,22 @@ CREATE TABLE `t_sys_code_generator_validate`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段校验规则配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段校验规则配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_validate
 -- ----------------------------
 INSERT INTO `t_sys_code_generator_validate` VALUES (1, 0, '手机号码', '^1[0-9]{10}$', 1, '2021-10-15 16:47:18', 1, '2021-10-15 17:16:51', 1, 0);
-INSERT INTO `t_sys_code_generator_validate` VALUES (2, 0, '电子邮箱', '^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$', 1, '2021-10-15 18:42:24', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (2, 0, '电子邮箱', '^([A-Za-z0-9_\\\\-\\\\.])+\\\\@([A-Za-z0-9_\\\\-\\\\.])+\\\\.([A-Za-z]{2,4})$', 1, '2021-10-15 18:42:24', 1, '2021-12-17 16:52:54', 1, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (3, 0, '数字校验', '^[0-9]*$', 1, '2021-11-24 13:20:01', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (4, 0, '中文、英文、数字包括下划线', '^[\\u4E00-\\u9FA5A-Za-z0-9_]+$', 1, '2021-11-24 13:42:26', 1, '2021-11-24 13:43:37', 1, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (5, 0, '身份证号(15位、18位数字)', '^\\d{15}|\\d{18}$', 1, '2021-11-24 13:43:05', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (6, 0, '域名', '[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(/.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+/.?', 1, '2021-11-24 13:44:03', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (7, 0, '数字+字母', '^[A-Za-z0-9]+$', 1, '2021-11-24 13:44:42', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (8, 0, '汉字', '^[\\u4e00-\\u9fa5]{0,}$', 1, '2021-11-24 13:45:22', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (9, 0, '英文和数字', '^[A-Za-z0-9]+$ 或 ^[A-Za-z0-9]{4,40}$', 1, '2021-11-24 13:45:37', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (10, 0, '字母', '^[A-Za-z]+$', 1, '2021-11-24 13:45:53', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_validate` VALUES (11, 0, '带1-2位小数的正数或负数', '^(-)?\\d+(.\\d{1,2})?$', 1, '2021-11-24 13:47:46', 1, '2021-11-24 14:30:07', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_data_permission_role
@@ -1398,8 +1341,8 @@ CREATE TABLE `t_sys_dfs`  (
 -- ----------------------------
 -- Records of t_sys_dfs
 -- ----------------------------
-INSERT INTO `t_sys_dfs` VALUES (1, 0, 2, 'MinIO', 'http://127.0.0.1:9000', 'http://127.0.0.1:9000', 'gitegg', 'gitegg', 'gitegg', 'minioadmin', 'minioadmin', 1, 1, 0, 'MinIO存储', '2021-05-06 14:05:59', 1, '2021-05-06 15:15:43', 1, 0);
-INSERT INTO `t_sys_dfs` VALUES (2, 0, 3, 'QINiuKODO', 'http://qss6id4y7.hn-bkt.clouddn.com', 'http://upload.qiniup.com', 'gitegg', 'gitegg', 'zone0', '11111', '222222', 0, 1, 0, '七牛云存储', '2021-05-06 14:09:50', 1, '2021-05-07 09:50:49', 1, 0);
+INSERT INTO `t_sys_dfs` VALUES (1, 0, 2, 'MinIO', 'http://172.16.20.188:9000', 'http://172.16.20.188:9000', 'gitegg', 'gitegg', 'gitegg', 'minioadmin', 'minioadmin', 1, 1, 0, 'MinIO存储', '2021-05-06 14:05:59', 1, '2021-05-06 15:15:43', 1, 0);
+INSERT INTO `t_sys_dfs` VALUES (2, 0, 3, 'QINiuKODO', 'http://qss6id4y7.hn-bkt.clouddn.com', 'http://upload.qiniup.com', 'gitegg', 'gitegg', 'zone0', '111111', '111111', 0, 1, 0, '七牛云存储', '2021-05-06 14:09:50', 1, '2021-05-07 09:50:49', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_dfs_file
@@ -1422,7 +1365,7 @@ CREATE TABLE `t_sys_dfs_file`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '分布式存储文件记录表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 78 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '分布式存储文件记录表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_sys_dfs_file
@@ -1430,26 +1373,6 @@ CREATE TABLE `t_sys_dfs_file`  (
 INSERT INTO `t_sys_dfs_file` VALUES (1, 0, NULL, NULL, NULL, '20210506181426.png', NULL, 0, 1, NULL, '2021-05-08 16:20:50', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_dfs_file` VALUES (2, 0, NULL, NULL, NULL, '20210506181426.png', NULL, 0, 1, NULL, '2021-05-08 16:27:55', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_dfs_file` VALUES (3, 0, 1, NULL, '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-08 16:32:24', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (4, 0, 1, 'http://127.0.0.1:9000', '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-08 16:39:52', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (5, 0, 1, 'http://127.0.0.1:9000', '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-08 16:51:34', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (6, 0, 1, 'http://127.0.0.1:9000', '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-08 16:57:28', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (14, 0, 2, NULL, 'logo.png', 'Fj6O8ohhWEqdiyLJyQJwst6zJXWh.png', 'png', 11544, 1, NULL, '2021-05-08 17:15:34', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (15, 0, 2, NULL, 'logo.png', 'Fj6O8ohhWEqdiyLJyQJwst6zJXWh.png', 'png', 11544, 1, NULL, '2021-05-08 17:17:36', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (16, 0, 2, NULL, 'logo.png', 'Fj6O8ohhWEqdiyLJyQJwst6zJXWh.png', 'png', 11544, 1, NULL, '2021-05-08 17:29:48', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (17, 0, 2, NULL, 'logo.png', 'Fj6O8ohhWEqdiyLJyQJwst6zJXWh.png', 'png', 11544, 1, NULL, '2021-05-08 17:34:13', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (18, 0, 2, NULL, 'logo.png', 'Fj6O8ohhWEqdiyLJyQJwst6zJXWh.png', 'png', 11544, 1, NULL, '2021-05-08 17:39:58', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (19, 0, 1, 'http://127.0.0.1:9000', 'logo.png', 'Fj6O8ohhWEqdiyLJyQJwst6zJXWh.png', 'png', 11544, 1, NULL, '2021-05-08 17:49:31', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (20, 0, 2, NULL, 'logo.png', 'Fj6O8ohhWEqdiyLJyQJwst6zJXWh.png', 'png', 11544, 1, NULL, '2021-05-08 17:50:47', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (21, 0, 1, 'http://127.0.0.1:9000', 'logo.png', 'Fj6O8ohhWEqdiyLJyQJwst6zJXWh.png', 'png', 11544, 1, NULL, '2021-05-08 18:03:50', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (22, 0, 2, 'http://qss6id4y7.hn-bkt.clouddn.com', 'logo.png', 'Fj6O8ohhWEqdiyLJyQJwst6zJXWh.png', 'png', 11544, 1, NULL, '2021-05-08 18:04:24', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (23, 0, 2, NULL, '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-10 11:40:53', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (24, 0, 2, NULL, '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-10 11:43:17', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (25, 0, 2, NULL, '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-10 11:47:17', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (26, 0, 2, NULL, '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-10 11:48:07', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (27, 0, 2, NULL, '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-10 11:49:54', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (28, 0, 2, 'http://qss6id4y7.hn-bkt.clouddn.com', '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-10 11:54:22', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (29, 0, 2, 'http://qss6id4y7.hn-bkt.clouddn.com', '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-10 13:56:56', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (30, 0, 2, 'http://qss6id4y7.hn-bkt.clouddn.com', '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-12 10:36:04', 1, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_dict
@@ -5316,7 +5239,7 @@ CREATE TABLE `t_sys_resource`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `INDEX_PERM_NAME`(`resource_name`) USING BTREE,
   INDEX `INDEX_PERM_PID`(`parent_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 196 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 207 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_resource
@@ -5432,10 +5355,10 @@ INSERT INTO `t_sys_resource` VALUES (124, 0, 105, '0,1,2,3,105', '批量删除�
 INSERT INTO `t_sys_resource` VALUES (125, 0, 1, '0,1', '代码生成', 'plugin:code', '2', 'xitongguanli', 'plugin/code/generator', 'nested', 999, 1, 1, NULL, 1, '代码生成', '2016-04-22 10:43:19', 1, '2021-09-30 18:06:28', 1, 0);
 INSERT INTO `t_sys_resource` VALUES (126, 0, 125, '0,1,125', '代码配置', 'plugin:code:config', '2', 'quanxianguanli', 'plugin/code/generator/config', 'plugin/code/generator/config/table', 1, 1, 1, 'generationTable', 1, '代码配置', '2016-04-22 10:43:19', 1, '2021-10-25 19:33:36', 1, 0);
 INSERT INTO `t_sys_resource` VALUES (127, 0, 126, '0,1,125,126', '代码配置列表', 'plugin:code:config:list', '4', 'quanxianguanli', 'plugin/code/generator/config/list', '/gitegg-code-generator/code/generator/config/list', 1, 1, 1, NULL, 1, '代码配置列表', '2016-04-22 10:43:19', 1, '2018-11-02 14:48:15', 1, 0);
-INSERT INTO `t_sys_resource` VALUES (128, 0, 126, '0,1,125,126', '创建代码配置', 'plugin:code:config:create', '4', 'xitongrizhi', 'plugin/code/generator/config/create', '/gitegg-code-generator/code/generator/config/create', 2, 1, 1, NULL, 1, '添加代码配置', '2018-10-27 17:40:14', 1, '2018-11-02 14:53:38', 1, 0);
+INSERT INTO `t_sys_resource` VALUES (128, 0, 126, '0,1,125,126', '创建代码配置', 'plugin:code:config:create', '4', 'xitongrizhi', 'plugin/code/generator/config/create', '/gitegg-code-generator/code/generator/config/create', 2, 1, 1, NULL, 1, '添加代码配置', '2018-10-27 17:40:14', 1, '2021-11-17 11:23:16', 1, 0);
 INSERT INTO `t_sys_resource` VALUES (129, 0, 126, '0,1,125,126', '更新代码配置', 'plugin:code:config:update', '4', 'xitongrizhi', 'plugin/code/generator/config/update', '/gitegg-code-generator/code/generator/config/update', 3, 1, 1, NULL, 1, '更新代码配置', '2018-10-27 17:40:14', 1, '2018-11-02 14:53:38', 1, 0);
 INSERT INTO `t_sys_resource` VALUES (130, 0, 126, '0,1,125,126', '删除代码配置', 'plugin:code:config:delete', '4', 'xitongrizhi', 'plugin/code/generator/config/delete', '/gitegg-code-generator/code/generator/config/delete/{cfgId}', 4, 1, 1, NULL, 1, '删除代码配置', '2018-10-27 17:40:14', 1, '2018-11-02 14:53:38', 1, 0);
-INSERT INTO `t_sys_resource` VALUES (131, 0, 126, '0,1,125,126', '批量删除代码配置', 'plugin:code:config:batch:delete', '4', 'xitongrizhi', 'plugin/code/generator/config/batch/delete', '/gitegg-code-generator/code/generator/config/batch/delete', 5, 1, 1, NULL, 1, '批量删除代码配置', '2018-10-27 17:40:14', 1, '2018-11-02 14:53:38', 1, 0);
+INSERT INTO `t_sys_resource` VALUES (131, 0, 126, '0,1,125,126', '批量删除代码配置', 'plugin:code:config:batch:delete', '4', 'xitongrizhi', 'plugin/code/generator/config/batch/delete', '/gitegg-code-generator/code/generator/config/batch/delete', 5, 1, 1, NULL, 1, '批量删除代码配置', '2018-10-27 17:40:14', 1, '2021-11-17 11:22:11', 1, 0);
 INSERT INTO `t_sys_resource` VALUES (132, 0, 125, '0,1,125', '数据源配置', 'plugin:code:datasource', '2', 'quanxianguanli', 'plugin/code/generator/datasource', 'plugin/codeGenerator/datasourceTable', 4, 1, 1, 'datasourceTable', 1, '数据源配置', '2016-04-22 10:43:19', 1, '2021-10-15 11:58:43', 1, 0);
 INSERT INTO `t_sys_resource` VALUES (133, 0, 132, '0,1,125,132', '数据源配置列表', 'plugin:code:datasource:list', '4', 'quanxianguanli', 'plugin/code/generator/datasource/list', '/gitegg-code-generator/code/generator/datasource/list', 1, 1, 1, NULL, 1, '数据源配置列表', '2016-04-22 10:43:19', 1, '2018-11-02 14:48:15', 1, 0);
 INSERT INTO `t_sys_resource` VALUES (134, 0, 132, '0,1,125,132', '创建数据源配置', 'plugin:code:datasource:create', '4', 'xitongrizhi', 'plugin/code/generator/datasource/create', '/gitegg-code-generator/code/generator/datasource/create', 2, 1, 1, NULL, 1, '添加数据源配置', '2018-10-27 17:40:14', 1, '2018-11-02 14:53:38', 1, 0);
@@ -5706,7 +5629,7 @@ CREATE TABLE `t_sys_role_resource`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 270 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和权限关联表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 282 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和权限关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_role_resource
@@ -5917,7 +5840,7 @@ INSERT INTO `t_sys_role_resource` VALUES (265, 0, 2, 191, '2021-10-15 11:57:51',
 INSERT INTO `t_sys_role_resource` VALUES (266, 0, 2, 192, '2021-10-15 11:57:51', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_role_resource` VALUES (267, 0, 2, 193, '2021-10-15 11:57:51', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_role_resource` VALUES (268, 0, 2, 194, '2021-10-15 11:57:51', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_role_resource` VALUES (269, 0, 2, 195, '2021-10-15 18:50:52', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_role_resource` VALUES (281, 0, 2, 195, '2021-12-17 16:33:58', 1, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_sms_channel
@@ -5944,7 +5867,7 @@ CREATE TABLE `t_sys_sms_channel`  (
 -- ----------------------------
 -- Records of t_sys_sms_channel
 -- ----------------------------
-INSERT INTO `t_sys_sms_channel` VALUES (1, 0, 'aliyun', '阿里云短信', '11111', '222222', 'cn-hangzhou', 1, '阿里云短信', '2021-01-26 15:19:11', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_sms_channel` VALUES (1, 0, 'aliyun', '阿里云短信', '111111', '11111111', 'cn-hangzhou', 1, '阿里云短信', '2021-01-26 15:19:11', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_sms_channel` VALUES (2, 0, '2', '2', '2', '2', '2', 1, '2', '2021-01-26 15:19:20', 1, NULL, NULL, 0);
 
 -- ----------------------------
@@ -5972,7 +5895,7 @@ CREATE TABLE `t_sys_sms_template`  (
 -- ----------------------------
 -- Records of t_sys_sms_template
 -- ----------------------------
-INSERT INTO `t_sys_sms_template` VALUES (1, 0, 1, 'aliLoginCode', '登录验证码', 'SMS_137670765', '短信签名', 1, '阿里云登录验证码', '2021-01-26 12:01:25', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_sms_template` VALUES (1, 0, 1, 'aliLoginCode', '登录验证码', 'SMS_137670765', '11111', 1, '阿里云登录验证码', '2021-01-26 12:01:25', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_sms_template` VALUES (2, 0, 2, NULL, '1', '1', '1', 1, '1', '2021-01-26 12:01:26', 1, '2021-01-26 12:01:32', 1, 0);
 
 -- ----------------------------
@@ -6023,9 +5946,9 @@ INSERT INTO `t_sys_tenant` VALUES (17, '222', '222', '222', '222', '222', '222',
 INSERT INTO `t_sys_tenant` VALUES (18, '11', '11', '11', '11', '11', '11', 11, '2020-12-23 22:00:00', '1', 1, '1', '2020-12-23 04:32:06', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_tenant` VALUES (19, '123', '123', '123', '123', '123', '123', 123, '2020-12-22 22:12:12', '1', 1, '1', '2020-12-23 04:52:10', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_tenant` VALUES (20, '44', '444', '444', '444', '444', '444', 444, '2012-12-19 16:00:00', '444', 1, '444', '2020-12-19 23:04:00', 1, '2020-12-21 04:01:02', 1, 0);
-INSERT INTO `t_sys_tenant` VALUES (21, '32', '32', '32', '32', '32', '32', 32, '2020-12-23 10:00:00', '1', 1, '1', '2020-12-23 20:24:22', 1, '2020-12-24 10:50:22', 1, 0);
-INSERT INTO `t_sys_tenant` VALUES (22, '32', '32', '32', '32', '32', '32', 32, '2020-12-22 10:00:00', '1', 1, '1', '2020-12-22 20:29:26', 1, '2020-12-23 10:45:09', 1, 0);
-INSERT INTO `t_sys_tenant` VALUES (23, '1222', '1222', '1222', '1222', '1222', '1222', 1222, '2020-12-24 00:00:00', '1', 1, '1', '2020-12-24 14:17:05', 1, '2021-05-11 09:41:39', 1, 0);
+INSERT INTO `t_sys_tenant` VALUES (21, '32', '32', 'http://172.16.20.188:9000/gitegg/FhEvMCP7VtglcaDXGm0Wzn0MDYIq.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20211117%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211117T112922Z&X-Amz-Expires=7200&X-Amz-SignedHeaders=host&X-Amz-Signature=338c0aded3ea9b309ca94cd11a2232ff93ff8e34d1ed2a5418006ba2a6b7669d,http://172.16.20.188:9000/gitegg/FhxnqnrwQLbOPkZOVjaRUFlqyUxo.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20211117%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211117T112933Z&X-Amz-Expires=7200&X-Amz-SignedHeaders=host&X-Amz-Signature=442be4225fe2ae7c62925ea7c3254bb70f1195056b172781519e8bc6830eb62f', '32', '32', '32', 32, '2020-12-23 10:00:00', '1', 1, '1', '2020-12-23 20:24:22', 1, '2021-11-17 19:29:43', 1, 0);
+INSERT INTO `t_sys_tenant` VALUES (22, '32', '32', 'http://172.16.20.188:9000/gitegg/FhEvMCP7VtglcaDXGm0Wzn0MDYIq.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20211117%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211117T104633Z&X-Amz-Expires=7200&X-Amz-SignedHeaders=host&X-Amz-Signature=bf9ecce392f200ea4371bd13655389ff5fd7fdf96350b10f3caa817c38ad535c', '32', '32', '32', 32, '2020-12-22 10:00:00', '1', 1, '1', '2020-12-22 20:29:26', 1, '2021-11-17 19:28:56', 1, 0);
+INSERT INTO `t_sys_tenant` VALUES (23, '1222', '1222', 'http://172.16.20.188:9000/gitegg/FhEvMCP7VtglcaDXGm0Wzn0MDYIq.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20211117%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211117T121613Z&X-Amz-Expires=7200&X-Amz-SignedHeaders=host&X-Amz-Signature=ea4296c175e2475ab880914ffec413699c6959412afd70ebd8d996613acaaaad', '1222', '1222', '1222', 1222, '2020-12-24 00:00:00', '1', 1, '1', '2020-12-24 14:17:05', 1, '2021-11-17 20:16:21', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_user
@@ -6063,15 +5986,9 @@ CREATE TABLE `t_sys_user`  (
 -- ----------------------------
 -- Records of t_sys_user
 -- ----------------------------
-INSERT INTO `t_sys_user` VALUES (1, 0, 'admin', '管理员', '管理员', '1', 'jeebase@jeebase.com', '15850682567', '{bcrypt}$2a$10$3BagvjPujvAKKbkNEzLPiuclcf9Y6nmFGZRIXDOhQ1ORemzoFecnW', 1, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, '320000', '320100', '320104', NULL, '系统管理员', '2018-05-19 17:55:36', 1, '2021-08-26 17:26:11', 1, 0);
-INSERT INTO `t_sys_user` VALUES (2, 0, 'test001', 'test001', 'test001', '0', 'test001@qq.com', '15850682555', '$2a$10$wm3EX5HnBslChBBYTgfP8e8B6jslFUreh/8bblJ1TRsSA2mOnDpoi', 1, NULL, NULL, '320000', '320300', '320303', '2342342343', '2342343', '2020-11-27 16:43:06', 1, '2021-07-06 09:54:19', 1, 0);
-INSERT INTO `t_sys_user` VALUES (3, 0, 'test002', 'test002', 'test002', '1', 'test002@qq.com', '15850682557', '$2a$10$MBsO4f0tIMIIdjcLUSUNd.fu6yZakXRcK9Ck.XypALznIhMYpFUKG', 1, NULL, NULL, '320000', '320100', '320104', '234423423', '234234', '2020-11-27 02:55:30', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_user` VALUES (4, 0, '111', '111', '111', '1', '111@qq.com', '15696936969', '$2a$10$9cJcuNF300ha9oLxhUiUpeTl2uNnQwlr8DgTs02z0cspGbRhoyFMG', 1, NULL, NULL, '120000', '120100', '120101', '324234234', '234234234', '2020-12-24 16:26:10', 1, '2020-12-25 16:51:46', 1, 0);
-INSERT INTO `t_sys_user` VALUES (5, 0, '11133', '22', '1233123', '0', '13636323632@qq.com', '13636323632', '$2a$10$d2SG09Lxoe9L3lgyc4Eeo.lie.GM0uNhnUX9G8HcktejZj/PYsut.', 1, NULL, NULL, '120000', '120100', '120101', '234234234', '', '2020-12-25 17:02:36', 1, '2020-12-27 16:31:05', 1, 0);
-INSERT INTO `t_sys_user` VALUES (6, 0, 'qianmin', 'qianmin', 'qianmin', '1', '15636236963@hisc.com.cn', '15636236963', '$2a$10$kANK/Ol6vDdX7M4BG89mEuLOGdariR4nh8Jbqfq4K2fPVuMOlq516', 1, NULL, NULL, NULL, NULL, NULL, '', '', '2021-01-11 09:55:02', 1, '2021-05-16 00:52:54', 1, 0);
-INSERT INTO `t_sys_user` VALUES (7, 0, '23423423', '23423432', '23423423', '1', '234234@qq.com', '15698636235', '$2a$10$ZByqjn3G0B/RkHtHQxjqvuciRcRWj.IcANBT8409qwg4REFYBc0KC', 1, NULL, NULL, '110000', '110100', '110101', '23423423', '', '2021-07-06 18:17:26', 1, '2021-07-06 18:17:34', 1, 0);
-INSERT INTO `t_sys_user` VALUES (8, 0, 'admin1', '管理员1', '管理员1', '1', '13770767525@qq.com', '13770767525', '$2a$10$OKGZrglOdUUFrqCcm8FCMuxRlhS0mhID0rWaac4UZrZ6RRgJmAc3i', 1, NULL, NULL, '320000', '320100', '320102', '11111', '', '2021-08-26 17:28:29', 1, NULL, NULL, 0);
-
+INSERT INTO `t_sys_user` VALUES (1, 0, 'admin', '管理员', '管理员', '1', 'gitegg@gitegg.com', '15853682555', '{bcrypt}$2a$10$3BagvjPujvAKKbkNEzLPiuclcf9Y6nmFGZRIXDOhQ1ORemzoFecnW', 1, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, '320000', '320100', '320104', NULL, '系统管理员', '2018-05-19 17:55:36', 1, '2021-08-26 17:26:11', 1, 0);
+INSERT INTO `t_sys_user` VALUES (2, 0, 'test001', 'test001', 'test001', '0', 'test001@qq.com', '15852682556', '$2a$10$wm3EX5HnBslChBBYTgfP8e8B6jslFUreh/8bblJ1TRsSA2mOnDpoi', 1, NULL, NULL, '320000', '320300', '320303', '2342342343', '2342343', '2020-11-27 16:43:06', 1, '2021-07-06 09:54:19', 1, 0);
+INSERT INTO `t_sys_user` VALUES (3, 0, 'test002', 'test002', 'test002', '1', 'test002@qq.com', '15851682557', '$2a$10$MBsO4f0tIMIIdjcLUSUNd.fu6yZakXRcK9Ck.XypALznIhMYpFUKG', 1, NULL, NULL, '320000', '320100', '320104', '234423423', '234234', '2020-11-27 02:55:30', 1, NULL, NULL, 0);
 -- ----------------------------
 -- Table structure for t_sys_user_info
 -- ----------------------------
