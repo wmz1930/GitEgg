@@ -36,9 +36,9 @@
         <!-- GitEgg项目统一设置版本号 -->
         <gitegg.project.version>1.0-SNAPSHOT</gitegg.project.version>
         <!-- SpringBoot版本号 -->
-        <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
+        <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
         <!-- SpringCloud版本号 -->
-        <spring.cloud.version>Hoxton.SR8</spring.cloud.version>
+        <spring.cloud.version>Hoxton.SR12</spring.cloud.version>
         <!-- hutool工具版本 -->
         <hutool.version>5.5.1</hutool.version>
 
@@ -60,23 +60,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- spring boot工程的依赖库,无需继承spring-boot-starter-parent -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!-- spring cloud工程的依赖库 -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring.cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!-- GitEgg-Component相关Jar包 -->
             <dependency>
                 <groupId>com.gitegg.platform</groupId>
                 <artifactId>gitegg-platform-bom</artifactId>
@@ -84,7 +67,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

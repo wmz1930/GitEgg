@@ -58,16 +58,6 @@
             <artifactId>gitegg-service-system-client</artifactId>
             <version>${gitegg.project.version}</version>
         </dependency>
-        <!-- spring boot web核心包 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <!-- spring boot 健康监控 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
