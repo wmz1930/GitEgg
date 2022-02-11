@@ -59,6 +59,14 @@
             <artifactId>apm-toolkit-log4j-2.x</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-spring-boot</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-oauth2</artifactId>
         </dependency>

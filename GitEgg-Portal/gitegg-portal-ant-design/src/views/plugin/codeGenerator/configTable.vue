@@ -779,15 +779,9 @@
                 this.$refs['configForm'].validate(valid => {
                     if (valid) {
                         updateConfig(this.configForm).then(() => {
-                            for (const v of this.list) {
-                                if (v.id === this.configForm.id) {
-                                    const index = this.list.indexOf(v)
-                                    this.list.splice(index, 1, this.configForm)
-                                    break
-                                }
-                            }
                             this.dialogFormVisible = false
                             this.$message.success('更新成功')
+                            this.handleTableRefresh()
                         })
                     }
                 })
