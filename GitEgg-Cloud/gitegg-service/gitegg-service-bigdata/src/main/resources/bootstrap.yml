@@ -1,0 +1,19 @@
+server:
+  port: 8007
+spring:
+  profiles:
+    active: '@spring.profiles.active@'
+  application:
+    name: '@artifactId@'
+  cloud:
+    inetutils:
+      ignored-interfaces: docker0
+    nacos:
+      discovery:
+        server-addr: ${spring.nacos.addr}
+      config:
+        server-addr: ${spring.nacos.addr}
+        file-extension: yaml
+        prefix: ${spring.nacos.config.prefix}
+        group: ${spring.nacos.config.group}
+        enabled: true
