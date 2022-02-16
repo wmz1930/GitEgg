@@ -3,7 +3,6 @@ package com.gitegg.service.bigdata.log.service.impl;
 import com.gitegg.service.bigdata.log.service.ILogReceiveService;
 import com.gitegg.service.bigdata.sink.LogSink;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.support.GenericMessage;
