@@ -31,7 +31,9 @@ export default userApi
 export function login (parameter) {
   return request({
     url: userApi.Login,
+    authenticationScheme: 'Basic',
     method: 'post',
+    headers: { 'Authorization': `Basic ${process.env.VUE_APP_CLIENT_SECRET}` },
     skipAuthRefresh: true,
     data: parameter
   })

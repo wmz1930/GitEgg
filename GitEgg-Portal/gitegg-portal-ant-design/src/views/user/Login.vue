@@ -314,8 +314,6 @@ export default {
           const loginParams = { ...values }
           delete loginParams.username
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
-          loginParams.client_id = process.env.VUE_APP_CLIENT_ID
-          loginParams.client_secret = process.env.VUE_APP_CLIENT_SECRET
 
           if (this.grantType === 'password' && customActiveKey === 'tab_account') {
               loginParams.grant_type = 'password'
@@ -394,9 +392,6 @@ export default {
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
           const loginParams = { ...values }
-
-          loginParams.client_id = process.env.VUE_APP_CLIENT_ID
-          loginParams.client_secret = process.env.VUE_APP_CLIENT_SECRET
 
           loginParams.grant_type = 'sms_captcha'
           loginParams.phone_number = values.phoneNumber

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Vue from 'vue'
 import createAuthRefreshInterceptor from 'axios-auth-refresh'
 import store from '@/store'
 import storage from 'store'
@@ -18,13 +19,12 @@ const request = axios.create({
 // 当token失效时，需要调用的刷新token的方法
 const refreshAuthLogic = failedRequest =>
   axios.post(process.env.VUE_APP_API_BASE_URL + '/gitegg-oauth/oauth/token',
-  serialize({ client_id: process.env.VUE_APP_CLIENT_ID,
-      client_secret: process.env.VUE_APP_CLIENT_SECRET,
+  serialize({
       grant_type: 'refresh_token',
       refresh_token: storage.get(REFRESH_ACCESS_TOKEN)
     }),
     {
-      headers: { 'TenantId': process.env.VUE_APP_TENANT_ID, 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'TenantId': process.env.VUE_APP_TENANT_ID, 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Basic ${process.env.VUE_APP_CLIENT_SECRET}` },
       skipAuthRefresh: true // 刷新token请求过期，不再进行刷新
     }
     ).then(tokenRefreshResponse => {
@@ -78,7 +78,7 @@ request.interceptors.request.use(config => {
   const token = storage.get(ACCESS_TOKEN)
   // 如果 token 存在
   // 让每个请求携带自定义 token 请根据实际情况自行修改
-  if (token) {
+  if (token && config.authenticationScheme !== 'Basic') {
     config.headers['Authorization'] = token
   }
   config.headers['TenantId'] = process.env.VUE_APP_TENANT_ID
@@ -94,6 +94,7 @@ request.interceptors.response.use((response) => {
         message: '操作失败',
         description: res.msg
       })
+      Vue.prototype.$loading.hide()
       return Promise.reject(res || 'Error')
     } else {
       return response.data

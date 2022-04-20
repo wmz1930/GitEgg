@@ -873,10 +873,14 @@
                     content: '如果已经存在该模块代码，那么新生成的代码将会覆盖旧代码，请确认是否存在影响。',
                     onOk () {
                         that.$loading.show()
+                        try {
                         generateCode({ id: row.id }).then(response => {
                             that.$loading.hide()
                             that.$message.success('执行成功')
                         })
+                        } catch (e) {
+                          that.$loading.hide()
+                        }
                     },
                     onCancel () {
                         that.$message.info('已取消执行')
