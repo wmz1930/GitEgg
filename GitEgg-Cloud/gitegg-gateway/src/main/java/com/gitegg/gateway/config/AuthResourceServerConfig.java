@@ -25,6 +25,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 资源服务器配置
  * 注解需要使用@EnableWebFluxSecurity而非@EnableWebSecurity,因为SpringCloud Gateway基于WebFlux
@@ -59,6 +62,12 @@ public class AuthResourceServerConfig {
 
         // 对白名单路径，直接移除JWT请求头，不移除的话，后台会校验jwt
         http.addFilterBefore(whiteListRemoveJwtFilter, SecurityWebFiltersOrder.AUTHENTICATION);
+
+        // Basic认证直接放行
+        if (!CollectionUtils.isEmpty(authUrlWhiteListProperties.getTokenUrls()))
+        {
+            http.authorizeExchange().pathMatchers(ArrayUtil.toArray(authUrlWhiteListProperties.getStaticFiles(), String.class)).permitAll();
+        }
 
         // 判断是否有静态文件
         if (!CollectionUtils.isEmpty(authUrlWhiteListProperties.getStaticFiles()))

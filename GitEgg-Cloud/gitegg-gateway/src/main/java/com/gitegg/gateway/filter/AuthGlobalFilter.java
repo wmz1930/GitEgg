@@ -55,7 +55,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             addHeaders.put(AuthConstant.TENANT_ID, tenantId);
         }
 
-        if (!StrUtil.isEmpty(token)) {
+        if (!StrUtil.isEmpty(token) && token.startsWith(AuthConstant.JWT_TOKEN_PREFIX)) {
             try {
                 //从token中解析用户信息并设置到Header中去
                 String realToken = token.replace(AuthConstant.JWT_TOKEN_PREFIX, "");

@@ -7,6 +7,7 @@ import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import com.gitegg.service.system.dto.CreateResourceDTO;
+import com.gitegg.service.system.dto.QueryUserResourceDTO;
 import com.gitegg.service.system.dto.UpdateResourceDTO;
 import com.gitegg.service.system.entity.Resource;
 import com.gitegg.service.system.entity.User;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -164,11 +166,27 @@ public class ResourceController {
      * @param currentUser
      * @return
      */
-    @GetMapping("/menu")
+    @GetMapping("/user/menu")
     @ApiOperation(value = "登陆后获取个人权限资源")
     public Result<List<Resource>> navMenu(@ApiIgnore User currentUser) {
         Long userId = currentUser.getId();
         List<Resource> resourceList = resourceService.queryMenuTreeByUserId(userId);
         return Result.data(resourceList);
+    }
+
+    /**
+     * 登陆后获取个人权限资源code，此数据用于前端页面鉴权，因有前端页面用或者不用都可以，所以和获取用户信息分开
+     *
+     * @param currentUser
+     * @return
+     */
+    @GetMapping("/user/resource")
+    @ApiOperation(value = "登陆后获取个人权限资源code")
+    public Result<List<Resource>> queryPermCode(@ApiIgnore User currentUser) {
+        QueryUserResourceDTO queryUserResourceDTO = new QueryUserResourceDTO();
+        queryUserResourceDTO.setUserId(currentUser.getId());
+        List<Resource> resourceList = resourceService.queryResourceListByUserId(queryUserResourceDTO);
+        return Result.data(resourceList);
+
     }
 }

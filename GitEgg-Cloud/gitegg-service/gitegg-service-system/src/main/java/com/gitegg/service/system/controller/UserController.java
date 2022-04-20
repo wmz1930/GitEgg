@@ -2,6 +2,7 @@ package com.gitegg.service.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitegg.platform.base.annotation.resubmit.ResubmitLock;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
@@ -58,13 +59,14 @@ public class UserController {
     @GetMapping("/list")
     @ApiOperation(value = "查询用户列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userName", value = "用户名", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "userMobile", value = "手机号", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "userEmail", value = "邮箱", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "roleId", value = "角色", required = false, dataType = "integer", paramType = "query"),
-            @ApiImplicitParam(name = "userStatus", value = "用户状态", required = false, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "realName", value = "用户名", required = false, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "mobile", value = "手机号", required = false, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "email", value = "邮箱", required = false, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "roleId", value = "角色", required = false, dataType = "Integer", paramType = "query"),
+            @ApiImplicitParam(name = "status", value = "用户状态", required = false, dataType = "Integer", paramType = "query"),
             @ApiImplicitParam(name = "size", value = "每页条数", required = false, dataType = "Integer", paramType = "query"),
             @ApiImplicitParam(name = "current", value = "当前页", required = false, dataType = "Integer", paramType = "query") })
+//    @ResubmitLock(interval = 60, argsIndex = {0}, ignoreKeys = {"email","status"})
     public PageResult<UserInfo> list(@ApiIgnore QueryUserDTO user, @ApiIgnore Page<UserInfo> page) {
         Page<UserInfo> pageUser = userService.selectUserList(page, user);
         PageResult<UserInfo> pageResult = new PageResult<>(pageUser.getTotal(), pageUser.getRecords());
@@ -76,6 +78,7 @@ public class UserController {
      */
     @PostMapping("/create")
     @ApiOperation(value = "添加用户")
+    @ResubmitLock(interval = 10)
     public Result<?> create(@RequestBody @Valid CreateUserDTO user) {
         boolean result = userService.createUser(user);
         if (result) {

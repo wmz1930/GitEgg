@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.gitegg.platform.base.constant.TokenConstant;
 import com.gitegg.platform.oauth2.props.AuthUrlWhiteListProperties;
 import com.nimbusds.jose.JWSObject;
@@ -23,6 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.PathMatcher;
 import org.springframework.util.StringUtils;
 
@@ -67,6 +69,13 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
         String token = request.getHeaders().getFirst(AuthConstant.JWT_TOKEN_HEADER);
         if (StringUtils.isEmpty(token)) {
             return Mono.just(new AuthorizationDecision(false));
+        }
+
+        // Basic认证直接放行,此处需注意：请不要将所有带Basic头的直接放行，否则可以直接绕过网关认证，从而访问其他微服务
+        if (token.startsWith(AuthConstant.JWT_TOKEN_PREFIX_BASIC)
+                && !CollectionUtils.isEmpty(authUrlWhiteListProperties.getTokenUrls()) && authUrlWhiteListProperties.getTokenUrls().contains(path))
+        {
+            return Mono.just(new AuthorizationDecision(true));
         }
 
         //如果token被加入到黑名单，就是执行了退出登录操作，那么拒绝访问
@@ -136,6 +145,7 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
                 .map(AuthorizationDecision::new)
                 .defaultIfEmpty(new AuthorizationDecision(false));
         return authorizationDecisionMono;
+
     }
 }
 
