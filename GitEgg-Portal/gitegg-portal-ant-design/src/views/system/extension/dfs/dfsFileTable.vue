@@ -127,7 +127,7 @@
         <a-form-model-item label="文件大小" prop="fileSize">
           <a-input v-model="dfsFileForm.fileSize" placeholder="输入文件大小" :maxLength="32" />
         </a-form-model-item>
-        <a-form-model-item label="状态 0上传成功失败，1 上传成功" prop="fileStatus">
+        <a-form-model-item label="状态" prop="fileStatus">
           <a-input v-model="dfsFileForm.fileStatus" placeholder="输入状态 0上传成功失败，1 上传成功" :maxLength="32" />
         </a-form-model-item>
         <a-form-model-item label="备注" prop="comments">

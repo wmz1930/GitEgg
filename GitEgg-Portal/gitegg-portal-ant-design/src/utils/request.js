@@ -88,7 +88,7 @@ request.interceptors.request.use(config => {
 // response interceptor
 request.interceptors.response.use((response) => {
   const res = response.data
-  if (res.code) {
+  if (res && res.code) {
     if (res.code !== 200) {
       notification.error({
         message: '操作失败',
