@@ -64,7 +64,6 @@ public class LoginController {
     @GetMapping("/user/info")
     @ApiOperation(value = "登录后获取用户个人信息")
     public Result<UserInfo> userInfo( @ApiIgnore @CurrentUser GitEggUser currentUser) {
-        GitEggUser tmp = GitEggAuthUtils.getCurrentUser();
         User user = new User();
         user.setId(currentUser.getId());
         UserInfo userInfo = userService.queryUserInfo(user);

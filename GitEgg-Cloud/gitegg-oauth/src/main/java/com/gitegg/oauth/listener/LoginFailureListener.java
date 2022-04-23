@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -30,26 +31,41 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
 
     private final RedisTemplate redisTemplate;
 
+    /**
+     * 超过尝试次数，锁定账户
+     */
     @Value("${system.maxTryTimes}")
     private int maxTryTimes;
+
+    /**
+     * 锁定时间，单位 秒
+     */
+    @Value("${system.maxTryTimes}")
+    private long maxLockTime;
 
     @Override
     public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {
 
-        if (event.getException().getClass().equals(UsernameNotFoundException.class)) {
+        if (event.getException() instanceof UsernameNotFoundException
+                || event.getException().getCause() instanceof InvalidTokenException) {
             return;
         }
 
-        String userName = event.getAuthentication().getName();
+        try {
+            String userName = event.getAuthentication().getName();
 
-        GitEggUserDetails user = (GitEggUserDetails) userDetailsService.loadUserByUsername(userName);
+            GitEggUserDetails user = (GitEggUserDetails) userDetailsService.loadUserByUsername(userName);
 
-        if (null != user) {
-            Object lockTimes = redisTemplate.boundValueOps(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId()).get();
-            if(null == lockTimes || (int)lockTimes <= maxTryTimes){
-                redisTemplate.boundValueOps(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId()).increment(GitEggConstant.Number.ONE);
-                redisTemplate.expire(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId(),60 * 60 * 2 , TimeUnit.SECONDS);
+            if (null != user) {
+                Object lockTimes = redisTemplate.boundValueOps(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId()).get();
+                if(null == lockTimes || (int)lockTimes <= maxTryTimes){
+                    redisTemplate.boundValueOps(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId()).increment(GitEggConstant.Number.ONE);
+                    redisTemplate.expire(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId(), maxLockTime , TimeUnit.SECONDS);
+                }
             }
+        } catch (Exception e)
+        {
+            log.error("增加账户锁定次数失败：{}", e);
         }
     }
 }

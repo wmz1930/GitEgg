@@ -318,13 +318,26 @@ public class EngineServiceImpl implements IEngineService {
                     //因为目前版本框架只支持自定义输出到other目录，所以这里利用重写AbstractTemplateEngine的outputCustomFile方法支持所有自定义文件输出目录
                     Map<String, String> customFilePath = new HashMap<>();
 
-                    int start = serviceName.indexOf(StrUtil.DASHED);
-                    int end = serviceName.length();
-                    String servicePath = serviceName.substring(start, end).replace(StrUtil.DASHED, File.separator);
-
-                    if (!StringUtils.isEmpty(frontCodeDir))
+                    String servicePath = StrUtil.EMPTY;
+                    //处理服务名
+                    if (!StringUtils.isEmpty(serviceName))
                     {
-                        servicePath = frontCodeDir + servicePath ;
+                        int start = serviceName.indexOf(StrUtil.DASHED);
+
+                        if (start >= 0)
+                        {
+                            int end = serviceName.length();
+                            servicePath = serviceName.substring(start, end).replace(StrUtil.DASHED, File.separator);
+                        }
+                        else
+                        {
+                            servicePath = servicePath + File.separator + serviceName;
+                        }
+
+                        if (!StringUtils.isEmpty(frontCodeDir))
+                        {
+                            servicePath = frontCodeDir + servicePath ;
+                        }
                     }
 
                     //判断是否生成后端代码
@@ -353,8 +366,8 @@ public class EngineServiceImpl implements IEngineService {
                         String vueFile = config.getModuleCode() + CodeGeneratorConstant.TABLE_VUE;
                         String jsFile = config.getModuleCode() + CodeGeneratorConstant.JS;
 
-                        String vuePath = frontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + servicePath + File.separator + config.getModuleCode();
-                        String jsPath = frontCodePath + GitEggCodeGeneratorConstant.JS_PATH + servicePath + File.separator + config.getModuleCode();
+                        String vuePath = frontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
+                        String jsPath = frontCodePath + GitEggCodeGeneratorConstant.JS_PATH + (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
                         customFilePath.put(vueFile, vuePath);
                         customFilePath.put(jsFile, jsPath);
                         // VUE AND JS
@@ -362,7 +375,7 @@ public class EngineServiceImpl implements IEngineService {
                         customFileMap.put(vueFile, CustomFileEnum.VUE.path);
                         customFileMap.put(jsFile, CustomFileEnum.JS.path);
                         customMap.put(GitEggCodeGeneratorConstant.VUE_TABLE_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFile);
-                        customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
+                        customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH)) + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
                     }
 
                     customMap.put(GitEggCodeGeneratorConstant.CUSTOM_FILE_PATH_MAP, customFilePath);
@@ -618,13 +631,26 @@ public class EngineServiceImpl implements IEngineService {
                         //因为目前版本框架只支持自定义输出到other目录，所以这里利用重写AbstractTemplateEngine的outputCustomFile方法支持所有自定义文件输出目录
                         Map<String, String> customFilePath = new HashMap<>();
 
-                        int start = serviceName.indexOf(StrUtil.DASHED);
-                        int end = serviceName.length();
-                        String servicePath = serviceName.substring(start, end).replace(StrUtil.DASHED, File.separator);
-
-                        if (!StringUtils.isEmpty(frontCodeDir))
+                        String servicePath = StrUtil.EMPTY;
+                        //处理服务名
+                        if (!StringUtils.isEmpty(serviceName))
                         {
-                            servicePath = frontCodeDir + servicePath ;
+                            int start = serviceName.indexOf(StrUtil.DASHED);
+
+                            if (start >= 0)
+                            {
+                                int end = serviceName.length();
+                                servicePath = serviceName.substring(start, end).replace(StrUtil.DASHED, File.separator);
+                            }
+                            else
+                            {
+                                servicePath = servicePath + File.separator + serviceName;
+                            }
+
+                            if (!StringUtils.isEmpty(frontCodeDir))
+                            {
+                                servicePath = frontCodeDir + servicePath ;
+                            }
                         }
 
                         //判断是否生成后端代码
@@ -694,8 +720,8 @@ public class EngineServiceImpl implements IEngineService {
                             String vueFile = config.getModuleCode() + CodeGeneratorConstant.TABLE_VUE;
                             String jsFile = config.getModuleCode() + CodeGeneratorConstant.JS;
 
-                            String vuePath = frontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + servicePath + File.separator + config.getModuleCode();
-                            String jsPath = frontCodePath + GitEggCodeGeneratorConstant.JS_PATH + servicePath + File.separator + config.getModuleCode();
+                            String vuePath = frontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
+                            String jsPath = frontCodePath + GitEggCodeGeneratorConstant.JS_PATH + (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
                             customFilePath.put(vueFile, vuePath);
                             customFilePath.put(jsFile, jsPath);
                             // VUE AND JS
@@ -718,7 +744,7 @@ public class EngineServiceImpl implements IEngineService {
                                 }
                             }
                             customMap.put(GitEggCodeGeneratorConstant.VUE_TABLE_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFile);
-                            customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
+                            customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH)) + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
                         }
 
                         customMap.put(GitEggCodeGeneratorConstant.CUSTOM_FILE_PATH_MAP, customFilePath);

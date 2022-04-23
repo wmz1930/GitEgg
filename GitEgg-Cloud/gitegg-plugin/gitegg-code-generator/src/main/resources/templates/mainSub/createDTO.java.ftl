@@ -79,10 +79,10 @@ public class Create${entity}DTO implements Serializable {
     @NotBlank(message="${field.comment}不能为空")
     </#if>
     <#if field.min??>
-    @Min(${field.min})
+    @Min(${field.min}L)
     </#if>
     <#if field.max??>
-    @Max(${field.max})
+    @Max(${field.max}L)
     </#if>
     <#if field.maxLength??>
     @Length(min=${field.minLength},max=${field.maxLength})

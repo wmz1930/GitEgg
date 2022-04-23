@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function query${entity}List (data) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/main/list',
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/main/list',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function query${entity}List (data) {
 
 export function create${entity} (data) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/create',
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/create',
     method: 'post',
     data
   })
@@ -18,7 +18,7 @@ export function create${entity} (data) {
 
 export function update${entity} (data) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/update',
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/update',
     method: 'post',
     data
   })
@@ -39,7 +39,7 @@ export function update${entity} (data) {
 
 export function update${entity}Status (${table.entityPath}Id, status) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/status/' + ${table.entityPath}Id + '/' + status,
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/status/' + ${table.entityPath}Id + '/' + status,
     method: 'post'
   })
 }
@@ -55,7 +55,7 @@ export function update${entity}Status (${mainEntityName?uncap_first}Id, status) 
 
 export function batchDelete${entity} (data) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/batch/delete',
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/batch/delete',
     method: 'post',
     data
   })
@@ -63,14 +63,14 @@ export function batchDelete${entity} (data) {
 
 export function delete${entity} (id) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/delete/' + id,
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/delete/' + id,
     method: 'post'
   })
 }
 
 export function check${entity}Exist (data) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/check',
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/check',
     method: 'post',
     params: data
   })
@@ -79,7 +79,7 @@ export function check${entity}Exist (data) {
 
 export function download${entity}List (data) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/download',
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/download',
     method: 'post',
     data,
     responseType: 'blob'
@@ -90,7 +90,7 @@ export function download${entity}List (data) {
 
 export function upload${entity} (formData) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/upload',
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/upload',
     method: 'post',
     data: formData
   })
@@ -98,7 +98,7 @@ export function upload${entity} (formData) {
 
 export function download${entity}Template (query) {
   return request({
-    url: '/${config.serviceName}<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/download/template',
+    url: '<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>/download/template',
     method: 'get',
     responseType: 'blob',
     params: query
