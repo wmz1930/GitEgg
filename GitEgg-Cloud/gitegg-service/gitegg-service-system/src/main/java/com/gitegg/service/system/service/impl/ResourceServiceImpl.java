@@ -187,6 +187,20 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         return resourceList;
     }
 
+    @Override
+    public Long queryResourceMaxId() {
+        Long idMax = 0L;
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.orderByDesc("id");
+        queryWrapper.last("limit 1");
+        List<Resource> resourceList = this.list(queryWrapper);
+        if(!CollectionUtils.isEmpty(resourceList))
+        {
+            idMax = resourceList.get(0).getId();
+        }
+        return idMax;
+    }
+
     /**
      * 组装子父级目录
      * @param resourceList

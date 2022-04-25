@@ -68,4 +68,11 @@ public interface IResourceService extends IService<Resource> {
      * @return
      */
     List<Resource> queryResourceRoles();
+
+    /**
+     * 查询资源权限当前最大id
+     * @param
+     * @return
+     */
+    Long queryResourceMaxId();
 }

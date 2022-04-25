@@ -8,7 +8,7 @@
     <artifactId>GitEgg-Cloud</artifactId>
     <name>gitegg-cloud</name>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1.RELEASE</version>
 
     <modules>
         <module>gitegg-common</module>
@@ -34,7 +34,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- GitEgg项目统一设置版本号 -->
-        <gitegg.project.version>1.0-SNAPSHOT</gitegg.project.version>
+        <gitegg.project.version>1.0.1.RELEASE</gitegg.project.version>
         <!-- SpringBoot版本号 -->
         <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
         <!-- SpringCloud版本号 -->
