@@ -139,8 +139,6 @@ export default {
 
     // 上传图片（点击上传按钮）
     finish (type) {
-      debugger
-      console.log('finish')
       const that = this
       // 输出
       if (type === 'blob') {
