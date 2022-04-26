@@ -1,19 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : 测试
- Source Server Type    : MySQL
- Source Server Version : 50711
- Source Host           : 172.16.20.188:3306
- Source Schema         : gitegg_cloud
-
- Target Server Type    : MySQL
- Target Server Version : 50711
- File Encoding         : 65001
-
- Date: 17/12/2021 17:06:16
-*/
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -32,617 +16,6 @@ CREATE TABLE `system_table`  (
 -- ----------------------------
 INSERT INTO `system_table` VALUES (1, '2');
 INSERT INTO `system_table` VALUES (2, '3');
-
--- ----------------------------
--- Table structure for t_mall_goods_brand
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_goods_brand`;
-CREATE TABLE `t_mall_goods_brand`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '品牌id',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '品牌名称',
-  `image` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '品牌图片地址',
-  `letter` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '品牌的首字母',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '品牌表，一个品牌下有多个商品（spu），一对多关系' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of t_mall_goods_brand
--- ----------------------------
-
--- ----------------------------
--- Table structure for t_mall_goods_brand_category
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_goods_brand_category`;
-CREATE TABLE `t_mall_goods_brand_category`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '品牌id',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `brand_id` bigint(20) NOT NULL COMMENT '品牌id',
-  `category_id` bigint(20) NOT NULL COMMENT '商品类目id',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `key_tenant_id`(`tenant_id`) USING BTREE,
-  INDEX `key_category_id`(`category_id`) USING BTREE,
-  INDEX `key_brand_id`(`brand_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品分类和品牌的中间表，两者是多对多关系' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of t_mall_goods_brand_category
--- ----------------------------
-
--- ----------------------------
--- Table structure for t_mall_goods_category
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_goods_category`;
-CREATE TABLE `t_mall_goods_category`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '类目id',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类目名称',
-  `parent_id` bigint(20) NOT NULL COMMENT '父类目id,顶级类目填0',
-  `is_parent` tinyint(2) NOT NULL COMMENT '是否为父节点，0为否，1为是',
-  `sort` tinyint(2) NOT NULL COMMENT '排序指数，越小越靠前',
-  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `key_parent_id`(`parent_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品类目表，类目和商品(spu)是一对多关系，类目与品牌是多对多关系' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of t_mall_goods_category
--- ----------------------------
-
--- ----------------------------
--- Table structure for t_mall_goods_sku
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_goods_sku`;
-CREATE TABLE `t_mall_goods_sku`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `spu_id` bigint(20) NOT NULL COMMENT 'spu id',
-  `title` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品标题',
-  `images` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '商品的图片，多个图片以‘,’分割',
-  `stock` int(8) UNSIGNED NULL DEFAULT 0 COMMENT '库存',
-  `price` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '销售价格',
-  `indexes` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '特有规格属性在spu属性模板中的对应下标组合',
-  `own_spec` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT 'sku的特有规格参数键值对，json格式，反序列化时请使用linkedHashMap，保证有序',
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效，0无效，1有效',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `key_spu_id`(`spu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'sku表,该表表示具体的商品实体' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of t_mall_goods_sku
--- ----------------------------
-INSERT INTO `t_mall_goods_sku` VALUES (1, 0, 1, '123123', '123123', 8640, 10.00, '', '', 1, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `t_mall_goods_sku` VALUES (2, 0, 2, '234234', '23423', 8368, 23.00, '', '', 1, NULL, NULL, NULL, NULL, 0);
-
--- ----------------------------
--- Table structure for t_mall_goods_spec_group
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_goods_spec_group`;
-CREATE TABLE `t_mall_goods_spec_group`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `category_id` bigint(20) NOT NULL COMMENT '商品分类id，一个分类下有多个规格组',
-  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '规格组的名称',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `key_tenant_id`(`tenant_id`) USING BTREE,
-  INDEX `key_category_id`(`category_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '规格参数的分组表，每个商品分类下有多个规格参数组' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of t_mall_goods_spec_group
--- ----------------------------
-
--- ----------------------------
--- Table structure for t_mall_goods_spec_param
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_goods_spec_param`;
-CREATE TABLE `t_mall_goods_spec_param`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `category_id` bigint(20) NOT NULL COMMENT '商品分类id',
-  `group_id` bigint(20) NOT NULL COMMENT '所属组的id',
-  `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '参数名',
-  `numeric` tinyint(1) NOT NULL COMMENT '是否是数字类型参数，true或false',
-  `unit` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '数字类型参数的单位，非数字类型可以为空',
-  `generic` tinyint(1) NOT NULL COMMENT '是否是sku通用属性，true或false',
-  `searching` tinyint(1) NOT NULL COMMENT '是否用于搜索过滤，true或false',
-  `segments` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '数值类型参数，如果需要搜索，则添加分段间隔值，如CPU频率间隔：0.5-1.0',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `key_tenant_id`(`tenant_id`) USING BTREE,
-  INDEX `key_category_id`(`category_id`) USING BTREE,
-  INDEX `key_group_id`(`group_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '规格参数组下的参数名' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of t_mall_goods_spec_param
--- ----------------------------
-
--- ----------------------------
--- Table structure for t_mall_goods_spu
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_goods_spu`;
-CREATE TABLE `t_mall_goods_spu`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `brand_id` bigint(20) NOT NULL COMMENT '商品所属品牌id',
-  `category_id` bigint(20) NOT NULL COMMENT '商品分类id',
-  `name` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '商品名称',
-  `sub_title` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '副标题，一般是促销信息',
-  `on_sale` tinyint(2) NOT NULL DEFAULT 1 COMMENT '是否上架，0下架，1上架',
-  `price` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '售价',
-  `use_spec` tinyint(2) NOT NULL DEFAULT 1 COMMENT '是否使用规格：0=不使用，1=使用',
-  `spec_groups` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品规格组',
-  `goods_stock` int(11) NOT NULL DEFAULT 0 COMMENT '商品库存',
-  `virtual_sales` int(11) NOT NULL DEFAULT 0 COMMENT '虚拟销售数量',
-  `confine_count` int(11) NOT NULL DEFAULT -1 COMMENT '购物数量限制',
-  `pieces` int(11) NOT NULL DEFAULT 0 COMMENT '满件包邮',
-  `forehead` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '满额包邮',
-  `freight_id` int(11) NOT NULL COMMENT '运费模板ID',
-  `give_integral` int(11) NOT NULL DEFAULT 0 COMMENT '赠送积分',
-  `give_integral_type` tinyint(2) NOT NULL DEFAULT 1 COMMENT '赠送积分类型1固定值 2百分比',
-  `deductible_integral` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '可抵扣积分',
-  `deductible_integral_type` tinyint(2) NOT NULL DEFAULT 1 COMMENT '可抵扣积分类型1固定值 2百分比',
-  `accumulative` tinyint(2) NOT NULL DEFAULT 0 COMMENT '允许多件累计折扣 0否 1是',
-  `individual_share` tinyint(2) NOT NULL DEFAULT 0 COMMENT '是否单独分销设置：0否 1是',
-  `share_setting_type` tinyint(2) NOT NULL DEFAULT 0 COMMENT '分销设置类型 0普通设置 1详细设置',
-  `share_commission_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '佣金配比 0 固定金额 1 百分比',
-  `membership_price` tinyint(2) NOT NULL DEFAULT 0 COMMENT '是否享受会员价购买',
-  `membership_price_single` tinyint(2) NOT NULL DEFAULT 0 COMMENT '是否单独设置会员价',
-  `share_image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '自定义分享图片',
-  `share_title` varchar(65) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '自定义分享标题',
-  `is_default_services` tinyint(2) NOT NULL DEFAULT 1 COMMENT '默认服务 0否  1是',
-  `sort` int(11) NOT NULL DEFAULT 100 COMMENT '排序',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `key_tenant_id`(`tenant_id`) USING BTREE,
-  INDEX `key_category_id`(`category_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = 'spu表，该表描述的是一个抽象性的商品' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of t_mall_goods_spu
--- ----------------------------
-
--- ----------------------------
--- Table structure for t_mall_goods_spu_detail
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_goods_spu_detail`;
-CREATE TABLE `t_mall_goods_spu_detail`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `spu_id` bigint(20) NOT NULL,
-  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '商品描述信息',
-  `generic_spec` varchar(2048) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '通用规格参数数据',
-  `special_spec` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '特有规格参数及可选值信息，json格式',
-  `packing_list` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '包装清单',
-  `after_service` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '售后服务',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `key_tenant_id`(`tenant_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of t_mall_goods_spu_detail
--- ----------------------------
-
--- ----------------------------
--- Table structure for t_mall_order
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_order`;
-CREATE TABLE `t_mall_order`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `user_id` bigint(20) NOT NULL COMMENT '主键',
-  `store_id` int(11) NOT NULL DEFAULT 0 COMMENT '店铺id',
-  `order_no` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '订单号',
-  `total_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '订单总金额(含运费)',
-  `total_pay_price` decimal(10, 2) NOT NULL COMMENT '实际支付总费用(含运费）',
-  `express_original_price` decimal(10, 2) NOT NULL COMMENT '运费',
-  `express_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '修改后运费',
-  `total_goods_original_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '订单商品总金额',
-  `total_goods_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '优惠后订单商品总金额',
-  `store_discount_price` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '商家改价优惠',
-  `member_discount_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '会员优惠价格',
-  `coupon_id` int(11) NULL DEFAULT NULL COMMENT '优惠券id',
-  `coupon_discount_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '优惠券优惠金额',
-  `integral` int(11) NULL DEFAULT NULL COMMENT '使用的积分数量',
-  `integral_deduction_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '积分抵扣金额',
-  `name` varchar(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '收件人姓名',
-  `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '收件人手机号',
-  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '收件人地址',
-  `comments` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '用户订单备注',
-  `order_form` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '自定义表单（JSON）',
-  `leaving_message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '留言',
-  `store_comments` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '商家订单备注',
-  `pay_status` tinyint(2) NULL DEFAULT 0 COMMENT '是否支付：0.未支付 1.已支付',
-  `pay_type` tinyint(2) NULL DEFAULT 1 COMMENT '支付方式：1.在线支付 2.货到付款 3.余额支付',
-  `pay_time` timestamp(0) NULL DEFAULT '2021-10-27 00:00:01' COMMENT '支付时间',
-  `deliver_status` tinyint(2) NULL DEFAULT 0 COMMENT '是否发货：0.未发货 1.已发货',
-  `deliver_time` timestamp(0) NULL DEFAULT '2021-10-27 00:00:01' COMMENT '发货时间',
-  `express` varchar(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '物流公司',
-  `express_no` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '物流订单号',
-  `confirm_receipt` tinyint(2) NULL DEFAULT 0 COMMENT '收货状态：0.未收货 1.已收货',
-  `confirm_receipt_time` timestamp(0) NULL DEFAULT '2021-10-27 00:00:01' COMMENT '确认收货时间',
-  `cancel_status` tinyint(2) NULL DEFAULT 0 COMMENT '订单取消状态：0.未取消 1.已取消 2.申请取消',
-  `cancel_time` timestamp(0) NULL DEFAULT '2021-10-27 00:00:01' COMMENT '订单取消时间',
-  `recycle_status` tinyint(2) NULL DEFAULT 0 COMMENT '是否加入回收站 0.否 1.是',
-  `offline` tinyint(2) NULL DEFAULT 0 COMMENT '是否到店自提：0.否 1.是',
-  `offline_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '核销码',
-  `verifier_id` int(11) NULL DEFAULT 0 COMMENT '核销员ID',
-  `verifier_store_id` int(11) NULL DEFAULT 0 COMMENT '自提门店ID',
-  `support_pay_types` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '支持的支付方式',
-  `evaluation_status` tinyint(2) NULL DEFAULT 0 COMMENT '是否评价 0.否 1.是',
-  `evaluation_time` timestamp(0) NULL DEFAULT '2021-10-27 00:00:01',
-  `after_sales_out` tinyint(2) NULL DEFAULT 0 COMMENT '是否过售后时间 0.否 1.是',
-  `after_sales_status` tinyint(2) NULL DEFAULT 0 COMMENT '是否申请售后 0.否 1.是',
-  `status` tinyint(2) NULL DEFAULT 1 COMMENT '订单状态 1.已完成 0.进行中',
-  `auto_cancel_time` timestamp(0) NULL DEFAULT NULL COMMENT '自动取消时间',
-  `auto_confirm_verifier_time` timestamp(0) NULL DEFAULT NULL COMMENT '自动确认收货时间',
-  `auto_after_sales_time` timestamp(0) NULL DEFAULT NULL COMMENT '自动售后时间',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE,
-  INDEX `INDEX_USER_ID`(`user_id`) USING BTREE,
-  INDEX `INDEX_STORE_ID`(`store_id`) USING BTREE,
-  INDEX `INDEX_ORDER_NO`(`order_no`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_mall_order
--- ----------------------------
-INSERT INTO `t_mall_order` VALUES (1, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-24 21:29:48', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (2, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-24 21:31:35', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (3, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-24 21:33:19', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (4, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-29 11:12:02', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (5, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-29 11:14:22', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (6, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-29 11:25:19', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (7, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-29 11:46:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (8, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-29 18:47:22', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (9, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-30 18:32:52', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (10, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-30 18:41:44', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (11, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-30 18:50:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (12, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-30 19:27:31', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (13, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-30 19:27:34', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (14, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-30 19:27:36', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (15, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-30 19:27:37', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (16, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-30 19:27:38', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (17, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-30 19:31:17', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (18, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-03-31 11:45:24', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (22, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 17:08:16', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (23, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 17:08:52', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (24, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 17:28:04', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (25, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 17:34:17', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (26, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 17:57:05', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (27, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 17:59:49', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (28, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 18:20:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (29, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 18:33:15', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (30, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 18:34:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (31, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 18:57:46', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (32, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 18:58:27', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (33, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 18:59:02', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (34, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 18:59:08', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (35, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 19:00:57', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (36, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 19:00:59', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (37, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 19:01:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (38, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 19:01:12', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (39, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 19:01:13', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (40, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 19:05:45', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (41, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 19:12:08', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (42, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-02 19:15:05', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (43, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-20 15:05:31', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (44, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-20 15:11:47', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (45, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-20 15:52:15', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order` VALUES (46, 0, 1, 0, '', 188.00, 188.00, 188.00, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, '', '', '', '', NULL, '', '', 0, 1, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', '', '', 0, '2021-10-27 00:00:01', 0, '2021-10-27 00:00:01', 0, 0, '', 0, 0, NULL, 0, '2021-10-27 00:00:01', 0, 0, 1, NULL, NULL, NULL, '2021-04-20 17:12:33', 1, NULL, NULL, 0);
-
--- ----------------------------
--- Table structure for t_mall_order_sku
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_order_sku`;
-CREATE TABLE `t_mall_order_sku`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `order_id` bigint(20) NOT NULL COMMENT '订单id',
-  `goods_sku_id` bigint(20) NULL DEFAULT NULL COMMENT '购买商品id',
-  `goods_sku_number` int(11) NULL DEFAULT NULL COMMENT '购买商品数量',
-  `goods_sku_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '商品单价',
-  `total_original_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '商品总价',
-  `total_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '优惠后商品总价',
-  `member_discount_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '会员优惠金额',
-  `store_discount_price` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '商家改价优惠',
-  `goods_sku_info` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '购买商品信息',
-  `refund_status` tinyint(1) NULL DEFAULT 0 COMMENT '是否退款',
-  `after_sales_status` tinyint(1) NULL DEFAULT 0 COMMENT '售后状态 0--未售后 1--售后中 2--售后结束',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE,
-  INDEX `INDEX_ORDER_ID`(`order_id`) USING BTREE,
-  INDEX `INDEX_GOODS_SKU_ID`(`goods_sku_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_mall_order_sku
--- ----------------------------
-INSERT INTO `t_mall_order_sku` VALUES (1, 0, 3, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-24 21:33:19', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (2, 0, 3, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-24 21:33:19', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (3, 0, 4, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 11:12:02', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (4, 0, 4, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 11:12:02', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (5, 0, 5, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 11:14:22', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (6, 0, 5, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 11:14:22', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (7, 0, 6, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 11:25:19', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (8, 0, 6, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 11:25:19', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (9, 0, 7, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 11:46:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (10, 0, 7, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 11:46:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (11, 0, 8, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 18:47:22', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (12, 0, 8, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-29 18:47:22', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (13, 0, 9, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 18:32:52', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (14, 0, 9, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 18:32:52', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (15, 0, 10, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 18:41:44', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (16, 0, 10, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 18:41:44', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (17, 0, 11, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 18:50:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (18, 0, 11, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 18:50:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (19, 0, 12, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:31', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (20, 0, 12, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:31', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (21, 0, 13, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:34', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (22, 0, 13, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:34', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (23, 0, 14, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:36', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (24, 0, 14, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:36', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (25, 0, 15, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:37', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (26, 0, 15, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:37', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (27, 0, 16, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:38', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (28, 0, 16, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:27:38', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (29, 0, 17, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:31:17', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (30, 0, 17, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-30 19:31:17', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (31, 0, 18, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-31 11:45:24', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (32, 0, 18, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-03-31 11:45:24', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (39, 0, 22, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:08:16', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (40, 0, 22, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:08:16', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (41, 0, 23, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:08:52', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (42, 0, 23, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:08:52', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (43, 0, 24, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:28:04', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (44, 0, 24, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:28:04', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (45, 0, 25, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:34:17', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (46, 0, 25, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:34:17', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (47, 0, 26, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:57:06', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (48, 0, 26, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:57:06', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (49, 0, 27, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:59:49', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (50, 0, 27, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 17:59:49', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (51, 0, 28, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:20:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (52, 0, 28, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:20:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (53, 0, 29, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:33:15', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (54, 0, 29, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:33:15', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (55, 0, 30, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:34:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (56, 0, 30, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:34:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (57, 0, 31, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:57:46', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (58, 0, 31, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:57:46', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (59, 0, 32, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:58:27', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (60, 0, 32, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:58:27', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (61, 0, 33, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:59:02', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (62, 0, 33, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:59:02', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (63, 0, 34, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:59:08', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (64, 0, 34, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 18:59:08', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (65, 0, 35, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:00:57', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (66, 0, 35, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:00:57', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (67, 0, 36, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:00:59', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (68, 0, 36, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:00:59', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (69, 0, 37, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:01:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (70, 0, 37, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:01:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (71, 0, 38, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:01:12', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (72, 0, 38, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:01:12', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (73, 0, 39, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:01:13', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (74, 0, 39, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:01:13', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (75, 0, 40, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:05:45', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (76, 0, 40, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:05:45', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (77, 0, 41, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:12:08', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (78, 0, 41, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:12:08', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (79, 0, 42, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:15:05', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (80, 0, 42, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-02 19:15:05', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (81, 0, 43, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-20 15:05:33', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (82, 0, 43, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-20 15:05:33', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (83, 0, 44, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-20 15:11:48', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (84, 0, 44, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-20 15:11:48', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (85, 0, 45, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-20 15:52:15', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (86, 0, 45, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-20 15:52:15', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (87, 0, 46, 1, 5, 10.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-20 17:12:33', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_order_sku` VALUES (88, 0, 46, 2, 6, 23.00, NULL, NULL, NULL, 0.00, NULL, 0, 0, '2021-04-20 17:12:33', 1, NULL, NULL, 0);
-
--- ----------------------------
--- Table structure for t_mall_pay_record
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_pay_record`;
-CREATE TABLE `t_mall_pay_record`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `user_id` bigint(20) NOT NULL COMMENT '用户id',
-  `order_no` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0',
-  `amount` decimal(9, 2) NOT NULL,
-  `pay_status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '支付状态：0=未支付，1=已支付, 2=已退款',
-  `pay_type` tinyint(2) NOT NULL DEFAULT 3 COMMENT '支付方式：1=微信支付，2=货到付款，3=余额支付，4=支付宝支付,  5=银行卡支付',
-  `title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '',
-  `refund` decimal(9, 2) NOT NULL DEFAULT 0.00 COMMENT '已退款金额',
-  `comments` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '备注',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_mall_pay_record
--- ----------------------------
-INSERT INTO `t_mall_pay_record` VALUES (1, 0, 1, '0', 100.00, 1, 5, '', 0.00, '', '2021-03-19 16:36:11', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_pay_record` VALUES (2, 0, 1, '0', 100.00, 1, 5, '', 0.00, '', '2021-04-02 19:11:12', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_pay_record` VALUES (3, 0, 1, '0', 188.00, 1, 5, '', 0.00, '', '2021-04-20 16:00:05', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_pay_record` VALUES (4, 0, 1, '0', 188.00, 1, 5, '', 0.00, '', '2021-04-20 16:57:15', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_pay_record` VALUES (5, 0, 1, '0', 188.00, 1, 5, '', 0.00, '', '2021-04-20 17:08:01', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_pay_record` VALUES (6, 0, 1, '0', 188.00, 1, 5, '', 0.00, '', '2021-04-20 17:12:33', 1, NULL, NULL, 0);
-
--- ----------------------------
--- Table structure for t_mall_user_account
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_user_account`;
-CREATE TABLE `t_mall_user_account`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `user_id` bigint(20) NOT NULL COMMENT '用户id',
-  `integral` bigint(20) NOT NULL DEFAULT 0 COMMENT '积分',
-  `balance` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '余额',
-  `account_status` tinyint(2) NULL DEFAULT 1 COMMENT '账户状态 \'0\'禁用，\'1\' 启用',
-  `comments` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE,
-  INDEX `INDEX_USER_ID`(`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户账户表' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of t_mall_user_account
--- ----------------------------
-INSERT INTO `t_mall_user_account` VALUES (1, 0, 1, 1000, 1019.80, 1, NULL, '2021-03-19 14:26:48', 1, '2021-04-20 17:12:33', 1, 0);
-
--- ----------------------------
--- Table structure for t_mall_user_balance_record
--- ----------------------------
-DROP TABLE IF EXISTS `t_mall_user_balance_record`;
-CREATE TABLE `t_mall_user_balance_record`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
-  `user_id` bigint(20) NOT NULL COMMENT '用户id',
-  `type` tinyint(2) NOT NULL COMMENT '类型：1=收入，2=支出',
-  `amount` decimal(10, 2) NOT NULL COMMENT '变动金额',
-  `comments` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '备注',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
-  `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE,
-  INDEX `INDEX_USER_ID`(`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 69 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_mall_user_balance_record
--- ----------------------------
-INSERT INTO `t_mall_user_balance_record` VALUES (1, 0, 1, 2, 100.00, '', '2021-03-19 16:32:59', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (2, 0, 1, 2, 100.00, '', '2021-03-19 16:33:19', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (3, 0, 1, 2, 100.00, '', '2021-03-19 16:33:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (4, 0, 1, 2, 100.00, '', '2021-03-19 16:33:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (5, 0, 1, 2, 100.00, '', '2021-03-19 16:33:24', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (6, 0, 1, 2, 100.00, '', '2021-03-19 16:33:24', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (7, 0, 1, 2, 100.00, '', '2021-03-19 16:33:24', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (8, 0, 1, 2, 100.00, '', '2021-03-19 16:34:51', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (9, 0, 1, 2, 100.00, '', '2021-03-19 16:36:09', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (10, 0, 1, 2, 23.01, '', '2021-03-29 11:51:30', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (11, 0, 1, 2, 23.01, '', '2021-03-29 11:51:32', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (12, 0, 1, 2, 23.01, '', '2021-03-29 11:51:32', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (13, 0, 1, 2, 23.01, '', '2021-03-29 11:51:33', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (14, 0, 1, 2, 23.01, '', '2021-03-29 11:51:34', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (15, 0, 1, 2, 23.01, '', '2021-03-29 11:51:34', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (16, 0, 1, 2, 23.01, '', '2021-03-29 11:51:35', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (17, 0, 1, 2, 23.01, '', '2021-03-29 11:51:35', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (18, 0, 1, 2, 23.01, '', '2021-03-29 11:51:35', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (19, 0, 1, 2, 23.01, '', '2021-03-29 11:51:36', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (20, 0, 1, 2, 23.01, '', '2021-03-29 11:51:36', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (21, 0, 1, 2, 23.01, '', '2021-03-29 11:51:36', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (22, 0, 1, 2, 23.01, '', '2021-03-29 11:52:00', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (23, 0, 1, 2, 23.01, '', '2021-03-29 11:52:01', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (24, 0, 1, 2, 23.01, '', '2021-03-29 11:52:02', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (25, 0, 1, 2, 23.01, '', '2021-03-29 11:52:07', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (26, 0, 1, 2, 23.01, '', '2021-03-29 11:56:57', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (27, 0, 1, 2, 23.01, '', '2021-03-29 11:57:34', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (28, 0, 1, 2, 188.00, '', '2021-03-31 11:45:24', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (29, 0, 1, 2, 188.00, '', '2021-04-01 09:43:14', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (30, 0, 1, 2, 188.00, '', '2021-04-01 09:44:51', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (31, 0, 1, 2, 188.00, '', '2021-04-01 09:47:47', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (32, 0, 1, 2, 188.00, '', '2021-04-01 09:56:12', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (33, 0, 1, 2, 188.00, '', '2021-04-01 11:07:43', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (34, 0, 1, 2, 188.00, '', '2021-04-01 11:09:50', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (35, 0, 1, 2, 188.00, '', '2021-04-01 11:16:36', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (36, 0, 1, 2, 188.00, '', '2021-04-01 15:42:24', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (37, 0, 1, 2, 188.00, '', '2021-04-01 18:14:54', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (38, 0, 1, 2, 188.00, '', '2021-04-01 18:25:10', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (39, 0, 1, 2, 188.00, '', '2021-04-01 18:31:49', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (40, 0, 1, 2, 188.00, '', '2021-04-01 18:43:54', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (41, 0, 1, 2, 188.00, '', '2021-04-01 18:55:48', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (42, 0, 1, 2, 188.00, '', '2021-04-02 11:12:52', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (43, 0, 1, 2, 188.00, '', '2021-04-02 11:59:17', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (44, 0, 1, 2, 188.00, '', '2021-04-02 15:36:21', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (45, 0, 1, 2, 188.00, '', '2021-04-02 16:54:32', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (46, 0, 1, 2, 188.00, '', '2021-04-02 17:08:11', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (47, 0, 1, 2, 188.00, '', '2021-04-02 17:08:13', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (48, 0, 1, 2, 188.00, '', '2021-04-02 17:08:51', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (49, 0, 1, 2, 188.00, '', '2021-04-02 17:08:51', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (50, 0, 1, 2, 188.00, '', '2021-04-02 17:28:03', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (51, 0, 1, 2, 188.00, '', '2021-04-02 17:28:03', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (52, 0, 1, 2, 188.00, '', '2021-04-02 17:34:17', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (53, 0, 1, 2, 188.00, '', '2021-04-02 17:34:17', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (54, 0, 1, 2, 188.00, '', '2021-04-02 17:57:05', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (55, 0, 1, 2, 188.00, '', '2021-04-02 17:57:05', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (56, 0, 1, 2, 188.00, '', '2021-04-02 17:59:48', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (57, 0, 1, 2, 188.00, '', '2021-04-02 17:59:48', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (58, 0, 1, 2, 188.00, '', '2021-04-02 18:20:22', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (59, 0, 1, 2, 188.00, '', '2021-04-02 18:20:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (60, 0, 1, 2, 188.00, '', '2021-04-02 18:33:15', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (61, 0, 1, 2, 188.00, '', '2021-04-02 18:33:15', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (62, 0, 1, 2, 188.00, '', '2021-04-02 18:34:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (63, 0, 1, 2, 188.00, '', '2021-04-02 18:34:23', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (64, 0, 1, 2, 100.00, '', '2021-04-02 19:10:56', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (65, 0, 1, 2, 188.00, '', '2021-04-20 16:00:02', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (66, 0, 1, 2, 188.00, '', '2021-04-20 16:57:05', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (67, 0, 1, 2, 188.00, '', '2021-04-20 17:07:56', 1, NULL, NULL, 0);
-INSERT INTO `t_mall_user_balance_record` VALUES (68, 0, 1, 2, 188.00, '', '2021-04-20 17:12:33', 1, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_oauth_client_details
@@ -666,14 +39,13 @@ CREATE TABLE `t_oauth_client_details`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`client_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_oauth_client_details
 -- ----------------------------
 INSERT INTO `t_oauth_client_details` VALUES ('gitegg-admin', NULL, '123456', 'all', 'password,captcha,sms_captcha,refresh_token,authorization_code', NULL, NULL, 3600, 7200, NULL, 'true', NULL, NULL, NULL, NULL, 0);
 INSERT INTO `t_oauth_client_details` VALUES ('gitegg-weapp', NULL, '123456', 'all', 'password,captcha,sms_captcha,refresh_token,authorization_code', NULL, NULL, 3600, 7200, NULL, 'true', NULL, NULL, NULL, NULL, 0);
-
 -- ----------------------------
 -- Table structure for t_sys_code_generator_config
 -- ----------------------------
@@ -710,25 +82,11 @@ CREATE TABLE `t_sys_code_generator_config`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成配置表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '代码生成配置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_config
 -- ----------------------------
-INSERT INTO `t_sys_code_generator_config` VALUES (1, 0, 75, '12', '12', '12', '12', '12', '12', '12', NULL, '12', '12', 0, '12', '12', '12', '12', '12', NULL, 1, 1, 1, 1, 'ALL', '2021-09-03 09:52:49', 1, '2021-09-03 09:53:10', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (2, 0, 75, '字段配置', 'field', 'gitegg-plugin-code', 't_sys_code_generator_field', 'genField', 't_sys_code_', 'com.gitegg.code.generator', NULL, 'modal', 'multi', 0, 'table', '12', NULL, 'D:\\', 'D:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-09-14 09:28:53', 1, '2021-09-14 16:44:27', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (3, 0, 75, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (4, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (5, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (6, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (7, 0, 1, '测试模块', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (8, 0, 1, '测试模块-复制', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 1);
-INSERT INTO `t_sys_code_generator_config` VALUES (9, 0, 75, '测试模块-复制', 'test', 'gitegg-code-generator', 't_sys_code_generator_config', 'genConfig', 't_sys_code_generator_', 'com.gitegg.code.generator', NULL, 'modal', 'single', 0, 'table', '24', NULL, 'E:\\', 'E:\\', NULL, 1, 1, 1, 1, 'ALL', '2021-10-09 17:44:02', 1, '2021-10-11 17:16:06', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (10, 0, 75, '字段配置-复制', 'field', 'gitegg-plugin-code', 't_sys_code_generator_field', 'genField', 't_sys_code_', 'com.gitegg.code.generator', NULL, 'drawer', 'multi', 0, 'table', '12', NULL, 'D:\\newService', 'D:\\newBackground', NULL, 1, 1, 1, 1, 'ALL', '2021-09-14 09:28:53', 1, '2021-09-14 16:44:27', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (11, 0, 75, '校验配置', 'validate111', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 0, 'table', '24', NULL, 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Cloud\\gitegg-plugin\\gitegg-code-generator', 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Portal\\gitegg-portal-ant-design', 'validateTest', 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (13, 0, 75, '校验配置-复制', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 0, 'table', '24', NULL, 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Cloud\\gitegg-plugin\\gitegg-code-generator', 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Portal\\gitegg-portal-ant-design', NULL, 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (14, 0, 75, '校验配置-复制-复制', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 0, 'table', '24', NULL, 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Cloud\\gitegg-plugin\\gitegg-code-generator', 'D:\\GitEggPublic\\eggGit\\GitEgg\\GitEgg-Portal\\gitegg-portal-ant-design', NULL, 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
-INSERT INTO `t_sys_code_generator_config` VALUES (15, 0, 75, '校验配置-复制', 'validate', 'gitegg-plugin-code', 't_sys_code_generator_validate', 'validate', 't_sys_code_generator_', 'com.gitegg.code.generator', '/code/generator/validate', 'modal', 'single', 0, 'table', '24', NULL, 'D:\\newService', 'D:\\newBackground', NULL, 1, 1, 0, 1, 'ALL', '2021-10-13 11:56:41', 1, '2021-10-13 17:22:44', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_code_generator_datasource
@@ -750,14 +108,12 @@ CREATE TABLE `t_sys_code_generator_datasource`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 76 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据源配置表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 77 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据源配置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_datasource
 -- ----------------------------
-INSERT INTO `t_sys_code_generator_datasource` VALUES (1, 0, '测试数据库', 'jdbc:mysql://172.16.20.188/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&all owMultiQueries=true&serverTimezone=Asia/Shanghai', 'myHisc', 'root4Hisc', '', 'mysql', '测试数据库', '2021-08-26 11:49:27', 1, '2021-08-26 13:49:26', 1, 1);
-INSERT INTO `t_sys_code_generator_datasource` VALUES (75, 0, '测试数据库001', 'jdbc:mysql://172.16.20.188/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&all owMultiQueries=true&serverTimezone=Asia/Shanghai', 'myHisc', 'root4Hisc', '', 'mysql', '', '2021-11-11 19:06:11', 1, '2021-11-11 19:15:29', 1, 0);
-
+INSERT INTO `t_sys_code_generator_datasource` VALUES (1, 0, '测试数据库', 'jdbc:mysql://127.0.0.1/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai', 'root', 'root', '', 'mysql', '测试数据库', '2021-08-26 11:49:27', 1, '2021-08-26 13:49:26', 1, 1);
 -- ----------------------------
 -- Table structure for t_sys_code_generator_dict
 -- ----------------------------
@@ -782,7 +138,7 @@ CREATE TABLE `t_sys_code_generator_dict`  (
   INDEX `INDEX_DICT_CODE`(`dict_code`) USING BTREE,
   INDEX `INDEX_PARENT_ID`(`parent_id`) USING BTREE,
   INDEX `INDEX_TENANT_ID`(`tenant_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 118 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 118 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据字典表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_dict
@@ -888,6 +244,11 @@ INSERT INTO `t_sys_code_generator_dict` VALUES (109, 0, 0, '0', '代码生成方
 INSERT INTO `t_sys_code_generator_dict` VALUES (110, 0, 109, '0,109', '全部', 'ALL', 1, 1, '全部', '2021-10-15 17:54:41', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (111, 0, 109, '0,109', '后端代码', 'SERVICE', 2, 1, '后端代码', '2021-10-15 17:55:16', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_code_generator_dict` VALUES (112, 0, 109, '0,109', '前端代码', 'FRONT', 3, 1, '前端代码', '2021-10-15 17:55:33', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_code_generator_dict` VALUES (113, 0, 0, '0', '灯杆类型', 'POLE_MODEL', 20, 1, '灯杆类型', '2021-11-24 12:51:34', 1, '2021-11-24 12:58:01', 1, 1);
+INSERT INTO `t_sys_code_generator_dict` VALUES (114, 0, 113, '0,113', '固定式', '1', 1, 1, '', '2021-11-24 12:52:42', 1, NULL, NULL, 1);
+INSERT INTO `t_sys_code_generator_dict` VALUES (115, 0, 113, '0,113', '滑槽式', '2', 2, 1, '', '2021-11-24 12:52:52', 1, NULL, NULL, 1);
+INSERT INTO `t_sys_code_generator_dict` VALUES (116, 0, 113, '0,113', '机架式', '3', 3, 1, '', '2021-11-24 12:53:05', 1, NULL, NULL, 1);
+INSERT INTO `t_sys_code_generator_dict` VALUES (117, 0, 41, '0,41', '主表子表', 'main_sub', 3, 1, '主表子表', '2021-12-03 22:12:40', 1, '2021-12-03 22:12:47', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_code_generator_field
@@ -930,234 +291,11 @@ CREATE TABLE `t_sys_code_generator_field`  (
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_field`(`generation_id`, `join_id`, `join_table_name`, `field_name`) USING BTREE COMMENT '联合约束'
-) ENGINE = InnoDB AUTO_INCREMENT = 1154 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段属性配置表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段属性配置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_field
 -- ----------------------------
-INSERT INTO `t_sys_code_generator_field` VALUES (306, 0, 2, 0, 't_sys_code_generator_field', 'id', 'bigint(20)', '主键', 'Long', 'id', 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (307, 0, 2, 0, 't_sys_code_generator_field', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 1, 1, 0, 0, 0, 0, 1, 1, NULL, 'INPUT_TEXT', 'LIKE_RIGHT', NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (308, 0, 2, 0, 't_sys_code_generator_field', 'generation_id', 'bigint(20)', '代码生成主键', 'Long', 'generationId', 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (309, 0, 2, 0, 't_sys_code_generator_field', 'join_id', 'bigint(20)', '关联表主键', 'Long', 'joinId', 1, 0, 0, 0, 0, 0, 0, 0, NULL, 'SELECT', '<=', NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (310, 0, 2, 0, 't_sys_code_generator_field', 'join_table_name', 'varchar(64)', '表名', 'String', 'joinTableName', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (311, 0, 2, 0, 't_sys_code_generator_field', 'field_name', 'varchar(32)', '字段名称', 'String', 'fieldName', 1, 1, 0, 0, 0, 0, 0, 0, NULL, 'TEXTAREA', 'QUERY_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (312, 0, 2, 0, 't_sys_code_generator_field', 'field_type', 'varchar(20)', '字段类型', 'String', 'fieldType', 0, 0, 0, 0, 0, 0, 1, 1, NULL, NULL, 'DATA_PERMISSION_TYPE', NULL, NULL, 1, 20, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (313, 0, 2, 0, 't_sys_code_generator_field', 'comment', 'varchar(100)', '字段描述', 'String', 'comment', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 100, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (314, 0, 2, 0, 't_sys_code_generator_field', 'entity_type', 'varchar(20)', '实体类型', 'String', 'entityType', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 20, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (315, 0, 2, 0, 't_sys_code_generator_field', 'entity_name', 'varchar(50)', '实体名称', 'String', 'entityName', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 50, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (316, 0, 2, 0, 't_sys_code_generator_field', 'form_add', 'tinyint(2)', '表单新增', 'Integer', 'formAdd', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (317, 0, 2, 0, 't_sys_code_generator_field', 'form_edit', 'tinyint(2)', '表单编辑', 'Integer', 'formEdit', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (318, 0, 2, 0, 't_sys_code_generator_field', 'query_term', 'tinyint(2)', '查询条件', 'Integer', 'queryTerm', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (319, 0, 2, 0, 't_sys_code_generator_field', 'list_show', 'tinyint(2)', '列表展示', 'Integer', 'listShow', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (320, 0, 2, 0, 't_sys_code_generator_field', 'import_flag', 'tinyint(2)', '是否支持导入 1支持 0不支持', 'Integer', 'importFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (321, 0, 2, 0, 't_sys_code_generator_field', 'export_flag', 'tinyint(2)', '是否支持导出 1支持 0不支持', 'Integer', 'exportFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (322, 0, 2, 0, 't_sys_code_generator_field', 'required', 'tinyint(2)', '是否必填', 'Integer', 'required', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (323, 0, 2, 0, 't_sys_code_generator_field', 'field_unique', 'tinyint(2)', '是否唯一', 'Integer', 'fieldUnique', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (324, 0, 2, 0, 't_sys_code_generator_field', 'query_type', 'varchar(32)', '查询类型', 'String', 'queryType', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (325, 0, 2, 0, 't_sys_code_generator_field', 'control_type', 'varchar(32)', '组件类型', 'String', 'controlType', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (326, 0, 2, 0, 't_sys_code_generator_field', 'dict_code', 'varchar(50)', '字典编码', 'String', 'dictCode', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 50, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (327, 0, 2, 0, 't_sys_code_generator_field', 'min', 'bigint(20)', '最小值', 'Long', 'min', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (328, 0, 2, 0, 't_sys_code_generator_field', 'max', 'bigint(20)', '最大值', 'Long', 'max', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (329, 0, 2, 0, 't_sys_code_generator_field', 'min_length', 'int(11)', '最小长度', 'Integer', 'minLength', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 10, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (330, 0, 2, 0, 't_sys_code_generator_field', 'max_length', 'int(11)', '字段最大长度', 'Integer', 'maxLength', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 10, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (331, 0, 2, 0, 't_sys_code_generator_field', 'field_sort', 'int(11)', '显示排序', 'Integer', 'fieldSort', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 10, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (332, 0, 2, 0, 't_sys_code_generator_field', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (333, 0, 2, 0, 't_sys_code_generator_field', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (334, 0, 2, 0, 't_sys_code_generator_field', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (335, 0, 2, 0, 't_sys_code_generator_field', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (336, 0, 2, 0, 't_sys_code_generator_field', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (337, 0, 2, 1, 't_mall_goods_brand', 'id', 'bigint(20)', '品牌id', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (338, 0, 2, 1, 't_mall_goods_brand', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (339, 0, 2, 1, 't_mall_goods_brand', 'name', 'varchar(64)', '品牌名称', 'String', 'name', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (340, 0, 2, 1, 't_mall_goods_brand', 'image', 'varchar(256)', '品牌图片地址', 'String', 'image', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 256, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (341, 0, 2, 1, 't_mall_goods_brand', 'letter', 'char(1)', '品牌的首字母', 'String', 'letter', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (342, 0, 2, 1, 't_mall_goods_brand', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (343, 0, 2, 1, 't_mall_goods_brand', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (344, 0, 2, 1, 't_mall_goods_brand', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (345, 0, 2, 1, 't_mall_goods_brand', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (346, 0, 2, 1, 't_mall_goods_brand', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (347, 0, 2, 2, 't_mall_goods_brand', 'id', 'bigint(20)', '品牌id', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (348, 0, 2, 2, 't_mall_goods_brand', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (349, 0, 2, 2, 't_mall_goods_brand', 'name', 'varchar(64)', '品牌名称', 'String', 'name', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (350, 0, 2, 2, 't_mall_goods_brand', 'image', 'varchar(256)', '品牌图片地址', 'String', 'image', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 256, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (351, 0, 2, 2, 't_mall_goods_brand', 'letter', 'char(1)', '品牌的首字母', 'String', 'letter', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (352, 0, 2, 2, 't_mall_goods_brand', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (353, 0, 2, 2, 't_mall_goods_brand', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (354, 0, 2, 2, 't_mall_goods_brand', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (355, 0, 2, 2, 't_mall_goods_brand', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (356, 0, 2, 2, 't_mall_goods_brand', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (357, 0, 2, 3, 't_mall_goods_brand', 'id', 'bigint(20)', '品牌id', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (358, 0, 2, 3, 't_mall_goods_brand', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (359, 0, 2, 3, 't_mall_goods_brand', 'name', 'varchar(64)', '品牌名称', 'String', 'name', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (360, 0, 2, 3, 't_mall_goods_brand', 'image', 'varchar(256)', '品牌图片地址', 'String', 'image', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 256, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (361, 0, 2, 3, 't_mall_goods_brand', 'letter', 'char(1)', '品牌的首字母', 'String', 'letter', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (362, 0, 2, 3, 't_mall_goods_brand', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (363, 0, 2, 3, 't_mall_goods_brand', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (364, 0, 2, 3, 't_mall_goods_brand', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (365, 0, 2, 3, 't_mall_goods_brand', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (366, 0, 2, 3, 't_mall_goods_brand', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (367, 0, 3, 0, 't_sys_code_generator_config', 'id', 'bigint(20)', '主键', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (368, 0, 3, 0, 't_sys_code_generator_config', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (369, 0, 3, 0, 't_sys_code_generator_config', 'datasource_id', 'bigint(20)', '数据源', 'Long', 'datasourceId', 1, 1, 1, 1, 1, 1, 1, 0, '=', 'SELECT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (370, 0, 3, 0, 't_sys_code_generator_config', 'module_name', 'varchar(32)', '模块名称', 'String', 'moduleName', 1, 1, 1, 1, 1, 1, 1, 0, 'LIKE', 'INPUT_TEXT', NULL, NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (371, 0, 3, 0, 't_sys_code_generator_config', 'module_code', 'varchar(32)', '模块代码', 'String', 'moduleCode', 1, 1, 1, 1, 1, 1, 1, 0, 'LIKE', 'INPUT_TEXT', NULL, NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (372, 0, 3, 0, 't_sys_code_generator_config', 'service_name', 'varchar(64)', '服务名称', 'String', 'serviceName', 1, 1, 1, 1, 1, 1, 1, 0, 'LIKE', 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (373, 0, 3, 0, 't_sys_code_generator_config', 'table_name', 'varchar(64)', '表名', 'String', 'tableName', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (374, 0, 3, 0, 't_sys_code_generator_config', 'table_alias', 'varchar(64)', '表别名', 'String', 'tableAlias', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (375, 0, 3, 0, 't_sys_code_generator_config', 'table_prefix', 'varchar(64)', '表前缀', 'String', 'tablePrefix', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (376, 0, 3, 0, 't_sys_code_generator_config', 'parent_package', 'varchar(500)', '父包名', 'String', 'parentPackage', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 500, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (377, 0, 3, 0, 't_sys_code_generator_config', 'form_type', 'varchar(32)', '表单类型', 'String', 'formType', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'SELECT', 'UNION_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (378, 0, 3, 0, 't_sys_code_generator_config', 'table_type', 'varchar(32)', '表类型', 'String', 'tableType', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'SELECT', 'TABLE_DATA_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (379, 0, 3, 0, 't_sys_code_generator_config', 'table_show_type', 'varchar(32)', '展示类型', 'String', 'tableShowType', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'SELECT', 'FORM_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (380, 0, 3, 0, 't_sys_code_generator_config', 'form_item_col', 'varchar(32)', '字段排列', 'String', 'formItemCol', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'SELECT', 'FORM_COL', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (381, 0, 3, 0, 't_sys_code_generator_config', 'left_tree_type', 'varchar(32)', '左树类型', 'String', 'leftTreeType', 1, 1, 0, 1, 1, 1, 0, 0, NULL, 'SELECT', 'TREE_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (382, 0, 3, 0, 't_sys_code_generator_config', 'front_code_path', 'varchar(1000)', '前端代码路径', 'String', 'frontCodePath', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 1000, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (383, 0, 3, 0, 't_sys_code_generator_config', 'service_code_path', 'varchar(1000)', '后端代码路径', 'String', 'serviceCodePath', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 1000, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (384, 0, 3, 0, 't_sys_code_generator_config', 'import_flag', 'tinyint(2)', '支持导入', 'Integer', 'importFlag', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'RADIO', 'YES_NO', NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (385, 0, 3, 0, 't_sys_code_generator_config', 'export_flag', 'tinyint(2)', '支持导出', 'Integer', 'exportFlag', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'RADIO', 'YES_NO', NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (386, 0, 3, 0, 't_sys_code_generator_config', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (387, 0, 3, 0, 't_sys_code_generator_config', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (388, 0, 3, 0, 't_sys_code_generator_config', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (389, 0, 3, 0, 't_sys_code_generator_config', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (390, 0, 3, 0, 't_sys_code_generator_config', 'del_flag', 'tinyint(2)', '是否删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (391, 0, 9, 0, 't_sys_code_generator_config', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (392, 0, 9, 0, 't_sys_code_generator_config', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (393, 0, 9, 0, 't_sys_code_generator_config', 'datasource_id', 'bigint(20)', '数据源', 'Long', 'datasourceId', 1, 1, 1, 1, 1, 1, 1, 0, '=', 'SELECT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (394, 0, 9, 0, 't_sys_code_generator_config', 'del_flag', 'tinyint(2)', '是否删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (395, 0, 9, 0, 't_sys_code_generator_config', 'export_flag', 'tinyint(2)', '支持导出', 'Integer', 'exportFlag', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'RADIO', 'YES_NO', NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (396, 0, 9, 0, 't_sys_code_generator_config', 'form_item_col', 'varchar(32)', '字段排列', 'String', 'formItemCol', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'SELECT', 'FORM_COL', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (397, 0, 9, 0, 't_sys_code_generator_config', 'form_type', 'varchar(32)', '表单类型', 'String', 'formType', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'SELECT', 'UNION_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (398, 0, 9, 0, 't_sys_code_generator_config', 'front_code_path', 'varchar(1000)', '前端代码路径', 'String', 'frontCodePath', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 1000, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (399, 0, 9, 0, 't_sys_code_generator_config', 'id', 'bigint(20)', '主键', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (400, 0, 9, 0, 't_sys_code_generator_config', 'import_flag', 'tinyint(2)', '支持导入', 'Integer', 'importFlag', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'RADIO', 'YES_NO', NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (401, 0, 9, 0, 't_sys_code_generator_config', 'left_tree_type', 'varchar(32)', '左树类型', 'String', 'leftTreeType', 1, 1, 0, 1, 1, 1, 0, 0, NULL, 'SELECT', 'TREE_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (402, 0, 9, 0, 't_sys_code_generator_config', 'module_code', 'varchar(32)', '模块代码', 'String', 'moduleCode', 1, 1, 1, 1, 1, 1, 1, 0, 'LIKE', 'INPUT_TEXT', NULL, NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (403, 0, 9, 0, 't_sys_code_generator_config', 'module_name', 'varchar(32)', '模块名称', 'String', 'moduleName', 1, 1, 1, 1, 1, 1, 1, 0, 'LIKE', 'INPUT_TEXT', NULL, NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (404, 0, 9, 0, 't_sys_code_generator_config', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (405, 0, 9, 0, 't_sys_code_generator_config', 'parent_package', 'varchar(500)', '父包名', 'String', 'parentPackage', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 500, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (406, 0, 9, 0, 't_sys_code_generator_config', 'service_code_path', 'varchar(1000)', '后端代码路径', 'String', 'serviceCodePath', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 1000, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (407, 0, 9, 0, 't_sys_code_generator_config', 'service_name', 'varchar(64)', '服务名称', 'String', 'serviceName', 1, 1, 1, 1, 1, 1, 1, 0, 'LIKE', 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (408, 0, 9, 0, 't_sys_code_generator_config', 'table_alias', 'varchar(64)', '表别名', 'String', 'tableAlias', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (409, 0, 9, 0, 't_sys_code_generator_config', 'table_name', 'varchar(64)', '表名', 'String', 'tableName', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (410, 0, 9, 0, 't_sys_code_generator_config', 'table_prefix', 'varchar(64)', '表前缀', 'String', 'tablePrefix', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (411, 0, 9, 0, 't_sys_code_generator_config', 'table_show_type', 'varchar(32)', '展示类型', 'String', 'tableShowType', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'SELECT', 'FORM_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (412, 0, 9, 0, 't_sys_code_generator_config', 'table_type', 'varchar(32)', '表类型', 'String', 'tableType', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'SELECT', 'TABLE_DATA_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (413, 0, 9, 0, 't_sys_code_generator_config', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:13', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (414, 0, 9, 0, 't_sys_code_generator_config', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 10:54:01', 1, '2021-10-11 15:32:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (415, 0, 10, 0, 't_sys_code_generator_field', 'comment', 'varchar(100)', '字段描述', 'String', 'comment', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 100, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (416, 0, 10, 0, 't_sys_code_generator_field', 'control_type', 'varchar(32)', '组件类型', 'String', 'controlType', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (417, 0, 10, 0, 't_sys_code_generator_field', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (418, 0, 10, 0, 't_sys_code_generator_field', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (419, 0, 10, 0, 't_sys_code_generator_field', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (420, 0, 10, 0, 't_sys_code_generator_field', 'dict_code', 'varchar(50)', '字典编码', 'String', 'dictCode', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 50, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (421, 0, 10, 0, 't_sys_code_generator_field', 'entity_name', 'varchar(50)', '实体名称', 'String', 'entityName', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 50, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (422, 0, 10, 0, 't_sys_code_generator_field', 'entity_type', 'varchar(20)', '实体类型', 'String', 'entityType', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 20, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (423, 0, 10, 0, 't_sys_code_generator_field', 'export_flag', 'tinyint(2)', '是否支持导出 1支持 0不支持', 'Integer', 'exportFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (424, 0, 10, 0, 't_sys_code_generator_field', 'field_name', 'varchar(32)', '字段名称', 'String', 'fieldName', 1, 1, 0, 0, 0, 0, 0, 0, NULL, 'TEXTAREA', 'QUERY_TYPE', NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (425, 0, 10, 0, 't_sys_code_generator_field', 'field_sort', 'int(11)', '显示排序', 'Integer', 'fieldSort', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 10, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (426, 0, 10, 0, 't_sys_code_generator_field', 'field_type', 'varchar(20)', '字段类型', 'String', 'fieldType', 0, 0, 0, 0, 0, 0, 1, 1, NULL, NULL, 'DATA_PERMISSION_TYPE', NULL, NULL, 1, 20, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (427, 0, 10, 0, 't_sys_code_generator_field', 'field_unique', 'tinyint(2)', '是否唯一', 'Integer', 'fieldUnique', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (428, 0, 10, 0, 't_sys_code_generator_field', 'form_add', 'tinyint(2)', '表单新增', 'Integer', 'formAdd', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (429, 0, 10, 0, 't_sys_code_generator_field', 'form_edit', 'tinyint(2)', '表单编辑', 'Integer', 'formEdit', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (430, 0, 10, 0, 't_sys_code_generator_field', 'generation_id', 'bigint(20)', '代码生成主键', 'Long', 'generationId', 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (431, 0, 10, 0, 't_sys_code_generator_field', 'id', 'bigint(20)', '主键', 'Long', 'id', 1, 1, 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (432, 0, 10, 0, 't_sys_code_generator_field', 'import_flag', 'tinyint(2)', '是否支持导入 1支持 0不支持', 'Integer', 'importFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (433, 0, 10, 0, 't_sys_code_generator_field', 'join_id', 'bigint(20)', '关联表主键', 'Long', 'joinId', 1, 0, 0, 0, 0, 0, 0, 0, NULL, 'SELECT', '<=', NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (434, 0, 10, 0, 't_sys_code_generator_field', 'join_table_name', 'varchar(64)', '表名', 'String', 'joinTableName', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (435, 0, 10, 0, 't_sys_code_generator_field', 'list_show', 'tinyint(2)', '列表展示', 'Integer', 'listShow', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (436, 0, 10, 0, 't_sys_code_generator_field', 'max', 'bigint(20)', '最大值', 'Long', 'max', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (437, 0, 10, 0, 't_sys_code_generator_field', 'max_length', 'int(11)', '字段最大长度', 'Integer', 'maxLength', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 10, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (438, 0, 10, 0, 't_sys_code_generator_field', 'min', 'bigint(20)', '最小值', 'Long', 'min', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (439, 0, 10, 0, 't_sys_code_generator_field', 'min_length', 'int(11)', '最小长度', 'Integer', 'minLength', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 10, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (440, 0, 10, 0, 't_sys_code_generator_field', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (441, 0, 10, 0, 't_sys_code_generator_field', 'query_term', 'tinyint(2)', '查询条件', 'Integer', 'queryTerm', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (442, 0, 10, 0, 't_sys_code_generator_field', 'query_type', 'varchar(32)', '查询类型', 'String', 'queryType', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 32, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (443, 0, 10, 0, 't_sys_code_generator_field', 'required', 'tinyint(2)', '是否必填', 'Integer', 'required', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:15', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (444, 0, 10, 0, 't_sys_code_generator_field', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 1, 1, 0, 0, 0, 0, 1, 1, NULL, 'INPUT_TEXT', 'LIKE_RIGHT', NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:14', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (445, 0, 10, 0, 't_sys_code_generator_field', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (446, 0, 10, 1, 't_mall_goods_brand', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (447, 0, 10, 1, 't_mall_goods_brand', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (448, 0, 10, 1, 't_mall_goods_brand', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (449, 0, 10, 1, 't_mall_goods_brand', 'id', 'bigint(20)', '品牌id', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (450, 0, 10, 1, 't_mall_goods_brand', 'image', 'varchar(256)', '品牌图片地址', 'String', 'image', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 256, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (451, 0, 10, 1, 't_mall_goods_brand', 'letter', 'char(1)', '品牌的首字母', 'String', 'letter', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (452, 0, 10, 1, 't_mall_goods_brand', 'name', 'varchar(64)', '品牌名称', 'String', 'name', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (453, 0, 10, 1, 't_mall_goods_brand', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (454, 0, 10, 1, 't_mall_goods_brand', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (455, 0, 10, 1, 't_mall_goods_brand', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (456, 0, 10, 2, 't_mall_goods_brand', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (457, 0, 10, 2, 't_mall_goods_brand', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (458, 0, 10, 2, 't_mall_goods_brand', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (459, 0, 10, 2, 't_mall_goods_brand', 'id', 'bigint(20)', '品牌id', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (460, 0, 10, 2, 't_mall_goods_brand', 'image', 'varchar(256)', '品牌图片地址', 'String', 'image', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 256, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (461, 0, 10, 2, 't_mall_goods_brand', 'letter', 'char(1)', '品牌的首字母', 'String', 'letter', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (462, 0, 10, 2, 't_mall_goods_brand', 'name', 'varchar(64)', '品牌名称', 'String', 'name', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (463, 0, 10, 2, 't_mall_goods_brand', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (464, 0, 10, 2, 't_mall_goods_brand', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:16', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (465, 0, 10, 2, 't_mall_goods_brand', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (466, 0, 10, 3, 't_mall_goods_brand', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (467, 0, 10, 3, 't_mall_goods_brand', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (468, 0, 10, 3, 't_mall_goods_brand', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (469, 0, 10, 3, 't_mall_goods_brand', 'id', 'bigint(20)', '品牌id', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (470, 0, 10, 3, 't_mall_goods_brand', 'image', 'varchar(256)', '品牌图片地址', 'String', 'image', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 256, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (471, 0, 10, 3, 't_mall_goods_brand', 'letter', 'char(1)', '品牌的首字母', 'String', 'letter', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (472, 0, 10, 3, 't_mall_goods_brand', 'name', 'varchar(64)', '品牌名称', 'String', 'name', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (473, 0, 10, 3, 't_mall_goods_brand', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (474, 0, 10, 3, 't_mall_goods_brand', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (475, 0, 10, 3, 't_mall_goods_brand', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-09-28 17:57:36', 1, '2021-09-28 17:58:17', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (476, 0, 10, 4, 't_mall_goods_brand', 'id', 'bigint(20)', '品牌id', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:28', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (477, 0, 10, 4, 't_mall_goods_brand', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:28', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (478, 0, 10, 4, 't_mall_goods_brand', 'name', 'varchar(64)', '品牌名称', 'String', 'name', 1, 1, 0, 1, 1, 1, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:28', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (479, 0, 10, 4, 't_mall_goods_brand', 'image', 'varchar(256)', '品牌图片地址', 'String', 'image', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 256, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (480, 0, 10, 4, 't_mall_goods_brand', 'letter', 'char(1)', '品牌的首字母', 'String', 'letter', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (481, 0, 10, 4, 't_mall_goods_brand', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (482, 0, 10, 4, 't_mall_goods_brand', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (483, 0, 10, 4, 't_mall_goods_brand', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (484, 0, 10, 4, 't_mall_goods_brand', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (485, 0, 10, 4, 't_mall_goods_brand', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (486, 0, 10, 5, 't_mall_goods_brand', 'id', 'bigint(20)', '品牌id', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (487, 0, 10, 5, 't_mall_goods_brand', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (488, 0, 10, 5, 't_mall_goods_brand', 'name', 'varchar(64)', '品牌名称', 'String', 'name', 1, 1, 0, 1, 1, 1, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (489, 0, 10, 5, 't_mall_goods_brand', 'image', 'varchar(256)', '品牌图片地址', 'String', 'image', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 256, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (490, 0, 10, 5, 't_mall_goods_brand', 'letter', 'char(1)', '品牌的首字母', 'String', 'letter', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (491, 0, 10, 5, 't_mall_goods_brand', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (492, 0, 10, 5, 't_mall_goods_brand', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (493, 0, 10, 5, 't_mall_goods_brand', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (494, 0, 10, 5, 't_mall_goods_brand', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (495, 0, 10, 5, 't_mall_goods_brand', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:29', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (496, 0, 10, 6, 't_mall_goods_brand', 'id', 'bigint(20)', '品牌id', 'Long', 'id', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (497, 0, 10, 6, 't_mall_goods_brand', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (498, 0, 10, 6, 't_mall_goods_brand', 'name', 'varchar(64)', '品牌名称', 'String', 'name', 1, 1, 0, 1, 1, 1, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 64, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (499, 0, 10, 6, 't_mall_goods_brand', 'image', 'varchar(256)', '品牌图片地址', 'String', 'image', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 256, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (500, 0, 10, 6, 't_mall_goods_brand', 'letter', 'char(1)', '品牌的首字母', 'String', 'letter', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (501, 0, 10, 6, 't_mall_goods_brand', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (502, 0, 10, 6, 't_mall_goods_brand', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (503, 0, 10, 6, 't_mall_goods_brand', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (504, 0, 10, 6, 't_mall_goods_brand', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (505, 0, 10, 6, 't_mall_goods_brand', 'del_flag', 'tinyint(2)', '1:删除 0:不删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-11 19:15:23', 1, '2021-10-18 15:25:30', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (506, 0, 11, 0, 't_sys_code_generator_validate', 'id', 'bigint(20)', '主键', 'Long', 'id', 0, 0, 0, 1, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (507, 0, 11, 0, 't_sys_code_generator_validate', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (508, 0, 11, 0, 't_sys_code_generator_validate', 'validate_name', 'varchar(32)', '校验名称', 'String', 'validateName', 1, 1, 1, 1, 1, 1, 1, 1, 'LIKE', 'INPUT_TEXT', NULL, NULL, NULL, 1, 32, NULL, 2, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (509, 0, 11, 0, 't_sys_code_generator_validate', 'validate_regular', 'varchar(255)', '校验规则', 'String', 'validateRegular', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 255, NULL, 1, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (510, 0, 11, 0, 't_sys_code_generator_validate', 'status', 'tinyint(2)', '状态', 'Integer', 'status', 1, 1, 1, 1, 1, 1, 1, 0, '=', 'RADIO', 'ENABLE_OR_NOT', NULL, NULL, 1, 3, '1', NULL, '45345345', 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (511, 0, 11, 0, 't_sys_code_generator_validate', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 1, 0, 1, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, '3453', 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (512, 0, 11, 0, 't_sys_code_generator_validate', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, '35434', 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (513, 0, 11, 0, 't_sys_code_generator_validate', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, '34534', 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (514, 0, 11, 0, 't_sys_code_generator_validate', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (515, 0, 11, 0, 't_sys_code_generator_validate', 'del_flag', 'tinyint(2)', '是否删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (516, 0, 10, 0, 't_sys_code_generator_field', 'default_value', 'varchar(50)', '默认值', 'String', 'defaultValue', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 50, NULL, NULL, NULL, 1, '2021-10-18 15:25:28', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (517, 0, 10, 0, 't_sys_code_generator_field', 'validate_id', 'bigint(20)', '校验规则主键', 'Long', 'validateId', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-18 15:25:28', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (518, 0, 10, 0, 't_sys_code_generator_field', 'validate_regular', 'varchar(255)', '自定义正则表达式校验规则', 'String', 'validateRegular', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 255, NULL, NULL, NULL, 1, '2021-10-18 15:25:28', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (519, 0, 15, 0, 't_sys_code_generator_validate', 'create_time', 'datetime', '创建时间', 'LocalDateTime', 'createTime', 0, 0, 0, 1, 0, 1, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, '3453', 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (520, 0, 15, 0, 't_sys_code_generator_validate', 'creator', 'bigint(20)', '创建者', 'Long', 'creator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, '35434', 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (521, 0, 15, 0, 't_sys_code_generator_validate', 'del_flag', 'tinyint(2)', '是否删除', 'Integer', 'delFlag', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 3, NULL, NULL, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (522, 0, 15, 0, 't_sys_code_generator_validate', 'id', 'bigint(20)', '主键', 'Long', 'id', 0, 0, 0, 1, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (523, 0, 15, 0, 't_sys_code_generator_validate', 'operator', 'bigint(20)', '更新者', 'Long', 'operator', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (524, 0, 15, 0, 't_sys_code_generator_validate', 'status', 'tinyint(2)', '状态', 'Integer', 'status', 1, 1, 1, 1, 1, 1, 1, 0, '=', 'RADIO', 'ENABLE_OR_NOT', NULL, NULL, 1, 3, '1', NULL, '45345345', 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (525, 0, 15, 0, 't_sys_code_generator_validate', 'tenant_id', 'bigint(20)', '租户id', 'Long', 'tenantId', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (526, 0, 15, 0, 't_sys_code_generator_validate', 'update_time', 'datetime', '更新时间', 'LocalDateTime', 'updateTime', 0, 0, 0, 0, 0, 0, 0, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 19, NULL, NULL, '34534', 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (527, 0, 15, 0, 't_sys_code_generator_validate', 'validate_name', 'varchar(32)', '校验名称', 'String', 'validateName', 1, 1, 1, 1, 1, 1, 1, 1, 'LIKE', 'INPUT_TEXT', NULL, NULL, NULL, 1, 32, NULL, 2, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
-INSERT INTO `t_sys_code_generator_field` VALUES (528, 0, 15, 0, 't_sys_code_generator_validate', 'validate_regular', 'varchar(255)', '校验规则', 'String', 'validateRegular', 1, 1, 0, 1, 1, 1, 1, 0, NULL, 'INPUT_TEXT', NULL, NULL, NULL, 1, 255, NULL, 1, NULL, 1, '2021-10-13 12:00:14', 1, '2021-10-15 15:56:34', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_code_generator_table_join
@@ -1185,17 +323,11 @@ CREATE TABLE `t_sys_code_generator_table_join`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '多表查询时的联合表配置' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '多表查询时的联合表配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_table_join
 -- ----------------------------
-INSERT INTO `t_sys_code_generator_table_join` VALUES (1, 0, 2, NULL, NULL, NULL, NULL, 't_mall_goods_brand', 'brand', 't_mall_goods_', 'left', 'name,image,letter', 'on a.id = b.id and a.del_flag = 0', NULL, 1, '2021-09-18 18:00:30', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (2, 0, 2, NULL, NULL, NULL, NULL, 't_mall_goods_brand', '234', '234', 'left', 'letter,image,name', '222', NULL, 2, '2021-09-18 18:04:01', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (3, 0, 2, NULL, NULL, NULL, NULL, 't_mall_goods_brand', '345', '345', 'right', 'name,tenant_id,create_time,creator,image', '4534', NULL, 345, '2021-09-22 09:08:49', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (4, 0, 10, NULL, NULL, NULL, NULL, 't_mall_goods_brand', 'brand', 't_mall_goods_', 'left', 'name,image,letter', 'on a.id = b.id and a.del_flag = 0', NULL, 1, '2021-09-18 18:00:30', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (5, 0, 10, NULL, NULL, NULL, NULL, 't_mall_goods_brand', '234', '234', 'left', 'letter,image,name', '222', NULL, 2, '2021-09-18 18:04:01', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_code_generator_table_join` VALUES (6, 0, 10, NULL, NULL, NULL, NULL, 't_mall_goods_brand', '345', '345', 'right', 'name,tenant_id,create_time,creator,image', '4534', NULL, 345, '2021-09-22 09:08:49', 1, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_code_generator_validate
@@ -1213,7 +345,7 @@ CREATE TABLE `t_sys_code_generator_validate`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段校验规则配置表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段校验规则配置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_code_generator_validate
@@ -1256,17 +388,12 @@ CREATE TABLE `t_sys_data_permission_role`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据权限配置表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据权限配置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_data_permission_role
 -- ----------------------------
 INSERT INTO `t_sys_data_permission_role` VALUES (1, 0, 15, '查询用户列表数据权限', 'com.gitegg.service.system.mapper.UserMapper.selectUserList', 't_sys_organization_user', 'organizationUser', 'password,roleKey', 'roleIds,createTime', 't_sys_organization', 'orgDataPermission', '2', '', 1, '查询用户列表数据权限', '2021-05-13 16:59:07', 1, '2021-07-22 16:26:37', 1, 0);
-INSERT INTO `t_sys_data_permission_role` VALUES (2, 0, 15, '2342341', '2342342341', '2342341', '2342341', '2342341', '2342341', '2342341', '2342341', '3', NULL, 1, '2342341', '2021-05-13 18:13:02', 1, '2021-05-13 18:28:15', 1, 0);
-INSERT INTO `t_sys_data_permission_role` VALUES (3, 0, 15, '4234234', '234234', '23423', '234234', '234234', '234234', '234234', '234234', '3', NULL, 1, '23423423', '2021-05-13 18:24:13', 1, '2021-05-13 18:33:31', 1, 0);
-INSERT INTO `t_sys_data_permission_role` VALUES (4, 0, 16, '35345435', '3453455', '3345345', '345345', '345345345', '345345', '345345', '345345', '3', NULL, 1, '345345345435', '2021-05-14 16:57:45', 1, NULL, NULL, 1);
-INSERT INTO `t_sys_data_permission_role` VALUES (5, 0, 14, '2342341', '2342342342342341', '2342341', '2342341', '2342342342341', '3242342341', '234231', '42341', '3', NULL, 1, '234234', '2021-05-14 16:59:58', 1, '2021-05-14 17:04:25', 1, 0);
-INSERT INTO `t_sys_data_permission_role` VALUES (6, 0, 14, '23423', '4234234', '234234', '234234', '234234', '234234', '23423', '4234', '3', NULL, 0, '123123', '2021-05-14 17:04:41', 1, '2021-05-14 17:28:18', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_data_permission_user
@@ -1284,31 +411,13 @@ CREATE TABLE `t_sys_data_permission_user`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据权限多部门' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据权限多部门' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_data_permission_user
 -- ----------------------------
 INSERT INTO `t_sys_data_permission_user` VALUES (1, 1, 2, 1, 1, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (2, 1, 3, 1, 1, '2020-11-27 02:55:30', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (4, 0, 4, 9, 1, '2020-12-25 15:19:17', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (5, 0, 5, 12, 1, '2020-12-25 17:02:36', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (7, 0, 2, 13, 1, '2020-12-26 21:19:49', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (15, 0, 4, 13, 1, '2020-12-27 14:11:07', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (16, 0, 3, 12, 1, '2020-12-27 14:14:22', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (17, 0, 6, 13, 1, '2021-01-11 09:55:02', 1, NULL, NULL, 1);
-INSERT INTO `t_sys_data_permission_user` VALUES (18, 0, 6, 12, 1, '2021-05-14 17:50:56', 1, NULL, NULL, 1);
-INSERT INTO `t_sys_data_permission_user` VALUES (19, 0, 6, 9, 1, '2021-05-14 17:51:07', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (20, 0, 6, 14, 1, '2021-05-14 17:51:07', 1, NULL, NULL, 1);
-INSERT INTO `t_sys_data_permission_user` VALUES (21, 0, 6, 10, 1, '2021-05-14 17:51:07', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (22, 0, 5, 10, 1, '2021-05-14 17:51:15', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (23, 0, 6, 11, 1, '2021-05-14 17:51:21', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (24, 0, 2, 11, 1, '2021-05-14 19:51:34', 1, NULL, NULL, 1);
-INSERT INTO `t_sys_data_permission_user` VALUES (25, 0, 6, 14, 1, '2021-05-14 20:00:17', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (26, 0, 2, 14, 1, '2021-07-06 09:54:20', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (27, 0, 7, 14, 1, '2021-07-06 18:17:26', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (28, 0, 7, 11, 1, '2021-07-06 18:17:40', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_data_permission_user` VALUES (29, 0, 8, 12, 1, '2021-08-26 17:28:29', 1, NULL, NULL, 0);
+
 
 -- ----------------------------
 -- Table structure for t_sys_dfs
@@ -1336,13 +445,13 @@ CREATE TABLE `t_sys_dfs`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '分布式存储配置表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '分布式存储配置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_dfs
 -- ----------------------------
 INSERT INTO `t_sys_dfs` VALUES (1, 0, 2, 'MinIO', 'http://172.16.20.188:9000', 'http://172.16.20.188:9000', 'gitegg', 'gitegg', 'gitegg', 'minioadmin', 'minioadmin', 1, 1, 0, 'MinIO存储', '2021-05-06 14:05:59', 1, '2021-05-06 15:15:43', 1, 0);
-INSERT INTO `t_sys_dfs` VALUES (2, 0, 3, 'QINiuKODO', 'http://qss6id4y7.hn-bkt.clouddn.com', 'http://upload.qiniup.com', 'gitegg', 'gitegg', 'zone0', '111111', '111111', 0, 1, 0, '七牛云存储', '2021-05-06 14:09:50', 1, '2021-05-07 09:50:49', 1, 0);
+INSERT INTO `t_sys_dfs` VALUES (2, 0, 3, 'QINiuKODO', 'http://qss6id4y7.hn-bkt.clouddn.com', 'http://upload.qiniup.com', 'gitegg', 'gitegg', 'zone0', 'xxxxxx', 'xxxxxxxxxx', 0, 1, 0, '七牛云存储', '2021-05-06 14:09:50', 1, '2021-05-07 09:50:49', 1, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_dfs_file
@@ -1365,14 +474,13 @@ CREATE TABLE `t_sys_dfs_file`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 78 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '分布式存储文件记录表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 78 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '分布式存储文件记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_dfs_file
 -- ----------------------------
 INSERT INTO `t_sys_dfs_file` VALUES (1, 0, NULL, NULL, NULL, '20210506181426.png', NULL, 0, 1, NULL, '2021-05-08 16:20:50', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_dfs_file` VALUES (2, 0, NULL, NULL, NULL, '20210506181426.png', NULL, 0, 1, NULL, '2021-05-08 16:27:55', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_dfs_file` VALUES (3, 0, 1, NULL, '20210506181426.png', 'Fpry1OhhUZpuLe4jUXym7oc-kJ6_.png', 'png', 1103, 1, NULL, '2021-05-08 16:32:24', 1, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_dict
@@ -5093,7 +4201,7 @@ INSERT INTO `t_sys_district` VALUES (7041, '叶集', 231, 'y', 'yj', 'yeji', '�
 -- ----------------------------
 DROP TABLE IF EXISTS `t_sys_log`;
 CREATE TABLE `t_sys_log`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
   `method_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接口名称',
   `in_params` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '入参',
@@ -5113,6 +4221,37 @@ CREATE TABLE `t_sys_log`  (
 -- Records of t_sys_log
 -- ----------------------------
 INSERT INTO `t_sys_log` VALUES (1, 0, '1', '1', '1', '1', '1', '1', '2020-11-30 17:51:12', 1, '2020-11-30 17:51:15', 1, 0);
+
+-- ----------------------------
+-- Table structure for t_sys_log_api
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sys_log_api`;
+CREATE TABLE `t_sys_log_api`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '租户id',
+  `request_uri` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求地址',
+  `query_params` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'GET请求查询参数',
+  `request_body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '请求参数',
+  `response_code` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT '返回码',
+  `response_body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '返回参数',
+  `start_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
+  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
+  `duration` bigint(20) NULL DEFAULT NULL COMMENT '耗费时长',
+  `scheme` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT 'HTTP   HTTPS',
+  `method` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '1' COMMENT 'POST   GET',
+  `client_host` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '客户端HOST',
+  `client_ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '客户端IP',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建日期',
+  `creator` bigint(20) NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新日期',
+  `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
+  `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '是否删除 1:删除 0:不删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_sys_log_api
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_sys_organization
@@ -5195,7 +4334,7 @@ CREATE TABLE `t_sys_organization_user`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_organization_user
@@ -5206,9 +4345,11 @@ INSERT INTO `t_sys_organization_user` VALUES (3, 0, 1, 3, '2020-11-27 02:55:30',
 INSERT INTO `t_sys_organization_user` VALUES (5, 0, 9, 4, '2020-12-25 15:19:17', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_organization_user` VALUES (6, 0, 12, 5, '2020-12-25 17:02:36', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_organization_user` VALUES (7, 0, 13, 6, '2021-01-11 09:55:02', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_organization_user` VALUES (8, 0, 14, 2, '2021-07-06 09:54:19', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_organization_user` VALUES (9, 0, 14, 7, '2021-07-06 18:17:26', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_organization_user` VALUES (8, 0, 14, 2, '2021-07-06 09:54:19', 1, NULL, NULL, 1);
+INSERT INTO `t_sys_organization_user` VALUES (9, 0, 14, 7, '2021-07-06 18:17:26', 1, NULL, NULL, 1);
 INSERT INTO `t_sys_organization_user` VALUES (10, 0, 12, 8, '2021-08-26 17:28:29', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_organization_user` VALUES (11, 0, 12, 7, '2021-12-22 17:06:07', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_organization_user` VALUES (12, 0, 12, 2, '2021-12-22 17:06:16', 1, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_sys_resource
@@ -5239,7 +4380,7 @@ CREATE TABLE `t_sys_resource`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `INDEX_PERM_NAME`(`resource_name`) USING BTREE,
   INDEX `INDEX_PERM_PID`(`parent_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 207 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 196 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_resource
@@ -5556,7 +4697,7 @@ CREATE TABLE `t_sys_role_data_permission`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 136 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和数据权限关联表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 136 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和数据权限关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_role_data_permission
@@ -5862,12 +5003,12 @@ CREATE TABLE `t_sys_sms_channel`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '短信渠道表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '短信渠道表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_sms_channel
 -- ----------------------------
-INSERT INTO `t_sys_sms_channel` VALUES (1, 0, 'aliyun', '阿里云短信', '111111', '11111111', 'cn-hangzhou', 1, '阿里云短信', '2021-01-26 15:19:11', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_sms_channel` VALUES (1, 0, 'aliyun', '阿里云短信', 'xxxxxx', 'xxxxxxxxx', 'cn-hangzhou', 1, '阿里云短信', '2021-01-26 15:19:11', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_sms_channel` VALUES (2, 0, '2', '2', '2', '2', '2', 1, '2', '2021-01-26 15:19:20', 1, NULL, NULL, 0);
 
 -- ----------------------------
@@ -5890,12 +5031,12 @@ CREATE TABLE `t_sys_sms_template`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '短信配置表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '短信配置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_sms_template
 -- ----------------------------
-INSERT INTO `t_sys_sms_template` VALUES (1, 0, 1, 'aliLoginCode', '登录验证码', 'SMS_137670765', '11111', 1, '阿里云登录验证码', '2021-01-26 12:01:25', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_sms_template` VALUES (1, 0, 1, 'aliLoginCode', '登录验证码', 'SMS_137670765', '111111', 1, '阿里云登录验证码', '2021-01-26 12:01:25', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_sms_template` VALUES (2, 0, 2, NULL, '1', '1', '1', 1, '1', '2021-01-26 12:01:26', 1, '2021-01-26 12:01:32', 1, 0);
 
 -- ----------------------------
@@ -5921,7 +5062,7 @@ CREATE TABLE `t_sys_tenant`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '更新者',
   `del_flag` tinyint(2) NULL DEFAULT 0 COMMENT '1:删除 0:不删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '租户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '租户信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_tenant
@@ -5945,11 +5086,6 @@ INSERT INTO `t_sys_tenant` VALUES (16, '111', '111', '111', '111', '111', '111',
 INSERT INTO `t_sys_tenant` VALUES (17, '222', '222', '222', '222', '222', '222', 2222, '2020-12-21 09:56:13', '1', 1, '1', '2020-12-21 23:01:05', 1, '2020-12-22 13:02:21', 1, 0);
 INSERT INTO `t_sys_tenant` VALUES (18, '11', '11', '11', '11', '11', '11', 11, '2020-12-23 22:00:00', '1', 1, '1', '2020-12-23 04:32:06', 1, NULL, NULL, 0);
 INSERT INTO `t_sys_tenant` VALUES (19, '123', '123', '123', '123', '123', '123', 123, '2020-12-22 22:12:12', '1', 1, '1', '2020-12-23 04:52:10', 1, NULL, NULL, 0);
-INSERT INTO `t_sys_tenant` VALUES (20, '44', '444', '444', '444', '444', '444', 444, '2012-12-19 16:00:00', '444', 1, '444', '2020-12-19 23:04:00', 1, '2020-12-21 04:01:02', 1, 0);
-INSERT INTO `t_sys_tenant` VALUES (21, '32', '32', 'http://172.16.20.188:9000/gitegg/FhEvMCP7VtglcaDXGm0Wzn0MDYIq.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20211117%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211117T112922Z&X-Amz-Expires=7200&X-Amz-SignedHeaders=host&X-Amz-Signature=338c0aded3ea9b309ca94cd11a2232ff93ff8e34d1ed2a5418006ba2a6b7669d,http://172.16.20.188:9000/gitegg/FhxnqnrwQLbOPkZOVjaRUFlqyUxo.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20211117%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211117T112933Z&X-Amz-Expires=7200&X-Amz-SignedHeaders=host&X-Amz-Signature=442be4225fe2ae7c62925ea7c3254bb70f1195056b172781519e8bc6830eb62f', '32', '32', '32', 32, '2020-12-23 10:00:00', '1', 1, '1', '2020-12-23 20:24:22', 1, '2021-11-17 19:29:43', 1, 0);
-INSERT INTO `t_sys_tenant` VALUES (22, '32', '32', 'http://172.16.20.188:9000/gitegg/FhEvMCP7VtglcaDXGm0Wzn0MDYIq.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20211117%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211117T104633Z&X-Amz-Expires=7200&X-Amz-SignedHeaders=host&X-Amz-Signature=bf9ecce392f200ea4371bd13655389ff5fd7fdf96350b10f3caa817c38ad535c', '32', '32', '32', 32, '2020-12-22 10:00:00', '1', 1, '1', '2020-12-22 20:29:26', 1, '2021-11-17 19:28:56', 1, 0);
-INSERT INTO `t_sys_tenant` VALUES (23, '1222', '1222', 'http://172.16.20.188:9000/gitegg/FhEvMCP7VtglcaDXGm0Wzn0MDYIq.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=minioadmin%2F20211117%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211117T121613Z&X-Amz-Expires=7200&X-Amz-SignedHeaders=host&X-Amz-Signature=ea4296c175e2475ab880914ffec413699c6959412afd70ebd8d996613acaaaad', '1222', '1222', '1222', 1222, '2020-12-24 00:00:00', '1', 1, '1', '2020-12-24 14:17:05', 1, '2021-11-17 20:16:21', 1, 0);
-
 -- ----------------------------
 -- Table structure for t_sys_user
 -- ----------------------------
@@ -5986,9 +5122,15 @@ CREATE TABLE `t_sys_user`  (
 -- ----------------------------
 -- Records of t_sys_user
 -- ----------------------------
-INSERT INTO `t_sys_user` VALUES (1, 0, 'admin', '管理员', '管理员', '1', 'gitegg@gitegg.com', '15853682555', '{bcrypt}$2a$10$3BagvjPujvAKKbkNEzLPiuclcf9Y6nmFGZRIXDOhQ1ORemzoFecnW', 1, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, '320000', '320100', '320104', NULL, '系统管理员', '2018-05-19 17:55:36', 1, '2021-08-26 17:26:11', 1, 0);
-INSERT INTO `t_sys_user` VALUES (2, 0, 'test001', 'test001', 'test001', '0', 'test001@qq.com', '15852682556', '$2a$10$wm3EX5HnBslChBBYTgfP8e8B6jslFUreh/8bblJ1TRsSA2mOnDpoi', 1, NULL, NULL, '320000', '320300', '320303', '2342342343', '2342343', '2020-11-27 16:43:06', 1, '2021-07-06 09:54:19', 1, 0);
-INSERT INTO `t_sys_user` VALUES (3, 0, 'test002', 'test002', 'test002', '1', 'test002@qq.com', '15851682557', '$2a$10$MBsO4f0tIMIIdjcLUSUNd.fu6yZakXRcK9Ck.XypALznIhMYpFUKG', 1, NULL, NULL, '320000', '320100', '320104', '234423423', '234234', '2020-11-27 02:55:30', 1, NULL, NULL, 0);
+INSERT INTO `t_sys_user` VALUES (1, 0, 'admin', '管理员', '管理员', '1', 'giteegg@giteegg.com', '15850682222', '{bcrypt}$2a$10$3BagvjPujvAKKbkNEzLPiuclcf9Y6nmFGZRIXDOhQ1ORemzoFecnW', 1, 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', NULL, '320000', '320100', '320104', NULL, '系统管理员', '2018-05-19 17:55:36', 1, '2021-12-22 17:06:37', 1, 0);
+INSERT INTO `t_sys_user` VALUES (2, 0, 'test001', 'test001', 'test001', '0', 'test001@qq.com', '15850682555', '$2a$10$wm3EX5HnBslChBBYTgfP8e8B6jslFUreh/8bblJ1TRsSA2mOnDpoi', 1, NULL, NULL, '320000', '320300', '320303', '2342342343', '2342343', '2020-11-27 16:43:06', 1, '2021-12-22 17:06:16', 1, 0);
+INSERT INTO `t_sys_user` VALUES (3, 0, 'test002', 'test002', 'test002', '1', 'test002@qq.com', '15850682557', '$2a$10$MBsO4f0tIMIIdjcLUSUNd.fu6yZakXRcK9Ck.XypALznIhMYpFUKG', 1, NULL, NULL, '320000', '320100', '320104', '234423423', '234234', '2020-11-27 02:55:30', 1, '2022-01-05 18:33:44', 1, 0);
+INSERT INTO `t_sys_user` VALUES (4, 0, '111', '111', '111', '1', '111@qq.com', '15696936969', '$2a$10$9cJcuNF300ha9oLxhUiUpeTl2uNnQwlr8DgTs02z0cspGbRhoyFMG', 1, NULL, NULL, '120000', '120100', '120101', '324234234', '234234234', '2020-12-24 16:26:10', 1, '2020-12-25 16:51:46', 1, 0);
+INSERT INTO `t_sys_user` VALUES (5, 0, '11133', '22', '1233123', '0', '13636323632@qq.com', '13636323632', '$2a$10$d2SG09Lxoe9L3lgyc4Eeo.lie.GM0uNhnUX9G8HcktejZj/PYsut.', 1, NULL, NULL, '120000', '120100', '120101', '234234234', '', '2020-12-25 17:02:36', 1, '2020-12-27 16:31:05', 1, 0);
+INSERT INTO `t_sys_user` VALUES (6, 0, 'test1', 'test1', 'test1', '1', '15636236222@gitegg.com', '15636236222', '$2a$10$kANK/Ol6vDdX7M4BG89mEuLOGdariR4nh8Jbqfq4K2fPVuMOlq516', 1, NULL, NULL, NULL, NULL, NULL, '', '', '2021-01-11 09:55:02', 1, '2021-12-22 17:06:47', 1, 0);
+INSERT INTO `t_sys_user` VALUES (7, 0, '23423423', '23423432', '23423423', '1', '234234@qq.com', '15698636235', '$2a$10$ZByqjn3G0B/RkHtHQxjqvuciRcRWj.IcANBT8409qwg4REFYBc0KC', 1, NULL, NULL, '110000', '110100', '110101', '23423423', '', '2021-07-06 18:17:26', 1, '2021-12-22 17:06:07', 1, 0);
+INSERT INTO `t_sys_user` VALUES (8, 0, 'admin1', '管理员1', '管理员1', '1', '13770722222@qq.com', '13770722222', '$2a$10$OKGZrglOdUUFrqCcm8FCMuxRlhS0mhID0rWaac4UZrZ6RRgJmAc3i', 1, NULL, NULL, '320000', '320100', '320102', '11111', '', '2021-08-26 17:28:29', 1, '2021-12-22 17:07:00', 1, 0);
+
 -- ----------------------------
 -- Table structure for t_sys_user_info
 -- ----------------------------
@@ -6026,7 +5168,7 @@ CREATE TABLE `t_sys_user_info`  (
   `operator` bigint(20) NULL DEFAULT NULL COMMENT '最后修改人',
   `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '是否删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信注册会员表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信注册会员表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sys_user_info
