@@ -275,17 +275,17 @@
         </a-row>
         <a-row>
           <a-form-model-item label="后端代码保存路径" prop="serviceCodePath">
-            <a-input v-model="configForm.serviceCodePath" placeholder="输入后端代码路径" :maxLength="1000" />
+            <a-input v-model="configForm.serviceCodePath" placeholder="输入后端代码存放路径" :maxLength="1000" />
           </a-form-model-item>
         </a-row>
         <a-row>
           <a-form-model-item label="前端代码保存路径" prop="frontCodePath">
-            <a-input v-model="configForm.frontCodePath" placeholder="输入前端代码路径" :maxLength="1000" />
+            <a-input v-model="configForm.frontCodePath" placeholder="输入前端代码存放路径" :maxLength="1000" />
           </a-form-model-item>
         </a-row>
         <a-row>
           <a-form-model-item label="页面文件目录自定义" prop="frontCodeDir">
-            <a-input v-model="configForm.frontCodeDir" placeholder="存放.vue页面文件的目录，用于区分不同系统，例如：system" :maxLength="100" />
+            <a-input v-model="configForm.frontCodeDir" placeholder="存放.vue页面文件的目录名称，用于区分不同系统，例如：system" :maxLength="100" />
           </a-form-model-item>
         </a-row>
         <a-row>

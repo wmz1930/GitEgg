@@ -30,10 +30,10 @@ const assetsCDN = {
   css: [],
   // https://unpkg.com/browse/vue@2.6.10/
   js: [
-    '//cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js',
-    '//cdn.jsdelivr.net/npm/vue-router@3.1.3/dist/vue-router.min.js',
-    '//cdn.jsdelivr.net/npm/vuex@3.1.1/dist/vuex.min.js',
-    '//cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js'
+    '//img.gitegg.com/npm/vue@2.6.10/dist/vue.min.js',
+    '//img.gitegg.com/npm/vue-router@3.1.3/dist/vue-router.min.js',
+    '//img.gitegg.com/npm/vuex@3.1.1/dist/vuex.min.js',
+    '//img.gitegg.com/npm/axios@400.19.0/dist/axios.min.js'
   ]
 }
 
