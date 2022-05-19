@@ -194,11 +194,6 @@
       :pagination="${table.entityPath}Pagination"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
-<#if hasStatus?? && hasStatus == true>
-      <span slot="${statusName}Status" slot-scope="text, record">
-        {{ record.${statusName} | ${statusName}DictFilter }}
-      </span>
-</#if>
 <#-- ----------  所有的字典类型 设置Filter  ---------->
 <#list dictCodeFields as field>
     <#if field??>
