@@ -120,3 +120,4 @@ hs_err_pid*
 /GitEgg-Cloud/gitegg-service-client/gitegg-service-bigdata-client/gitegg-service-bigdata-client.iml
 /GitEgg-Platform/gitegg-platform-code-generator/gitegg-platform-code-generator.iml
 /GitEgg-Platform/gitegg-platform-code-generator/target
+/GitEgg-Cloud/gitegg-service/target
