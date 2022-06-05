@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.code.generator.dict.mapper.GeneratorDictMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.code.generator.dict.entity.GeneratorDict">
+        <id column="id" property="id"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="dict_name" property="dictName"/>
+        <result column="dict_code" property="dictCode"/>
+        <result column="dict_order" property="dictOrder"/>
+        <result column="dict_status" property="dictStatus"/>
+        <result column="comments" property="comments"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="operator" property="operator"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tenant_id, parent_id, dict_name, dict_code, dict_order, dict_status, comments, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 通过parentId查询所有字典值 -->
+    <select id="selectGeneratorDictChildren" resultType="com.gitegg.code.generator.dict.entity.GeneratorDict" parameterType="com.gitegg.code.generator.dict.dto.QueryGeneratorDictDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_dict
+        WHERE del_flag = 0
+        <if test="dict.parentId != null and dict.parentId != ''">
+            <choose>
+                <!-- 仅查询子字典，不包含parentId字典本身 -->
+                <when test="dict.isLeaf != null and dict.isLeaf == '1'.toString()">
+                    AND find_in_set(#{dict.parentId}, ancestors)
+                </when>
+                <!-- 查询子机构，包含parentId机构本身 -->
+                <otherwise>
+                    AND (id = #{dict.parentId} OR find_in_set(#{dict.parentId}, ancestors))
+                </otherwise>
+            </choose>
+        </if>
+        ORDER BY id
+    </select>
+
+    <select id="selectGeneratorDictList" resultType="com.gitegg.code.generator.dict.dto.GeneratorDictDTO"
+            parameterType="com.gitegg.code.generator.dict.dto.QueryGeneratorDictDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_dict
+        WHERE del_flag = 0
+        <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+            <if test="dict.id != null">
+                AND id = #{dict.id}
+            </if>
+            <if test="dict.parentId != null">
+                AND parent_id = #{dict.parentId}
+            </if>
+            <if test="dict.dictCode != null and dict.dictCode != ''">
+                AND dict_code = #{dict.dictCode}
+            </if>
+            <if test="dict.dictName != null and dict.dictName != ''">
+                AND dict_name = #{dict.dictName}
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

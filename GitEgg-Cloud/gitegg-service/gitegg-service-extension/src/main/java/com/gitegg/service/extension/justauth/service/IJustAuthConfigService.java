@@ -70,4 +70,10 @@ public interface IJustAuthConfigService extends IService<JustAuthConfig> {
     * @return
     */
     boolean batchDeleteJustAuthConfig(List<Long> justAuthConfigIds);
+    
+    /**
+     * 初始化配置表列表
+     * @return
+     */
+    void initJustAuthConfigList();
 }

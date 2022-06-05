@@ -40,7 +40,7 @@ import java.util.ArrayList;
 * </p>
 *
 * @author GitEgg
-* @since 2022-05-19
+* @since 2022-05-23
 */
 @RestController
 @RequestMapping("/extension/justauth/social")
@@ -87,8 +87,8 @@ public class JustAuthSocialController {
     @PostMapping("/create")
     @ApiOperation(value = "添加租户第三方登录功能配置表")
     public Result<?> create(@RequestBody CreateJustAuthSocialDTO justAuthSocial) {
-        boolean result = justAuthSocialService.createJustAuthSocial(justAuthSocial);
-        return Result.result(result);
+        justAuthSocialService.createJustAuthSocial(justAuthSocial);
+        return Result.success();
     }
 
     /**

@@ -52,6 +52,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * OAuth2认证中心
+ * @author GitEgg
+ */
 @Api(tags = "OAuth2认证中心")
 @Slf4j
 @RestController
@@ -156,7 +160,7 @@ public class GitEggOAuthController {
         return Result.data(oauth2Token);
     }
 
-    @ApiOperation("发送短信验证码")
+    @ApiOperation("发送登录短信验证码")
     @PostMapping("/sms/captcha/send")
     public Result sendSmsCaptcha(@ApiIgnore @RequestParam Map<String, String> parameters) {
         boolean checkCaptchaResult = CaptchaUtils.checkCaptcha(parameters, redisTemplate, captchaService);

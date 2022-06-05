@@ -11,7 +11,7 @@ import lombok.Data;
 
 /**
 * <p>
-* 租户第三方登录功能配置表
+* 第三方用户绑定
 * </p>
 *
 * @author GitEgg
@@ -20,7 +20,7 @@ import lombok.Data;
 @HeadRowHeight(20)
 @ContentRowHeight(15)
 @Data
-@ApiModel(value="JustAuthSocialUser对象", description="租户第三方登录功能配置表数据导入模板")
+@ApiModel(value="JustAuthSocialUser对象", description="第三方用户绑定数据导入模板")
 public class JustAuthSocialUserImport implements Serializable {
 
     private static final long serialVersionUID = 1L;

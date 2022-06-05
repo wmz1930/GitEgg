@@ -1,5 +1,9 @@
 package com.gitegg.oauth.enums;
 
+/**
+ * @author GitEgg
+ */
+
 public enum AuthEnum {
 
     /**
@@ -16,6 +20,11 @@ public enum AuthEnum {
      * 短信验证码登录
      */
     SMS_CAPTCHA("sms_captcha", "短信验证码登录"),
+    
+    /**
+     * 第三方登录
+     */
+    SOCIAL("social", "第三方登录"),
 
     /**
      * 二维码登录

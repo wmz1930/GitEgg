@@ -1,5 +1,6 @@
 package com.gitegg.service.extension.justauth.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.gitegg.platform.mybatis.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,6 +27,10 @@ public class QueryJustAuthSourceDTO extends BaseEntity {
 
     @ApiModelProperty(value = "登录类型")
     private String sourceType;
+    
+    @ApiModelProperty(value = "状态")
+    @TableField("status")
+    private Integer status;
 
     @ApiModelProperty(value = "开始时间")
     private String beginDateTime;

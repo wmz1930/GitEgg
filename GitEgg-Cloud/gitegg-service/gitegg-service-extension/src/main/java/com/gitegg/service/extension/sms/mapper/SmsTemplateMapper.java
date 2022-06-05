@@ -1,11 +1,15 @@
 package com.gitegg.service.extension.sms.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitegg.service.extension.sms.dto.QuerySmsTemplateDTO;
-import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
 import com.gitegg.service.extension.sms.entity.SmsTemplate;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
 import org.apache.ibatis.annotations.Param;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
+import com.gitegg.service.extension.sms.dto.QuerySmsTemplateDTO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,17 +17,24 @@ import org.apache.ibatis.annotations.Param;
  * </p>
  *
  * @author GitEgg
- * @since 2021-01-26
+ * @since 2022-05-24
  */
 public interface SmsTemplateMapper extends BaseMapper<SmsTemplate> {
 
     /**
-    * 查询短信配置表列表
+    * 分页查询短信配置表列表
     * @param page
     * @param smsTemplateDTO
     * @return
     */
     Page<SmsTemplateDTO> querySmsTemplateList(Page<SmsTemplateDTO> page, @Param("smsTemplate") QuerySmsTemplateDTO smsTemplateDTO);
+
+    /**
+    * 查询短信配置表列表
+    * @param smsTemplateDTO
+    * @return
+    */
+    List<SmsTemplateDTO> querySmsTemplateList(@Param("smsTemplate") QuerySmsTemplateDTO smsTemplateDTO);
 
     /**
     * 查询短信配置表信息

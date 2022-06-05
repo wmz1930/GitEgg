@@ -13,16 +13,16 @@ import java.util.List;
 
 /**
  * <p>
- * 租户第三方登录功能配置表 Mapper 接口
+ * 第三方用户信息 Mapper 接口
  * </p>
  *
  * @author GitEgg
- * @since 2022-05-19
+ * @since 2022-05-23
  */
 public interface JustAuthSocialMapper extends BaseMapper<JustAuthSocial> {
 
     /**
-    * 分页查询租户第三方登录功能配置表列表
+    * 分页查询第三方用户信息列表
     * @param page
     * @param justAuthSocialDTO
     * @return
@@ -30,14 +30,21 @@ public interface JustAuthSocialMapper extends BaseMapper<JustAuthSocial> {
     Page<JustAuthSocialDTO> queryJustAuthSocialList(Page<JustAuthSocialDTO> page, @Param("justAuthSocial") QueryJustAuthSocialDTO justAuthSocialDTO);
 
     /**
-    * 查询租户第三方登录功能配置表列表
+    * 查询第三方用户信息列表
     * @param justAuthSocialDTO
     * @return
     */
     List<JustAuthSocialDTO> queryJustAuthSocialList(@Param("justAuthSocial") QueryJustAuthSocialDTO justAuthSocialDTO);
+    
+    /**
+     * 查询第三方用户绑定的系统用户id
+     * @param justAuthSocialDTO
+     * @return
+     */
+    Long queryUserIdBySocial(@Param("justAuthSocial") QueryJustAuthSocialDTO justAuthSocialDTO);
 
     /**
-    * 查询租户第三方登录功能配置表信息
+    * 查询第三方用户信息信息
     * @param justAuthSocialDTO
     * @return
     */

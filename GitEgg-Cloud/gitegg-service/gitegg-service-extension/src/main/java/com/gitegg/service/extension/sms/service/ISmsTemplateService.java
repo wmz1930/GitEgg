@@ -1,14 +1,15 @@
 package com.gitegg.service.extension.sms.service;
 
+import java.util.List;
+
+import com.gitegg.service.extension.sms.entity.SmsTemplate;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gitegg.service.extension.sms.dto.CreateSmsTemplateDTO;
-import com.gitegg.service.extension.sms.dto.QuerySmsTemplateDTO;
-import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
-import com.gitegg.service.extension.sms.dto.UpdateSmsTemplateDTO;
-import com.gitegg.service.extension.sms.entity.SmsTemplate;
 
-import java.util.List;
+import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
+import com.gitegg.service.extension.sms.dto.CreateSmsTemplateDTO;
+import com.gitegg.service.extension.sms.dto.UpdateSmsTemplateDTO;
+import com.gitegg.service.extension.sms.dto.QuerySmsTemplateDTO;
 
 /**
  * <p>
@@ -16,7 +17,7 @@ import java.util.List;
  * </p>
  *
  * @author GitEgg
- * @since 2021-01-26
+ * @since 2022-05-24
  */
 public interface ISmsTemplateService extends IService<SmsTemplate> {
 
@@ -27,6 +28,13 @@ public interface ISmsTemplateService extends IService<SmsTemplate> {
     * @return
     */
     Page<SmsTemplateDTO> querySmsTemplateList(Page<SmsTemplateDTO> page, QuerySmsTemplateDTO querySmsTemplateDTO);
+
+    /**
+    * 查询短信配置表列表
+    * @param querySmsTemplateDTO
+    * @return
+    */
+    List<SmsTemplateDTO> querySmsTemplateList(QuerySmsTemplateDTO querySmsTemplateDTO);
 
     /**
     * 查询短信配置表详情

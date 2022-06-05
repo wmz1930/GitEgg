@@ -11,9 +11,9 @@ import lombok.Data;
 @Data
 public class LoginResultDTO {
 
-	private boolean success;
+    private boolean success;
 
-	private String message;
+    private String message;
 
-	private String targetUrl;
+    private String targetUrl;
 }

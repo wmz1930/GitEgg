@@ -1,5 +1,6 @@
 package com.gitegg.service.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitegg.service.system.entity.Role;
@@ -32,28 +33,24 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 
     @Override
     public UserRole selectByUserId(Long userId) {
-        QueryWrapper<UserRole> ew = new QueryWrapper<>();
-        ew.eq("user_id", userId);
+        LambdaQueryWrapper<UserRole> ew = new LambdaQueryWrapper<>();
+        ew.eq(UserRole::getUserId, userId);
         return this.getOne(ew);
     }
 
     @Override
-//    @Cacheable(value = "roles", key = "'user_id_'.concat(#userId)")
     public List<Role> queryRolesByUserId(Long userId) {
-        QueryWrapper<UserRole> ew = new QueryWrapper<>();
-        ew.eq("user_id", userId);
+        LambdaQueryWrapper<UserRole> ew = new LambdaQueryWrapper<>();
+        ew.eq(UserRole::getUserId, userId);
         List<UserRole> userRoleList = this.list(ew);
         if (!CollectionUtils.isEmpty(userRoleList)) {
             List<Long> roleIds = new ArrayList<>();
             for (UserRole userRole : userRoleList) {
                 roleIds.add(userRole.getRoleId());
             }
-            QueryWrapper<Role> ewRole = new QueryWrapper<>();
-            ewRole.in("id", roleIds);
-            List<Role> roleList = roleService.list(ewRole);
+            List<Role> roleList = roleService.listByIds(roleIds);
             return roleList;
-        } else {
-            return null;
         }
+        return null;
     }
 }

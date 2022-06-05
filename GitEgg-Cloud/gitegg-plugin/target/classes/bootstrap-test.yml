@@ -1,0 +1,7 @@
+spring:
+  profiles: test
+  nacos:
+    addr: 172.16.20.188:8848
+    config:
+      prefix: gitegg-cloud-config
+      group: GITEGG_CLOUD

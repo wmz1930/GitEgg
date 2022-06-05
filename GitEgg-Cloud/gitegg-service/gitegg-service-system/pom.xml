@@ -13,6 +13,20 @@
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <!-- gitegg-service-extension 的fegin公共调用方法 -->
+        <dependency>
+            <groupId>com.gitegg.cloud</groupId>
+            <artifactId>gitegg-service-extension-client</artifactId>
+            <version>${gitegg.project.version}</version>
+        </dependency>
+        <!-- 验证码 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-captcha</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

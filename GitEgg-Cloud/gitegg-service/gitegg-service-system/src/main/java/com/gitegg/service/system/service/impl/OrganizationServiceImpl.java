@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.service.system.entity.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +81,8 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
 
     @Override
     public boolean createOrganization(Organization organization) {
-        QueryWrapper<Organization> ew = new QueryWrapper<>();
-        ew.eq("organization_name", organization.getOrganizationName()).or().eq("organization_key", organization.getOrganizationKey());
+        LambdaQueryWrapper<Organization> ew = new LambdaQueryWrapper<>();
+        ew.eq(Organization::getOrganizationName, organization.getOrganizationName()).or().eq(Organization::getOrganizationKey, organization.getOrganizationKey());
         List<Organization> organizationList = list(ew);
         if (!CollectionUtils.isEmpty(organizationList)) {
             throw new BusinessException("组织名称或组织标识已经存在");
@@ -104,8 +105,8 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
 
     @Override
     public boolean updateOrganization(Organization organization) {
-        QueryWrapper<Organization> ew = new QueryWrapper<>();
-        ew.ne("id", organization.getId()).and(e -> e.eq("organization_name", organization.getOrganizationName()).or().eq("organization_key", organization.getOrganizationKey()));
+        LambdaQueryWrapper<Organization> ew = new LambdaQueryWrapper<>();
+        ew.ne(Organization::getId, organization.getId()).and(e -> e.eq(Organization::getOrganizationName, organization.getOrganizationName()).or().eq(Organization::getOrganizationKey, organization.getOrganizationKey()));
         List<Organization> organizationList = list(ew);
         if (!CollectionUtils.isEmpty(organizationList)) {
             throw new BusinessException("组织名称或组织标识已经存在");

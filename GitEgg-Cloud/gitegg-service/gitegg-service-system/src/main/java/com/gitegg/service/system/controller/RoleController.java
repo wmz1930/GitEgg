@@ -2,6 +2,7 @@ package com.gitegg.service.system.controller;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.util.CollectionUtils;
@@ -134,8 +135,8 @@ public class RoleController {
     @ApiOperation(value = "获取角色的权限资源")
     @ApiImplicitParam(paramType = "path", name = "roleId", value = "角色ID", required = true, dataType = "Integer")
     public Result<List<RoleResource>> queryRoleResource(@PathVariable("roleId") Integer roleId) {
-        QueryWrapper<RoleResource> ew = new QueryWrapper<>();
-        ew.eq("role_id", roleId);
+        LambdaQueryWrapper<RoleResource> ew = new LambdaQueryWrapper<>();
+        ew.eq(RoleResource::getRoleId, roleId);
         List<RoleResource> list = roleResourceService.list(ew);
         return Result.data(list);
     }
@@ -161,8 +162,7 @@ public class RoleController {
     @GetMapping(value = "/all")
     @ApiOperation(value = "查询所有角色列表")
     public Result<List<Role>> queryAll() {
-        QueryWrapper<Role> ew = new QueryWrapper<>();
-        List<Role> result = roleService.list(ew);
+        List<Role> result = roleService.list();
         return Result.data(result);
     }
 

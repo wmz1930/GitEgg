@@ -19,12 +19,18 @@
         id, user_id, social_id, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
-    <!-- 分页查询租户第三方登录功能配置表列表 -->
+    <!-- 分页查询第三方用户绑定列表 -->
     <select id="queryJustAuthSocialUserList" resultType="com.gitegg.service.extension.justauth.dto.JustAuthSocialUserDTO" parameterType="com.gitegg.service.extension.justauth.dto.QueryJustAuthSocialUserDTO">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_just_auth_social_user
         WHERE del_flag = 0
+        <if test="justAuthSocialUser.socialId != null and justAuthSocialUser.socialId != ''">
+            AND social_id = #{justAuthSocialUser.socialId}
+        </if>
+        <if test="justAuthSocialUser.userId != null and justAuthSocialUser.userId != ''">
+            AND user_id = #{justAuthSocialUser.userId}
+        </if>
         <if test="justAuthSocialUser.beginDateTime != null and justAuthSocialUser.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{justAuthSocialUser.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
@@ -33,12 +39,18 @@
         </if>
         ORDER BY id DESC
     </select>
-    <!-- 查询租户第三方登录功能配置表信息 -->
+    <!-- 查询第三方用户绑定信息 -->
     <select id="queryJustAuthSocialUser" resultType="com.gitegg.service.extension.justauth.dto.JustAuthSocialUserDTO" parameterType="com.gitegg.service.extension.justauth.dto.QueryJustAuthSocialUserDTO">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_just_auth_social_user
         WHERE del_flag = 0
+        <if test="justAuthSocialUser.socialId != null and justAuthSocialUser.socialId != ''">
+            AND social_id = #{justAuthSocialUser.socialId}
+        </if>
+        <if test="justAuthSocialUser.userId != null and justAuthSocialUser.userId != ''">
+            AND user_id = #{justAuthSocialUser.userId}
+        </if>
         <if test="justAuthSocialUser.beginDateTime != null and justAuthSocialUser.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{justAuthSocialUser.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>

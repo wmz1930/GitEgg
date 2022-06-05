@@ -3,6 +3,7 @@ package com.gitegg.service.extension.justauth.service.impl;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitegg.platform.base.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.gitegg.service.extension.justauth.entity.JustAuthSocialUser;
 import com.gitegg.service.extension.justauth.mapper.JustAuthSocialUserMapper;
@@ -22,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
- * 租户第三方登录功能配置表 服务实现类
+ * 租户第三方用户绑定 服务实现类
  * </p>
  *
  * @author GitEgg
@@ -36,7 +37,7 @@ public class JustAuthSocialUserServiceImpl extends ServiceImpl<JustAuthSocialUse
     private final JustAuthSocialUserMapper justAuthSocialUserMapper;
 
     /**
-    * 分页查询租户第三方登录功能配置表列表
+    * 分页查询租户第三方用户绑定列表
     * @param page
     * @param queryJustAuthSocialUserDTO
     * @return
@@ -48,7 +49,7 @@ public class JustAuthSocialUserServiceImpl extends ServiceImpl<JustAuthSocialUse
     }
 
     /**
-    * 查询租户第三方登录功能配置表列表
+    * 查询租户第三方用户绑定列表
     * @param queryJustAuthSocialUserDTO
     * @return
     */
@@ -59,7 +60,7 @@ public class JustAuthSocialUserServiceImpl extends ServiceImpl<JustAuthSocialUse
     }
 
     /**
-    * 查询租户第三方登录功能配置表详情
+    * 查询租户第三方用户绑定详情
     * @param queryJustAuthSocialUserDTO
     * @return
     */
@@ -70,19 +71,32 @@ public class JustAuthSocialUserServiceImpl extends ServiceImpl<JustAuthSocialUse
     }
 
     /**
-    * 创建租户第三方登录功能配置表
+    * 创建租户第三方用户绑定
     * @param justAuthSocialUser
     * @return
     */
     @Override
-    public boolean createJustAuthSocialUser(CreateJustAuthSocialUserDTO justAuthSocialUser) {
+    public JustAuthSocialUser createJustAuthSocialUser(CreateJustAuthSocialUserDTO justAuthSocialUser) {
+    
+        QueryJustAuthSocialUserDTO queryJustAuthSocialUserDTO = new QueryJustAuthSocialUserDTO();
+        queryJustAuthSocialUserDTO.setSocialId(justAuthSocialUser.getSocialId());
+        JustAuthSocialUserDTO justAuthSocialUserDTO = this.queryJustAuthSocialUser(queryJustAuthSocialUserDTO);
+        if (null != justAuthSocialUserDTO)
+        {
+            throw new BusinessException("已经存在绑定用户，请勿重复绑定。");
+        }
+        
         JustAuthSocialUser justAuthSocialUserEntity = BeanCopierUtils.copyByClass(justAuthSocialUser, JustAuthSocialUser.class);
         boolean result = this.save(justAuthSocialUserEntity);
-        return result;
+        if (!result)
+        {
+            throw new BusinessException("绑定用户失败");
+        }
+        return justAuthSocialUserEntity;
     }
 
     /**
-    * 更新租户第三方登录功能配置表
+    * 更新租户第三方用户绑定
     * @param justAuthSocialUser
     * @return
     */
@@ -94,7 +108,7 @@ public class JustAuthSocialUserServiceImpl extends ServiceImpl<JustAuthSocialUse
     }
 
     /**
-    * 删除租户第三方登录功能配置表
+    * 删除租户第三方用户绑定
     * @param justAuthSocialUserId
     * @return
     */
@@ -105,7 +119,7 @@ public class JustAuthSocialUserServiceImpl extends ServiceImpl<JustAuthSocialUse
     }
 
     /**
-    * 批量删除租户第三方登录功能配置表
+    * 批量删除租户第三方用户绑定
     * @param justAuthSocialUserIds
     * @return
     */

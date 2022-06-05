@@ -11,6 +11,7 @@ import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
 
 /**
  * 阿里云短信服务接口工厂类
+ * @author GitEgg
  */
 public class SmsAliyunFactory {
 

@@ -7,6 +7,7 @@ import com.gitegg.service.system.dto.QueryUserDTO;
 import com.gitegg.service.system.dto.UpdateUserDTO;
 import com.gitegg.service.system.entity.User;
 import com.gitegg.service.system.entity.UserInfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,13 +20,13 @@ import java.util.List;
 public interface IUserService extends IService<User> {
 
     /**
-     * 创建用户
+     * 创建用户，成功后将id和对象返回
      * 
      * @param user
      * @param
      * @return
      */
-    boolean createUser(CreateUserDTO user);
+    CreateUserDTO createUser(CreateUserDTO user);
 
     /**
      * 更新用户
@@ -56,6 +57,13 @@ public interface IUserService extends IService<User> {
      * @return 用户
      */
     User queryUserByAccount(String userAccount);
+    
+    /**
+     * 查询已存在的用户，用户名、昵称、邮箱、手机号有任一重复即视为用户已存在，真实姓名是可以重复的。
+     * @param user
+     * @return
+     */
+    public Boolean checkUserExist(User user);
 
     /**
      * 分页查询用户

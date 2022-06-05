@@ -1,38 +1,31 @@
 package com.gitegg.oauth.granter;
 
-import com.anji.captcha.model.common.RepCodeEnum;
-import com.anji.captcha.model.common.ResponseModel;
-import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
 import com.gitegg.oauth.util.CaptchaUtils;
 import com.gitegg.platform.base.constant.TokenConstant;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.result.Result;
-import com.gitegg.platform.captcha.constant.CaptchaConstant;
 import com.gitegg.service.extension.client.feign.ISmsFeign;
 import com.gitegg.service.system.client.feign.IUserFeign;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthorizationException;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.TokenRequest;
+import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.util.StringUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * 短信验证码模式
+ * @author GitEgg
  */
 public class SmsCaptchaTokenGranter extends AbstractTokenGranter {
 

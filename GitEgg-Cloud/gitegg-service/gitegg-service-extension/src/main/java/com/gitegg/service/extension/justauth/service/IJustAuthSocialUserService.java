@@ -48,7 +48,7 @@ public interface IJustAuthSocialUserService extends IService<JustAuthSocialUser>
     * @param justAuthSocialUser
     * @return
     */
-    boolean createJustAuthSocialUser(CreateJustAuthSocialUserDTO justAuthSocialUser);
+    JustAuthSocialUser createJustAuthSocialUser(CreateJustAuthSocialUserDTO justAuthSocialUser);
 
     /**
     * 更新租户第三方登录功能配置表

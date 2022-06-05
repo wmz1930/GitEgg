@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 租户第三方登录功能配置表
+ * 第三方用户绑定
  * </p>
  *
  * @author GitEgg
@@ -23,7 +23,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel(value="JustAuthSocialUser对象", description="租户第三方登录功能配置表")
+@ApiModel(value="JustAuthSocialUser对象", description="第三方用户绑定")
 public class CreateJustAuthSocialUserDTO extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

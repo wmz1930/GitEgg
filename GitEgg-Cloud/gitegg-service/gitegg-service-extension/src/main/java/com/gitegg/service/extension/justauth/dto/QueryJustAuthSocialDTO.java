@@ -8,24 +8,30 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 租户第三方登录功能配置表
+ * 第三方用户信息
  * </p>
  *
  * @author GitEgg
- * @since 2022-05-19
+ * @since 2022-05-23
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel(value="JustAuthSocial对象", description="租户第三方登录功能配置表")
+@ApiModel(value="JustAuthSocial对象", description="第三方用户信息")
 public class QueryJustAuthSocialDTO extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "第三方ID	")
+    @ApiModelProperty(value = "第三方ID")
     private String uuid;
 
-    @ApiModelProperty(value = "用户来源")
+    @ApiModelProperty(value = "第三方来源")
     private String source;
+
+    @ApiModelProperty(value = "用户名")
+    private String username;
+
+    @ApiModelProperty(value = "用户昵称")
+    private String nickname;
 
     @ApiModelProperty(value = "开始时间")
     private String beginDateTime;

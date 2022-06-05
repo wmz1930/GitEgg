@@ -1,5 +1,6 @@
 package com.gitegg.service.extension.justauth.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.gitegg.service.extension.justauth.entity.JustAuthConfig;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -42,4 +43,12 @@ public interface JustAuthConfigMapper extends BaseMapper<JustAuthConfig> {
     * @return
     */
     JustAuthConfigDTO queryJustAuthConfig(@Param("justAuthConfig") QueryJustAuthConfigDTO justAuthConfigDTO);
+    
+    /**
+     * 查询租户第三方登录功能配置表列表
+     * @param justAuthConfigDTO
+     * @return
+     */
+    @InterceptorIgnore(tenantLine = "true")
+    List<JustAuthConfigDTO> initJustAuthConfigList(@Param("justAuthConfig") QueryJustAuthConfigDTO justAuthConfigDTO);
 }

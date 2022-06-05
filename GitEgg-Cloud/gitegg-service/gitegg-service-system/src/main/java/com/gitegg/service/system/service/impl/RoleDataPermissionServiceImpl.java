@@ -78,9 +78,7 @@ public class RoleDataPermissionServiceImpl extends ServiceImpl<RoleDataPermissio
     @Override
     public boolean updateRoleDataPermission(UpdateRoleDataPermissionDTO roleDataPermission) {
         RoleDataPermission roleDataPermissionEntity = BeanCopierUtils.copyByClass(roleDataPermission, RoleDataPermission.class);
-        QueryWrapper<RoleDataPermission> wrapper = new QueryWrapper<>();
-        wrapper.eq("id", roleDataPermissionEntity.getId());
-        boolean result = this.update(roleDataPermissionEntity, wrapper);
+        boolean result = this.updateById(roleDataPermissionEntity);
         return result;
     }
 
@@ -124,8 +122,6 @@ public class RoleDataPermissionServiceImpl extends ServiceImpl<RoleDataPermissio
             ewResource.eq("data_permission_id", dataPermissionId).in("role_id", roleIdList);
             this.remove(ewResource);
         }
-        //重新初始化数据权限和角色的缓存
-//        this.initRoleDataPermission();
         return true;
     }
 }
