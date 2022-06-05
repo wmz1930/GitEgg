@@ -230,6 +230,37 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/social',
+    component: BlankLayout,
+    redirect: '/social/:socialType/callback',
+    hidden: true,
+    children: [
+      {
+        path: ':socialType/callback',
+        name: 'socialCallback',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/SocialCallback')
+      },
+      {
+        path: 'bind',
+        name: 'socialBind',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/SocialBind/SocialBind')
+      }
+    ]
+  },
+  {
+    path: '/register',
+    component: BlankLayout,
+    redirect: '/register/account',
+    hidden: true,
+    children: [
+      {
+        path: 'account',
+        name: 'registerAccount',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register/Register')
+      }
+    ]
+  },
 
   {
     path: '/404',

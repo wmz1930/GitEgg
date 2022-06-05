@@ -13,34 +13,58 @@
             </a-form-model-item>
           </a-col>
           <a-col :md="6" :sm="24">
-            <a-form-model-item label="用户来源" prop="source">
+            <a-form-model-item label="第三方来源" prop="source">
               <a-input
                 v-model.trim="listJustAuthSocialQuery.source"
-                placeholder="请输入用户来源"
+                placeholder="请输入第三方来源"
                 :max-length="32"
                 @keyup.enter.native="handleFilter" />
             </a-form-model-item>
           </a-col>
           <a-col :md="6" :sm="24">
-            <a-form-model-item label="开始时间">
-              <a-date-picker v-model.trim="listJustAuthSocialQuery.beginDateTime"
-                             placeholder="开始时间"
-                             valueFormat="YYYY-MM-DD"
-                             style="width:100%;"/>
+            <a-form-model-item label="用户名" prop="username">
+              <a-input
+                v-model.trim="listJustAuthSocialQuery.username"
+                placeholder="请输入用户名"
+                :max-length="64"
+                @keyup.enter.native="handleFilter" />
             </a-form-model-item>
           </a-col>
           <a-col :md="6" :sm="24">
-            <a-form-model-item label="结束时间">
-              <a-date-picker v-model.trim="listJustAuthSocialQuery.endDateTime"
-                             placeholder="结束时间"
-                             valueFormat="YYYY-MM-DD"
-                             style="width:100%;"/>
+            <a-form-model-item label="用户昵称" prop="nickname">
+              <a-input
+                v-model.trim="listJustAuthSocialQuery.nickname"
+                placeholder="请输入用户昵称"
+                :max-length="64"
+                @keyup.enter.native="handleFilter" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="24" :sm="24">
-            <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' }">
+          <template v-if="advanced">
+            <a-col :md="6" :sm="24">
+              <a-form-model-item label="开始时间">
+                <a-date-picker v-model.trim="listJustAuthSocialQuery.beginDateTime"
+                               placeholder="开始时间"
+                               valueFormat="YYYY-MM-DD"
+                               style="width:100%;"/>
+              </a-form-model-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-model-item label="结束时间">
+                <a-date-picker v-model.trim="listJustAuthSocialQuery.endDateTime"
+                               placeholder="结束时间"
+                               valueFormat="YYYY-MM-DD"
+                               style="width:100%;"/>
+              </a-form-model-item>
+            </a-col>
+          </template>
+          <a-col :md="!advanced && 6 || 24" :sm="24">
+            <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
               <a-button type="primary" @click="handleFilter">查询</a-button>
               <a-button style="margin-left: 8px" @click="resetJustAuthSocialQuery">重置</a-button>
+              <a @click="toggleAdvanced" style="margin-left: 8px">
+                {{ advanced ? '收起' : '展开' }}
+                <a-icon :type="advanced ? 'up' : 'down'"/>
+              </a>
             </span>
           </a-col>
         </a-row>
@@ -105,7 +129,7 @@
         :label-col="justAuthSocialLabelCol"
         :wrapper-col="justAuthSocialWrapperCol">
         <a-row>
-          <a-col :md="12" :sm="24">
+          <a-col :md="24" :sm="24">
             <a-form-model-item label="第三方ID" prop="uuid">
               <a-input
                 v-model.trim="justAuthSocialForm.uuid"
@@ -113,17 +137,97 @@
                 :max-length="100" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="用户来源" prop="source">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="第三方来源" prop="source">
               <a-input
                 v-model.trim="justAuthSocialForm.source"
-                placeholder="请输入用户来源"
+                placeholder="请输入第三方来源"
                 :max-length="32" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
-          <a-col :md="12" :sm="24">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="用户名" prop="username">
+              <a-input
+                v-model.trim="justAuthSocialForm.username"
+                placeholder="请输入用户名"
+                :max-length="64" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="用户昵称" prop="nickname">
+              <a-input
+                v-model.trim="justAuthSocialForm.nickname"
+                placeholder="请输入用户昵称"
+                :max-length="64" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="用户头像" prop="avatar">
+              <a-input
+                v-model.trim="justAuthSocialForm.avatar"
+                placeholder="请输入用户头像"
+                :max-length="500" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="用户网址" prop="blog">
+              <a-input
+                v-model.trim="justAuthSocialForm.blog"
+                placeholder="请输入用户网址"
+                :max-length="500" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="所在公司" prop="company">
+              <a-input
+                v-model.trim="justAuthSocialForm.company"
+                placeholder="请输入所在公司"
+                :max-length="255" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="位置" prop="location">
+              <a-input
+                v-model.trim="justAuthSocialForm.location"
+                placeholder="请输入位置"
+                :max-length="100" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="用户邮箱" prop="email">
+              <a-input
+                v-model.trim="justAuthSocialForm.email"
+                placeholder="请输入用户邮箱"
+                :max-length="100" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="用户备注" prop="remark">
+              <a-input
+                v-model.trim="justAuthSocialForm.remark"
+                placeholder="请输入用户备注"
+                :max-length="500" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="性别" prop="gender">
+              <a-input
+                v-model.trim="justAuthSocialForm.gender"
+                placeholder="请输入性别"
+                :max-length="3" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="24" :sm="24">
             <a-form-model-item label="授权令牌" prop="accessToken">
               <a-input
                 v-model.trim="justAuthSocialForm.accessToken"
@@ -131,7 +235,9 @@
                 :max-length="500" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="12" :sm="24">
+        </a-row>
+        <a-row>
+          <a-col :md="24" :sm="24">
             <a-form-model-item label="令牌有效期" prop="expireIn">
               <a-input
                 v-model.trim="justAuthSocialForm.expireIn"
@@ -139,9 +245,7 @@
                 :max-length="10" />
             </a-form-model-item>
           </a-col>
-        </a-row>
-        <a-row>
-          <a-col :md="12" :sm="24">
+          <a-col :md="24" :sm="24">
             <a-form-model-item label="刷新令牌" prop="refreshToken">
               <a-input
                 v-model.trim="justAuthSocialForm.refreshToken"
@@ -149,112 +253,158 @@
                 :max-length="500" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="OpenId" prop="openId">
-              <a-input
-                v-model.trim="justAuthSocialForm.openId"
-                placeholder="请输入OpenId"
-                :max-length="100" />
-            </a-form-model-item>
-          </a-col>
         </a-row>
         <a-row>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="用户ID" prop="uid">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="刷新令牌有效期" prop="accessTokenExpireIn">
+              <a-input
+                v-model.trim="justAuthSocialForm.accessTokenExpireIn"
+                placeholder="请输入刷新令牌有效期"
+                :max-length="10" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="第三方用户ID" prop="uid">
               <a-input
                 v-model.trim="justAuthSocialForm.uid"
-                placeholder="请输入用户ID"
+                placeholder="请输入第三方用户ID"
                 :max-length="100" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="授权信息" prop="accessCode">
+        </a-row>
+        <a-row>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="第三方用户OpenId" prop="openId">
+              <a-input
+                v-model.trim="justAuthSocialForm.openId"
+                placeholder="请输入第三方用户OpenId"
+                :max-length="100" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="AccessCode" prop="accessCode">
               <a-input
                 v-model.trim="justAuthSocialForm.accessCode"
-                placeholder="请输入授权信息"
+                placeholder="请输入AccessCode"
                 :max-length="255" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="UnionId" prop="unionId">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="第三方用户UnionId" prop="unionId">
               <a-input
                 v-model.trim="justAuthSocialForm.unionId"
-                placeholder="请输入UnionId"
+                placeholder="请输入第三方用户UnionId"
                 :max-length="255" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="用户权限" prop="scope">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="Google Scope" prop="scope">
               <a-input
                 v-model.trim="justAuthSocialForm.scope"
-                placeholder="请输入用户权限"
+                placeholder="请输入Google Scope"
                 :max-length="255" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="授权类型" prop="tokenType">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="Google TokenType" prop="tokenType">
               <a-input
                 v-model.trim="justAuthSocialForm.tokenType"
-                placeholder="请输入授权类型"
+                placeholder="请输入Google TokenType"
                 :max-length="255" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="IdToken" prop="idToken">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="Google IdToken" prop="idToken">
               <a-input
                 v-model.trim="justAuthSocialForm.idToken"
-                placeholder="请输入IdToken"
+                placeholder="请输入Google IdToken"
                 :max-length="255" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="mac_algorithm" prop="macAlgorithm">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="小米MacAlgorithm" prop="macAlgorithm">
               <a-input
                 v-model.trim="justAuthSocialForm.macAlgorithm"
-                placeholder="请输入mac_algorithm"
+                placeholder="请输入小米MacAlgorithm"
                 :max-length="255" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="mac_key" prop="macKey">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="小米Mac_Key" prop="macKey">
               <a-input
                 v-model.trim="justAuthSocialForm.macKey"
-                placeholder="请输入mac_key"
+                placeholder="请输入小米Mac_Key"
                 :max-length="255" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="授权code" prop="code">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="企业微信code" prop="code">
               <a-input
                 v-model.trim="justAuthSocialForm.code"
-                placeholder="请输入授权code"
+                placeholder="请输入企业微信code"
                 :max-length="255" />
             </a-form-model-item>
           </a-col>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="oauth_token" prop="oauthToken">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="Twitter OauthToken" prop="oauthToken">
               <a-input
                 v-model.trim="justAuthSocialForm.oauthToken"
-                placeholder="请输入oauth_token"
+                placeholder="请输入Twitter OauthToken"
                 :max-length="255" />
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row>
-          <a-col :md="12" :sm="24">
-            <a-form-model-item label="oauth_token_secret" prop="oauthTokenSecret">
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="Twitter OauthTokenSecret" prop="oauthTokenSecret">
               <a-input
                 v-model.trim="justAuthSocialForm.oauthTokenSecret"
-                placeholder="请输入oauth_token_secret"
+                placeholder="请输入Twitter OauthTokenSecret"
                 :max-length="255" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="Twitter UserId" prop="userId">
+              <a-input
+                v-model.trim="justAuthSocialForm.userId"
+                placeholder="请输入Twitter UserId"
+                :max-length="100" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="Twitter ScreenName" prop="screenName">
+              <a-input
+                v-model.trim="justAuthSocialForm.screenName"
+                placeholder="请输入Twitter ScreenName"
+                :max-length="255" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="Twitter OauthCallbackConfirmed" prop="oauthCallbackConfirmed">
+              <a-input
+                v-model.trim="justAuthSocialForm.oauthCallbackConfirmed"
+                placeholder="请输入Twitter OauthCallbackConfirmed"
+                :max-length="1" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :md="24" :sm="24">
+            <a-form-model-item label="原始用户信息" prop="rawUserInfo">
+              <a-input
+                v-model.trim="justAuthSocialForm.rawUserInfo"
+                placeholder="请输入原始用户信息"
+                :max-length="65535" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -288,7 +438,9 @@
                 listLoading: true,
                 listJustAuthSocialQuery: {
                     uuid: undefined, // 第三方ID
-                    source: undefined, // 用户来源
+                    source: undefined, // 第三方来源
+                    username: undefined, // 用户名
+                    nickname: undefined, // 用户昵称
                     beginDateTime: '',
                     endDateTime: ''
                 },
@@ -301,11 +453,21 @@
                 justAuthSocialForm: {
                     uuid: undefined,
                     source: undefined,
+                    username: undefined,
+                    nickname: undefined,
+                    avatar: undefined,
+                    blog: undefined,
+                    company: undefined,
+                    location: undefined,
+                    email: undefined,
+                    remark: undefined,
+                    gender: '0',
                     accessToken: undefined,
                     expireIn: undefined,
                     refreshToken: undefined,
-                    openId: undefined,
+                    accessTokenExpireIn: undefined,
                     uid: undefined,
+                    openId: undefined,
                     accessCode: undefined,
                     unionId: undefined,
                     scope: undefined,
@@ -315,7 +477,11 @@
                     macKey: undefined,
                     code: undefined,
                     oauthToken: undefined,
-                    oauthTokenSecret: undefined
+                    oauthTokenSecret: undefined,
+                    userId: undefined,
+                    screenName: undefined,
+                    oauthCallbackConfirmed: undefined,
+                    rawUserInfo: undefined
                 },
                 // 表头
                 columns: [
@@ -327,116 +493,81 @@
                         dataIndex: 'uuid'
                     },
                     {
-                        title: '用户来源',
+                        title: '第三方来源',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
                         dataIndex: 'source'
                     },
                     {
-                        title: '授权令牌',
+                        title: '用户名',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'accessToken'
+                        dataIndex: 'username'
                     },
                     {
-                        title: '令牌有效期',
+                        title: '用户昵称',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'expireIn'
+                        dataIndex: 'nickname'
                     },
                     {
-                        title: '刷新令牌',
+                        title: '用户头像',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'refreshToken'
+                        dataIndex: 'avatar'
                     },
                     {
-                        title: 'OpenId',
+                        title: '用户网址',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'openId'
+                        dataIndex: 'blog'
                     },
                     {
-                        title: '用户ID',
+                        title: '所在公司',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'uid'
+                        dataIndex: 'company'
                     },
                     {
-                        title: '授权信息',
+                        title: '位置',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'accessCode'
+                        dataIndex: 'location'
                     },
                     {
-                        title: 'UnionId',
+                        title: '用户邮箱',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'unionId'
+                        dataIndex: 'email'
                     },
                     {
-                        title: '用户权限',
+                        title: '用户备注',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'scope'
+                        dataIndex: 'remark'
                     },
                     {
-                        title: '授权类型',
+                        title: '性别',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'tokenType'
+                        dataIndex: 'gender'
                     },
                     {
-                        title: 'IdToken',
+                        title: '创建时间',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'idToken'
-                    },
-                    {
-                        title: 'mac_algorithm',
-                        align: 'center',
-                        width: 200,
-                        ellipsis: true,
-                        dataIndex: 'macAlgorithm'
-                    },
-                    {
-                        title: 'mac_key',
-                        align: 'center',
-                        width: 200,
-                        ellipsis: true,
-                        dataIndex: 'macKey'
-                    },
-                    {
-                        title: '授权code',
-                        align: 'center',
-                        width: 200,
-                        ellipsis: true,
-                        dataIndex: 'code'
-                    },
-                    {
-                        title: 'oauth_token',
-                        align: 'center',
-                        width: 200,
-                        ellipsis: true,
-                        dataIndex: 'oauthToken'
-                    },
-                    {
-                        title: 'oauth_token_secret',
-                        align: 'center',
-                        width: 200,
-                        ellipsis: true,
-                        dataIndex: 'oauthTokenSecret'
+                        dataIndex: 'createTime'
                     },
                     {
                         title: '操作',
@@ -449,54 +580,123 @@
                 rules: {
                     // 字段校验
                     uuid: [
-                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入第三方ID', trigger: 'blur' }
                     ],
                     source: [
-                        { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入第三方来源', trigger: 'blur' }
+                    ],
+                    username: [
+                        { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入用户名', trigger: 'blur' }
+                    ],
+                    nickname: [
+                        { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入用户昵称', trigger: 'blur' }
+                    ],
+                    avatar: [
+                        { min: 1, max: 500, message: '长度在 1 到 500 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入用户头像', trigger: 'blur' }
+                    ],
+                    blog: [
+                        { min: 1, max: 500, message: '长度在 1 到 500 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入用户网址', trigger: 'blur' }
+                    ],
+                    company: [
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入所在公司', trigger: 'blur' }
+                    ],
+                    location: [
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入位置', trigger: 'blur' }
+                    ],
+                    email: [
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入用户邮箱', trigger: 'blur' }
+                    ],
+                    remark: [
+                        { min: 1, max: 500, message: '长度在 1 到 500 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入用户备注', trigger: 'blur' }
+                    ],
+                    gender: [
                     ],
                     accessToken: [
-                        { min: 1, max: 500, message: '长度在 1 到 500 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 500, message: '长度在 1 到 500 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入授权令牌', trigger: 'blur' }
                     ],
                     expireIn: [
+                        { required: true, message: '请输入令牌有效期', trigger: 'blur' }
                     ],
                     refreshToken: [
-                        { min: 1, max: 500, message: '长度在 1 到 500 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 500, message: '长度在 1 到 500 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入刷新令牌', trigger: 'blur' }
                     ],
-                    openId: [
-                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur', type: 'string' }
+                    accessTokenExpireIn: [
+                        { required: true, message: '请输入刷新令牌有效期', trigger: 'blur' }
                     ],
                     uid: [
-                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入第三方用户ID', trigger: 'blur' }
+                    ],
+                    openId: [
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入第三方用户OpenId', trigger: 'blur' }
                     ],
                     accessCode: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入AccessCode', trigger: 'blur' }
                     ],
                     unionId: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入第三方用户UnionId', trigger: 'blur' }
                     ],
                     scope: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入Google Scope', trigger: 'blur' }
                     ],
                     tokenType: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入Google TokenType', trigger: 'blur' }
                     ],
                     idToken: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入Google IdToken', trigger: 'blur' }
                     ],
                     macAlgorithm: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入小米MacAlgorithm', trigger: 'blur' }
                     ],
                     macKey: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入小米Mac_Key', trigger: 'blur' }
                     ],
                     code: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入企业微信code', trigger: 'blur' }
                     ],
                     oauthToken: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入Twitter OauthToken', trigger: 'blur' }
                     ],
                     oauthTokenSecret: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入Twitter OauthTokenSecret', trigger: 'blur' }
+                    ],
+                    userId: [
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入Twitter UserId', trigger: 'blur' }
+                    ],
+                    screenName: [
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入Twitter ScreenName', trigger: 'blur' }
+                    ],
+                    oauthCallbackConfirmed: [
+                        { required: true, message: '请输入Twitter OauthCallbackConfirmed', trigger: 'blur' }
+                    ],
+                    rawUserInfo: [
+                        { min: 1, max: 65535, message: '长度在 1 到 65535 个字符', trigger: 'blur', type: 'string' },
+                        { required: true, message: '请输入原始用户信息', trigger: 'blur' }
                     ]
                 },
                 downloadLoading: false,
@@ -542,7 +742,9 @@
             resetJustAuthSocialQuery () {
                 this.listJustAuthSocialQuery = {
                         uuid: undefined, // 第三方ID
-                        source: undefined, // 用户来源
+                        source: undefined, // 第三方来源
+                        username: undefined, // 用户名
+                        nickname: undefined, // 用户昵称
                         beginDateTime: '',
                         endDateTime: ''
                 }
@@ -550,22 +752,36 @@
             resetJustAuthSocialForm () {
                 this.justAuthSocialForm = {
                     uuid: undefined, // 第三方ID
-                    source: undefined, // 用户来源
+                    source: undefined, // 第三方来源
+                    username: undefined, // 用户名
+                    nickname: undefined, // 用户昵称
+                    avatar: undefined, // 用户头像
+                    blog: undefined, // 用户网址
+                    company: undefined, // 所在公司
+                    location: undefined, // 位置
+                    email: undefined, // 用户邮箱
+                    remark: undefined, // 用户备注
+                    gender: '0', // 性别
                     accessToken: undefined, // 授权令牌
                     expireIn: undefined, // 令牌有效期
                     refreshToken: undefined, // 刷新令牌
-                    openId: undefined, // OpenId
-                    uid: undefined, // 用户ID
-                    accessCode: undefined, // 授权信息
-                    unionId: undefined, // UnionId
-                    scope: undefined, // 用户权限
-                    tokenType: undefined, // 授权类型
-                    idToken: undefined, // IdToken
-                    macAlgorithm: undefined, // mac_algorithm
-                    macKey: undefined, // mac_key
-                    code: undefined, // 授权code
-                    oauthToken: undefined, // oauth_token
-                    oauthTokenSecret: undefined // oauth_token_secret
+                    accessTokenExpireIn: undefined, // 刷新令牌有效期
+                    uid: undefined, // 第三方用户ID
+                    openId: undefined, // 第三方用户OpenId
+                    accessCode: undefined, // AccessCode
+                    unionId: undefined, // 第三方用户UnionId
+                    scope: undefined, // Google Scope
+                    tokenType: undefined, // Google TokenType
+                    idToken: undefined, // Google IdToken
+                    macAlgorithm: undefined, // 小米MacAlgorithm
+                    macKey: undefined, // 小米Mac_Key
+                    code: undefined, // 企业微信code
+                    oauthToken: undefined, // Twitter OauthToken
+                    oauthTokenSecret: undefined, // Twitter OauthTokenSecret
+                    userId: undefined, // Twitter UserId
+                    screenName: undefined, // Twitter ScreenName
+                    oauthCallbackConfirmed: undefined, // Twitter OauthCallbackConfirmed
+                    rawUserInfo: undefined // 原始用户信息
                 }
             },
             onSelectChange (selectedRowKeys, selectedRows) {

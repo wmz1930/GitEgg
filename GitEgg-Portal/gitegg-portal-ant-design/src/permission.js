@@ -10,7 +10,7 @@ import { i18nRender } from '@/locales'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const allowList = ['login', 'register', 'registerResult'] // no redirect allowList
+const allowList = ['login', 'register', 'registerResult', 'socialCallback', 'socialBind', 'registerAccount'] // no redirect allowList
 const loginRoutePath = '/user/login'
 const defaultRoutePath = '/dashboard/analysis'
 
@@ -38,7 +38,6 @@ router.beforeEach((to, from, next) => {
             const accessResourcesRouters = await store.dispatch('GenerateResourcesRouters', resources)
             // dynamically add accessible routes
             router.addRoutes(accessResourcesRouters)
-
             // 请求带有 redirect 重定向时，登录自动重定向到该地址
             const redirect = decodeURIComponent(from.query.redirect || to.path)
             if (to.path === redirect) {

@@ -80,7 +80,7 @@
       </a-upload>
       <a href="javascript:;" @click="handleDownloadTemplate" style="margin-left: 8px;">下载导入模板</a>-->
       <a-tag color="orange">
-        此页面需在系统管理员指导下进行配置.
+        此页面需在系统管理员指导下进行配置
       </a-tag>
     </div>
     <s-table
@@ -200,7 +200,7 @@
               <a-input-number
                 style="width: 100%;"
                 v-model.trim="justAuthConfigForm.cacheTimeout"
-                placeholder="请输入缓存超时时间"
+                placeholder="请输入缓存超时时间，单位： 分钟"
                 :min="0"
                 :max="2147483647"
                 @keyup.enter.native="handleFilter" />
