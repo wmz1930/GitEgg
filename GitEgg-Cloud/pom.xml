@@ -79,6 +79,7 @@
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>**/*.jks</exclude>
+                    <exclude>static/**</exclude>
                 </excludes>
             </resource>
             <!-- 解决jks被过滤掉的问题 -->
@@ -87,6 +88,7 @@
                 <filtering>false</filtering>
                 <includes>
                     <include>**/*.jks</include>
+                    <include>static/**</include>
                 </includes>
             </resource>
             <resource>

@@ -25,6 +25,11 @@
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-captcha</artifactId>
         </dependency>
+        <!-- 定时任务 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-xxl-job</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
