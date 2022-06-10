@@ -121,3 +121,5 @@ hs_err_pid*
 /GitEgg-Platform/gitegg-platform-code-generator/gitegg-platform-code-generator.iml
 /GitEgg-Platform/gitegg-platform-code-generator/target
 /GitEgg-Cloud/gitegg-service/target
+/GitEgg-Cloud/gitegg-plugin/xxl-job-admin/target
+/GitEgg-Cloud/gitegg-plugin/xxl-job-admin/xxl-job-admin.iml

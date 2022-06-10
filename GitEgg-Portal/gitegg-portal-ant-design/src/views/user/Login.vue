@@ -165,7 +165,8 @@
         <a class="register"
            @click="openRegister"
         >{{ $t('user.login.signup') }}
-        </a></div>
+        </a>
+      </div>
     </a-form>
 
     <Verify @success="verifySuccess"
