@@ -66,7 +66,7 @@ public class AuthResourceServerConfig {
         // Basic认证直接放行
         if (!CollectionUtils.isEmpty(authUrlWhiteListProperties.getTokenUrls()))
         {
-            http.authorizeExchange().pathMatchers(ArrayUtil.toArray(authUrlWhiteListProperties.getStaticFiles(), String.class)).permitAll();
+            http.authorizeExchange().pathMatchers(ArrayUtil.toArray(authUrlWhiteListProperties.getTokenUrls(), String.class)).permitAll();
         }
 
         // 判断是否有静态文件
