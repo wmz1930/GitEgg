@@ -12,6 +12,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author GitEgg
+ */
 @Component
 public class SmsFactory {
 

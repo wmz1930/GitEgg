@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 添加contextId用于区分相同name的client，否则会报错
+ * @author GitEgg
  */
 @FeignClient(name = "gitegg-service-extension", contextId = "SmsClient")
 public interface ISmsFeign {
@@ -37,6 +38,7 @@ public interface ISmsFeign {
      *
      * @param smsCode
      * @param phoneNumber
+     * @param verificationCode
      * @return
      */
     @GetMapping("/feign/sms/check/verification/code")

@@ -8,6 +8,14 @@ export function querySmsChannelList (query) {
   })
 }
 
+export function querySmsChannelListAll (query) {
+  return request({
+    url: '/gitegg-service-extension/extension/sms/channel/list/all',
+    method: 'get',
+    params: query
+  })
+}
+
 export function createSmsChannel (data) {
   return request({
     url: '/gitegg-service-extension/extension/sms/channel/create',
@@ -51,5 +59,14 @@ export function checkSmsChannelExist (data) {
     url: '/gitegg-service-extension/extension/sms/channel/check',
     method: 'post',
     params: data
+  })
+}
+
+export function downloadSmsChannelList (query) {
+  return request({
+    url: '/gitegg-service-extension/extension/sms/channel/download',
+    method: 'get',
+    responseType: 'blob',
+    params: query
   })
 }

@@ -1,6 +1,7 @@
 package com.gitegg.service.extension.sms.dto;
 
 import com.gitegg.platform.mybatis.entity.BaseEntity;
+import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author GitEgg
- * @since 2021-01-26
+ * @since 2022-05-24
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -21,30 +22,11 @@ public class QuerySmsChannelDTO extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "主键")
-    private Long id;
-
     @ApiModelProperty(value = "渠道编码")
     private String channelCode;
 
     @ApiModelProperty(value = "渠道名称")
     private String channelName;
-
-    @ApiModelProperty(value = "短信发送的key id")
-    private String secretId;
-
-    @ApiModelProperty(value = "短信发送的秘钥")
-    private String secretKey;
-
-    @ApiModelProperty(value = "regionId仅阿里云需要")
-    private String regionId;
-
-    @ApiModelProperty(value = "渠道状态 1有效 0禁用")
-    private Integer channelStatus;
-
-    @ApiModelProperty(value = "描述")
-    private String comments;
-
 
     @ApiModelProperty(value = "开始时间")
     private String beginDateTime;

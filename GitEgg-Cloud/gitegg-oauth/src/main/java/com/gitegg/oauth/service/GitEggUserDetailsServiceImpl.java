@@ -78,7 +78,12 @@ public class GitEggUserDetailsServiceImpl implements UserDetailsService {
             String phone = request.getParameter(AuthConstant.PHONE_NUMBER);
             result = userFeign.queryUserByPhone(phone);
         }
-        // 通过账号密码登录
+        // 第三方登录
+        else if(!StringUtils.isEmpty(authGrantType) && AuthEnum.SOCIAL.code.equals(authGrantType))
+        {
+            result = userFeign.queryById(Long.parseLong(username));
+        }
+        // 扫描二维码登录 TODO
         else if(!StringUtils.isEmpty(authGrantType) && AuthEnum.QR.code.equals(authGrantType))
         {
             result = userFeign.queryUserByAccount(username);
@@ -108,7 +113,8 @@ public class GitEggUserDetailsServiceImpl implements UserDetailsService {
 
             // 判断账号密码输入错误几次，如果输入错误多次，则锁定账号
             // 输入错误大于配置的次数，必须选择captcha或sms_captcha
-            if (null != lockTimes && (int)lockTimes > maxNonCaptchaTimes && ( StringUtils.isEmpty(authGrantType) || (!StringUtils.isEmpty(authGrantType)
+            if (null != lockTimes && (int)lockTimes > maxNonCaptchaTimes
+                    && ( StringUtils.isEmpty(authGrantType) || (!StringUtils.isEmpty(authGrantType)
                     && !AuthEnum.SMS_CAPTCHA.code.equals(authGrantType) && !AuthEnum.CAPTCHA.code.equals(authGrantType)))) {
                 throw new GitEggOAuth2Exception(ResultCodeEnum.INVALID_PASSWORD_CAPTCHA.msg);
             }

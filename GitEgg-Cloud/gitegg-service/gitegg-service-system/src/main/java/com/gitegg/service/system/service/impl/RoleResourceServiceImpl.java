@@ -2,6 +2,7 @@ package com.gitegg.service.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitegg.platform.base.constant.AuthConstant;
@@ -38,7 +39,7 @@ public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, Rol
     /**
      * 是否开启租户模式
      */
-    @Value(("${tenant.enable}"))
+    @Value("${tenant.enable}")
     private Boolean enable;
 
     private final IResourceService resourceService;
@@ -54,17 +55,15 @@ public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, Rol
 
     @Override
     public List<Resource> queryResourceByRoleId(Long roleId) {
-        QueryWrapper<RoleResource> ew = new QueryWrapper<>();
-        ew.eq("role_id", roleId);
+        LambdaQueryWrapper<RoleResource> ew = new LambdaQueryWrapper<>();
+        ew.eq(RoleResource::getRoleId, roleId);
         List<RoleResource> roleResourceList = this.list(ew);
         if (!CollectionUtils.isEmpty(roleResourceList)) {
             List<Long> resourceIds = new ArrayList<>();
             for (RoleResource roleResource : roleResourceList) {
                 resourceIds.add(roleResource.getResourceId());
             }
-            QueryWrapper<Resource> ewResource = new QueryWrapper<>();
-            ewResource.in("id", resourceIds);
-            List<Resource> resourceList = resourceService.list(ewResource);
+            List<Resource> resourceList = resourceService.listByIds(resourceIds);
             return resourceList;
         } else {
             return null;
@@ -85,8 +84,8 @@ public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, Rol
                 resIdList.add(rr.getResourceId());
             }
             Long roleId = updateRoleResource.getRoleId();
-            QueryWrapper<RoleResource> ewResource = new QueryWrapper<>();
-            ewResource.eq("role_id", roleId).in("resource_id", resIdList);
+            LambdaQueryWrapper<RoleResource> ewResource = new LambdaQueryWrapper<>();
+            ewResource.eq(RoleResource::getRoleId, roleId).in(RoleResource::getResourceId, resIdList);
             this.remove(ewResource);
             this.genRoleResources(delList, false);
         }

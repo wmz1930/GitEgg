@@ -1,32 +1,26 @@
 package com.gitegg.service.system.service.impl;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitegg.platform.base.constant.AuthConstant;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitegg.platform.base.util.BeanCopierUtils;
 import com.gitegg.platform.mybatis.constant.DataPermissionConstant;
 import com.gitegg.platform.mybatis.entity.DataPermissionEntity;
-import com.gitegg.service.system.entity.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.gitegg.service.system.dto.CreateDataPermissionRoleDTO;
+import com.gitegg.service.system.dto.DataPermissionRoleDTO;
+import com.gitegg.service.system.dto.QueryDataPermissionRoleDTO;
+import com.gitegg.service.system.dto.UpdateDataPermissionRoleDTO;
 import com.gitegg.service.system.entity.DataPermissionRole;
 import com.gitegg.service.system.mapper.DataPermissionRoleMapper;
 import com.gitegg.service.system.service.IDataPermissionRoleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
-import com.gitegg.platform.base.util.BeanCopierUtils;
-import com.gitegg.service.system.dto.DataPermissionRoleDTO;
-import com.gitegg.service.system.dto.CreateDataPermissionRoleDTO;
-import com.gitegg.service.system.dto.UpdateDataPermissionRoleDTO;
-import com.gitegg.service.system.dto.QueryDataPermissionRoleDTO;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -44,7 +38,7 @@ public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRol
     /**
      * 是否开启租户模式
      */
-    @Value(("${tenant.enable}"))
+    @Value("${tenant.enable}")
     private Boolean enable;
 
     private final DataPermissionRoleMapper dataPermissionRoleMapper;
@@ -94,9 +88,7 @@ public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRol
     @Override
     public boolean updateDataPermissionRole(UpdateDataPermissionRoleDTO dataPermissionRole) {
         DataPermissionRole dataPermissionRoleEntity = BeanCopierUtils.copyByClass(dataPermissionRole, DataPermissionRole.class);
-        QueryWrapper<DataPermissionRole> wrapper = new QueryWrapper<>();
-        wrapper.eq("id", dataPermissionRoleEntity.getId());
-        boolean result = this.update(dataPermissionRoleEntity, wrapper);
+        boolean result = this.updateById(dataPermissionRoleEntity);
         return result;
     }
 

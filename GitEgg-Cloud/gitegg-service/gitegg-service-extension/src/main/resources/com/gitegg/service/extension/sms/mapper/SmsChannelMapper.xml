@@ -11,6 +11,8 @@
         <result column="secret_key" property="secretKey" />
         <result column="region_id" property="regionId" />
         <result column="channel_status" property="channelStatus" />
+        <result column="sms_quantity" property="smsQuantity" />
+        <result column="sms_validity" property="smsValidity" />
         <result column="comments" property="comments" />
         <result column="tenant_id" property="tenantId" />
         <result column="create_time" property="createTime" />
@@ -21,7 +23,7 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, channel_code, channel_name, secret_id, secret_key, region_id, channel_status, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, channel_code, channel_name, secret_id, secret_key, region_id, channel_status, sms_quantity, sms_validity, comments, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 分页查询短信渠道表列表 -->
@@ -30,8 +32,11 @@
         <include refid="Base_Column_List"/>
         FROM t_sys_sms_channel
         WHERE del_flag = 0
-        <if test="smsChannel.id != null and smsChannel.id != ''">
-            AND id = #{smsChannel.id}
+        <if test="smsChannel.channelCode != null and smsChannel.channelCode != ''">
+            AND channel_code = #{smsChannel.channelCode}
+        </if>
+        <if test="smsChannel.channelName != null and smsChannel.channelName != ''">
+            AND channel_name = #{smsChannel.channelName}
         </if>
         <if test="smsChannel.beginDateTime != null and smsChannel.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsChannel.beginDateTime},'%Y-%m-%d %H:%M:%S')
@@ -41,15 +46,17 @@
         </if>
         ORDER BY id DESC
     </select>
-
     <!-- 查询短信渠道表信息 -->
     <select id="querySmsChannel" resultType="com.gitegg.service.extension.sms.dto.SmsChannelDTO" parameterType="com.gitegg.service.extension.sms.dto.QuerySmsChannelDTO">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_sys_sms_channel
         WHERE del_flag = 0
-        <if test="smsChannel.id != null and smsChannel.id != ''">
-            AND id = #{smsChannel.id}
+        <if test="smsChannel.channelCode != null and smsChannel.channelCode != ''">
+            AND channel_code = #{smsChannel.channelCode}
+        </if>
+        <if test="smsChannel.channelName != null and smsChannel.channelName != ''">
+            AND channel_name = #{smsChannel.channelName}
         </if>
         <if test="smsChannel.beginDateTime != null and smsChannel.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsChannel.beginDateTime},'%Y-%m-%d %H:%M:%S')
@@ -59,5 +66,4 @@
         </if>
         ORDER BY id DESC
     </select>
-
 </mapper>

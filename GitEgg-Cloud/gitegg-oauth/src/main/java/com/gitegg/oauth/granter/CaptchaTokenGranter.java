@@ -1,11 +1,9 @@
 package com.gitegg.oauth.granter;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import com.anji.captcha.service.CaptchaService;
 import com.gitegg.oauth.util.CaptchaUtils;
-import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.platform.base.constant.TokenConstant;
+import com.gitegg.platform.base.enums.ResultCodeEnum;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -14,14 +12,9 @@ import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthoriza
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.util.StringUtils;
 
-import com.anji.captcha.model.common.RepCodeEnum;
-import com.anji.captcha.model.common.ResponseModel;
-import com.anji.captcha.model.vo.CaptchaVO;
-import com.anji.captcha.service.CaptchaService;
-import com.gitegg.platform.base.enums.ResultCodeEnum;
-import com.gitegg.platform.captcha.constant.CaptchaConstant;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 验证码模式

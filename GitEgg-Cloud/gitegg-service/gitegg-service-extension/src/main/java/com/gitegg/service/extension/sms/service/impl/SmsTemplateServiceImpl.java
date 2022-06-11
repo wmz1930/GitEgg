@@ -1,22 +1,24 @@
 package com.gitegg.service.extension.sms.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.gitegg.platform.base.util.BeanCopierUtils;
-import com.gitegg.service.extension.sms.dto.CreateSmsTemplateDTO;
-import com.gitegg.service.extension.sms.dto.QuerySmsTemplateDTO;
-import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
-import com.gitegg.service.extension.sms.dto.UpdateSmsTemplateDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.gitegg.service.extension.sms.entity.SmsTemplate;
 import com.gitegg.service.extension.sms.mapper.SmsTemplateMapper;
 import com.gitegg.service.extension.sms.service.ISmsTemplateService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
+import com.gitegg.platform.base.util.BeanCopierUtils;
+import com.gitegg.service.extension.sms.dto.SmsTemplateDTO;
+import com.gitegg.service.extension.sms.dto.CreateSmsTemplateDTO;
+import com.gitegg.service.extension.sms.dto.UpdateSmsTemplateDTO;
+import com.gitegg.service.extension.sms.dto.QuerySmsTemplateDTO;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * <p>
@@ -24,7 +26,7 @@ import java.util.List;
  * </p>
  *
  * @author GitEgg
- * @since 2021-01-26
+ * @since 2022-05-24
  */
 @Slf4j
 @Service
@@ -42,6 +44,17 @@ public class SmsTemplateServiceImpl extends ServiceImpl<SmsTemplateMapper, SmsTe
     @Override
     public Page<SmsTemplateDTO> querySmsTemplateList(Page<SmsTemplateDTO> page, QuerySmsTemplateDTO querySmsTemplateDTO) {
         Page<SmsTemplateDTO> smsTemplateInfoList = smsTemplateMapper.querySmsTemplateList(page, querySmsTemplateDTO);
+        return smsTemplateInfoList;
+    }
+
+    /**
+    * 查询短信配置表列表
+    * @param querySmsTemplateDTO
+    * @return
+    */
+    @Override
+    public List<SmsTemplateDTO> querySmsTemplateList(QuerySmsTemplateDTO querySmsTemplateDTO) {
+        List<SmsTemplateDTO> smsTemplateInfoList = smsTemplateMapper.querySmsTemplateList(querySmsTemplateDTO);
         return smsTemplateInfoList;
     }
 
@@ -76,9 +89,7 @@ public class SmsTemplateServiceImpl extends ServiceImpl<SmsTemplateMapper, SmsTe
     @Override
     public boolean updateSmsTemplate(UpdateSmsTemplateDTO smsTemplate) {
         SmsTemplate smsTemplateEntity = BeanCopierUtils.copyByClass(smsTemplate, SmsTemplate.class);
-        QueryWrapper<SmsTemplate> wrapper = new QueryWrapper<>();
-        wrapper.eq("id", smsTemplateEntity.getId());
-        boolean result = this.update(smsTemplateEntity, wrapper);
+        boolean result = this.updateById(smsTemplateEntity);
         return result;
     }
 

@@ -11,6 +11,13 @@
         <result column="template_id" property="templateId" />
         <result column="sign_name" property="signName" />
         <result column="template_status" property="templateStatus" />
+        <result column="template_type" property="templateType" />
+        <result column="cache_code_key" property="cacheCodeKey" />
+        <result column="cache_time_out" property="cacheTimeOut" />
+        <result column="cache_time_out_unit" property="cacheTimeOutUnit" />
+        <result column="send_times_limit" property="sendTimesLimit" />
+        <result column="send_times_limit_period" property="sendTimesLimitPeriod" />
+        <result column="send_times_limit_period_unit" property="sendTimesLimitPeriodUnit" />
         <result column="comments" property="comments" />
         <result column="tenant_id" property="tenantId" />
         <result column="create_time" property="createTime" />
@@ -21,17 +28,17 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, channel_id, sms_code, sms_name, template_id, sign_name, template_status, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, channel_id, sms_code, sms_name, template_id, sign_name, template_status, template_type, cache_code_key, cache_time_out, cache_time_out_unit, send_times_limit, send_times_limit_period, send_times_limit_period_unit, comments, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
-    <!-- 通用查询结果列-模板 -->
+    <!-- 通用查询结果列 -->
     <sql id="Base_Column_List_Template">
-        template.id, template.channel_id, template.sms_name, template.template_id, template.sign_name, template.template_status, template.comments, template.tenant_id, template.create_time, template.creator, template.update_time, template.operator, template.del_flag
+        template.id, template.channel_id, template.sms_code, template.sms_name, template.template_id, template.sign_name, template.template_status, template.template_type, template.cache_code_key, template.cache_time_out, template.cache_time_out_unit, template.send_times_limit, template.send_times_limit_period, template.send_times_limit_period_unit, template.comments, template.tenant_id, template.create_time, template.creator, template.update_time, template.operator, template.del_flag
     </sql>
 
-    <!-- 通用查询结果列-渠道 -->
+    <!-- 通用查询结果列 -->
     <sql id="Base_Column_List_Channel">
-        channel.channel_code, channel.channel_name, channel.secret_id, channel.secret_key, channel.region_id, channel.channel_status
+        channel.id, channel.channel_code, channel.channel_name, channel.secret_id, channel.secret_key, channel.region_id, channel.channel_status, channel.sms_quantity, channel.sms_validity, channel.comments, channel.tenant_id, channel.create_time, channel.creator, channel.update_time, channel.operator, channel.del_flag
     </sql>
 
     <!-- 分页查询短信配置表列表 -->
@@ -43,11 +50,23 @@
         FROM t_sys_sms_template template
         inner join t_sys_sms_channel channel on template.channel_id = channel.id and channel.del_flag = 0
         WHERE template.del_flag = 0
-        <if test="smsTemplate.id != null and smsTemplate.id != ''">
-            AND template.id = #{smsTemplate.id}
+        <if test="smsTemplate.channelId != null and smsTemplate.channelId != ''">
+            AND template.channel_id = #{smsTemplate.channelId}
         </if>
         <if test="smsTemplate.smsCode != null and smsTemplate.smsCode != ''">
             AND template.sms_code = #{smsTemplate.smsCode}
+        </if>
+        <if test="smsTemplate.smsName != null and smsTemplate.smsName != ''">
+            AND template.sms_name = #{smsTemplate.smsName}
+        </if>
+        <if test="smsTemplate.templateId != null and smsTemplate.templateId != ''">
+            AND template.template_id = #{smsTemplate.templateId}
+        </if>
+        <if test="smsTemplate.templateStatus != null and smsTemplate.templateStatus != ''">
+            AND template.template_status = #{smsTemplate.templateStatus}
+        </if>
+        <if test="smsTemplate.channelStatus != null and smsTemplate.channelStatus != ''">
+            AND channel.channel_status = #{smsTemplate.channelStatus}
         </if>
         <if test="smsTemplate.beginDateTime != null and smsTemplate.beginDateTime != ''">
             AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsTemplate.beginDateTime},'%Y-%m-%d %H:%M:%S')
@@ -57,7 +76,6 @@
         </if>
         ORDER BY template.id DESC
     </select>
-
     <!-- 查询短信配置表信息 -->
     <select id="querySmsTemplate" resultType="com.gitegg.service.extension.sms.dto.SmsTemplateDTO" parameterType="com.gitegg.service.extension.sms.dto.QuerySmsTemplateDTO">
         SELECT
@@ -67,11 +85,23 @@
         FROM t_sys_sms_template template
         inner join t_sys_sms_channel channel on template.channel_id = channel.id and channel.del_flag = 0
         WHERE template.del_flag = 0
-        <if test="smsTemplate.id != null and smsTemplate.id != ''">
-            AND template.id = #{smsTemplate.id}
+        <if test="smsTemplate.channelId != null and smsTemplate.channelId != ''">
+            AND template.channel_id = #{smsTemplate.channelId}
         </if>
         <if test="smsTemplate.smsCode != null and smsTemplate.smsCode != ''">
             AND template.sms_code = #{smsTemplate.smsCode}
+        </if>
+        <if test="smsTemplate.smsName != null and smsTemplate.smsName != ''">
+            AND template.sms_name = #{smsTemplate.smsName}
+        </if>
+        <if test="smsTemplate.templateId != null and smsTemplate.templateId != ''">
+            AND template.template_id = #{smsTemplate.templateId}
+        </if>
+        <if test="smsTemplate.templateStatus != null and smsTemplate.templateStatus != ''">
+            AND template.template_status = #{smsTemplate.templateStatus}
+        </if>
+        <if test="smsTemplate.channelStatus != null and smsTemplate.channelStatus != ''">
+            AND channel.channel_status = #{smsTemplate.channelStatus}
         </if>
         <if test="smsTemplate.beginDateTime != null and smsTemplate.beginDateTime != ''">
             AND DATE_FORMAT(template.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsTemplate.beginDateTime},'%Y-%m-%d %H:%M:%S')
@@ -81,5 +111,4 @@
         </if>
         ORDER BY template.id DESC
     </select>
-
 </mapper>

@@ -1,14 +1,15 @@
 package com.gitegg.service.extension.sms.service;
 
+import java.util.List;
+
+import com.gitegg.service.extension.sms.entity.SmsChannel;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gitegg.service.extension.sms.dto.CreateSmsChannelDTO;
-import com.gitegg.service.extension.sms.dto.QuerySmsChannelDTO;
-import com.gitegg.service.extension.sms.dto.SmsChannelDTO;
-import com.gitegg.service.extension.sms.dto.UpdateSmsChannelDTO;
-import com.gitegg.service.extension.sms.entity.SmsChannel;
 
-import java.util.List;
+import com.gitegg.service.extension.sms.dto.SmsChannelDTO;
+import com.gitegg.service.extension.sms.dto.CreateSmsChannelDTO;
+import com.gitegg.service.extension.sms.dto.UpdateSmsChannelDTO;
+import com.gitegg.service.extension.sms.dto.QuerySmsChannelDTO;
 
 /**
  * <p>
@@ -16,7 +17,7 @@ import java.util.List;
  * </p>
  *
  * @author GitEgg
- * @since 2021-01-26
+ * @since 2022-05-24
  */
 public interface ISmsChannelService extends IService<SmsChannel> {
 
@@ -27,6 +28,13 @@ public interface ISmsChannelService extends IService<SmsChannel> {
     * @return
     */
     Page<SmsChannelDTO> querySmsChannelList(Page<SmsChannelDTO> page, QuerySmsChannelDTO querySmsChannelDTO);
+
+    /**
+    * 查询短信渠道表列表
+    * @param querySmsChannelDTO
+    * @return
+    */
+    List<SmsChannelDTO> querySmsChannelList(QuerySmsChannelDTO querySmsChannelDTO);
 
     /**
     * 查询短信渠道表详情

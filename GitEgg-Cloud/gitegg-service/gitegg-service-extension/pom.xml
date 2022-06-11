@@ -24,6 +24,11 @@
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-dfs-starter</artifactId>
         </dependency>
+        <!-- 验证码 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-captcha</artifactId>
+        </dependency>
         <!-- gitegg-service-extension 的fegin公共调用方法 -->
         <dependency>
             <groupId>com.gitegg.cloud</groupId>

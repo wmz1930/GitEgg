@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * 添加contextId用于区分相同name的client，否则会报错
- * @author gitegg
+ * @author GitEgg
  */
 @FeignClient(name = "gitegg-service-system", contextId = "ResourceClient")
 public interface IResourceFeign {

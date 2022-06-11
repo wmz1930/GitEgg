@@ -146,24 +146,26 @@
 
       <div class="user-login-other">
         <span>{{ $t('user.login.sign-in-with') }}</span>
-        <a>
+        <a @click="openSocialLogin('wechat_open')">
           <a-icon class="item-icon"
                   type="wechat"></a-icon>
         </a>
-        <a>
+        <a @click="openSocialLogin('qq')">
           <a-icon class="item-icon"
                   type="qq"></a-icon>
         </a>
-        <a>
+        <a @click="openSocialLogin('github')">
           <a-icon class="item-icon"
                   type="github"></a-icon>
         </a>
-        <a>
+        <a @click="openSocialLogin('dingtalk')">
           <a-icon class="item-icon"
-                  type="alipay-circle"></a-icon>
+                  type="dingding"></a-icon>
         </a>
-        <router-link class="register"
-                     :to="{ name: 'register' }">{{ $t('user.login.signup') }}</router-link>
+        <a class="register"
+           @click="openRegister"
+        >{{ $t('user.login.signup') }}
+        </a>
       </div>
     </a-form>
 
@@ -182,7 +184,7 @@ import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import Verify from '@/components/verifition/Verify'
 import { mapActions } from 'vuex'
 import { timeFix, serialize } from '@/utils/util'
-import { getCaptchaType, getImageCaptcha, getSmsCaptcha } from '@/api/login'
+import { getCaptchaType, getImageCaptcha, getSmsCaptcha, getSocialLoginUrl } from '@/api/login'
 
 export default {
   components: {
@@ -221,6 +223,10 @@ export default {
           ]
         }
       },
+      socialVisible: false,
+      socialLoading: false,
+      socialType: '',
+      socialUrl: '',
       sendSms: false,
       grantType: 'password',
       loginCaptchaType: 'sliding',
@@ -232,6 +238,8 @@ export default {
       captchaImage: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAICRAEAOw==',
       inputCodeNull: true
     }
+  },
+  mounted () {
   },
   created () {
     this.queryCaptchaType()
@@ -328,7 +336,7 @@ export default {
               loginParams.grant_type = 'sms_captcha'
               loginParams.phone_number = values.phoneNumber
               loginParams.code = values.captcha
-              loginParams.smsCode = 'aliLoginCode'
+              loginParams.smsCode = 'sms_login_code'
               loginParams.captcha_key = this.captchaKey
               loginParams.captcha_code = values.captchaCodeSms
             }
@@ -396,7 +404,7 @@ export default {
           loginParams.grant_type = 'sms_captcha'
           loginParams.phone_number = values.phoneNumber
           loginParams.code = values.captcha
-          loginParams.smsCode = 'aliLoginCode'
+          loginParams.smsCode = 'sms_login_code'
           // 判断是图片验证码还是滑动验证码
           if (this.loginCaptchaType === 'sliding') {
             loginParams.captcha_type = 'sliding'
@@ -419,6 +427,34 @@ export default {
           this.refreshImageCode()
         }
       })
+    },
+    openRegister () {
+      const { href } = this.$router.resolve({
+          name: 'registerAccount', // 这里是跳转页面的name
+          query: {// 要传的参数
+              redirect: this.$route.query.redirect
+          }
+      })
+      window.open(href)
+    },
+    openSocialLogin (socialType) {
+      this.socialLoading = true
+      getSocialLoginUrl(socialType).then(res => {
+        this.socialLoading = false
+        if (res.data && res.data !== '') {
+          window.open(res.data)
+          // this.socialType = socialType
+          // this.openWindow(res.data, socialType, 650, 500)
+        } else {
+          // 提示获取第三方登录失败
+        }
+      })
+    },
+    // 因很多网站拒绝嵌套iframe，所以不采用弹出框的方式
+    openWindow (url, name, iWidth, iHeight) {
+      var iTop = (window.screen.availHeight - 30 - iHeight) / 2 // 获得窗口的垂直位置;
+      var iLeft = (window.screen.availWidth - 10 - iWidth) / 2 // 获得窗口的水平位置;
+      window.open(url, name, 'height=' + iHeight + ',innerHeight=' + iHeight + ',width=' + iWidth + ',innerWidth=' + iWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no')
     },
     refreshImageCode () {
       getImageCaptcha().then(res => {
@@ -453,7 +489,7 @@ export default {
 
           const hide = this.$message.loading('验证码发送中..', 0)
           loginParams.phoneNumber = values.phoneNumber
-          loginParams.smsCode = 'aliLoginCode'
+          loginParams.smsCode = 'sms_login_code'
           getSmsCaptcha(serialize(loginParams)).then(res => {
             setTimeout(hide, 1)
             if (res.success && res.data) {
@@ -496,6 +532,10 @@ export default {
          storage.remove(process.env.VUE_APP_TENANT_ID + '-' + process.env.VUE_APP_CLIENT_ID + '-password')
          storage.remove(process.env.VUE_APP_TENANT_ID + '-' + process.env.VUE_APP_CLIENT_ID + '-rememberMe')
       }
+      this.successRedirect()
+      this.isLoginError = false
+    },
+    successRedirect () {
       this.$router.push({ path: '/' })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
@@ -504,7 +544,6 @@ export default {
           description: `${timeFix()}，欢迎回来`
         })
       }, 1000)
-      this.isLoginError = false
     },
     requestFailed (err) {
       const errMsg = err && err.msg ? err.msg : '系统异常，请稍后再试'

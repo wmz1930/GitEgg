@@ -3,6 +3,7 @@ package com.gitegg.service.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitegg.service.system.dto.*;
 import com.gitegg.service.system.entity.UserInfo;
@@ -78,9 +79,7 @@ public class DataPermissionUserServiceImpl extends ServiceImpl<DataPermissionUse
     @Override
     public boolean updateDataPermissionUser(UpdateDataPermissionUserDTO dataPermissionUser) {
         DataPermissionUser dataPermissionUserEntity = BeanCopierUtils.copyByClass(dataPermissionUser, DataPermissionUser.class);
-        QueryWrapper<DataPermissionUser> wrapper = new QueryWrapper<>();
-        wrapper.eq("id", dataPermissionUserEntity.getId());
-        boolean result = this.update(dataPermissionUserEntity, wrapper);
+        boolean result = this.updateById(dataPermissionUserEntity);
         return result;
     }
 
@@ -119,8 +118,8 @@ public class DataPermissionUserServiceImpl extends ServiceImpl<DataPermissionUse
         List<Long> removeDataPermissions = updateDataPermission.getRemoveDataPermissions();
         if (!CollectionUtils.isEmpty(removeDataPermissions) && null != userId)
         {
-            QueryWrapper<DataPermissionUser> removeWrapper = new QueryWrapper<>();
-            removeWrapper.eq("user_id", userId).in("organization_id", removeDataPermissions);
+            LambdaQueryWrapper<DataPermissionUser> removeWrapper = new LambdaQueryWrapper<>();
+            removeWrapper.eq(DataPermissionUser::getUserId, userId).in(DataPermissionUser::getOrganizationId, removeDataPermissions);
             result = this.remove(removeWrapper);
         }
 

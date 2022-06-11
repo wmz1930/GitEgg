@@ -1,0 +1,50 @@
+server:
+  port: 8007
+spring:
+  profiles:
+    active: '@spring.profiles.active@'
+  application:
+    name: '@artifactId@'
+  cloud:
+    inetutils:
+      ignored-interfaces: docker0
+    nacos:
+      discovery:
+        server-addr: ${spring.nacos.addr}
+      config:
+        server-addr: ${spring.nacos.addr}
+        file-extension: yaml
+        extension-configs:
+          # 必须带文件扩展名，此时 file-extension 的配置对自定义扩展配置的 Data Id 文件扩展名没有影响
+          - data-id: ${spring.nacos.config.prefix}.yaml
+            group: ${spring.nacos.config.group}
+            refresh: true
+          - data-id: ${spring.nacos.config.prefix}-xxl-job.yaml
+            group: ${spring.nacos.config.group}
+            refresh: true
+  ### xxl-job-admin config
+  mvc:
+    servlet:
+      load-on-startup: 0
+    static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:/static/
+  ### freemarker
+  freemarker:
+    templateLoaderPath: classpath:/templates/
+    suffix: .ftl
+    charset: UTF-8
+    request-context-attribute: request
+    settings.number_format: 0.##########
+### actuator
+management:
+  server:
+    servlet:
+      context-path: /actuator
+  health:
+    mail:
+      enabled: false
+### mybatis
+mybatis:
+  mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
+

@@ -29,22 +29,7 @@
                 :max="${field.max}"
                 @keyup.enter.native="handleFilter" />
 </#if>
-<#if field.controlType == "RADIO">
-<#assign dictSelect=true/>
-              <a-radio-group v-model="list${entity}Query.${field.entityName}"
-                             name="list${entity}Query.Radio${field.entityName}">
-                <a-radio :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">{{ item.dictName }}</a-radio>
-              </a-radio-group>
-</#if>
-<#if field.controlType == "CHECKBOX">
-<#assign dictSelect=true/>
-              <a-checkbox-group v-model="${table.entityPath}Form.${field.entityName}" name="list${entity}Query.RadioCheckbox${field.entityName}">
-                <a-checkbox :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">
-                  {{ item.dictName }}
-                </a-checkbox>
-              </a-checkbox-group>
-</#if>
-<#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI">
+<#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI" || field.controlType == "RADIO" || field.controlType == "SWITCH" || field.controlType == "CHECKBOX">
 <#assign dictSelect=true/>
 <#macro Multiple controlType>
 <#if controlType == "SELECT_MULTI">
@@ -60,7 +45,7 @@
                         :filter-option="filterOption"
                         @keyup.enter.native="handleFilter" >
                 <a-select-option :key="item.id + index"
-                                 v-for="(item,index) in ${field.entityName}DictList"
+                                 v-for="(item,index) in ${field.entityName}Dict.dictList"
                                  :label="item.dictName"
                                  :value="item.dictCode">
                   {{ item.dictName }}
@@ -138,8 +123,7 @@
               <a-form-model-item label="开始时间">
                 <a-date-picker v-model.trim="list${entity}Query.beginDateTime"
                                placeholder="开始时间"
-                               show-time
-                               valueFormat="YYYY-MM-DD HH:mm:ss"
+                               valueFormat="YYYY-MM-DD"
                                style="width:100%;"/>
               </a-form-model-item>
             </a-col>
@@ -147,8 +131,7 @@
               <a-form-model-item label="结束时间">
                 <a-date-picker v-model.trim="list${entity}Query.endDateTime"
                                placeholder="结束时间"
-                               show-time
-                               valueFormat="YYYY-MM-DD HH:mm:ss"
+                               valueFormat="YYYY-MM-DD"
                                style="width:100%;"/>
               </a-form-model-item>
             </a-col>
@@ -211,11 +194,15 @@
       :pagination="${table.entityPath}Pagination"
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
-<#if hasStatus?? && hasStatus == true>
-      <span slot="${statusName}Status" slot-scope="text, record">
-        {{ record.${statusName} | ${statusName}DictFilter }}
+<#-- ----------  所有的字典类型 设置Filter  ---------->
+<#list dictCodeFields as field>
+    <#if field??>
+      <span slot="${field.entityName}Slot" slot-scope="text, record">
+        {{ record.${field.entityName} | ${field.entityName}DictFilter }}
       </span>
-</#if>
+    </#if>
+</#list>
+<#------------  END 所有的字典类型 设置Filter  ---------->
       <span slot="createTime" slot-scope="text, record">
         <span>{{ record.createTime | moment }}</span>
       </span>
@@ -277,38 +264,45 @@
               <a-input
                 v-model.trim="${table.entityPath}Form.${field.entityName}"
                 placeholder="请输入${field.comment}"
-                :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                :max-length="${field.maxLength}" />
 </#if>
 <#if field.controlType == "TEXTAREA">
               <a-textarea
                 v-model.trim="${table.entityPath}Form.${field.entityName}"
                 placeholder="请输入${field.comment}"
-                :auto-size="{ minRows: 3, maxRows: 5 }"
-                @keyup.enter.native="handleFilter" />
+                :auto-size="{ minRows: 3, maxRows: 5 }" />
 </#if>
 <#if field.controlType == "INPUT_NUMBER">
               <a-input-number
                 v-model.trim="${table.entityPath}Form.${field.entityName}"
                 placeholder="${field.comment}"
                 <#if field.min??>:min="${field.min}"</#if>
-                <#if field.max??>:max="${field.max}"</#if>
-                @keyup.enter.native="handleFilter" />
+                <#if field.max??>:max="${field.max}"</#if> />
 </#if>
 <#if field.controlType == "RADIO">
             <#assign dictSelect=true/>
               <a-radio-group v-model="${table.entityPath}Form.${field.entityName}"
                              name="${table.entityPath}Form.Radio${field.entityName}">
-                <a-radio :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">{{ item.dictName }}</a-radio>
+                <a-radio :key="item.id + index" v-for="(item,index) in ${field.entityName}Dict.dictList" :value="item.dictCode">{{ item.dictName }}</a-radio>
               </a-radio-group>
 </#if>
 <#if field.controlType == "CHECKBOX">
             <#assign dictSelect=true/>
               <a-checkbox-group v-model="${table.entityPath}Form.${field.entityName}" name="${table.entityPath}Form.RadioCheckbox${field.entityName}">
-                <a-checkbox :key="item.id + index" v-for="(item,index) in ${field.entityName}DictList" :value="item.dictCode">
+                <a-checkbox :key="item.id + index" v-for="(item,index) in ${field.entityName}Dict.dictList" :value="item.dictCode">
                   {{ item.dictName }}
                 </a-checkbox>
               </a-checkbox-group>
+</#if>
+<#if field.controlType == "SWITCH">
+            <#assign dictSelect=true/>
+              <a-switch v-model="${table.entityPath}Form.${field.entityName}"
+                        name="${table.entityPath}Form.Switch${field.entityName}"
+                        checked-children="开"
+                        un-checked-children="关"
+                        default-checked>
+                <span :key="item.id + index" v-for="(item,index) in ${field.entityName}Dict.dictList" :slot="item.dictCode" >{{ item.dictName }}</span>
+              </a-switch>
 </#if>
 <#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI">
             <#assign dictSelect=true/>
@@ -324,9 +318,8 @@
                 placeholder="${field.comment}"
                 show-search
                 <@Multiple controlType="${field.controlType}"/>
-                :filter-option="filterOption"
-                @keyup.enter.native="handleFilter" >
-                <a-select-option v-for="item in ${field.entityName}DictList"
+                :filter-option="filterOption" >
+                <a-select-option v-for="item in ${field.entityName}Dict.dictList"
                                  :key="item.dictCode"
                                  :label="item.dictName"
                                  :value="item.dictCode">
@@ -356,45 +349,39 @@
               <a-cascader v-model="${table.entityPath}Form.${field.entityName}"
                           :options="provinceOptions"
                           placeholder="输选择${field.comment}"
-                          style="width:100%;"
-                          @keyup.enter.native="handleFilter" />
+                          style="width:100%;" />
 </#if>
 <#if field.controlType == "OrganizationTreeSelect">
             <#assign organizationTree=true/>
               <a-input
                 v-model.trim="${table.entityPath}Form.${field.entityName}"
                 placeholder="${field.comment}"
-                :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                :max-length="${field.maxLength}" />
 </#if>
 <#if field.controlType == "RoleSelect">
             <#assign roleTree=true/>
               <a-input
                 v-model.trim="${table.entityPath}Form.${field.entityName}"
                 placeholder="${field.comment}"
-                :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                :max-length="${field.maxLength}" />
 </#if>
 <#if field.controlType == "ResourceTreeSelect">
             <#assign resourceTree=true/>
               <a-input
                 v-model.trim="${table.entityPath}Form.${field.entityName}"
                 placeholder="${field.comment}"
-                :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                :max-length="${field.maxLength}" />
 </#if>
 <#if field.controlType == "MenuTreeSelect">
             <#assign menuTree=true/>
               <a-input
                 v-model.trim="${table.entityPath}Form.${field.entityName}"
                 placeholder="${field.comment}"
-                :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                :max-length="${field.maxLength}" />
 </#if>
 <#if field.controlType == "RATE">
               <a-rate v-model.trim="${table.entityPath}Form.${field.entityName}"
-                      placeholder="${field.comment}"
-                      @keyup.enter.native="handleFilter"/>
+                      placeholder="${field.comment}" />
 </#if>
 <#if field.controlType == "UPLOAD_FILE">
 <#assign uploadFile=true/>
@@ -461,7 +448,7 @@
     import { handleDownloadBlod } from '@/utils/util'
     </#if>
     <#if dictSelect?? && dictSelect == true>
-    import { listDictBusiness } from '@/api/system/base/dictBusiness'
+    import { batchListDictBusiness } from '@/api/system/base/dictBusiness'
     let vm = {}
     </#if>
     export default {
@@ -473,7 +460,7 @@
             <#if field??>
             // ${field.comment}数据字典展示
             ${field.entityName}DictFilter (dictCode) {
-                return vm.${field.entityName}FilterMap[dictCode]
+                return vm.${field.entityName}Dict.filterMap[dictCode]
             }<#if field?has_next>,</#if>
             </#if>
             </#list>
@@ -531,8 +518,11 @@
                 <#-- ----------  所有的字典类型 字段循环遍历  ---------->
                 <#list dictCodeFields as field>
                 <#if field??>
-                ${field.entityName}DictList: [], // ${field.comment}数据字典列表
-                ${field.entityName}FilterMap: {},
+                ${field.entityName}Dict: {
+                    dictCode: '<#if field.dictCode?? && field.dictCode !?length gt 0>${field.dictCode}<#else>${field.entityName}DictCode</#if>',
+                    dictList: [],
+                    filterMap: {}
+                }, // ${field.comment}数据字典列表
                 </#if>
                 </#list>
                 <#------------  END 所有的字典类型 字段循环遍历  ---------->
@@ -557,8 +547,8 @@
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-<#if field?? && field.entityName?ends_with("status")>
-                        scopedSlots: { customRender: '${field.entityName}Status' },
+<#if field?? && field.dictCode !?length gt 0>
+                        scopedSlots: { customRender: '${field.entityName}Slot' },
 </#if>
                         dataIndex: '${field.entityName}'
                     },
@@ -618,11 +608,7 @@
                 },
                 // 加载数据方法 必须为 Promise 对象
                 loadData: parameter => {
-                    return query${entity}List(Object.assign(parameter, this.list${entity}Query))
-                        .then(res => {
-                            this.list = res.data
-                            return res
-                        })
+                    return function () {}
                 }
             }
         },
@@ -630,15 +616,43 @@
 
         },
         created () {
-            <#-- ----------  所有的字典类型 字段循环遍历  ---------->
-            <#list fields as field>
-            <#if field?? && field.dictCode !?length gt 0>
-            this.query${field.entityName}DictList()
-            </#if>
-            </#list>
+             const that = this
             <#------------  END 所有的字典类型 字段循环遍历  ---------->
-            <#if !(dictSelect?? && dictSelect == true)>
-            this.getList()
+            <#if dictSelect?? && dictSelect == true>
+            const dictList = [<#list dictCodeFields as field><#if field??>that.${field.entityName}Dict<#if field?has_next>, </#if></#if></#list>]
+            const dictCodeList = dictList.map(function (n) {
+                return n.dictCode
+            })
+            this.getBatchDataDictList(dictCodeList).then(function (result) {
+                dictList.forEach(function (dict) {
+                    dict.dictList = result[dict.dictCode]
+                    dict.filterMap = {}
+                    dict.dictList.forEach((item, index, arr) => {
+                        dict.filterMap[item.dictCode] = item.dictName
+                    })
+                })
+                that.loadData = function (parameter) {
+                    return query${entity}List(Object.assign(parameter, that.list${entity}Query))
+                        .then(res => {
+                            that.list = res.data
+                            return res
+                        })
+                }
+                that.$nextTick(() => {
+                    that.handleFilter()
+                })
+            })
+            <#else>
+                that.loadData = function (parameter) {
+                    return query${entity}List(Object.assign(parameter, that.list${entity}Query))
+                        .then(res => {
+                            that.list = res.data
+                            return res
+                        })
+                }
+                that.$nextTick(() => {
+                    that.handleFilter()
+                })
             </#if>
         },
         methods: {
@@ -663,25 +677,18 @@
             },
           </#if>
           <#-- ----------  所有的字典类型 字段循环遍历  ---------->
-          <#list dictCodeFields as field>
-          <#if field??>
-            query${field.entityName}DictList () {
+          <#if dictSelect?? && dictSelect == true>
+            async getBatchDataDictList (dictParams) {
                 const that = this
+                let result = {}
                 that.listLoading = true
-                listDictBusiness('<#if field.dictCode?? && field.dictCode !?length gt 0>${field.dictCode}<#else>${field.entityName}DictCode</#if>').then(response => {
-                    this.${field.entityName}DictList = response.data
-                    this.${field.entityName}FilterMap = {}
-                    this.${field.entityName}DictList.forEach((item, index, arr) => {
-                        this.${field.entityName}FilterMap[item.dictCode] = item.dictName
-                    })
+                await batchListDictBusiness(dictParams).then(response => {
+                    result = response.data
                     that.listLoading = false
-                    <#if !field?has_next>
-                    this.getList()
-                    </#if>
                 })
+                return result
             },
             </#if>
-            </#list>
             <#------------  END 所有的字典类型 字段循环遍历  ---------->
             reset${entity}Query () {
                 this.list${entity}Query = {
@@ -748,6 +755,9 @@
             handleUpdate (row) {
                 this.${table.entityPath}Form = Object.assign({}, row) // copy obj
                 this.dialogStatus = 'update'
+                <#if hasStatus?? && hasStatus == true>
+                this.${table.entityPath}Form.${statusName} = row.${statusName} + ''
+                </#if>
                 this.dialogFormVisible = true
                 this.$nextTick(() => {
                     this.$refs['${table.entityPath}Form'].clearValidate()

@@ -56,7 +56,7 @@ export default {
   },
   mounted () {
       this.currentUser = {
-        name: this.name,
+        name: this.name || this.nickname,
         avatar: this.avatar
       }
   }

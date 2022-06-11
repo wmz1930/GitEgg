@@ -3,6 +3,7 @@ package com.gitegg.service.system.controller;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitegg.service.system.dto.*;
 import com.gitegg.service.system.entity.RoleDataPermission;
 import com.gitegg.service.system.service.IRoleDataPermissionService;
@@ -170,8 +171,8 @@ public class DataPermissionController {
     @ApiOperation(value = "获取拥有某个数据权限的所有角色列表")
     @ApiImplicitParam(paramType = "path", name = "id", value = "数据权限ID", required = true, dataType = "Long")
     public Result<List<RoleDataPermission>> queryPermissionRoles(@PathVariable("id") Long id) {
-        QueryWrapper<RoleDataPermission> ew = new QueryWrapper<>();
-        ew.eq("data_permission_id", id);
+        LambdaQueryWrapper<RoleDataPermission> ew = new LambdaQueryWrapper<>();
+        ew.eq(RoleDataPermission::getDataPermissionId, id);
         List<RoleDataPermission> list = roleDataPermissionService.list(ew);
         return Result.data(list);
     }

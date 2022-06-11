@@ -1,6 +1,6 @@
 package com.gitegg.service.extension.sms.service;
 
-import com.gitegg.platform.sms.domain.SmsResponse;
+import com.gitegg.platform.base.result.Result;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ public interface ISmsService {
      * @param phoneNumbers
      * @return
      */
-    SmsResponse sendSmsNormal(String smsCode, String smsData, String phoneNumbers);
+    Result<?> sendSmsNormal(String smsCode, String smsData, String phoneNumbers);
 
     /**
      * 发送短信验证码
@@ -30,15 +30,24 @@ public interface ISmsService {
      * @param phoneNumber
      * @return
      */
-    SmsResponse sendSmsVerificationCode( String smsCode, String phoneNumber);
+    Result<?> sendSmsVerificationCode( String smsCode, String phoneNumber);
 
     /**
      * 校验短信验证码
      *
      * @param smsCode
      * @param phoneNumber
+     * @param verificationCode
      * @return
      */
-    boolean checkSmsVerificationCode(String smsCode, String phoneNumber, String verificationCode);
-
+    Result<?> checkSmsVerificationCode(String smsCode, String phoneNumber, String verificationCode);
+    
+    /**
+     * 前置校验短信验证码，使用场景为输入框输入之后进行实时校验
+     * @param smsCode
+     * @param phoneNumber
+     * @param verificationCode
+     * @return
+     */
+    Result<?> checkSmsVerificationCodePre(String smsCode, String phoneNumber, String verificationCode);
 }

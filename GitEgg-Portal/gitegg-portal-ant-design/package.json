@@ -16,6 +16,7 @@
     "ant-design-vue": "^1.7.2",
     "axios": "^0.21.1",
     "axios-auth-refresh": "^3.1.0",
+    "cnpm": "^7.1.1",
     "codemirror": "^5.58.3",
     "core-js": "^3.1.2",
     "crypto-js": "^4.0.0",
@@ -42,7 +43,8 @@
     "vue-svg-component-runtime": "^1.0.1",
     "vuex": "^3.1.1",
     "wangeditor": "^3.1.1",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.16.9",
+    "yarn": "^1.22.18"
   },
   "devDependencies": {
     "@ant-design/colors": "^3.2.1",

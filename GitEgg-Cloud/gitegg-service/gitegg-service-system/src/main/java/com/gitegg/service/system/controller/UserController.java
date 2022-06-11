@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.util.CollectionUtils;
@@ -36,7 +37,7 @@ import java.util.List;
 /**
  * @ClassName: UserController
  * @Description: User前端控制器
- * @author gitegg
+ * @author GitEgg
  * @date 2019年5月18日 下午4:03:58
  */
 @RestController
@@ -50,7 +51,7 @@ public class UserController {
 
     private final IDataPermissionUserService dataPermissionUserService;
 
-//    @Value("${system.defaultPwd}")
+    @Value("${system.defaultPwd}")
     private String defaultPwd;
 
     /**
@@ -80,12 +81,8 @@ public class UserController {
     @ApiOperation(value = "添加用户")
     @ResubmitLock(interval = 10)
     public Result<?> create(@RequestBody @Valid CreateUserDTO user) {
-        boolean result = userService.createUser(user);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        CreateUserDTO userDTO = userService.createUser(user);
+        return Result.data(userDTO.getId());
     }
 
     /**
@@ -228,7 +225,7 @@ public class UserController {
     }
 
     /**
-     * 修改用户
+     * 更新用户数据权限
      */
     @PostMapping("/update/organization/data/permission")
     @ApiOperation(value = "更新用户数据权限")

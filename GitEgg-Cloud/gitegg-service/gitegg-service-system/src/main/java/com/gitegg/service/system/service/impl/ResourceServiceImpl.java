@@ -1,6 +1,7 @@
 package com.gitegg.service.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitegg.platform.base.constant.GitEggConstant;
@@ -50,8 +51,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Override
     public boolean createResource(Resource resource) {
         String resourceKey = resource.getResourceKey();
-        QueryWrapper<Resource> resourceQueryWrapper = new QueryWrapper<>();
-        resourceQueryWrapper.eq("resource_key", resourceKey);
+        LambdaQueryWrapper<Resource> resourceQueryWrapper = new LambdaQueryWrapper<>();
+        resourceQueryWrapper.eq(Resource::getResourceKey, resourceKey);
         int count = this.count(resourceQueryWrapper);
         if (count > 0) {
             throw new BusinessException("资源标识已存在");
@@ -75,8 +76,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Override
     public boolean updateResource(Resource resource) {
         String resourceKey = resource.getResourceKey();
-        QueryWrapper<Resource> resourceQueryWrapper = new QueryWrapper<>();
-        resourceQueryWrapper.eq("resource_key", resourceKey).ne("id", resource.getId());
+        LambdaQueryWrapper<Resource> resourceQueryWrapper = new LambdaQueryWrapper<>();
+        resourceQueryWrapper.eq(Resource::getResourceKey, resourceKey).ne(Resource::getId, resource.getId());
         int count = this.count(resourceQueryWrapper);
         if (count > 0) {
             throw new BusinessException("资源标识已存在");
@@ -189,7 +190,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 
     @Override
     public Long queryResourceMaxId() {
-        Long idMax = 0L;
+        Long idMax = GitEggConstant.ZERO_LONG;
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.orderByDesc("id");
         queryWrapper.last("limit 1");

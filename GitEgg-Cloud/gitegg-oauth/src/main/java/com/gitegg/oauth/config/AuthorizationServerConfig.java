@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import com.gitegg.oauth.exception.GitEggOAuth2ExceptionTranslator;
 import com.gitegg.oauth.token.GitEggTokenServices;
+import com.gitegg.service.extension.client.feign.IJustAuthFeign;
 import com.gitegg.service.extension.client.feign.ISmsFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final IUserFeign userFeign;
 
     private final ISmsFeign smsFeign;
+    
+    private final IJustAuthFeign justAuthFeign;
 
     private final RedisTemplate redisTemplate;
 
@@ -70,6 +73,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Value("${captcha.type}")
     private String captchaType;
+    
+    @Value("${system.secret-key}")
+    private String secretKey;
+    
+    @Value("${system.secret-key-salt}")
+    private String secretKeySalt;
 
     /**
      * 客户端信息配置
@@ -98,7 +107,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         // 获取自定义tokenGranter
         TokenGranter tokenGranter = GitEggTokenGranter.getTokenGranter(authenticationManager, endpoints, redisTemplate,
-            userFeign, smsFeign, captchaService, userDetailsService, captchaType);
+            userFeign, smsFeign, justAuthFeign, captchaService, userDetailsService, captchaType, secretKey, secretKeySalt);
 
         endpoints.authenticationManager(authenticationManager)
                 .accessTokenConverter(jwtAccessTokenConverter())

@@ -272,6 +272,7 @@ export default {
         {
           title: '资源名称',
           align: 'left',
+          ellipsis: true,
           dataIndex: 'resourceName'
         },
         {
