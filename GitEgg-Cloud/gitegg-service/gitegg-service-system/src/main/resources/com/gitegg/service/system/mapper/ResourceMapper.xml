@@ -110,7 +110,7 @@
                 </otherwise>
             </choose>
         </if>
-        ORDER BY id
+        ORDER BY resource_level
     </select>
 
 </mapper>
