@@ -2,6 +2,7 @@ package com.gitegg.service.extension.component;
 
 import com.gitegg.service.extension.justauth.service.IJustAuthConfigService;
 import com.gitegg.service.extension.justauth.service.IJustAuthSourceService;
+import com.gitegg.service.extension.mail.service.IMailChannelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class InitExtensionCacheRunner implements CommandLineRunner {
     
     private final IJustAuthSourceService justAuthSourceService;
 
+    private final IMailChannelService mailChannelService;
+
     @Override
     public void run(String... args) {
 
@@ -33,6 +36,8 @@ public class InitExtensionCacheRunner implements CommandLineRunner {
         // 初始化第三方登录 第三方配置
         justAuthSourceService.initJustAuthSourceList();
 
+        // 初始化邮件配置信息
+        mailChannelService.initMailChannelList();
 
     }
 }

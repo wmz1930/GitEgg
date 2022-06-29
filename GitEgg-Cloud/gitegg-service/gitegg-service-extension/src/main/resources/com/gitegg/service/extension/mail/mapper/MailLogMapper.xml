@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.extension.mail.mapper.MailLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.extension.mail.entity.MailLog">
+        <id column="id" property="id" />
+        <result column="channel_id" property="channelId" />
+        <result column="template_id" property="templateId" />
+        <result column="mail_subject" property="mailSubject" />
+        <result column="mail_from" property="mailFrom" />
+        <result column="mail_to" property="mailTo" />
+        <result column="mail_cc" property="mailCc" />
+        <result column="mail_bcc" property="mailBcc" />
+        <result column="mail_content" property="mailContent" />
+        <result column="attachment_name" property="attachmentName" />
+        <result column="attachment_size" property="attachmentSize" />
+        <result column="send_time" property="sendTime" />
+        <result column="send_result_code" property="sendResultCode" />
+        <result column="send_result_msg" property="sendResultMsg" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, channel_id, template_id, mail_subject, mail_from, mail_to, mail_cc, mail_bcc, mail_content, attachment_name, attachment_size, send_time, send_result_code, send_result_msg, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询邮件记录列表 -->
+    <select id="queryMailLogList" resultType="com.gitegg.service.extension.mail.dto.MailLogDTO" parameterType="com.gitegg.service.extension.mail.dto.QueryMailLogDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_mail_log
+        WHERE del_flag = 0
+        <if test="mailLog.mailSubject != null and mailLog.mailSubject != ''">
+            AND mail_subject like concat('%', #{mailLog.mailSubject}, '%')
+        </if>
+        <if test="mailLog.mailFrom != null and mailLog.mailFrom != ''">
+            AND mail_from like concat('%', #{mailLog.mailFrom}, '%')
+        </if>
+        <if test="mailLog.mailTo != null and mailLog.mailTo != ''">
+            AND mail_to like concat('%', #{mailLog.mailTo}, '%')
+        </if>
+        <if test="mailLog.mailContent != null and mailLog.mailContent != ''">
+            AND mail_content like concat('%', #{mailLog.mailContent}, '%')
+        </if>
+        <if test="mailLog.beginDateTime != null and mailLog.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{mailLog.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="mailLog.endDateTime != null and mailLog.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{mailLog.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+    <!-- 查询邮件记录信息 -->
+    <select id="queryMailLog" resultType="com.gitegg.service.extension.mail.dto.MailLogDTO" parameterType="com.gitegg.service.extension.mail.dto.QueryMailLogDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_mail_log
+        WHERE del_flag = 0
+        <if test="mailLog.mailSubject != null and mailLog.mailSubject != ''">
+            AND mail_subject like concat('%', #{mailLog.mailSubject}, '%')
+        </if>
+        <if test="mailLog.mailFrom != null and mailLog.mailFrom != ''">
+            AND mail_from like concat('%', #{mailLog.mailFrom}, '%')
+        </if>
+        <if test="mailLog.mailTo != null and mailLog.mailTo != ''">
+            AND mail_to like concat('%', #{mailLog.mailTo}, '%')
+        </if>
+        <if test="mailLog.mailContent != null and mailLog.mailContent != ''">
+            AND mail_content like concat('%', #{mailLog.mailContent}, '%')
+        </if>
+        <if test="mailLog.beginDateTime != null and mailLog.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{mailLog.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="mailLog.endDateTime != null and mailLog.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{mailLog.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.extension.mail.mapper.MailChannelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.extension.mail.entity.MailChannel">
+        <id column="id" property="id" />
+        <result column="channel_code" property="channelCode" />
+        <result column="channel_name" property="channelName" />
+        <result column="host" property="host" />
+        <result column="port" property="port" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="protocol" property="protocol" />
+        <result column="default_encoding" property="defaultEncoding" />
+        <result column="jndi_name" property="jndiName" />
+        <result column="properties" property="properties" />
+        <result column="channel_status" property="channelStatus" />
+        <result column="md5" property="md5" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, channel_code, channel_name, host, port, username, password, protocol, default_encoding, jndi_name, properties, channel_status, md5, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询邮件渠道表列表 -->
+    <select id="queryMailChannelList" resultType="com.gitegg.service.extension.mail.dto.MailChannelDTO" parameterType="com.gitegg.service.extension.mail.dto.QueryMailChannelDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_mail_channel
+        WHERE del_flag = 0
+        <if test="mailChannel.channelCode != null and mailChannel.channelCode != ''">
+            AND channel_code like concat('%', #{mailChannel.channelCode}, '%')
+        </if>
+        <if test="mailChannel.channelName != null and mailChannel.channelName != ''">
+            AND channel_name like concat('%', #{mailChannel.channelName}, '%')
+        </if>
+        <if test="mailChannel.username != null and mailChannel.username != ''">
+            AND username = #{mailChannel.username}
+        </if>
+        <if test="mailChannel.channelStatus != null and mailChannel.channelStatus != ''">
+            AND channel_status = #{mailChannel.channelStatus}
+        </if>
+        <if test="mailChannel.beginDateTime != null and mailChannel.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{mailChannel.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="mailChannel.endDateTime != null and mailChannel.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{mailChannel.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+    <!-- 查询邮件渠道表信息 -->
+    <select id="queryMailChannel" resultType="com.gitegg.service.extension.mail.dto.MailChannelDTO" parameterType="com.gitegg.service.extension.mail.dto.QueryMailChannelDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_mail_channel
+        WHERE del_flag = 0
+        <if test="mailChannel.channelCode != null and mailChannel.channelCode != ''">
+            AND channel_code like concat('%', #{mailChannel.channelCode}, '%')
+        </if>
+        <if test="mailChannel.channelName != null and mailChannel.channelName != ''">
+            AND channel_name like concat('%', #{mailChannel.channelName}, '%')
+        </if>
+        <if test="mailChannel.username != null and mailChannel.username != ''">
+            AND username = #{mailChannel.username}
+        </if>
+        <if test="mailChannel.channelStatus != null and mailChannel.channelStatus != ''">
+            AND channel_status = #{mailChannel.channelStatus}
+        </if>
+        <if test="mailChannel.beginDateTime != null and mailChannel.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{mailChannel.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="mailChannel.endDateTime != null and mailChannel.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{mailChannel.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 初始化查询邮件渠道表列表 -->
+    <select id="initMailChannelList" resultType="com.gitegg.service.extension.mail.dto.MailChannelDTO" parameterType="com.gitegg.service.extension.mail.dto.QueryMailChannelDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_mail_channel
+        WHERE del_flag = 0
+        <if test="mailChannel.channelCode != null and mailChannel.channelCode != ''">
+            AND channel_code like concat('%', #{mailChannel.channelCode}, '%')
+        </if>
+        <if test="mailChannel.channelName != null and mailChannel.channelName != ''">
+            AND channel_name like concat('%', #{mailChannel.channelName}, '%')
+        </if>
+        <if test="mailChannel.username != null and mailChannel.username != ''">
+            AND username = #{mailChannel.username}
+        </if>
+        <if test="mailChannel.channelStatus != null and mailChannel.channelStatus != ''">
+            AND channel_status = #{mailChannel.channelStatus}
+        </if>
+        ORDER BY id DESC
+    </select>
+</mapper>

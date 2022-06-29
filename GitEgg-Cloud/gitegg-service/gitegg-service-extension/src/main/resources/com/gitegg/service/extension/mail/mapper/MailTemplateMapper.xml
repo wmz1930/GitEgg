@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.extension.mail.mapper.MailTemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.extension.mail.entity.MailTemplate">
+        <id column="id" property="id" />
+        <result column="template_code" property="templateCode" />
+        <result column="template_name" property="templateName" />
+        <result column="sign_name" property="signName" />
+        <result column="template_status" property="templateStatus" />
+        <result column="template_type" property="templateType" />
+        <result column="template_content" property="templateContent" />
+        <result column="cache_code_key" property="cacheCodeKey" />
+        <result column="cache_time_out" property="cacheTimeOut" />
+        <result column="cache_time_out_unit" property="cacheTimeOutUnit" />
+        <result column="send_times_limit" property="sendTimesLimit" />
+        <result column="send_times_limit_period" property="sendTimesLimitPeriod" />
+        <result column="send_times_limit_period_unit" property="sendTimesLimitPeriodUnit" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, template_code, template_name, sign_name, template_status, template_type, template_content, cache_code_key, cache_time_out, cache_time_out_unit, send_times_limit, send_times_limit_period, send_times_limit_period_unit, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询邮件模板列表 -->
+    <select id="queryMailTemplateList" resultType="com.gitegg.service.extension.mail.dto.MailTemplateDTO" parameterType="com.gitegg.service.extension.mail.dto.QueryMailTemplateDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_mail_template
+        WHERE del_flag = 0
+        <if test="mailTemplate.templateCode != null and mailTemplate.templateCode != ''">
+            AND template_code like concat('%', #{mailTemplate.templateCode}, '%')
+        </if>
+        <if test="mailTemplate.templateName != null and mailTemplate.templateName != ''">
+            AND template_name like concat('%', #{mailTemplate.templateName}, '%')
+        </if>
+        <if test="mailTemplate.templateStatus != null and mailTemplate.templateStatus != ''">
+            AND template_status = #{mailTemplate.templateStatus}
+        </if>
+        <if test="mailTemplate.templateType != null and mailTemplate.templateType != ''">
+            AND template_type = #{mailTemplate.templateType}
+        </if>
+        <if test="mailTemplate.beginDateTime != null and mailTemplate.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{mailTemplate.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="mailTemplate.endDateTime != null and mailTemplate.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{mailTemplate.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+    <!-- 查询邮件模板信息 -->
+    <select id="queryMailTemplate" resultType="com.gitegg.service.extension.mail.dto.MailTemplateDTO" parameterType="com.gitegg.service.extension.mail.dto.QueryMailTemplateDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_mail_template
+        WHERE del_flag = 0
+        <if test="mailTemplate.templateCode != null and mailTemplate.templateCode != ''">
+            AND template_code like concat('%', #{mailTemplate.templateCode}, '%')
+        </if>
+        <if test="mailTemplate.templateName != null and mailTemplate.templateName != ''">
+            AND template_name like concat('%', #{mailTemplate.templateName}, '%')
+        </if>
+        <if test="mailTemplate.templateStatus != null and mailTemplate.templateStatus != ''">
+            AND template_status = #{mailTemplate.templateStatus}
+        </if>
+        <if test="mailTemplate.templateType != null and mailTemplate.templateType != ''">
+            AND template_type = #{mailTemplate.templateType}
+        </if>
+        <if test="mailTemplate.beginDateTime != null and mailTemplate.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{mailTemplate.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="mailTemplate.endDateTime != null and mailTemplate.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{mailTemplate.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+</mapper>
