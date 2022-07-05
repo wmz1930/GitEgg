@@ -182,7 +182,7 @@ public class MailChannelServiceImpl extends ServiceImpl<MailChannelMapper, MailC
     @Override
     public void initMailChannelList() {
         QueryMailChannelDTO mailChannelDTO = new QueryMailChannelDTO();
-        mailChannelDTO.setChannelStatus(GitEggConstant.ENABLE);
+        // 这里初始化所有的配置，不再只初始化已启用的配置
         List<MailChannelDTO> mailChannelInfoList = mailChannelMapper.initMailChannelList(mailChannelDTO);
 
         List<GitEggMailProperties> channelProperties = mailChannelInfoList.stream()

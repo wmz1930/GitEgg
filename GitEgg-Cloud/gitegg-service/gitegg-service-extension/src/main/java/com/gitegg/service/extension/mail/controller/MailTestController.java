@@ -49,27 +49,9 @@ public class MailTestController {
     @ApiOperation(value = "测试发送简单邮件")
     public Result<?> sendSimpleMailTest(@RequestBody SendSimpleMailDTO mailSendDTO) {
 //        mailService.sendSimpleMail(mailSendDTO.getMailSubject(), mailSendDTO.getMailTo(), mailSendDTO.getMailContent(), false, mailSendDTO.getChannelCode());
-//
-//        String htmlContent = "<span style=\"color:red;\">这是html邮件内容，查看此段文字是否显示红色:</span>。";
-//        mailSendDTO.setMailSubject("测试发送Html邮件");
-//        mailSendDTO.setMailContent(htmlContent);
-//        mailService.sendSimpleMail(mailSendDTO.getMailSubject(), mailSendDTO.getMailTo(), mailSendDTO.getMailContent(), true, mailSendDTO.getChannelCode());
-//
-//        mailSendDTO.setTemplateCode("register_code");
-//        mailSendDTO.setMailSubject("测试发送模板邮件");
-//        Map<String,String> templateKeyValue = new HashMap<>();
-//        templateKeyValue.put("code", "测试Code");
-//        mailSendDTO.setTemplateKeyValue(templateKeyValue);
-//        mailService.sendTemplateMail(mailSendDTO);
 
-        mailSendDTO.setMailSubject("测试发送附件邮件");
         mailSendDTO.setAttachment("测试附件内容");
-        mailService.sendAttachmentMail(mailSendDTO);
-
-        mailSendDTO.setAttachment("测试附件内容异步");
-        mailSendDTO.setMailSubject("测试发送异步模板邮件");
         mailService.sendAsyncAttachmentMail(mailSendDTO);
-
 
         return Result.success();
     }

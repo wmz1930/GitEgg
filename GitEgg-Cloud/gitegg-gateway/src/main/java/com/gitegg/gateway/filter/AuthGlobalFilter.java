@@ -77,11 +77,11 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
          ServerHttpRequest request = exchange.getRequest().mutate().headers(httpHeaders).build();
          exchange = exchange.mutate().request(request).build();
-             return chain.filter(exchange);
-         }
+         return chain.filter(exchange);
+     }
 
-         @Override
-         public int getOrder() {
+     @Override
+     public int getOrder() {
         return 0;
     }
 }

@@ -2,11 +2,9 @@ package com.gitegg.service.extension.mail.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.email.enums.MailResultCodeEnum;
 import com.gitegg.platform.email.factory.JavaMailSenderFactory;
-import com.gitegg.platform.email.impl.GitEggJavaMailSenderImpl;
 import com.gitegg.service.extension.mail.dto.CreateMailLogDTO;
 import com.gitegg.service.extension.mail.dto.SendSimpleMailDTO;
 import com.gitegg.service.extension.mail.entity.MailTemplate;
@@ -15,7 +13,6 @@ import com.gitegg.service.extension.mail.service.IMailService;
 import com.gitegg.service.extension.mail.service.IMailTemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.mail.util.MimeMessageParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -23,15 +20,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.mail.Address;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * 这里只考虑系统发送通知邮件等基本常用接口，不是复杂的邮件系统，其他高级功能请自己定制
@@ -86,7 +79,7 @@ public class MailServiceImpl implements IMailService {
      * @param to
      * @param content
      */
-    @Async("AsyncSendMailTaskExecutor")
+    @Async("mailTaskExecutor")
     @Override
     public void sendAsyncSimpleMail(String subject, String[] to, String content, boolean htmlFlag, String... channelCode) {
         this.sendSimpleMail(subject, null, to, content, htmlFlag, channelCode);
@@ -123,7 +116,7 @@ public class MailServiceImpl implements IMailService {
      * @param to
      * @param content
      */
-    @Async("AsyncSendMailTaskExecutor")
+    @Async("mailTaskExecutor")
     @Override
     public void sendAsyncSimpleMail(String subject, String from, String[] to, String content, boolean htmlFlag, String... channelCode) {
         this.sendSimpleMail(subject, from, to, content, htmlFlag, channelCode);
@@ -184,11 +177,10 @@ public class MailServiceImpl implements IMailService {
      * 异步发送带附件的邮件 ，这里以字节流的方式发送，实际复杂场景可自行扩展。
      * @param sendSimpleMailDTO
      */
-    @Async("AsyncSendMailTaskExecutor")
+    @Async("mailTaskExecutor")
     @Override
     public void sendAsyncAttachmentMail(SendSimpleMailDTO sendSimpleMailDTO) {
         this.sendAttachmentMail(sendSimpleMailDTO);
-
     }
 
     /**
