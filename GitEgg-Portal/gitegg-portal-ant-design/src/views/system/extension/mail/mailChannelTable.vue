@@ -442,12 +442,12 @@
                 sendMailForm: {
                     channelCode: undefined,
                     templateId: undefined,
-                    mailSubject: undefined,
+                    mailSubject: 'GitEgg系统邮件发送测试',
                     mailFrom: undefined,
                     mailTo: undefined,
                     mailCc: undefined,
                     mailBcc: undefined,
-                    mailContent: undefined,
+                    mailContent: 'GitEgg系统邮件发送测试内容',
                     attachmentName: '0',
                     attachmentSize: '0'
                 },
@@ -564,12 +564,12 @@
               this.sendMailForm = {
                     channelCode: undefined,
                     templateId: undefined,
-                    mailSubject: undefined,
+                    mailSubject: 'GitEgg系统邮件发送测试',
                     mailFrom: undefined,
                     mailTo: undefined,
                     mailCc: undefined,
                     mailBcc: undefined,
-                    mailContent: undefined,
+                    mailContent: 'GitEgg系统邮件发送测试内容',
                     attachmentName: '0',
                     attachmentSize: '0'
                 }
@@ -738,6 +738,7 @@
                         this.sendLoading = true
                         testSendSimpleMail(this.sendMailForm).then(() => {
                             this.sendLoading = false
+                            this.dialogTestSendMailVisible = false
                             this.$message.success('发送成功')
                         })
                     }
