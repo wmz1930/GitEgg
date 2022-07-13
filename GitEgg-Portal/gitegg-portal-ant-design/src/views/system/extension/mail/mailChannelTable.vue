@@ -36,6 +36,7 @@
                         placeholder="渠道状态"
                         show-search
                         mode="default"
+                        allow-clear
                         :filter-option="filterOption"
                         @keyup.enter.native="handleFilter" >
                 <a-select-option :key="item.id + index"
@@ -320,7 +321,7 @@
                     channelCode: undefined, // 渠道编码
                     channelName: undefined, // 渠道名称
                     username: undefined, // 账户名
-                    channelStatus: '0', // 渠道状态
+                    channelStatus: undefined, // 渠道状态
                     beginDateTime: '',
                     endDateTime: ''
                 },
@@ -539,7 +540,7 @@
                         channelCode: undefined, // 渠道编码
                         channelName: undefined, // 渠道名称
                         username: undefined, // 账户名
-                        channelStatus: '0', // 渠道状态
+                        channelStatus: undefined, // 渠道状态
                         beginDateTime: '',
                         endDateTime: ''
                 }
