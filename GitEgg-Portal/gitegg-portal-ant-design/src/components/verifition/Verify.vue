@@ -180,7 +180,7 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="less" scoped>
 .verifybox {
   position: relative;
   box-sizing: border-box;

@@ -22,7 +22,7 @@
                   <a-form-model-item label="字典值">
                     <a-input v-model.trim="parentTreeQuery.dictCode"
                              placeholder="请输入字典值"
-                             :max-length="32"
+                             :max-length="64"
                              @keyup.enter.native="handleParentFilter" />
                   </a-form-model-item>
                 </a-col>
@@ -132,7 +132,7 @@
                   <a-form-model-item label="字典值">
                     <a-input v-model.trim="treeQuery.dictCode"
                              placeholder="请输入字典值"
-                             :max-length="32"
+                             :max-length="64"
                              @keyup.enter.native="handleFilter" />
                   </a-form-model-item>
                 </a-col>
@@ -240,7 +240,7 @@
                            prop="dictCode">
           <a-input v-model.trim="dictForm.dictCode"
                    placeholder="输入字典类型/字典值"
-                   :maxLength="32" />
+                   :maxLength="64" />
         </a-form-model-item>
         <a-form-model-item label="字典排序"
                            prop="dictOrder">
@@ -442,7 +442,7 @@ export default {
         ],
         dictCode: [
           { required: true, message: '请输入字典值', trigger: 'blur' },
-          { min: 1, max: 32, message: '长度在 2 到 32 个字符', trigger: 'blur' },
+          { min: 1, max: 64, message: '长度在 2 到 64 个字符', trigger: 'blur' },
           { validator: validDictCode, trigger: 'blur' }
         ],
         dictOrder: [

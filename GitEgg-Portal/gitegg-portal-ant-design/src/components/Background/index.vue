@@ -175,7 +175,7 @@ export default {
     position: absolute;
     background: linear-gradient(65deg, #10455e, #24bfd5);
     background-size: 100% 100%;
-    z-index: -2;
+    z-index: 0;
     > canvas {
       width: 100%;
       height: 100%;

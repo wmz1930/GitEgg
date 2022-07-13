@@ -26,3 +26,11 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+/deep/ .ant-pro-basicLayout-content {
+    margin: 5px!important;
+}
+/deep/ .ant-card-body {
+    padding: 5px!important;
+}
+</style>
