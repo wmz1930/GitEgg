@@ -1,38 +1,34 @@
 package com.gitegg.service.extension.mail.controller;
 
 
-import java.util.List;
-
+import com.alibaba.excel.EasyExcel;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitegg.platform.base.result.PageResult;
+import com.gitegg.platform.base.result.Result;
+import com.gitegg.platform.base.util.BeanCopierUtils;
+import com.gitegg.service.extension.mail.dto.CreateMailLogDTO;
+import com.gitegg.service.extension.mail.dto.MailLogDTO;
+import com.gitegg.service.extension.mail.dto.QueryMailLogDTO;
+import com.gitegg.service.extension.mail.dto.UpdateMailLogDTO;
+import com.gitegg.service.extension.mail.entity.MailLog;
+import com.gitegg.service.extension.mail.entity.MailLogExport;
+import com.gitegg.service.extension.mail.entity.MailLogImport;
+import com.gitegg.service.extension.mail.service.IMailLogService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitegg.platform.base.constant.GitEggConstant;
-import com.gitegg.platform.base.result.PageResult;
-import com.gitegg.platform.base.result.Result;
-import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.service.extension.mail.entity.*;
-import com.gitegg.service.extension.mail.dto.*;
-
-import com.gitegg.service.extension.mail.service.IMailLogService;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
-
-import com.alibaba.excel.EasyExcel;
-import com.gitegg.platform.base.util.BeanCopierUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**

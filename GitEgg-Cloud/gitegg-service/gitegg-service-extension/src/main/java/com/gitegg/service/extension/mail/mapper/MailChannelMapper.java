@@ -1,16 +1,12 @@
 package com.gitegg.service.extension.mail.mapper;
 
 import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
-import com.gitegg.service.extension.justauth.dto.JustAuthSourceDTO;
-import com.gitegg.service.extension.justauth.dto.QueryJustAuthSourceDTO;
-import com.gitegg.service.extension.mail.entity.MailChannel;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-
-import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
 import com.gitegg.service.extension.mail.dto.MailChannelDTO;
 import com.gitegg.service.extension.mail.dto.QueryMailChannelDTO;
+import com.gitegg.service.extension.mail.entity.MailChannel;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
