@@ -13,7 +13,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +39,7 @@ import java.util.Map;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Api(value = "MailChannelController|邮件渠道表前端控制器")
 @RefreshScope
+@ConditionalOnProperty(prefix = "spring.mail", name = "host")
 public class MailTestController {
 
     private final IMailService mailService;
@@ -48,11 +53,7 @@ public class MailTestController {
     @PostMapping("/send/simple")
     @ApiOperation(value = "测试发送简单邮件")
     public Result<?> sendSimpleMailTest(@RequestBody SendSimpleMailDTO mailSendDTO) {
-//        mailService.sendSimpleMail(mailSendDTO.getMailSubject(), mailSendDTO.getMailTo(), mailSendDTO.getMailContent(), false, mailSendDTO.getChannelCode());
-
-        mailSendDTO.setAttachment("测试附件内容");
-        mailService.sendAsyncAttachmentMail(mailSendDTO);
-
+        mailService.sendAsyncSimpleMail(mailSendDTO.getMailSubject(), mailSendDTO.getMailTo(), mailSendDTO.getMailContent(), false, mailSendDTO.getChannelCode());
         return Result.success();
     }
 

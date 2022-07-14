@@ -14,8 +14,6 @@ import com.gitegg.service.extension.mail.service.IMailTemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -38,11 +36,10 @@ import java.util.Arrays;
 @Service
 @EnableAsync
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@ConditionalOnMissingBean( MailTenantServiceImpl.class)
-@ConditionalOnProperty(prefix = "spring.mail", name = "host")
-public class MailServiceImpl implements IMailService {
-    
-    private final JavaMailSenderImpl javaMailSender;
+@ConditionalOnProperty( value = {"spring.mail.tenant", "tenant.enable"}, havingValue = "true")
+public class MailTenantServiceImpl implements IMailService {
+
+    private final JavaMailSenderFactory javaMailSenderFactory;
 
     /**
      * 邮件发送记录日志
@@ -140,6 +137,7 @@ public class MailServiceImpl implements IMailService {
     public void sendSimpleMail(String subject, String from, String[] to, String content, boolean htmlFlag, String... channelCode) {
         CreateMailLogDTO mailLog = new CreateMailLogDTO();
         try {
+            JavaMailSenderImpl javaMailSender = javaMailSenderFactory.getMailSender(channelCode);
             if (StringUtils.isEmpty(from))
             {
                 from = javaMailSender.getUsername();
@@ -195,6 +193,7 @@ public class MailServiceImpl implements IMailService {
     public void sendAttachmentMail(SendSimpleMailDTO sendSimpleMailDTO) {
         CreateMailLogDTO mailLog = new CreateMailLogDTO();
         try {
+            JavaMailSenderImpl javaMailSender = javaMailSenderFactory.getMailSender(sendSimpleMailDTO.getChannelCode());
             String from = sendSimpleMailDTO.getMailFrom();
             if (StringUtils.isEmpty(from))
             {

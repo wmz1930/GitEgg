@@ -31,7 +31,7 @@ public interface IMailService {
      * @param content
      * @param htmlFlag
      */
-    void sendAsyncSimpleMail(String subject, String[] to, String content, boolean htmlFlag, String... channelCode);
+    void sendAsyncSimpleMail(String subject, String to, String content, boolean htmlFlag, String... channelCode);
 
     /**
      * 批量发送普通邮件，不设置from，默认取系统账号邮箱
