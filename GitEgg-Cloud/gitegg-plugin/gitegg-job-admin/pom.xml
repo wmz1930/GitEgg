@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     
-    <artifactId>gitegg-job</artifactId>
+    <artifactId>gitegg-job-admin</artifactId>
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
 

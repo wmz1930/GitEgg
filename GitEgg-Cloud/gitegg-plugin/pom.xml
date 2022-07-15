@@ -15,7 +15,7 @@
 
     <modules>
         <module>gitegg-code-generator</module>
-        <module>xxl-job-admin</module>
+        <module>gitegg-job-admin</module>
     </modules>
 
 </project>
