@@ -44,6 +44,17 @@
         <dependency>
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-boot</artifactId>
+            <!-- 去除gitegg-platform-boot默认的依赖-->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.gitegg.platform</groupId>
+                    <artifactId>gitegg-platform-cache</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka-clients</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- gitegg Spring Cloud自定义及扩展 -->
         <dependency>
