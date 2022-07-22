@@ -1,5 +1,5 @@
 server:
-  port: 8007
+  port: 8009
 spring:
   profiles:
     active: '@spring.profiles.active@'
@@ -11,6 +11,10 @@ spring:
     nacos:
       discovery:
         server-addr: ${spring.nacos.addr}
+        metadata:
+          # 启用SpringBootAdmin时 客户端端点信息的安全认证信息
+          user.name: ${spring.security.user.name}
+          user.password: ${spring.security.user.password}
       config:
         server-addr: ${spring.nacos.addr}
         file-extension: yaml
@@ -19,24 +23,7 @@ spring:
           - data-id: ${spring.nacos.config.prefix}.yaml
             group: ${spring.nacos.config.group}
             refresh: true
-          - data-id: ${spring.nacos.config.prefix}-xxl-job.yaml
+          - data-id: ${spring.nacos.config.prefix}-admin-monitor.yaml
             group: ${spring.nacos.config.group}
             refresh: true
-  ### xxl-job-admin config
-  mvc:
-    servlet:
-      load-on-startup: 0
-    static-path-pattern: /static/**
-  resources:
-    static-locations: classpath:/static/
-  ### freemarker
-  freemarker:
-    templateLoaderPath: classpath:/templates/
-    suffix: .ftl
-    charset: UTF-8
-    request-context-attribute: request
-    settings.number_format: 0.##########
-### mybatis
-mybatis:
-  mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
 

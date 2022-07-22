@@ -20,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -79,6 +80,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     
     @Value("${system.secret-key-salt}")
     private String secretKeySalt;
+    
+    @Value("${system.keyPair.keyLocation}")
+    private String keyLocation;
+    
+    @Value("${system.keyPair.keyPassword}")
+    private String keyPassword;
+    
+    @Value("${system.keyPair.alias}")
+    private String alias;
 
     /**
      * 客户端信息配置
@@ -87,6 +97,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @SneakyThrows
     public void configure(ClientDetailsServiceConfigurer clients) {
         GitEggClientDetailsServiceImpl jdbcClientDetailsService = new GitEggClientDetailsServiceImpl(dataSource);
+        // client-secret加密存储
+        jdbcClientDetailsService.setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
         jdbcClientDetailsService.setFindClientDetailsSql(AuthConstant.FIND_CLIENT_DETAILS_SQL);
         jdbcClientDetailsService.setSelectClientDetailsSql(AuthConstant.SELECT_CLIENT_DETAILS_SQL);
         clients.withClientDetails(jdbcClientDetailsService);
@@ -158,9 +170,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public KeyPair keyPair() {
         KeyStoreKeyFactory factory = new KeyStoreKeyFactory(
-                new ClassPathResource("gitegg.jks"), "123456".toCharArray());
+                new ClassPathResource(keyLocation), keyPassword.toCharArray());
         KeyPair keyPair = factory.getKeyPair(
-                "gitegg", "123456".toCharArray());
+                alias, keyPassword.toCharArray());
         return keyPair;
     }
 

@@ -80,6 +80,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return pageUserInfo;
     }
     
+    @Override
+    public List<UserInfo> queryUserList( QueryUserDTO user) {
+        List<UserInfo> userInfoList = userMapper.queryUserList(user);
+        return userInfoList;
+    }
+    
     /**
      * 新增用户，成功后将id和对象返回
      * @param user

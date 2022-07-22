@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 /**
  * 添加contextId用于区分相同name的client，否则会报错
  * @author GitEgg
@@ -23,6 +25,30 @@ public interface IUserFeign {
      */
     @GetMapping(value = "/feign/user/query/by/id")
     Result<Object> queryById(@RequestParam("id") Long id);
+    
+    /**
+     * 通过用户id查询用户信息
+     * @param ids
+     * @return
+     */
+    @GetMapping(value = "/feign/user/query/by/ids")
+    Result<Object> queryByIds(@RequestParam("ids") List<Long> ids);
+    
+    /**
+     * 通过用户id查询用户信息
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/feign/user/query/by/organization/id")
+    Result<Object> queryByOrganizationId(@RequestParam("id") Long id);
+    
+    /**
+     * 通过用户id查询用户信息
+     * @param ids
+     * @return
+     */
+    @GetMapping(value = "/feign/user/query/by/organization/ids")
+    Result<Object> queryByOrganizationIds(@RequestParam("ids") List<Long> ids);
 
     /**
      * 通过手机号码查询用户

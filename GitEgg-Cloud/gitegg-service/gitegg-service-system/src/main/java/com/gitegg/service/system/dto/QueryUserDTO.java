@@ -85,4 +85,16 @@ public class QueryUserDTO implements Serializable
 
     @ApiModelProperty(value = "组织机构id")
     private Long organizationId;
+    
+    @ApiModelProperty(value = "通过批量查询用户")
+    private List<Long> userIds;
+    
+    @ApiModelProperty(value = "角色id批量查询用户")
+    private List<Long> roleIds;
+    
+    @ApiModelProperty(value = "角色key批量查询用户")
+    private List<String> roleKeys;
+    
+    @ApiModelProperty(value = "机构id批量查询用户")
+    private List<Long> organizationIds;
 }

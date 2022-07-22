@@ -80,6 +80,7 @@
                 <excludes>
                     <exclude>**/*.jks</exclude>
                     <exclude>static/**</exclude>
+                    <exclude>assets/**</exclude>
                 </excludes>
             </resource>
             <!-- 解决jks被过滤掉的问题 -->
@@ -89,6 +90,7 @@
                 <includes>
                     <include>**/*.jks</include>
                     <include>static/**</include>
+                    <include>assets/**</include>
                 </includes>
             </resource>
             <resource>

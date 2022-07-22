@@ -79,4 +79,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     UserInfo queryUserInfo(User user);
+    
+    /**
+     * 批量查询用户信息
+     * @param user
+     * @return
+     */
+    List<UserInfo> queryUserList(QueryUserDTO user);
 }

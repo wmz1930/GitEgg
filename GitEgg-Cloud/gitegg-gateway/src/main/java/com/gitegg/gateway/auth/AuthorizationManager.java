@@ -1,16 +1,13 @@
 package com.gitegg.gateway.auth;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.convert.Convert;
+import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.platform.base.constant.TokenConstant;
 import com.gitegg.platform.oauth2.props.AuthUrlWhiteListProperties;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.Payload;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,13 +24,13 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PathMatcher;
 import org.springframework.util.StringUtils;
-
-import com.gitegg.platform.base.constant.AuthConstant;
-
-import cn.hutool.core.convert.Convert;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 网关鉴权管理器
@@ -73,7 +70,8 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
 
         // Basic认证直接放行,此处需注意：请不要将所有带Basic头的直接放行，否则可以直接绕过网关认证，从而访问其他微服务
         if (token.startsWith(AuthConstant.JWT_TOKEN_PREFIX_BASIC)
-                && !CollectionUtils.isEmpty(authUrlWhiteListProperties.getTokenUrls()) && authUrlWhiteListProperties.getTokenUrls().contains(path))
+                && !CollectionUtils.isEmpty(authUrlWhiteListProperties.getTokenUrls())
+                && authUrlWhiteListProperties.getTokenUrls().contains(path))
         {
             return Mono.just(new AuthorizationDecision(true));
         }

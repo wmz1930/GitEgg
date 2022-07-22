@@ -2,6 +2,7 @@ package com.gitegg.service.system.feign;
 
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import com.gitegg.service.system.dto.CreateUserDTO;
+import com.gitegg.service.system.dto.QueryUserDTO;
 import com.gitegg.service.system.dto.RegisterUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @ClassName: UserFeign
@@ -40,6 +42,33 @@ public class UserFeign {
         user.setId(id);
         UserInfo userInfo = userService.queryUserInfo(user);
         return Result.data(userInfo);
+    }
+    
+    @GetMapping(value = "/query/by/ids")
+    @ApiOperation(value = "批量通过用户id查询用户信息", notes = "批量通过用户id查询用户信息")
+    public Result<List<UserInfo>> queryByIds(List<Long> ids) {
+        QueryUserDTO user = new QueryUserDTO();
+        user.setUserIds(ids);
+        List<UserInfo> userInfoList = userService.queryUserList(user);
+        return Result.data(userInfoList);
+    }
+    
+    @GetMapping(value = "/query/by/organization/id")
+    @ApiOperation(value = "通过机构id查询用户信息", notes = "通过机构id查询用户信息")
+    public Result<List<UserInfo>> queryByOrganizationId(Long id) {
+        QueryUserDTO user = new QueryUserDTO();
+        user.setOrganizationId(id);
+        List<UserInfo> userInfoList = userService.queryUserList(user);
+        return Result.data(userInfoList);
+    }
+    
+    @GetMapping(value = "/query/by/organization/ids")
+    @ApiOperation(value = "批量通过机构id查询用户信息", notes = "批量通过机构id查询用户信息")
+    public Result<List<UserInfo>> queryByOrganizationIds(List<Long> ids) {
+        QueryUserDTO user = new QueryUserDTO();
+        user.setOrganizationIds(ids);
+        List<UserInfo> userInfoList = userService.queryUserList(user);
+        return Result.data(userInfoList);
     }
 
     @GetMapping(value = "/query/by/phone")

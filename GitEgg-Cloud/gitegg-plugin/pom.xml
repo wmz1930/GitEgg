@@ -16,6 +16,8 @@
     <modules>
         <module>gitegg-code-generator</module>
         <module>gitegg-job-admin</module>
+        <module>gitegg-plugin-workflow</module>
+        <module>gitegg-admin-monitor</module>
     </modules>
 
 </project>

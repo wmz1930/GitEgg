@@ -40,4 +40,11 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     List<User> queryExistUser(@Param("user") User user);
+    
+    /**
+     * 查询用户列表
+     * @param user
+     * @return
+     */
+    List<UserInfo> queryUserList(@Param("user") QueryUserDTO user);
 }

@@ -1,5 +1,5 @@
 server:
-  port: 8007
+  port: 8008
 spring:
   profiles:
     active: '@spring.profiles.active@'
@@ -19,24 +19,6 @@ spring:
           - data-id: ${spring.nacos.config.prefix}.yaml
             group: ${spring.nacos.config.group}
             refresh: true
-          - data-id: ${spring.nacos.config.prefix}-xxl-job.yaml
+          - data-id: ${spring.nacos.config.prefix}-workflow.yaml
             group: ${spring.nacos.config.group}
             refresh: true
-  ### xxl-job-admin config
-  mvc:
-    servlet:
-      load-on-startup: 0
-    static-path-pattern: /static/**
-  resources:
-    static-locations: classpath:/static/
-  ### freemarker
-  freemarker:
-    templateLoaderPath: classpath:/templates/
-    suffix: .ftl
-    charset: UTF-8
-    request-context-attribute: request
-    settings.number_format: 0.##########
-### mybatis
-mybatis:
-  mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
-
