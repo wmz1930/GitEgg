@@ -39,8 +39,6 @@
         <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
         <!-- SpringCloud版本号 -->
         <spring.cloud.version>Hoxton.SR12</spring.cloud.version>
-        <!-- hutool工具版本 -->
-        <hutool.version>5.5.1</hutool.version>
 
     </properties>
 
@@ -54,7 +52,6 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
         </dependency>
     </dependencies>
 
