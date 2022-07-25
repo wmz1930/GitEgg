@@ -53,11 +53,11 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
-        <!-- 如果使用prometheus进行健康检查，这里统一引入依赖。如果使用SpringBootAdmin，这里注释掉。-->
+        <!-- 如果使用prometheus进行健康检查，这里统一引入依赖。如果使用SpringBootAdmin，这里注释掉。
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <dependencyManagement>
