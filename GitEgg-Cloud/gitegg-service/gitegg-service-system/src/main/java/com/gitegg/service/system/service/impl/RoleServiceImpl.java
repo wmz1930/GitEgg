@@ -71,7 +71,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public boolean updateRole(UpdateRoleDTO role) {
         LambdaQueryWrapper<Role> ew = new LambdaQueryWrapper<>();
-        ew.ne(Role::getId, role.getId()).and(e -> ew.eq(Role::getRoleName, role.getRoleName()).or().eq(Role::getRoleKey, role.getRoleKey()).or()
+        ew.ne(Role::getId, role.getId()).and(e -> e.eq(Role::getRoleName, role.getRoleName()).or().eq(Role::getRoleKey, role.getRoleKey()).or()
                 .eq(Role::getRoleName, role.getRoleKey()).or().eq(Role::getRoleKey, role.getRoleName()));
         List<Role> roleList = list(ew);
         if (!CollectionUtils.isEmpty(roleList)) {
