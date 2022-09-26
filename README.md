@@ -4,10 +4,15 @@
 &nbsp;&nbsp;&nbsp;&nbsp;GitEgg 是一款开源免费的企业级微服务应用开发框架，旨在整合目前主流稳定的开源技术框架，集成常用的最佳项目解决方案，实现可直接使用的微服务快速开发框架。
 
 ### 项目官网
-http://cloud.gitegg.com
+https://cloud.gitegg.com
 
 ### Demo演示
-http://demo.gitegg.com
+https://demo.gitegg.com
+
+
+## 技术交流
+
+![技术交流](https://upload-images.jianshu.io/upload_images/19669137-65e36447b5d84f6d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### 系统架构
 ![GitEgg微服务系统架构图](https://images.gitee.com/uploads/images/2021/0622/222859_8209a5ea_378796.png "GitEgg微服务系统架构图.png")
@@ -140,10 +145,6 @@ GitEgg-Cloud
 ![短信模板](https://upload-images.jianshu.io/upload_images/19669137-9c4e2d5fdb77af0c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![短信渠道](https://upload-images.jianshu.io/upload_images/19669137-656f951da7073d32.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![操作日志](https://upload-images.jianshu.io/upload_images/19669137-6daf8e21b6e18f3f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-## 技术交流
-
-![技术交流](https://upload-images.jianshu.io/upload_images/19669137-c01787de4f8b12b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 版权许可
 
