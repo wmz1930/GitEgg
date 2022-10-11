@@ -60,7 +60,7 @@ export default {
       if (this.fullPathList.length > 1) {
         this.remove(e)
       } else {
-        this.$message.info('这是最后一个标签了, 无法被关闭')
+        // this.$message.info('这是最后一个标签了, 无法被关闭')
       }
     },
     closeLeft (e) {

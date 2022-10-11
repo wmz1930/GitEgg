@@ -38,6 +38,11 @@ export default {
       type: String,
       default: 'organizationTree'
     },
+    // 父级id
+    parentId: {
+      type: String,
+      default: '0'
+    },
     checkStrictly: {
       type: Boolean,
       default: false
@@ -115,7 +120,7 @@ export default {
     // 查询组织机构数据
     queryOrganizationList () {
       this.listLoading = true
-      fetchOrgList({ parentId: 0 }).then(response => {
+      fetchOrgList({ parentId: this.parentId }).then(response => {
         this.organizationList = response.data
         if (this.organizationList) {
           const organizationListStr = JSON.stringify(this.organizationList)
@@ -168,7 +173,6 @@ export default {
           return null
         })
         .filter((item, i, self) => item && self.indexOf(item) === i)
-      console.log(organizationTreeExpandedKeys)
       Object.assign(this, {
         organizationTreeExpandedKeys,
         searchValue: value,

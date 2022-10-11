@@ -19,6 +19,9 @@ const api = {
   closeCurrentPage: function () {
     this.close()
   },
+  removePage (targetKey) {
+    events.$emit('close', targetKey)
+  },
   /**
    * close route fullPath tab
    * @param config

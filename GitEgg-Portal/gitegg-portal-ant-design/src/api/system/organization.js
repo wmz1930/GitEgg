@@ -8,6 +8,14 @@ export function fetchOrgList (data) {
   })
 }
 
+export function queryOrgList (data) {
+  return request({
+    url: '/gitegg-service-system/organization/list',
+    method: 'get',
+    params: data
+  })
+}
+
 export function createOrganization (data) {
   return request({
     url: '/gitegg-service-system/organization/create',

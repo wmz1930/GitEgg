@@ -905,6 +905,10 @@ export default {
     cursor: pointer;
   }
 
+  /deep/ .icon-close:before {
+    color: #1890ff;
+  }
+
   /deep/ .verifybox-close:hover{
      color: #40a9ff;
   }
@@ -970,5 +974,9 @@ export default {
   /deep/ .verify-bar-area .verify-move-block .verify-icon {
     font-size: 18px;
     color: rgb(146, 148, 248, .9)!important;
+  }
+
+  /deep/ .verify-bar-area .verify-msg {
+    color: #40a9ff;
   }
 </style>

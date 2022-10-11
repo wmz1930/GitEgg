@@ -548,6 +548,7 @@
                     },
                     {
                         title: '操作',
+                        align: 'center',
                         dataIndex: 'action',
                         width: '280px',
                         scopedSlots: { customRender: 'action' }

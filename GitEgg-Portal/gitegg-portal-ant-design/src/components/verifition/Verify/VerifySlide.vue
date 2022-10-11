@@ -1,59 +1,56 @@
 <template>
   <div style="position: relative;">
-    <div v-if="type === '2'"
-         class="verify-img-out"
-         :style="{height: (parseInt(setSize.imgHeight) + vSpace) + 'px'}">
-      <div class="verify-img-panel"
-           :style="{width: setSize.imgWidth,
-                 height: setSize.imgHeight,}">
-        <img :src="'data:image/png;base64,'+backImgBase"
-             alt=""
-             style="width:100%;height:100%;display:block">
-        <div class="verify-refresh"
-             @click="refresh"
-             v-show="showRefresh">
-          <!-- <i class="iconfont icon-refresh"></i> -->
-          <a-icon type="reload"
-                  class="iconfont" />
+    <div
+      v-if="type === '2'"
+      class="verify-img-out"
+      :style="{height: (parseInt(setSize.imgHeight) + vSpace) + 'px'}"
+    >
+      <div
+        class="verify-img-panel"
+        :style="{width: setSize.imgWidth,
+                 height: setSize.imgHeight,}"
+      >
+        <img :src="backImgBase?('data:image/png;base64,'+backImgBase):defaultImg" alt="" style="width:100%;height:100%;display:block">
+        <div v-show="showRefresh" class="verify-refresh" @click="refresh"><i class="iconfont icon-refresh" />
         </div>
         <transition name="tips">
-          <span class="verify-tips"
-                v-if="tipWords"
-                :class="passFlag ?'suc-bg':'err-bg'">{{ tipWords }}</span>
+          <span v-if="tipWords" class="verify-tips" :class="passFlag ?'suc-bg':'err-bg'">{{ tipWords }}</span>
         </transition>
       </div>
     </div>
     <!-- 公共部分 -->
-    <div class="verify-bar-area"
-         :style="{width: setSize.imgWidth,
+    <div
+      class="verify-bar-area"
+      :style="{width: setSize.imgWidth,
                height: barSize.height,
-               'line-height':barSize.height}">
-      <span class="verify-msg"
-            v-text="text"></span>
-      <div class="verify-left-bar"
-           :style="{width: (leftBarWidth!==undefined)?leftBarWidth: barSize.height, height: barSize.height, 'border-color': leftBarBorderColor, transaction: transitionWidth}">
-        <span class="verify-msg"
-              v-text="finishText"></span>
-        <div class="verify-move-block"
-             @touchstart="start"
-             @mousedown="start"
-             :style="{width: barSize.height, height: barSize.height, 'background-color': moveBlockBackgroundColor, left: moveBlockLeft, transition: transitionLeft}">
-          <!-- <i
+               'line-height':barSize.height}"
+    >
+      <span class="verify-msg" v-text="text" />
+      <div
+        class="verify-left-bar"
+        :style="{width: (leftBarWidth!==undefined)?leftBarWidth: barSize.height, height: barSize.height, 'border-color': leftBarBorderColor, transaction: transitionWidth}"
+      >
+        <span class="verify-msg" v-text="finishText" />
+        <div
+          class="verify-move-block"
+          :style="{width: barSize.height, height: barSize.height, 'background-color': moveBlockBackgroundColor, left: moveBlockLeft, transition: transitionLeft}"
+          @touchstart="start"
+          @mousedown="start"
+        >
+          <i
             :class="['verify-icon iconfont', iconClass]"
-            :style="{color: iconColor}"></i> -->
-          <a-icon :type="iconType"
-                  :class="['verify-icon']"
-                  :style="{color: iconColor}" />
-          <div v-if="type === '2'"
-               class="verify-sub-block"
-               :style="{'width':Math.floor(parseInt(setSize.imgWidth)*47/310)+ 'px',
+            :style="{color: iconColor}"
+          />
+          <div
+            v-if="type === '2'"
+            class="verify-sub-block"
+            :style="{'width':Math.floor(parseInt(setSize.imgWidth)*47/310)+ 'px',
                      'height': setSize.imgHeight,
                      'top':'-' + (parseInt(setSize.imgHeight) + vSpace) + 'px',
                      'background-size': setSize.imgWidth + ' ' + setSize.imgHeight,
-            }">
-            <img :src="'data:image/png;base64,'+blockBackImgBase"
-                 alt=""
-                 style="width:100%;height:100%;display:block">
+            }"
+          >
+            <img :src="'data:image/png;base64,'+blockBackImgBase" alt="" style="width:100%;height:100%;display:block">
           </div>
         </div>
       </div>
@@ -62,9 +59,9 @@
 </template>
 <script type="text/babel">
 /**
- * VerifySlide
- * @description 滑块
- * */
+     * VerifySlide
+     * @description 滑块
+     * */
 import { aesEncrypt } from './../utils/ase'
 import { resetSize } from './../utils/util'
 import { reqGet, reqCheck } from './../api/index'
@@ -74,7 +71,7 @@ export default {
   name: 'VerifySlide',
   props: {
     captchaType: {
-      type: String
+      type: String,
     },
     type: {
       type: String,
@@ -95,7 +92,7 @@ export default {
     },
     imgSize: {
       type: Object,
-      default () {
+      default() {
         return {
           width: '310px',
           height: '155px'
@@ -104,7 +101,7 @@ export default {
     },
     blockSize: {
       type: Object,
-      default () {
+      default() {
         return {
           width: '50px',
           height: '50px'
@@ -113,15 +110,19 @@ export default {
     },
     barSize: {
       type: Object,
-      default () {
+      default() {
         return {
           width: '310px',
           height: '40px'
         }
       }
+    },
+    defaultImg: {
+      type: String,
+      default: ''
     }
   },
-  data () {
+  data() {
     return {
       secretKey: '', // 后端返回的加密秘钥 字段
       passFlag: '', // 是否通过的标识
@@ -149,7 +150,6 @@ export default {
       leftBarBorderColor: '#ddd',
       iconColor: undefined,
       iconClass: 'icon-right',
-      iconType: 'right',
       status: false, // 鼠标状态
       isEnd: false,		// 是够验证完成
       showRefresh: true,
@@ -158,15 +158,31 @@ export default {
     }
   },
   computed: {
-    barArea () {
+    barArea() {
       return this.$el.querySelector('.verify-bar-area')
     },
-    resetSize () {
+    resetSize() {
       return resetSize
     }
   },
+  watch: {
+    // type变化则全面刷新
+    type: {
+      immediate: true,
+      handler() {
+        this.init()
+      }
+    }
+  },
+  mounted() {
+    // 禁止拖拽
+    this.$el.onselectstart = function() {
+      return false
+    }
+    console.log(this.defaultImg)
+  },
   methods: {
-    init () {
+    init() {
       this.text = this.explain
       this.getPictrue()
       this.$nextTick(() => {
@@ -179,39 +195,39 @@ export default {
 
       var _this = this
 
-      window.removeEventListener('touchmove', function (e) {
+      window.removeEventListener('touchmove', function(e) {
         _this.move(e)
       })
-      window.removeEventListener('mousemove', function (e) {
-        _this.move(e)
-      })
-
-      // 鼠标松开
-      window.removeEventListener('touchend', function () {
-        _this.end()
-      })
-      window.removeEventListener('mouseup', function () {
-        _this.end()
-      })
-
-      window.addEventListener('touchmove', function (e) {
-        _this.move(e)
-      })
-      window.addEventListener('mousemove', function (e) {
+      window.removeEventListener('mousemove', function(e) {
         _this.move(e)
       })
 
       // 鼠标松开
-      window.addEventListener('touchend', function () {
+      window.removeEventListener('touchend', function() {
         _this.end()
       })
-      window.addEventListener('mouseup', function () {
+      window.removeEventListener('mouseup', function() {
+        _this.end()
+      })
+
+      window.addEventListener('touchmove', function(e) {
+        _this.move(e)
+      })
+      window.addEventListener('mousemove', function(e) {
+        _this.move(e)
+      })
+
+      // 鼠标松开
+      window.addEventListener('touchend', function() {
+        _this.end()
+      })
+      window.addEventListener('mouseup', function() {
         _this.end()
       })
     },
 
     // 鼠标按下
-    start: function (e) {
+    start: function(e) {
       e = e || window.event
       if (!e.touches) { // 兼容PC端
         var x = e.clientX
@@ -230,7 +246,7 @@ export default {
       }
     },
     // 鼠标移动
-    move: function (e) {
+    move: function(e) {
       e = e || window.event
       if (this.status && this.isEnd == false) {
         if (!e.touches) { // 兼容PC端
@@ -253,7 +269,7 @@ export default {
     },
 
     // 鼠标松开
-    end: function () {
+    end: function() {
       this.endMovetime = +new Date()
       var _this = this
       // 判断是否重合
@@ -271,7 +287,6 @@ export default {
             this.leftBarBorderColor = '#5cb85c'
             this.iconColor = '#fff'
             this.iconClass = 'icon-check'
-            this.iconType = 'check'
             this.showRefresh = false
             this.isEnd = true
             if (this.mode == 'pop') {
@@ -293,9 +308,8 @@ export default {
             this.leftBarBorderColor = '#d9534f'
             this.iconColor = '#fff'
             this.iconClass = 'icon-close'
-            this.iconType = 'close'
             this.passFlag = false
-            setTimeout(function () {
+            setTimeout(function() {
               _this.refresh()
             }, 1000)
             this.$parent.$emit('error', this)
@@ -309,7 +323,7 @@ export default {
       }
     },
 
-    refresh: function () {
+    refresh: function() {
       this.showRefresh = true
       this.finishText = ''
 
@@ -323,7 +337,6 @@ export default {
       this.moveBlockBackgroundColor = '#fff'
       this.iconColor = '#000'
       this.iconClass = 'icon-right'
-      this.iconType = 'right'
       this.isEnd = false
 
       this.getPictrue()
@@ -335,9 +348,11 @@ export default {
     },
 
     // 请求背景图片和验证图片
-    getPictrue () {
+    getPictrue() {
       const data = {
-        captchaType: this.captchaType
+        captchaType: this.captchaType,
+        clientUid: localStorage.getItem('slider'),
+        ts: Date.now(), // 现在的时间戳
       }
       reqGet(data).then(res => {
         if (res.success && res.data.repCode == '0000') {
@@ -348,23 +363,15 @@ export default {
         } else {
           this.tipWords = res.data.repMsg
         }
+
+        // 判断接口请求次数是否失效
+        if (res.data.repCode == '6201') {
+          this.backImgBase = null
+          this.blockBackImgBase = null
+        }
       })
-    }
+    },
   },
-  watch: {
-    // type变化则全面刷新
-    type: {
-      immediate: true,
-      handler () {
-        this.init()
-      }
-    }
-  },
-  mounted () {
-    // 禁止拖拽
-    this.$el.onselectstart = function () {
-      return false
-    }
-  }
 }
 </script>
+

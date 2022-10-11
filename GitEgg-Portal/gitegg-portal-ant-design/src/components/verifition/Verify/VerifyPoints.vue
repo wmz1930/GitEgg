@@ -1,28 +1,31 @@
 <template>
-  <div style="position: relative">
+  <div
+    style="position: relative"
+  >
     <div class="verify-img-out">
-      <div class="verify-img-panel"
-           :style="{'width': setSize.imgWidth,
+      <div
+        class="verify-img-panel"
+        :style="{'width': setSize.imgWidth,
                  'height': setSize.imgHeight,
                  'background-size' : setSize.imgWidth + ' '+ setSize.imgHeight,
-                 'margin-bottom': vSpace + 'px'}">
-        <div class="verify-refresh"
-             style="z-index:3"
-             @click="refresh"
-             v-show="showRefresh">
-          <!-- <i class="iconfont icon-refresh"></i> -->
-          <a-icon type="reload" />
+                 'margin-bottom': vSpace + 'px'}"
+      >
+        <div v-show="showRefresh" class="verify-refresh" style="z-index:3" @click="refresh">
+          <i class="iconfont icon-refresh" />
         </div>
-        <img :src="'data:image/png;base64,'+pointBackImgBase"
-             ref="canvas"
-             alt=""
-             style="width:100%;height:100%;display:block"
-             @click="bindingClick?canvasClick($event):undefined">
+        <img
+          ref="canvas"
+          :src="pointBackImgBase?('data:image/png;base64,'+pointBackImgBase):defaultImg"
+          alt=""
+          style="width:100%;height:100%;display:block"
+          @click="bindingClick?canvasClick($event):undefined"
+        >
 
-        <div v-for="(tempPoint, index) in tempPoints"
-             :key="index"
-             class="point-area"
-             :style="{
+        <div
+          v-for="(tempPoint, index) in tempPoints"
+          :key="index"
+          class="point-area"
+          :style="{
             'background-color':'#1abd6c',
             color:'#fff',
             'z-index':9999,
@@ -34,26 +37,29 @@
             position:'absolute',
             top:parseInt(tempPoint.y-10) + 'px',
             left:parseInt(tempPoint.x-10) + 'px'
-          }">
+          }"
+        >
           {{ index + 1 }}
         </div>
       </div>
     </div>
     <!-- 'height': this.barSize.height, -->
-    <div class="verify-bar-area"
-         :style="{'width': setSize.imgWidth,
+    <div
+      class="verify-bar-area"
+      :style="{'width': setSize.imgWidth,
                'color': this.barAreaColor,
                'border-color': this.barAreaBorderColor,
-               'line-height':this.barSize.height}">
+               'line-height':this.barSize.height}"
+    >
       <span class="verify-msg">{{ text }}</span>
     </div>
   </div>
 </template>
 <script type="text/babel">
 /**
- * VerifyPoints
- * @description 点选
- * */
+     * VerifyPoints
+     * @description 点选
+     * */
 import { resetSize, _code_chars, _code_color1, _code_color2 } from './../utils/util'
 import { aesEncrypt } from './../utils/ase'
 import { reqGet, reqCheck } from './../api/index'
@@ -67,7 +73,7 @@ export default {
       default: 'fixed'
     },
     captchaType: {
-      type: String
+      type: String,
     },
     // 间隔
     vSpace: {
@@ -76,7 +82,7 @@ export default {
     },
     imgSize: {
       type: Object,
-      default () {
+      default() {
         return {
           width: '310px',
           height: '155px'
@@ -85,15 +91,19 @@ export default {
     },
     barSize: {
       type: Object,
-      default () {
+      default() {
         return {
           width: '310px',
           height: '40px'
         }
       }
+    },
+    defaultImg: {
+      type: String,
+      default: ''
     }
   },
-  data () {
+  data() {
     return {
       secretKey: '', // 后端返回的ase加密秘钥
       checkNum: 3, // 默认需要点击的字数
@@ -118,12 +128,27 @@ export default {
     }
   },
   computed: {
-    resetSize () {
+    resetSize() {
       return resetSize
     }
   },
+  watch: {
+    // type变化则全面刷新
+    type: {
+      immediate: true,
+      handler() {
+        this.init()
+      }
+    }
+  },
+  mounted() {
+    // 禁止拖拽
+    this.$el.onselectstart = function() {
+      return false
+    }
+  },
   methods: {
-    init () {
+    init() {
       // 加载页面
       this.fontPos.splice(0, this.fontPos.length)
       this.checkPosArr.splice(0, this.checkPosArr.length)
@@ -134,7 +159,7 @@ export default {
         this.$parent.$emit('ready', this)
       })
     },
-    canvasClick (e) {
+    canvasClick(e) {
       this.checkPosArr.push(this.getMousePos(this.$refs.canvas, e))
       if (this.num == this.checkNum) {
         this.num = this.createPoint(this.getMousePos(this.$refs.canvas, e))
@@ -181,17 +206,17 @@ export default {
     },
 
     // 获取坐标
-    getMousePos: function (obj, e) {
+    getMousePos: function(obj, e) {
       var x = e.offsetX
       var y = e.offsetY
       return { x, y }
     },
     // 创建坐标点
-    createPoint: function (pos) {
+    createPoint: function(pos) {
       this.tempPoints.push(Object.assign({}, pos))
       return ++this.num
     },
-    refresh: function () {
+    refresh: function() {
       this.tempPoints.splice(0, this.tempPoints.length)
       this.barAreaColor = '#000'
       this.barAreaBorderColor = '#ddd'
@@ -205,9 +230,11 @@ export default {
     },
 
     // 请求背景图片和验证图片
-    getPictrue () {
+    getPictrue() {
       const data = {
-        captchaType: this.captchaType
+        captchaType: this.captchaType,
+        clientUid: localStorage.getItem('point'),
+        ts: Date.now(), // 现在的时间戳
       }
       reqGet(data).then(res => {
         if (res.success && res.data.repCode == '0000') {
@@ -217,12 +244,17 @@ export default {
           this.poinTextList = res.data.repData.wordList
           this.text = '请依次点击【' + this.poinTextList.join(',') + '】'
         } else {
-          this.text = res.repMsg
+          this.text = res.data.repMsg
+        }
+
+        // 判断接口请求次数是否失效
+        if (res.data.repCode == '6201') {
+          this.pointBackImgBase = null
         }
       })
     },
     // 坐标转换函数
-    pointTransfrom (pointArr, imgSize) {
+    pointTransfrom(pointArr, imgSize) {
       var newPointArr = pointArr.map(p => {
         const x = Math.round(310 * p.x / parseInt(imgSize.imgWidth))
         const y = Math.round(155 * p.y / parseInt(imgSize.imgHeight))
@@ -232,20 +264,5 @@ export default {
       return newPointArr
     }
   },
-  watch: {
-    // type变化则全面刷新
-    type: {
-      immediate: true,
-      handler () {
-        this.init()
-      }
-    }
-  },
-  mounted () {
-    // 禁止拖拽
-    this.$el.onselectstart = function () {
-      return false
-    }
-  }
 }
 </script>
