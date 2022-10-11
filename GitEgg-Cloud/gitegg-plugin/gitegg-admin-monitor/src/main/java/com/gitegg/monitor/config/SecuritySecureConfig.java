@@ -50,7 +50,7 @@ public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(this.adminServer.path("/login")).permitAll().anyRequest().authenticated()
         ).formLogin(
                 (formLogin) -> formLogin.loginPage(publicUrl + "/login").loginProcessingUrl(this.adminServer.path("/login")).successHandler(successHandler).and()
-        ).logout((logout) -> logout.logoutUrl(publicUrl + "/logout")).httpBasic(Customizer.withDefaults())
+        ).logout((logout) -> logout.logoutUrl(publicUrl + "/login?logout")).httpBasic(Customizer.withDefaults())
                 .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers(
                                 new AntPathRequestMatcher(this.adminServer.path("/instances"),
