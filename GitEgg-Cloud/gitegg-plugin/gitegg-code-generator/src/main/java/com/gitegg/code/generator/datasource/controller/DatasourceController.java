@@ -42,7 +42,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/code/generator/datasource")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "DatasourceController|数据源配置表前端控制器")
+@Api(value = "DatasourceController|数据源配置表前端控制器", tags = {"数据源配置"})
 @RefreshScope
 public class DatasourceController {
 
@@ -93,7 +93,7 @@ public class DatasourceController {
     */
     @PostMapping("/delete/{datasourceId}")
     @ApiOperation(value = "删除数据源配置表")
-    @ApiImplicitParam(paramType = "path", name = "datasourceId", value = "数据源配置表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "datasourceId", value = "数据源配置表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("datasourceId") Long datasourceId) {
         if (null == datasourceId) {
             return Result.error("ID不能为空");
@@ -107,7 +107,7 @@ public class DatasourceController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除数据源配置表")
-    @ApiImplicitParam(name = "datasourceIds", value = "数据源配置表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "datasourceIds", value = "数据源配置表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> datasourceIds) {
         if (CollectionUtils.isEmpty(datasourceIds)) {
             return Result.error("数据源配置表ID列表不能为空");
@@ -147,6 +147,7 @@ public class DatasourceController {
      * @throws IOException
      */
     @GetMapping("/download")
+    @ApiOperation("导出数据")
     public void download(HttpServletResponse response, QueryDatasourceDTO queryDatasourceDTO) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -169,6 +170,7 @@ public class DatasourceController {
      * @throws IOException
      */
     @GetMapping("/download/template")
+    @ApiOperation("导出上传模板")
     public void downloadTemplate(HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -176,7 +178,7 @@ public class DatasourceController {
         String fileName = URLEncoder.encode("数据源导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "数据源列表";
-        EasyExcel.write(response.getOutputStream(), DatasourceImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), DatasourceImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
 
     /**
@@ -186,6 +188,7 @@ public class DatasourceController {
      * @throws IOException
      */
     @PostMapping("/upload")
+    @ApiOperation("批量上传数据")
     public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
         List<DatasourceImport> datasourceImportList =  EasyExcel.read(file.getInputStream(), DatasourceImport.class, null).sheet().doReadSync();
         if (!CollectionUtils.isEmpty(datasourceImportList))

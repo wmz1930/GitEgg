@@ -42,7 +42,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/extension/mail/log")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "MailLogController|邮件记录前端控制器")
+@Api(value = "MailLogController|邮件记录前端控制器", tags = {"邮件记录配置"})
 @RefreshScope
 public class MailLogController {
 
@@ -109,7 +109,7 @@ public class MailLogController {
     */
     @PostMapping("/delete/{mailLogId}")
     @ApiOperation(value = "删除邮件记录")
-    @ApiImplicitParam(paramType = "path", name = "mailLogId", value = "邮件记录ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "mailLogId", value = "邮件记录ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("mailLogId") Long mailLogId) {
         if (null == mailLogId) {
             return Result.error("ID不能为空");
@@ -126,7 +126,7 @@ public class MailLogController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除邮件记录")
-    @ApiImplicitParam(name = "mailLogIds", value = "邮件记录ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "mailLogIds", value = "邮件记录ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> mailLogIds) {
         if (CollectionUtils.isEmpty(mailLogIds)) {
             return Result.error("邮件记录ID列表不能为空");
@@ -143,6 +143,7 @@ public class MailLogController {
     * @throws IOException
     */
     @GetMapping("/download")
+    @ApiOperation("导出数据")
     public void download(HttpServletResponse response, QueryMailLogDTO queryMailLogDTO) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -166,6 +167,7 @@ public class MailLogController {
     * @throws IOException
     */
     @PostMapping("/upload")
+    @ApiOperation("批量上传数据")
     public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
     List<MailLogImport> mailLogImportList =  EasyExcel.read(file.getInputStream(), MailLogImport.class, null).sheet().doReadSync();
         if (!CollectionUtils.isEmpty(mailLogImportList))
@@ -185,6 +187,7 @@ public class MailLogController {
     * @throws IOException
     */
     @GetMapping("/download/template")
+    @ApiOperation("导出上传模板")
     public void downloadTemplate(HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -192,6 +195,6 @@ public class MailLogController {
         String fileName = URLEncoder.encode("邮件记录数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "邮件记录数据列表";
-        EasyExcel.write(response.getOutputStream(), MailLogImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), MailLogImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "resource")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "ResourceController|权限资源相关的前端控制器")
+@Api(value = "ResourceController|资源权限相关的前端控制器", tags = {"资源权限配置"})
 @RefreshScope
 public class ResourceController {
 
@@ -51,7 +51,7 @@ public class ResourceController {
      */
     @GetMapping(value = "/tree")
     @ApiOperation(value = "查询权限资源树", notes = "树状展示权限资源信息")
-    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataType = "Long")
+    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataTypeClass = Long.class)
     public Result<List<Resource>> queryResourceTree(Long parentId) {
         List<Resource> treeList = resourceService.queryResourceByParentId(parentId);
         return Result.data(treeList);
@@ -101,7 +101,7 @@ public class ResourceController {
      */
     @PostMapping("/delete/{resourceId}")
     @ApiOperation(value = "删除权限资源")
-    @ApiImplicitParam(paramType = "path", name = "resourceId", value = "权限资源ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "resourceId", value = "权限资源ID", required = true, dataTypeClass = Long.class)
     public Result<?> deleteResource(@PathVariable("resourceId") Long resourceId) {
         boolean result = resourceService.deleteResource(resourceId);
         if (result) {
@@ -117,8 +117,8 @@ public class ResourceController {
     @PostMapping("/status/{resourceId}/{resourceStatus}")
     @ApiOperation(value = "修改权限状态")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "resourceId", value = "权限ID", required = true, dataType = "Long", paramType = "path"),
-        @ApiImplicitParam(name = "resourceStatus", value = "权限状态", required = true, dataType = "Integer",
+        @ApiImplicitParam(name = "resourceId", value = "权限ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+        @ApiImplicitParam(name = "resourceStatus", value = "权限状态", required = true, dataTypeClass = Integer.class,
             paramType = "path")})
     public Result<?> updateStatus(@PathVariable("resourceId") Long resourceId,
         @PathVariable("resourceStatus") Integer resourceStatus) {

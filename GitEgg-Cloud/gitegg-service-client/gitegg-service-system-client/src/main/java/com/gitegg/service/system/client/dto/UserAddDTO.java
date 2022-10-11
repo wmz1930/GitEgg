@@ -33,19 +33,19 @@ public class UserAddDTO implements Serializable {
     private String nickname;
     
     @Length(max = 8, min = 2, message = "姓名长度范围应该在2-8位之间。")
-    @ApiModelProperty(value = "用户姓名", required = true, dataType = "String", notes = "姓名长度范围应该在2-8位之间。")
+    @ApiModelProperty(value = "用户姓名", required = true, notes = "姓名长度范围应该在2-8位之间。")
     private String realName;
     
-    @ApiModelProperty(value = "用户姓名", required = true, dataType = "String")
+    @ApiModelProperty(value = "用户姓名", required = true)
     private String mobile;
     
-    @ApiModelProperty(value = "用户姓名", required = true, dataType = "String", notes = "密码至少包含数字，字母和符号的两种")
+    @ApiModelProperty(value = "用户姓名", required = true, notes = "密码至少包含数字，字母和符号的两种")
     private String password;
     
-    @ApiModelProperty(value = "短信模板编码", required = true, dataType = "String", notes = "输入短信模板编码。")
+    @ApiModelProperty(value = "短信模板编码", required = true,  notes = "输入短信模板编码。")
     private String smsCode;
     
-    @ApiModelProperty(value = "短信验证码", required = true, dataType = "String", notes = "输入6位数短信验证码。")
+    @ApiModelProperty(value = "短信验证码", required = true, notes = "输入6位数短信验证码。")
     private String code;
     
     @ApiModelProperty(value = "邮箱")

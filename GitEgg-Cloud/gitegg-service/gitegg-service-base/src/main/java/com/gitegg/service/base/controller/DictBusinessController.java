@@ -37,7 +37,7 @@ import java.util.Map;
  */
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(tags = "gitegg-base")
+@Api(value = "DictBusinessController|业务数据字典表前端控制器", tags = {"业务数据字典配置"})
 @RefreshScope
 @RequestMapping("/business/dict")
 public class DictBusinessController {
@@ -73,7 +73,7 @@ public class DictBusinessController {
      */
     @GetMapping(value = "/tree")
     @ApiOperation(value = "查询字典树列表", notes = "查询字典树列表")
-    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataType = "Long")
+    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataTypeClass = Long.class)
     public Result<?> queryDictTree(Long parentId) {
         List<DictBusiness> treeList = dictBusinessService.queryDictBusinessTreeByParentId(parentId);
         return Result.data(treeList);
@@ -115,8 +115,8 @@ public class DictBusinessController {
     @PostMapping("/status/{dictBusinessId}/{dictBusinessStatus}")
     @ApiOperation(value = "修改数据字典状态")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "dictBusinessId", value = "数据字典ID", required = true, dataType = "Long", paramType = "path"),
-        @ApiImplicitParam(name = "dictBusinessStatus", value = "数据字典状态", required = true, dataType = "Integer",
+        @ApiImplicitParam(name = "dictBusinessId", value = "数据字典ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+        @ApiImplicitParam(name = "dictBusinessStatus", value = "数据字典状态", required = true, dataTypeClass = Integer.class,
             paramType = "path")})
     public Result<?> updateStatus(@PathVariable("dictBusinessId") Long dictBusinessId, @PathVariable("dictBusinessStatus") Integer dictBusinessStatus) {
         if (null == dictBusinessId || StringUtils.isEmpty(dictBusinessStatus)) {
@@ -134,7 +134,7 @@ public class DictBusinessController {
      */
     @PostMapping("/delete/{dictBusinessId}")
     @ApiOperation(value = "删除字典")
-    @ApiImplicitParam(paramType = "path", name = "dictBusinessId", value = "字典ID", required = true, dataType = "Integer")
+    @ApiImplicitParam(paramType = "path", name = "dictBusinessId", value = "字典ID", required = true, dataTypeClass = Integer.class)
     public Result<?> delete(@PathVariable("dictBusinessId") Long dictBusinessId) {
         boolean result = dictBusinessService.deleteDictBusiness(dictBusinessId);
         if (result) {
@@ -149,7 +149,7 @@ public class DictBusinessController {
      */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除字典")
-    @ApiImplicitParam(name = "dictBusinessIds", value = "字典ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "dictBusinessIds", value = "字典ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> dictBusinessIds) {
         if (CollectionUtils.isEmpty(dictBusinessIds)) {
             return Result.error("字典ID列表不能为空");
@@ -170,7 +170,7 @@ public class DictBusinessController {
      */
     @PostMapping(value = "/query/{dictBusinessCode}")
     @ApiOperation(value = "查询字典列表", notes = "查询字典列表")
-    @ApiImplicitParam(paramType = "query", name = "dictBusinessCode", value = "字典值", required = true, dataType = "String")
+    @ApiImplicitParam(paramType = "query", name = "dictBusinessCode", value = "字典值", required = true, dataTypeClass = String.class)
     public Result<List<DictBusiness>> queryDictBusinessList(@PathVariable("dictBusinessCode") String dictBusinessCode) {
         List<DictBusiness> dictBusinessList = dictBusinessService.queryDictBusinessListByParentCode(dictBusinessCode);
         return Result.data(dictBusinessList);
@@ -184,7 +184,7 @@ public class DictBusinessController {
      */
     @PostMapping(value = "/batch/query")
     @ApiOperation(value = "批量查询字典列表", notes = "批量查询字典列表")
-    @ApiImplicitParam(paramType = "query", name = "dictBusinessCodeList", value = "字典值", required = true, dataType = "List")
+    @ApiImplicitParam(paramType = "query", name = "dictBusinessCodeList", value = "字典值", required = true, dataTypeClass = List.class)
     public Result<Map<String, List<DictBusiness>>> queryBatchDictList(@RequestBody List<String> dictBusinessCodeList) {
         Map<String, List<DictBusiness>> resultMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(dictBusinessCodeList))

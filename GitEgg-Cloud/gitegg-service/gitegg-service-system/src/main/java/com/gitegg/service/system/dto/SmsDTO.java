@@ -20,7 +20,7 @@ public class SmsDTO {
      * 姓名
      */
     @Length(max = 8, min = 2, message = "姓名长度范围应该在2-8位之间。")
-    @ApiModelProperty(value = "姓名", required = false, dataType = "String", notes = "姓名长度范围应该在2-8位之间。")
+    @ApiModelProperty(value = "姓名", required = false, notes = "姓名长度范围应该在2-8位之间。")
     private String realName;
 
     /**
@@ -28,7 +28,7 @@ public class SmsDTO {
      */
     @NotBlank(message = "手机号不能为空")
     @Pattern(regexp = "^[1][1-9][0-9]{9}$", message = "请输入正确手机号。")
-    @ApiModelProperty(value = "手机号", required = true, dataType = "String")
+    @ApiModelProperty(value = "手机号", required = true)
     private String mobile;
 
     /**

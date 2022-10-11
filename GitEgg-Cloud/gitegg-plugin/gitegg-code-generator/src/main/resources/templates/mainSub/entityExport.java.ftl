@@ -18,7 +18,7 @@ import ${pkg};
     </#if>
 </#list>
 <#if hasDateTime?? && hasDateTime == true>
-import com.gitegg.platform.boot.excel.LocalDateTimeConverter;
+import com.alibaba.excel.converters.localdatetime.LocalDateTimeStringConverter;
 </#if>
 import com.zhxl.smartcity.device.device.entity.DeviceInfoExport;
 import ${mainPackagePath}.entity.${mainEntityName}Export;
@@ -75,7 +75,7 @@ public class ${entity}Export extends ${mainEntityName}Export {
      */
         </#if>
     </#if>
-    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.entityType?? && field.entityType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)
+    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.entityType?? && field.entityType == "LocalDateTime">, converter = LocalDateTimeStringConverter.class</#if>)
     @ColumnWidth(20)
 <#if field?? && field.entityType?? && field.entityType == "LocalDateTime">
     @DateTimeFormat("yyyy-MM-dd HH:mm:ss")

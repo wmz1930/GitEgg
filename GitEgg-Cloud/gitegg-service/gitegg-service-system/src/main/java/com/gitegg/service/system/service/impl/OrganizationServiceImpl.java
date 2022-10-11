@@ -16,6 +16,8 @@ import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitegg.boot.system.dto.QueryOrganizationDTO;
+import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.service.system.entity.Organization;
 import com.gitegg.service.system.mapper.OrganizationMapper;
@@ -61,15 +63,13 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
     }
 
     @Override
-    public List<Organization> queryOrganizationByParentId(Long parentId) {
+    public List<Organization> queryOrganizationByParentId(Organization organization) {
         List<Organization> orgs;
         try {
-            if (null == parentId) {
-                parentId = GitEggConstant.PARENT_ID;
+            if (null == organization.getParentId()) {
+                organization.setParentId(GitEggConstant.PARENT_ID);
             }
-            Organization organizationParent = new Organization();
-            organizationParent.setParentId(parentId);
-            List<Organization> orgList = organizationMapper.selectOrganizationChildren(organizationParent);
+            List<Organization> orgList = organizationMapper.selectOrganizationChildren(organization);
             Map<Long, Organization> organizationMap = new HashMap<>();
             orgs = this.assembleOrganizationTree(orgList, organizationMap);
         } catch (Exception e) {
@@ -77,6 +77,19 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
             throw new BusinessException("查询组织树失败");
         }
         return orgs;
+    }
+
+    @Override
+    public List<Organization> queryOrganizationList(Organization organization) {
+        try {
+            if (null == organization.getParentId()) {
+                organization.setParentId(GitEggConstant.PARENT_ID);
+            }
+            return organizationMapper.selectOrganizationList(organization);
+        } catch (Exception e) {
+            log.error("查询组织树失败:", e);
+            throw new BusinessException("查询组织树失败");
+        }
     }
 
     @Override

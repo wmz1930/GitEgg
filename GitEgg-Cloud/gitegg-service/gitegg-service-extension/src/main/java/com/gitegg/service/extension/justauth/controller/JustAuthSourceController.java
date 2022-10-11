@@ -46,7 +46,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/extension/justauth/source")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "JustAuthSourceController|租户第三方登录信息配置表前端控制器")
+@Api(value = "JustAuthSourceController|租户第三方登录信息配置表前端控制器", tags = {"第三方登录信息配置"})
 @RefreshScope
 public class JustAuthSourceController {
 
@@ -113,7 +113,7 @@ public class JustAuthSourceController {
     */
     @PostMapping("/delete/{justAuthSourceId}")
     @ApiOperation(value = "删除租户第三方登录信息配置表")
-    @ApiImplicitParam(paramType = "path", name = "justAuthSourceId", value = "租户第三方登录信息配置表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "justAuthSourceId", value = "租户第三方登录信息配置表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("justAuthSourceId") Long justAuthSourceId) {
         if (null == justAuthSourceId) {
             return Result.error("ID不能为空");
@@ -130,7 +130,7 @@ public class JustAuthSourceController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除租户第三方登录信息配置表")
-    @ApiImplicitParam(name = "justAuthSourceIds", value = "租户第三方登录信息配置表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "justAuthSourceIds", value = "租户第三方登录信息配置表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> justAuthSourceIds) {
         if (CollectionUtils.isEmpty(justAuthSourceIds)) {
             return Result.error("租户第三方登录信息配置表ID列表不能为空");
@@ -148,8 +148,8 @@ public class JustAuthSourceController {
      @PostMapping("/status/{justAuthSourceId}/{status}")
      @ApiOperation(value = "修改租户第三方登录信息配置表状态")
      @ApiImplicitParams({
-     @ApiImplicitParam(name = "justAuthSourceId", value = "租户第三方登录信息配置表ID", required = true, dataType = "Long", paramType = "path"),
-     @ApiImplicitParam(name = "status", value = "租户第三方登录信息配置表状态", required = true, dataType = "Integer", paramType = "path") })
+     @ApiImplicitParam(name = "justAuthSourceId", value = "租户第三方登录信息配置表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+     @ApiImplicitParam(name = "status", value = "租户第三方登录信息配置表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
      public Result<?> updateStatus(@PathVariable("justAuthSourceId") Long justAuthSourceId,
          @PathVariable("status") Integer status) {
 
@@ -171,6 +171,7 @@ public class JustAuthSourceController {
     * @throws IOException
     */
     @GetMapping("/download")
+    @ApiOperation("导出数据")
     public void download(HttpServletResponse response, QueryJustAuthSourceDTO queryJustAuthSourceDTO) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -194,6 +195,7 @@ public class JustAuthSourceController {
     * @throws IOException
     */
     @PostMapping("/upload")
+    @ApiOperation("批量上传数据")
     public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
     List<JustAuthSourceImport> justAuthSourceImportList =  EasyExcel.read(file.getInputStream(), JustAuthSourceImport.class, null).sheet().doReadSync();
         if (!CollectionUtils.isEmpty(justAuthSourceImportList))
@@ -213,6 +215,7 @@ public class JustAuthSourceController {
     * @throws IOException
     */
     @GetMapping("/download/template")
+    @ApiOperation("导出上传模板")
     public void downloadTemplate(HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -220,6 +223,6 @@ public class JustAuthSourceController {
         String fileName = URLEncoder.encode("租户第三方登录信息配置表数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "租户第三方登录信息配置表数据列表";
-        EasyExcel.write(response.getOutputStream(), JustAuthSourceImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), JustAuthSourceImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

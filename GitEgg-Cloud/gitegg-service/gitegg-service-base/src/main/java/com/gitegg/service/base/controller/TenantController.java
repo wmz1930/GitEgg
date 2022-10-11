@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/base/tenant")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "TenantController|租户信息表前端控制器")
+@Api(value = "TenantController|租户信息表前端控制器", tags = {"租户信息配置"})
 @RefreshScope
 public class TenantController {
 
@@ -89,7 +89,7 @@ public class TenantController {
      */
     @PostMapping("/delete/{tenantId}")
     @ApiOperation(value = "删除租户信息表")
-    @ApiImplicitParam(paramType = "path", name = "tenantId", value = "租户信息表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "tenantId", value = "租户信息表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("tenantId") Long tenantId) {
         if (null == tenantId) {
             return Result.error("ID不能为空");
@@ -103,7 +103,7 @@ public class TenantController {
      */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除租户信息表")
-    @ApiImplicitParam(name = "tenantIds", value = "租户信息表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "tenantIds", value = "租户信息表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> tenantIds) {
         if (CollectionUtils.isEmpty(tenantIds)) {
             return Result.error("租户信息表ID列表不能为空");
@@ -118,8 +118,8 @@ public class TenantController {
     @PostMapping("/status/{tenantId}/{tenantStatus}")
     @ApiOperation(value = "修改租户信息表状态")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "tenantId", value = "租户信息表ID", required = true, dataType = "Long", paramType = "path"),
-        @ApiImplicitParam(name = "tenantStatus", value = "租户信息表状态", required = true, dataType = "Integer",
+        @ApiImplicitParam(name = "tenantId", value = "租户信息表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+        @ApiImplicitParam(name = "tenantStatus", value = "租户信息表状态", required = true, dataTypeClass = Integer.class,
             paramType = "path")})
     public Result<?> updateStatus(@PathVariable("tenantId") Long tenantId,
         @PathVariable("tenantStatus") Integer tenantStatus) {

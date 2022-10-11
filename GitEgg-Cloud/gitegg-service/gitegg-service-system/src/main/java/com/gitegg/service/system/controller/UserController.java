@@ -43,7 +43,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "user")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "UserController|用户相关的前端控制器")
+@Api(value = "UserController|用户相关的前端控制器", tags = {"用户配置"})
 @RefreshScope
 public class UserController {
 
@@ -60,13 +60,13 @@ public class UserController {
     @GetMapping("/list")
     @ApiOperation(value = "查询用户列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "realName", value = "用户名", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "mobile", value = "手机号", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "email", value = "邮箱", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "roleId", value = "角色", required = false, dataType = "Integer", paramType = "query"),
-            @ApiImplicitParam(name = "status", value = "用户状态", required = false, dataType = "Integer", paramType = "query"),
-            @ApiImplicitParam(name = "size", value = "每页条数", required = false, dataType = "Integer", paramType = "query"),
-            @ApiImplicitParam(name = "current", value = "当前页", required = false, dataType = "Integer", paramType = "query") })
+            @ApiImplicitParam(name = "realName", value = "用户名", required = false, dataTypeClass = String.class, paramType = "query"),
+            @ApiImplicitParam(name = "mobile", value = "手机号", required = false, dataTypeClass = String.class, paramType = "query"),
+            @ApiImplicitParam(name = "email", value = "邮箱", required = false, dataTypeClass = String.class, paramType = "query"),
+            @ApiImplicitParam(name = "roleId", value = "角色", required = false, dataTypeClass = Integer.class, paramType = "query"),
+            @ApiImplicitParam(name = "status", value = "用户状态", required = false, dataTypeClass = Integer.class, paramType = "query"),
+            @ApiImplicitParam(name = "size", value = "每页条数", required = false, dataTypeClass = Integer.class, paramType = "query"),
+            @ApiImplicitParam(name = "current", value = "当前页", required = false, dataTypeClass = Integer.class, paramType = "query") })
 //    @ResubmitLock(interval = 60, argsIndex = {0}, ignoreKeys = {"email","status"})
     public PageResult<UserInfo> list(@ApiIgnore QueryUserDTO user, @ApiIgnore Page<UserInfo> page) {
         Page<UserInfo> pageUser = userService.selectUserList(page, user);
@@ -104,7 +104,7 @@ public class UserController {
      */
     @PostMapping("/delete/{userId}")
     @ApiOperation(value = "删除用户")
-    @ApiImplicitParam(paramType = "path", name = "userId", value = "用户ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "userId", value = "用户ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("userId") Long userId) {
         if (null == userId) {
             return Result.error("用户ID不能为空");
@@ -122,7 +122,7 @@ public class UserController {
      */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除用户")
-    @ApiImplicitParam(name = "userIds", value = "用户ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "userIds", value = "用户ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> userIds) {
         if (CollectionUtils.isEmpty(userIds)) {
             return Result.error("用户ID列表不能为空");
@@ -165,7 +165,7 @@ public class UserController {
      */
     @PostMapping("password/reset/{userId}")
     @ApiOperation(value = "管理员重置用户密码")
-    @ApiImplicitParam(paramType = "path", name = "userId", value = "用户ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "userId", value = "用户ID", required = true, dataTypeClass = Long.class)
     public Result<?> resetPassword(@PathVariable("userId") Long userId) {
         if (null == userId) {
             return Result.error("用户ID不能为空");
@@ -187,8 +187,8 @@ public class UserController {
     @PostMapping("/status/{userId}/{status}")
     @ApiOperation(value = "管理员修改用户状态")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long", paramType = "path"),
-        @ApiImplicitParam(name = "status", value = "用户状态", required = true, dataType = "Integer", paramType = "path")})
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+        @ApiImplicitParam(name = "status", value = "用户状态", required = true, dataTypeClass = Integer.class, paramType = "path")})
     public Result<?> updateStatus(@PathVariable("userId") Long userId, @PathVariable("status") Integer status) {
         if (null == userId || StringUtils.isEmpty(status)) {
             return Result.error("ID和状态不能为空");
@@ -282,7 +282,7 @@ public class UserController {
      */
     @PostMapping("/organization/data/permission/batch/delete")
     @ApiOperation(value = "批量删除机构下的用户权限关系")
-    @ApiImplicitParam(name = "dataPermissionUserIds", value = "ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "dataPermissionUserIds", value = "ID列表", required = true, dataTypeClass = List.class)
     public Result<?> organizationDataUserBatchDelete(@RequestBody List<Long> dataPermissionUserIds) {
         if (CollectionUtils.isEmpty(dataPermissionUserIds)) {
             return Result.error("ID列表不能为空");

@@ -1,6 +1,6 @@
 package ${package.Controller};
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +58,7 @@ import ${superControllerClassPackage};
 </#if>
 @RequestMapping("<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "${table.controllerName}|${table.comment!}前端控制器")
+@Api(value = "${table.controllerName}|${table.comment!}前端控制器", tags = {"${table.comment!}"})
 @RefreshScope
 <#if kotlin>
 class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
@@ -132,7 +132,7 @@ public class ${table.controllerName} {
     */
     @PostMapping("/delete/{${table.entityPath}Id}")
     @ApiOperation(value = "删除${table.comment!}")
-    @ApiImplicitParam(paramType = "path", name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("${table.entityPath}Id") Long ${table.entityPath}Id) {
         if (null == ${table.entityPath}Id) {
             return Result.error("ID不能为空");
@@ -149,7 +149,7 @@ public class ${table.controllerName} {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除${table.comment!}")
-    @ApiImplicitParam(name = "${table.entityPath}Ids", value = "${table.comment!}ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "${table.entityPath}Ids", value = "${table.comment!}ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> ${table.entityPath}Ids) {
         if (CollectionUtils.isEmpty(${table.entityPath}Ids)) {
             return Result.error("${table.comment!}ID列表不能为空");
@@ -238,6 +238,7 @@ public class ${table.controllerName} {
     * @throws IOException
     */
     @GetMapping("/download")
+    @ApiOperation("导出数据")
     public void download(HttpServletResponse response, Query${entity}DTO query${entity}DTO) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -263,6 +264,7 @@ public class ${table.controllerName} {
     * @throws IOException
     */
     @PostMapping("/upload")
+    @ApiOperation("批量上传数据")
     public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
     List<${entity}Import> ${table.entityPath}ImportList =  EasyExcel.read(file.getInputStream(), ${entity}Import.class, null).sheet().doReadSync();
         if (!CollectionUtils.isEmpty(${table.entityPath}ImportList))
@@ -282,6 +284,7 @@ public class ${table.controllerName} {
     * @throws IOException
     */
     @GetMapping("/download/template")
+    @ApiOperation("导出上传模板")
     public void downloadTemplate(HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -289,7 +292,7 @@ public class ${table.controllerName} {
         String fileName = URLEncoder.encode("${table.comment!}数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "${table.comment!}数据列表";
-        EasyExcel.write(response.getOutputStream(), ${entity}Import.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), ${entity}Import.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
     </#if>
  }

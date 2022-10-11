@@ -16,7 +16,11 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 </#if>
 </#if>
+<#if tableShowType?? && tableShowType == "tree_table">
 
+import java.util.List;
+
+</#if>
 /**
 * <p>
 * ${table.comment!}
@@ -99,7 +103,17 @@ public class ${entity} implements Serializable {
     private ${field.propertyType} ${field.propertyName};
 </#list>
 <#------------  END 字段循环遍历  ---------->
+<#if tableShowType?? && tableShowType == "tree_table">
 
+    @ApiModelProperty(value = "是否是叶子节点", notes = "查询时，如果此值为 1，则表示只查询子节点")
+    @TableField(exist = false)
+    private Integer isLeaf;
+
+    @ApiModelProperty(value = "子节点")
+    @TableField(exist = false)
+    private List<${entity}DTO> children;
+
+</#if>
 <#if !entityLombokModel>
     <#list table.fields as field>
         <#if field.propertyType == "boolean">

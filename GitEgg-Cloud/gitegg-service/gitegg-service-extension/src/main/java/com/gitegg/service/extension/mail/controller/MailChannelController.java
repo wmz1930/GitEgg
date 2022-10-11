@@ -44,7 +44,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/extension/mail/channel")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "MailChannelController|邮件渠道表前端控制器")
+@Api(value = "MailChannelController|邮件渠道表前端控制器", tags = {"邮件渠道配置"})
 @RefreshScope
 public class MailChannelController {
 
@@ -111,7 +111,7 @@ public class MailChannelController {
     */
     @PostMapping("/delete/{mailChannelId}")
     @ApiOperation(value = "删除邮件渠道表")
-    @ApiImplicitParam(paramType = "path", name = "mailChannelId", value = "邮件渠道表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "mailChannelId", value = "邮件渠道表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("mailChannelId") Long mailChannelId) {
         if (null == mailChannelId) {
             return Result.error("ID不能为空");
@@ -128,7 +128,7 @@ public class MailChannelController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除邮件渠道表")
-    @ApiImplicitParam(name = "mailChannelIds", value = "邮件渠道表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "mailChannelIds", value = "邮件渠道表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> mailChannelIds) {
         if (CollectionUtils.isEmpty(mailChannelIds)) {
             return Result.error("邮件渠道表ID列表不能为空");
@@ -146,8 +146,8 @@ public class MailChannelController {
      @PostMapping("/status/{mailChannelId}/{channelStatus}")
      @ApiOperation(value = "修改邮件渠道表状态")
      @ApiImplicitParams({
-     @ApiImplicitParam(name = "mailChannelId", value = "邮件渠道表ID", required = true, dataType = "Long", paramType = "path"),
-     @ApiImplicitParam(name = "channelStatus", value = "邮件渠道表状态", required = true, dataType = "Integer", paramType = "path") })
+     @ApiImplicitParam(name = "mailChannelId", value = "邮件渠道表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+     @ApiImplicitParam(name = "channelStatus", value = "邮件渠道表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
      public Result<?> updateStatus(@PathVariable("mailChannelId") Long mailChannelId,
          @PathVariable("channelStatus") Integer channelStatus) {
 
@@ -169,6 +169,7 @@ public class MailChannelController {
     * @throws IOException
     */
     @GetMapping("/download")
+    @ApiOperation("导出数据")
     public void download(HttpServletResponse response, QueryMailChannelDTO queryMailChannelDTO) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -192,6 +193,7 @@ public class MailChannelController {
     * @throws IOException
     */
     @PostMapping("/upload")
+    @ApiOperation("批量上传数据")
     public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
     List<MailChannelImport> mailChannelImportList =  EasyExcel.read(file.getInputStream(), MailChannelImport.class, null).sheet().doReadSync();
         if (!CollectionUtils.isEmpty(mailChannelImportList))
@@ -211,6 +213,7 @@ public class MailChannelController {
     * @throws IOException
     */
     @GetMapping("/download/template")
+    @ApiOperation("导出上传模板")
     public void downloadTemplate(HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -218,6 +221,6 @@ public class MailChannelController {
         String fileName = URLEncoder.encode("邮件渠道表数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "邮件渠道表数据列表";
-        EasyExcel.write(response.getOutputStream(), MailChannelImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), MailChannelImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

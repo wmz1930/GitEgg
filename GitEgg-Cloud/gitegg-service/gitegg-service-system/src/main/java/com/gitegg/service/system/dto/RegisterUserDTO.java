@@ -37,26 +37,26 @@ public class RegisterUserDTO implements Serializable {
     private String nickname;
     
     @Length(max = 8, min = 2, message = "姓名长度范围应该在2-8位之间。")
-    @ApiModelProperty(value = "用户姓名", required = true, dataType = "String", notes = "姓名长度范围应该在2-8位之间。")
+    @ApiModelProperty(value = "用户姓名", required = true, notes = "姓名长度范围应该在2-8位之间。")
     private String realName;
 
     @NotBlank(message = "手机号不能为空")
     @Pattern(regexp = "^[1][1-9][0-9]{9}$", message = "请输入正确手机号。")
-    @ApiModelProperty(value = "用户姓名", required = true, dataType = "String")
+    @ApiModelProperty(value = "用户姓名", required = true)
     private String mobile;
 
     @NotBlank(message = "密码不能为空")
 //    @Pattern(regexp = "^(?=.*[a-zA-Z0-9].*)(?=.*[a-zA-Z.!@#$%^&*].*)(?=.*[0-9.!@#$%^&*].*).{6,64}$", message = "密码至少包含数字，字母和符号的两种")
-    @ApiModelProperty(value = "用户姓名", required = true, dataType = "String", notes = "密码至少包含数字，字母和符号的两种")
+    @ApiModelProperty(value = "用户姓名", required = true, notes = "密码至少包含数字，字母和符号的两种")
     private String password;
 
     @NotBlank(message = "短信模板编码")
-    @ApiModelProperty(value = "短信模板编码", required = true, dataType = "String", notes = "输入短信模板编码。")
+    @ApiModelProperty(value = "短信模板编码", required = true, notes = "输入短信模板编码。")
     private String smsCode;
     
     @NotBlank(message = "短信验证码不能为空")
     @Length(max = 6, min = 6, message = "请输入6位数短信验证码。")
-    @ApiModelProperty(value = "短信验证码", required = true, dataType = "String", notes = "输入6位数短信验证码。")
+    @ApiModelProperty(value = "短信验证码", required = true, notes = "输入6位数短信验证码。")
     private String code;
     
     @ApiModelProperty(value = "邮箱")

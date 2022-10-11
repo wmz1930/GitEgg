@@ -19,7 +19,7 @@ import ${pkg};
     </#if>
 </#list>
 <#if hasDateTime?? && hasDateTime == true>
-import com.gitegg.platform.boot.excel.LocalDateTimeConverter;
+import com.alibaba.excel.converters.localdatetime.LocalDateTimeStringConverter;
 </#if>
 <#if swagger>
 import io.swagger.annotations.ApiModel;
@@ -74,7 +74,7 @@ public class ${entity}Import extends ${mainEntityName}Import {
     */
             </#if>
 </#if>
-    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.entityType?? && field.entityType == "LocalDateTime">, converter = LocalDateTimeConverter.class</#if>)
+    @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.entityType?? && field.entityType == "LocalDateTime">, converter = LocalDateTimeStringConverter.class</#if>)
     @ColumnWidth(20)
 <#if field?? && field.entityType?? && field.entityType == "LocalDateTime">
     @DateTimeFormat("yyyy-MM-dd HH:mm:ss")

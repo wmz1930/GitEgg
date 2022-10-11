@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/extension/dfs")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "DfsController|分布式存储配置表前端控制器")
+@Api(value = "DfsController|分布式存储配置表前端控制器", tags = {"分布式存储配置"})
 @RefreshScope
 public class DfsController {
 
@@ -93,7 +93,7 @@ public class DfsController {
     */
     @PostMapping("/delete/{dfsId}")
     @ApiOperation(value = "删除分布式存储配置表")
-    @ApiImplicitParam(paramType = "path", name = "dfsId", value = "分布式存储配置表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "dfsId", value = "分布式存储配置表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("dfsId") Long dfsId) {
         if (null == dfsId) {
             return Result.error("ID不能为空");
@@ -107,7 +107,7 @@ public class DfsController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除分布式存储配置表")
-    @ApiImplicitParam(name = "dfsIds", value = "分布式存储配置表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "dfsIds", value = "分布式存储配置表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> dfsIds) {
         if (CollectionUtils.isEmpty(dfsIds)) {
             return Result.error("分布式存储配置表ID列表不能为空");
@@ -122,8 +122,8 @@ public class DfsController {
     @PostMapping("/status/{dfsId}/{dfsStatus}")
     @ApiOperation(value = "修改分布式存储配置表状态")
     @ApiImplicitParams({
-    @ApiImplicitParam(name = "dfsId", value = "分布式存储配置表ID", required = true, dataType = "Long", paramType = "path"),
-    @ApiImplicitParam(name = "dfsStatus", value = "分布式存储配置表状态", required = true, dataType = "Integer", paramType = "path") })
+    @ApiImplicitParam(name = "dfsId", value = "分布式存储配置表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+    @ApiImplicitParam(name = "dfsStatus", value = "分布式存储配置表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
     public Result<?> updateStatus(@PathVariable("dfsId") Long dfsId,
             @PathVariable("dfsStatus") Integer dfsStatus) {
         if (null == dfsId || StringUtils.isEmpty(dfsStatus)) {
@@ -142,7 +142,7 @@ public class DfsController {
     @PostMapping("/default/{dfsId}")
     @ApiOperation(value = "修改分布式存储配置为默认")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "dfsId", value = "分布式存储配置表ID", required = true, dataType = "Long", paramType = "path")})
+            @ApiImplicitParam(name = "dfsId", value = "分布式存储配置表ID", required = true, dataTypeClass = Long.class, paramType = "path")})
     public Result<?> updateDefaultResult(@PathVariable("dfsId") Long dfsId) {
         if (null == dfsId) {
             return Result.error("ID不能为空");

@@ -41,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/data/permission/role")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "DataPermissionRoleController|数据权限配置表前端控制器")
+@Api(value = "DataPermissionRoleController|数据权限配置表前端控制器", tags = {"数据权限配置"})
 @RefreshScope
 public class DataPermissionController {
 
@@ -94,7 +94,7 @@ public class DataPermissionController {
     */
     @PostMapping("/delete/{dataPermissionRoleId}")
     @ApiOperation(value = "删除数据权限配置表")
-    @ApiImplicitParam(paramType = "path", name = "dataPermissionRoleId", value = "数据权限配置表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "dataPermissionRoleId", value = "数据权限配置表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("dataPermissionRoleId") Long dataPermissionRoleId) {
         if (null == dataPermissionRoleId) {
             return Result.error("ID不能为空");
@@ -108,7 +108,7 @@ public class DataPermissionController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除数据权限配置表")
-    @ApiImplicitParam(name = "dataPermissionRoleIds", value = "数据权限配置表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "dataPermissionRoleIds", value = "数据权限配置表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> dataPermissionRoleIds) {
         if (CollectionUtils.isEmpty(dataPermissionRoleIds)) {
             return Result.error("数据权限配置表ID列表不能为空");
@@ -123,8 +123,8 @@ public class DataPermissionController {
     @PostMapping("/status/{dpId}/{dpStatus}")
     @ApiOperation(value = "修改数据权限配置表状态")
     @ApiImplicitParams({
-    @ApiImplicitParam(name = "dpId", value = "数据权限配置表ID", required = true, dataType = "Long", paramType = "path"),
-    @ApiImplicitParam(name = "dpStatus", value = "数据权限配置表状态", required = true, dataType = "Integer", paramType = "path") })
+    @ApiImplicitParam(name = "dpId", value = "数据权限配置表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+    @ApiImplicitParam(name = "dpStatus", value = "数据权限配置表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
     public Result<?> updateStatus(@PathVariable("dpId") Long dpId,
             @PathVariable("dpStatus") Integer dpStatus) {
         if (null == dpId || StringUtils.isEmpty(dpStatus)) {
@@ -169,7 +169,7 @@ public class DataPermissionController {
      */
     @GetMapping(value = "/get/roles/{id}")
     @ApiOperation(value = "获取拥有某个数据权限的所有角色列表")
-    @ApiImplicitParam(paramType = "path", name = "id", value = "数据权限ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "id", value = "数据权限ID", required = true, dataTypeClass = Long.class)
     public Result<List<RoleDataPermission>> queryPermissionRoles(@PathVariable("id") Long id) {
         LambdaQueryWrapper<RoleDataPermission> ew = new LambdaQueryWrapper<>();
         ew.eq(RoleDataPermission::getDataPermissionId, id);

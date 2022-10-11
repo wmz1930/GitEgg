@@ -18,6 +18,7 @@ import java.util.Map;
 
 /**
  * 验证码模式
+ * @author GitEgg
  */
 public class CaptchaTokenGranter extends AbstractTokenGranter {
 

@@ -31,7 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/code/generator/engine")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "EngineController|字段属性前端控制器")
+@Api(value = "EngineController|代码生成引擎前端控制器", tags = {"代码生成接口"})
 @RefreshScope
 public class EngineController {
 

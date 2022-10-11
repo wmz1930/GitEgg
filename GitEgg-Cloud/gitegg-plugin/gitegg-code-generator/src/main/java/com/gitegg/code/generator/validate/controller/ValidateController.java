@@ -46,7 +46,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/code/generator/validate")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "ValidateController|字段校验规则配置表前端控制器")
+@Api(value = "ValidateController|字段校验规则配置表前端控制器", tags = {"字段校验规则配置"})
 @RefreshScope
 public class ValidateController {
 
@@ -126,7 +126,7 @@ public class ValidateController {
     */
     @PostMapping("/delete/{validateId}")
     @ApiOperation(value = "删除字段校验规则配置表")
-    @ApiImplicitParam(paramType = "path", name = "validateId", value = "字段校验规则配置表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "validateId", value = "字段校验规则配置表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("validateId") Long validateId) {
         if (null == validateId) {
             return Result.error("ID不能为空");
@@ -143,7 +143,7 @@ public class ValidateController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除字段校验规则配置表")
-    @ApiImplicitParam(name = "validateIds", value = "字段校验规则配置表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "validateIds", value = "字段校验规则配置表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> validateIds) {
         if (CollectionUtils.isEmpty(validateIds)) {
             return Result.error("字段校验规则配置表ID列表不能为空");
@@ -161,8 +161,8 @@ public class ValidateController {
      @PostMapping("/status/{validateId}/{status}")
      @ApiOperation(value = "修改字段校验规则配置表状态")
      @ApiImplicitParams({
-     @ApiImplicitParam(name = "validateId", value = "字段校验规则配置表ID", required = true, dataType = "Long", paramType = "path"),
-     @ApiImplicitParam(name = "status", value = "字段校验规则配置表状态", required = true, dataType = "Integer", paramType = "path") })
+     @ApiImplicitParam(name = "validateId", value = "字段校验规则配置表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+     @ApiImplicitParam(name = "status", value = "字段校验规则配置表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
      public Result<?> updateStatus(@PathVariable("validateId") Long validateId,
          @PathVariable("status") Integer status) {
 
@@ -207,6 +207,7 @@ public class ValidateController {
     * @throws IOException
     */
     @GetMapping("/download")
+    @ApiOperation("导出数据")
     public void download(HttpServletResponse response, QueryValidateDTO queryValidateDTO) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -230,6 +231,7 @@ public class ValidateController {
     * @throws IOException
     */
     @PostMapping("/upload")
+    @ApiOperation("批量上传数据")
     public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
     List<ValidateImport> validateImportList =  EasyExcel.read(file.getInputStream(), ValidateImport.class, null).sheet().doReadSync();
         if (!CollectionUtils.isEmpty(validateImportList))
@@ -249,6 +251,7 @@ public class ValidateController {
     * @throws IOException
     */
     @GetMapping("/download/template")
+    @ApiOperation("导出上传模板")
     public void downloadTemplate(HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -256,6 +259,6 @@ public class ValidateController {
         String fileName = URLEncoder.encode("字段校验规则配置表数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "字段校验规则配置表数据列表";
-        EasyExcel.write(response.getOutputStream(), ValidateImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), ValidateImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

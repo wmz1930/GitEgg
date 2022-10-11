@@ -312,8 +312,19 @@ public class EngineServiceImpl implements IEngineService {
                     // Export and Import
                     customFileMap.put(exportFile, CustomFileEnum.EXPORT.path);
                     customFileMap.put(importFile, CustomFileEnum.IMPORT.path);
-                    // SQL
-                    customFileMap.put(sqlFile, CustomFileEnum.SQL.path);
+
+
+                    // TODO 要支持树形表、左树右表、左表右表、左表右树、左树右树形表、左树右树
+                    if("table".equals(config.getTableShowType()))
+                    {
+                        // SQL
+                        customFileMap.put(sqlFile, CustomFileEnum.SQL.path);
+                    }
+                    else if("tree_table".equals(config.getTableShowType()))
+                    {
+                        // SQL
+                        customFileMap.put(sqlFile, "/templates/singleTable/tree_table/resource.sql.ftl");
+                    }
 
                     //因为目前版本框架只支持自定义输出到other目录，所以这里利用重写AbstractTemplateEngine的outputCustomFile方法支持所有自定义文件输出目录
                     Map<String, String> customFilePath = new HashMap<>();
@@ -339,6 +350,9 @@ public class EngineServiceImpl implements IEngineService {
                             servicePath = frontCodeDir + servicePath ;
                         }
                     }
+
+                    String tableShowType = config.getTableShowType();
+                    customMap.put(CodeGeneratorConstant.TABLE_SHOW_TYPE, tableShowType);
 
                     //判断是否生成后端代码
                     if (config.getCodeType().equals(CodeGeneratorConstant.CODE_ALL) || config.getCodeType().equals(CodeGeneratorConstant.CODE_SERVICE))
@@ -372,8 +386,17 @@ public class EngineServiceImpl implements IEngineService {
                         customFilePath.put(jsFile, jsPath);
                         // VUE AND JS
                         // TODO 要支持树形表、左树右表、左表右表、左表右树、左树右树形表、左树右树
-                        customFileMap.put(vueFile, CustomFileEnum.VUE.path);
-                        customFileMap.put(jsFile, CustomFileEnum.JS.path);
+                        if("table".equals(tableShowType))
+                        {
+                            customFileMap.put(vueFile, CustomFileEnum.VUE.path);
+                            customFileMap.put(jsFile, CustomFileEnum.JS.path);
+                        }
+                        else if("tree_table".equals(tableShowType))
+                        {
+                            customFileMap.put(vueFile, "/templates/singleTable/tree_table/page.vue.ftl");
+                            customFileMap.put(jsFile, "/templates/singleTable/tree_table/page.js.ftl");
+                        }
+
                         customMap.put(GitEggCodeGeneratorConstant.VUE_TABLE_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFile);
                         customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH)) + config.getModuleCode() + StrUtil.SLASH + config.getModuleCode());
                     }
@@ -419,12 +442,27 @@ public class EngineServiceImpl implements IEngineService {
                     {
                         builder.mapperXml(CustomFileEnum.MAPPER_XML_FILE.path);
                     }
-                    builder.entity(CustomFileEnum.ENTITY_FILE.path)
-                            .service(CustomFileEnum.SERVICE_FILE.path)
-                            .serviceImpl(CustomFileEnum.SERVICE_IMPL_FILE.path)
-                            .mapper(CustomFileEnum.MAPPER_FILE.path)
-                            .controller(CustomFileEnum.CONTROLLER_FILE.path)
-                            .build();
+                    // TODO 要支持树形表、左树右表、左表右表、左表右树、左树右树形表、左树右树
+                    if("table".equals(config.getTableShowType()))
+                    {
+                        builder.entity(CustomFileEnum.ENTITY_FILE.path)
+                                .service(CustomFileEnum.SERVICE_FILE.path)
+                                .serviceImpl(CustomFileEnum.SERVICE_IMPL_FILE.path)
+                                .mapper(CustomFileEnum.MAPPER_FILE.path)
+                                .controller(CustomFileEnum.CONTROLLER_FILE.path)
+                                .mapperXml(CustomFileEnum.MAPPER_XML_FILE.path)
+                                .build();
+                    }
+                    else if("tree_table".equals(config.getTableShowType()))
+                    {
+                        builder.entity(CustomFileEnum.ENTITY_FILE.path)
+                                .service("/templates/singleTable/tree_table/service.java")
+                                .serviceImpl("/templates/singleTable/tree_table/serviceImpl.java")
+                                .mapper("/templates/singleTable/tree_table/mapper.java")
+                                .controller("/templates/singleTable/tree_table/controller.java")
+                                .mapperXml("/templates/singleTable/tree_table/mapper.xml")
+                                .build();
+                    }
                 })
                 // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .templateEngine(new GitEggFreemarkerTemplateEngine())

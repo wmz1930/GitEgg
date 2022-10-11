@@ -33,7 +33,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/extension/sms")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "SmsController|短信配置表前端控制器")
+@Api(value = "SmsController|短信配置表前端控制器", tags = {"短信发送服务"})
 @RefreshScope
 public class SmsController {
     

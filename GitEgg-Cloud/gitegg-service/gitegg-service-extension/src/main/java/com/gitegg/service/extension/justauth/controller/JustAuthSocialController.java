@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 /**
 * <p>
-* 租户第三方登录功能配置表 前端控制器
+* 租户第三方登录渠道配置表 前端控制器
 * </p>
 *
 * @author GitEgg
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/extension/justauth/social")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "JustAuthSocialController|租户第三方登录功能配置表前端控制器")
+@Api(value = "JustAuthSocialController|租户第三方登录渠道配置表前端控制器", tags = {"第三方登录渠道配置"})
 @RefreshScope
 public class JustAuthSocialController {
 
@@ -112,7 +112,7 @@ public class JustAuthSocialController {
     */
     @PostMapping("/delete/{justAuthSocialId}")
     @ApiOperation(value = "删除租户第三方登录功能配置表")
-    @ApiImplicitParam(paramType = "path", name = "justAuthSocialId", value = "租户第三方登录功能配置表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "justAuthSocialId", value = "租户第三方登录功能配置表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("justAuthSocialId") Long justAuthSocialId) {
         if (null == justAuthSocialId) {
             return Result.error("ID不能为空");
@@ -129,7 +129,7 @@ public class JustAuthSocialController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除租户第三方登录功能配置表")
-    @ApiImplicitParam(name = "justAuthSocialIds", value = "租户第三方登录功能配置表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "justAuthSocialIds", value = "租户第三方登录功能配置表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> justAuthSocialIds) {
         if (CollectionUtils.isEmpty(justAuthSocialIds)) {
             return Result.error("租户第三方登录功能配置表ID列表不能为空");
@@ -146,6 +146,7 @@ public class JustAuthSocialController {
     * @throws IOException
     */
     @GetMapping("/download")
+    @ApiOperation("导出数据")
     public void download(HttpServletResponse response, QueryJustAuthSocialDTO queryJustAuthSocialDTO) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");

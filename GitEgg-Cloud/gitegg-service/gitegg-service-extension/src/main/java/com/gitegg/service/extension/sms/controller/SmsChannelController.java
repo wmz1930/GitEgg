@@ -45,7 +45,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/extension/sms/channel")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "SmsChannelController|短信渠道表前端控制器")
+@Api(value = "SmsChannelController|短信渠道表前端控制器", tags = {"短信渠道配置"})
 @RefreshScope
 public class SmsChannelController {
 
@@ -125,7 +125,7 @@ public class SmsChannelController {
     */
     @PostMapping("/delete/{smsChannelId}")
     @ApiOperation(value = "删除短信渠道表")
-    @ApiImplicitParam(paramType = "path", name = "smsChannelId", value = "短信渠道表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "smsChannelId", value = "短信渠道表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("smsChannelId") Long smsChannelId) {
         if (null == smsChannelId) {
             return Result.error("ID不能为空");
@@ -142,7 +142,7 @@ public class SmsChannelController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除短信渠道表")
-    @ApiImplicitParam(name = "smsChannelIds", value = "短信渠道表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "smsChannelIds", value = "短信渠道表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> smsChannelIds) {
         if (CollectionUtils.isEmpty(smsChannelIds)) {
             return Result.error("短信渠道表ID列表不能为空");
@@ -160,8 +160,8 @@ public class SmsChannelController {
      @PostMapping("/status/{smsChannelId}/{channelStatus}")
      @ApiOperation(value = "修改短信渠道表状态")
      @ApiImplicitParams({
-     @ApiImplicitParam(name = "smsChannelId", value = "短信渠道表ID", required = true, dataType = "Long", paramType = "path"),
-     @ApiImplicitParam(name = "channelStatus", value = "短信渠道表状态", required = true, dataType = "Integer", paramType = "path") })
+     @ApiImplicitParam(name = "smsChannelId", value = "短信渠道表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+     @ApiImplicitParam(name = "channelStatus", value = "短信渠道表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
      public Result<?> updateStatus(@PathVariable("smsChannelId") Long smsChannelId,
          @PathVariable("channelStatus") Integer channelStatus) {
 
@@ -183,6 +183,7 @@ public class SmsChannelController {
     * @throws IOException
     */
     @GetMapping("/download")
+    @ApiOperation("批量导出短信渠道表数据")
     public void download(HttpServletResponse response, QuerySmsChannelDTO querySmsChannelDTO) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");

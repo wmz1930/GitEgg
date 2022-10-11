@@ -19,6 +19,7 @@ import com.gitegg.service.extension.client.feign.IJustAuthFeign;
 import com.gitegg.service.extension.client.feign.ISmsFeign;
 import com.gitegg.service.system.client.dto.UserAddDTO;
 import com.gitegg.service.system.client.feign.IUserFeign;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/social")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Api(value = "SocialController | 第三方登录认证中心", tags = {"第三方登录认证中心"})
 public class SocialController {
     
     private final GitEggAuthRequestFactory factory;
@@ -85,6 +87,7 @@ public class SocialController {
     private long socialLoginExpiration;
 
     @GetMapping
+    @ApiOperation("获取第三方登录列表")
     public List<String> list() {
         return factory.oauthList();
     }
@@ -94,6 +97,7 @@ public class SocialController {
      * @param type
      * @return
      */
+    @ApiOperation("获取第三方登录url")
     @GetMapping("/login/{type}")
     public Result login(@PathVariable String type) {
         AuthRequest authRequest = factory.get(type);
@@ -106,6 +110,7 @@ public class SocialController {
      * @param callback
      * @return
      */
+    @ApiOperation("第三方登录")
     @RequestMapping("/{type}/callback")
     public Result login(@PathVariable String type, AuthCallback callback) {
         AuthRequest authRequest = factory.get(type);

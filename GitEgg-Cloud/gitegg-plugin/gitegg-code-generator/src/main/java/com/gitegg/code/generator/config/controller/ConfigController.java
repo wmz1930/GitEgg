@@ -36,7 +36,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/code/generator/config")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "ConfigController|代码生成配置表前端控制器")
+@Api(value = "ConfigController|代码生成配置表前端控制器", tags = {"代码生成配置"} )
 @RefreshScope
 public class ConfigController {
 
@@ -87,7 +87,7 @@ public class ConfigController {
     */
     @PostMapping("/delete/{configId}")
     @ApiOperation(value = "删除代码生成配置表")
-    @ApiImplicitParam(paramType = "path", name = "configId", value = "代码生成配置表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "configId", value = "代码生成配置表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("configId") Long configId) {
         if (null == configId) {
             return Result.error("ID不能为空");
@@ -101,7 +101,7 @@ public class ConfigController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除代码生成配置表")
-    @ApiImplicitParam(name = "configIds", value = "代码生成配置表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "configIds", value = "代码生成配置表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> configIds) {
         if (CollectionUtils.isEmpty(configIds)) {
             return Result.error("代码生成配置表ID列表不能为空");

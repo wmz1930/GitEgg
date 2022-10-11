@@ -37,7 +37,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/extension/mail/test")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "MailChannelController|邮件渠道表前端控制器")
+@Api(value = "MailChannelController|邮件渠道表前端控制器", tags = {"邮件发送测试"})
 @RefreshScope
 @ConditionalOnProperty(prefix = "spring.mail", name = "host")
 public class MailTestController {

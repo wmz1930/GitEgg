@@ -654,6 +654,9 @@
                     that.handleFilter()
                 })
             </#if>
+            <#if provinceSelect?? && provinceSelect == true>
+                that.getAreaList()
+            </#if>
         },
         methods: {
           <#if provinceSelect?? && provinceSelect == true>

@@ -34,7 +34,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/extension/dfs/file")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "DfsFileController|分布式存储文件记录表前端控制器")
+@Api(value = "DfsFileController|分布式存储文件记录表前端控制器", tags = {"分布式存储文件记录"})
 @RefreshScope
 public class DfsFileController {
 
@@ -85,7 +85,7 @@ public class DfsFileController {
     */
     @PostMapping("/delete/{dfsFileId}")
     @ApiOperation(value = "删除分布式存储文件记录表")
-    @ApiImplicitParam(paramType = "path", name = "dfsFileId", value = "分布式存储文件记录表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "dfsFileId", value = "分布式存储文件记录表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("dfsFileId") Long dfsFileId) {
         if (null == dfsFileId) {
             return Result.error("ID不能为空");
@@ -99,7 +99,7 @@ public class DfsFileController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除分布式存储文件记录表")
-    @ApiImplicitParam(name = "dfsFileIds", value = "分布式存储文件记录表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "dfsFileIds", value = "分布式存储文件记录表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> dfsFileIds) {
         if (CollectionUtils.isEmpty(dfsFileIds)) {
             return Result.error("分布式存储文件记录表ID列表不能为空");
@@ -114,8 +114,8 @@ public class DfsFileController {
     @PostMapping("/status/{dfsFileId}/{dfsFileStatus}")
     @ApiOperation(value = "修改分布式存储文件记录表状态")
     @ApiImplicitParams({
-    @ApiImplicitParam(name = "dfsFileId", value = "分布式存储文件记录表ID", required = true, dataType = "Long", paramType = "path"),
-    @ApiImplicitParam(name = "dfsFileStatus", value = "分布式存储文件记录表状态", required = true, dataType = "Integer", paramType = "path") })
+    @ApiImplicitParam(name = "dfsFileId", value = "分布式存储文件记录表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+    @ApiImplicitParam(name = "dfsFileStatus", value = "分布式存储文件记录表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
     public Result<?> updateStatus(@PathVariable("dfsFileId") Long dfsFileId,
             @PathVariable("dfsFileStatus") Integer dfsFileStatus) {
         if (null == dfsFileId || StringUtils.isEmpty(dfsFileStatus)) {

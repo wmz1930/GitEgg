@@ -5,19 +5,19 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.gitegg.service.base.entity.District">
         <result column="id" property="id"/>
-        <result column="name" property="name"/>
+        <result column="district_name" property="districtName"/>
         <result column="parent_id" property="parentId"/>
         <result column="initial" property="initial"/>
         <result column="initials" property="initials"/>
         <result column="pinyin" property="pinyin"/>
         <result column="suffix" property="suffix"/>
         <result column="code" property="code"/>
-        <result column="order" property="order"/>
+        <result column="district_order" property="districtOrder"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, 'name', parent_id, initial, initials, pinyin, suffix, code, 'order'
+        id, district_name, parent_id, initial, initials, pinyin, suffix, code, district_order
     </sql>
 
 </mapper>

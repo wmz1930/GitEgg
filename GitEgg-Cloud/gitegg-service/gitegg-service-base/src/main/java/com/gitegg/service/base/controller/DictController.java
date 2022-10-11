@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(tags = "gitegg-base")
+@Api(value = "DictController|系统数据字典表前端控制器", tags = {"系统数据字典配置"})
 @RefreshScope
 @RequestMapping("/dict")
 public class DictController {
@@ -76,7 +76,7 @@ public class DictController {
      */
     @GetMapping(value = "/tree")
     @ApiOperation(value = "查询字典树列表", notes = "查询字典树列表")
-    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataType = "Long")
+    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataTypeClass = Long.class)
     public Result<?> queryDictTree(Long parentId) {
         List<Dict> treeList = dictService.queryDictTreeByParentId(parentId);
         return Result.data(treeList);
@@ -118,8 +118,8 @@ public class DictController {
     @PostMapping("/status/{dictId}/{dictStatus}")
     @ApiOperation(value = "修改数据字典状态")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "dictId", value = "数据字典ID", required = true, dataType = "Long", paramType = "path"),
-        @ApiImplicitParam(name = "dictStatus", value = "数据字典状态", required = true, dataType = "Integer",
+        @ApiImplicitParam(name = "dictId", value = "数据字典ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+        @ApiImplicitParam(name = "dictStatus", value = "数据字典状态", required = true, dataTypeClass = Integer.class,
             paramType = "path")})
     public Result<?> updateStatus(@PathVariable("dictId") Long dictId, @PathVariable("dictStatus") Integer dictStatus) {
         if (null == dictId || StringUtils.isEmpty(dictStatus)) {
@@ -137,7 +137,7 @@ public class DictController {
      */
     @PostMapping("/delete/{dictId}")
     @ApiOperation(value = "删除字典")
-    @ApiImplicitParam(paramType = "path", name = "dictId", value = "字典ID", required = true, dataType = "Integer")
+    @ApiImplicitParam(paramType = "path", name = "dictId", value = "字典ID", required = true, dataTypeClass = Integer.class)
     public Result<?> delete(@PathVariable("dictId") Long dictId) {
         boolean result = dictService.deleteDict(dictId);
         if (result) {
@@ -152,7 +152,7 @@ public class DictController {
      */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除字典")
-    @ApiImplicitParam(name = "dictIds", value = "字典ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "dictIds", value = "字典ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> dictIds) {
         if (CollectionUtils.isEmpty(dictIds)) {
             return Result.error("字典ID列表不能为空");
@@ -173,7 +173,7 @@ public class DictController {
      */
     @PostMapping(value = "/query/{dictCode}")
     @ApiOperation(value = "查询字典列表", notes = "查询字典列表")
-    @ApiImplicitParam(paramType = "query", name = "dictCode", value = "字典值", required = true, dataType = "String")
+    @ApiImplicitParam(paramType = "query", name = "dictCode", value = "字典值", required = true, dataTypeClass = String.class)
     public Result<List<Dict>> queryDictList(@PathVariable("dictCode") String dictCode) {
         List<Dict> dictList = dictService.queryDictListByParentCode(dictCode);
         return Result.data(dictList);
@@ -187,7 +187,7 @@ public class DictController {
      */
     @PostMapping(value = "/batch/query")
     @ApiOperation(value = "批量查询字典列表", notes = "批量查询字典列表")
-    @ApiImplicitParam(paramType = "query", name = "dictCodeList", value = "字典值", required = true, dataType = "List")
+    @ApiImplicitParam(paramType = "query", name = "dictCodeList", value = "字典值", required = true, dataTypeClass = List.class)
     public Result<Map<String, List<Dict>>> queryBatchDictList(@RequestBody List<String> dictCodeList) {
         Map<String, List<Dict>> resultMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(dictCodeList))

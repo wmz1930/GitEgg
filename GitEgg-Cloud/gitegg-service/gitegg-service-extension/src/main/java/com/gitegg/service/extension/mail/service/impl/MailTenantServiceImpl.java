@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 /**
+ * 只有开启多租户时，才使用此邮件发送方法，如果没有开启多租户，请使用原生的springboot mail邮件发送方法
  * 这里只考虑系统发送通知邮件等基本常用接口，不是复杂的邮件系统，其他高级功能请自己定制
  * @author GitEgg
  * @date 2022/6/25

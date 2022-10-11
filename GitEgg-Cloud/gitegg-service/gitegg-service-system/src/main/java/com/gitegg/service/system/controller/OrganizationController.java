@@ -16,6 +16,7 @@ import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import com.gitegg.service.system.dto.CreateOrganizationDTO;
 import com.gitegg.service.system.dto.UpdateOrganizationDTO;
+import com.gitegg.boot.system.dto.QueryOrganizationDTO;
 import com.gitegg.service.system.entity.Organization;
 import com.gitegg.service.system.service.IOrganizationService;
 
@@ -36,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping(value = "organization")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "OrganizationController|组织机构相关的前端控制器")
+@Api(value = "OrganizationController|组织机构相关的前端控制器", tags = {"组织机构配置"})
 @RefreshScope
 public class OrganizationController {
 
@@ -45,14 +46,28 @@ public class OrganizationController {
     /**
      * 查询组织树
      * 
-     * @param parentId
+     * @param organizationDTO
      * @return
      */
     @GetMapping(value = "/tree")
     @ApiOperation(value = "查询组织机构树", notes = "树状展示组织机构信息")
-    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataType = "Integer")
-    public Result<List<Organization>> queryOrganizationTree(Long parentId) {
-        List<Organization> treeList = organizationService.queryOrganizationByParentId(parentId);
+    public Result<List<Organization>> queryOrganizationTree(QueryOrganizationDTO organizationDTO) {
+        Organization organization = BeanCopierUtils.copyByClass(organizationDTO, Organization.class);
+        List<Organization> treeList = organizationService.queryOrganizationByParentId(organization);
+        return Result.data(treeList);
+    }
+
+    /**
+     * 级联查询
+     *
+     * @param organizationDTO
+     * @return
+     */
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "查询组织机构树", notes = "树状展示组织机构信息")
+    public Result<List<Organization>> queryOrganizationList(QueryOrganizationDTO organizationDTO) {
+        Organization organization = BeanCopierUtils.copyByClass(organizationDTO, Organization.class);
+        List<Organization> treeList = organizationService.queryOrganizationList(organization);
         return Result.data(treeList);
     }
 
@@ -102,9 +117,9 @@ public class OrganizationController {
     @PostMapping("/status/{organizationId}/{organizationStatus}")
     @ApiOperation(value = "修改角色状态")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "organizationId", value = "组织机构ID", required = true, dataType = "Long",
+        @ApiImplicitParam(name = "organizationId", value = "组织机构ID", required = true, dataTypeClass = Long.class,
             paramType = "path"),
-        @ApiImplicitParam(name = "organizationStatus", value = "组织机构状态", required = true, dataType = "Integer",
+        @ApiImplicitParam(name = "organizationStatus", value = "组织机构状态", required = true, dataTypeClass = Integer.class,
             paramType = "path")})
     public Result<?> updateStatus(@PathVariable("organizationId") Long organizationId,
         @PathVariable("organizationStatus") Integer organizationStatus) {
@@ -127,7 +142,7 @@ public class OrganizationController {
      */
     @PostMapping("/delete/{organizationId}")
     @ApiOperation(value = "删除组织机构")
-    @ApiImplicitParam(paramType = "path", name = "organizationId", value = "组织机构ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "organizationId", value = "组织机构ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("organizationId") Long organizationId) {
         boolean result = organizationService.deleteOrganization(organizationId);
         if (result) {

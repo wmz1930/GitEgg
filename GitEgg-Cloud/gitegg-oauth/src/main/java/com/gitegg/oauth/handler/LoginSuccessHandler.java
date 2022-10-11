@@ -1,6 +1,6 @@
 package com.gitegg.oauth.handler;
 
-import com.alibaba.fastjson.JSONObject;
+import com.anji.captcha.util.JsonUtil;
 import com.gitegg.oauth.dto.LoginResultDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,20 +49,26 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 					loginResult.setTargetUrl("/index");
 				}
 				response.setContentType("application/json;charset=UTF-8");
-				response.getWriter().write(JSONObject.toJSONString(loginResult));
+				response.setHeader("Access-Control-Allow-Origin", "*");
+				response.setHeader("Cache-Control", "no-cache");
+				response.getWriter().write(JsonUtil.toJSONString(loginResult));
 			}
 			else
 			{
 				loginResult.setTargetUrl("/index");
 				response.setContentType("application/json;charset=UTF-8");
-				response.getWriter().write(JSONObject.toJSONString(loginResult));
+				response.setHeader("Access-Control-Allow-Origin", "*");
+				response.setHeader("Cache-Control", "no-cache");
+				response.getWriter().write(JsonUtil.toJSONString(loginResult));
 			}
 		}
 		catch (Exception e)
 		{
 			loginResult.setTargetUrl("/index");
 			response.setContentType("application/json;charset=UTF-8");
-			response.getWriter().write(JSONObject.toJSONString(loginResult));
+			response.setHeader("Access-Control-Allow-Origin", "*");
+			response.setHeader("Cache-Control", "no-cache");
+			response.getWriter().write(JsonUtil.toJSONString(loginResult));
 		}
 	}
 

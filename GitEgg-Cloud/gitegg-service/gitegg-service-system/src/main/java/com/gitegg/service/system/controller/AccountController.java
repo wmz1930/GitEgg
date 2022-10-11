@@ -44,7 +44,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "account")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "AccountController|账号相关的前端控制器")
+@Api(value = "AccountController|账号相关的前端控制器", tags = {"账号操作"})
 @Slf4j
 @RefreshScope
 public class AccountController {

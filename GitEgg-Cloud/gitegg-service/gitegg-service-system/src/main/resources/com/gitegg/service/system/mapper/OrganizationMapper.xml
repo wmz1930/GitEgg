@@ -37,6 +37,21 @@
         <include refid="Base_Column_List"/>
         FROM t_sys_organization
         WHERE del_flag = 0
+        <if test="org.organizationType != null and org.organizationType != ''">
+            AND organization_type = #{org.organizationType}
+        </if>
+        <if test="org.organizationKey != null and org.organizationKey != ''">
+            AND organization_key = #{org.organizationKey}
+        </if>
+        <if test="org.organizationName != null and org.organizationName != ''">
+            AND organization_name = #{org.organizationName}
+        </if>
+        <if test="org.organizationStatus != null and org.organizationStatus != ''">
+            AND organization_status = #{org.organizationStatus}
+        </if>
+        <if test="org.organizationLevel != null and org.organizationLevel != ''">
+            AND organization_level = #{org.organizationLevel}
+        </if>
         <if test="org.parentId != null and org.parentId != ''">
             <choose>
                 <!-- 仅查询子机构，不包含parentId机构本身 -->
@@ -49,7 +64,34 @@
                 </otherwise>
             </choose>
         </if>
-        ORDER BY id
+        ORDER BY id desc
+    </select>
+
+    <!-- 级联查询树 -->
+    <select id="selectOrganizationList" resultType="com.gitegg.service.system.entity.Organization" parameterType="com.gitegg.service.system.entity.Organization">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_organization
+        WHERE del_flag = 0
+        <if test="org.organizationType != null and org.organizationType != ''">
+            AND organization_type = #{org.organizationType}
+        </if>
+        <if test="org.organizationKey != null and org.organizationKey != ''">
+            AND organization_key = #{org.organizationKey}
+        </if>
+        <if test="org.organizationName != null and org.organizationName != ''">
+            AND organization_name = #{org.organizationName}
+        </if>
+        <if test="org.organizationStatus != null and org.organizationStatus != ''">
+            AND organization_status = #{org.organizationStatus}
+        </if>
+        <if test="org.organizationLevel != null and org.organizationLevel != ''">
+            AND organization_level = #{org.organizationLevel}
+        </if>
+        <if test="org.parentId != null">
+            AND parent_id = #{org.parentId}
+        </if>
+        ORDER BY id desc
     </select>
 
 </mapper>

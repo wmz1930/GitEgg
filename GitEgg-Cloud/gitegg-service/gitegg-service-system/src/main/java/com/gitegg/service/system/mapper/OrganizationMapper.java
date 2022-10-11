@@ -23,5 +23,11 @@ public interface OrganizationMapper extends BaseMapper<Organization> {
      */
     List<Organization> selectOrganizationChildren(@Param("org") Organization organization);
 
+    /**
+     * 级联查询组织机构
+     * @param organization
+     * @return
+     */
+    List<Organization> selectOrganizationList(@Param("org") Organization organization);
 
 }

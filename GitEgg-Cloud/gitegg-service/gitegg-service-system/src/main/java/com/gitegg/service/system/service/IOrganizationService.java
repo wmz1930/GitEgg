@@ -13,10 +13,10 @@ public interface IOrganizationService extends IService<Organization> {
 
     /**
      * 查询机构列表
-     * @param parentId
+     * @param organization
      * @return
      */
-    List<Organization> queryOrganizationByParentId(Long parentId);
+    List<Organization> queryOrganizationByParentId(Organization organization);
 
     /**
      * 查询机构列表，不组装父子节点
@@ -24,6 +24,13 @@ public interface IOrganizationService extends IService<Organization> {
      * @return
      */
     List<Organization> queryOrgList(Long parentId);
+
+    /**
+     * 级联查询组织机构
+     * @param organization
+     * @return
+     */
+    List<Organization> queryOrganizationList(Organization organization);
 
     /**
      * 创建组织

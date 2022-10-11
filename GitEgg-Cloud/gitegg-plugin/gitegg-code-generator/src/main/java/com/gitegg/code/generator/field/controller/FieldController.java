@@ -33,7 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/code/generator/field")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "FieldController|字段属性配置表前端控制器")
+@Api(value = "FieldController|字段属性配置表前端控制器", tags = {"字段属性配置"})
 @RefreshScope
 public class FieldController {
 
@@ -104,7 +104,7 @@ public class FieldController {
     */
     @PostMapping("/delete/{fieldId}")
     @ApiOperation(value = "删除字段属性配置表")
-    @ApiImplicitParam(paramType = "path", name = "fieldId", value = "字段属性配置表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "fieldId", value = "字段属性配置表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("fieldId") Long fieldId) {
         if (null == fieldId) {
             return Result.error("ID不能为空");
@@ -118,7 +118,7 @@ public class FieldController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除字段属性配置表")
-    @ApiImplicitParam(name = "fieldIds", value = "字段属性配置表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "fieldIds", value = "字段属性配置表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> fieldIds) {
         if (CollectionUtils.isEmpty(fieldIds)) {
             return Result.error("字段属性配置表ID列表不能为空");

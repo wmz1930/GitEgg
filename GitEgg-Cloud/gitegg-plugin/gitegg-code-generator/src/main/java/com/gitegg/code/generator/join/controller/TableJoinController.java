@@ -36,7 +36,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/code/generator/table/join")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "TableJoinController|多表查询时的联合表配置前端控制器")
+@Api(value = "TableJoinController|多表查询时的联合表配置前端控制器", tags = {"多表查询时的联合表"})
 @RefreshScope
 public class TableJoinController {
 
@@ -87,7 +87,7 @@ public class TableJoinController {
     */
     @PostMapping("/delete/{tableJoinId}")
     @ApiOperation(value = "删除多表查询时的联合表配置")
-    @ApiImplicitParam(paramType = "path", name = "tableJoinId", value = "多表查询时的联合表配置ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "tableJoinId", value = "多表查询时的联合表配置ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("tableJoinId") Long tableJoinId) {
         if (null == tableJoinId) {
             return Result.error("ID不能为空");
@@ -101,7 +101,7 @@ public class TableJoinController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除多表查询时的联合表配置")
-    @ApiImplicitParam(name = "tableJoinIds", value = "多表查询时的联合表配置ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "tableJoinIds", value = "多表查询时的联合表配置ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> tableJoinIds) {
         if (CollectionUtils.isEmpty(tableJoinIds)) {
             return Result.error("多表查询时的联合表配置ID列表不能为空");

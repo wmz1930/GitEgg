@@ -38,7 +38,7 @@ import java.util.Map;
  */
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(tags = "GeneratorDictController|代码生成配置字典前端控制器")
+@Api(value = "GeneratorDictController|代码生成配置字典前端控制器", tags = {"代码生成配置"})
 @RefreshScope
 @RequestMapping("/code/generator/dict")
 public class GeneratorDictController {
@@ -74,7 +74,7 @@ public class GeneratorDictController {
      */
     @GetMapping(value = "/tree")
     @ApiOperation(value = "查询字典树列表", notes = "查询字典树列表")
-    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataType = "Long")
+    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataTypeClass = Long.class)
     public Result<?> queryDictTree(Long parentId) {
         List<GeneratorDict> treeList = generatorDictService.queryGeneratorDictTreeByParentId(parentId);
         return Result.data(treeList);
@@ -116,8 +116,8 @@ public class GeneratorDictController {
     @PostMapping("/status/{generatorDictId}/{generatorDictStatus}")
     @ApiOperation(value = "修改数据字典状态")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "generatorDictId", value = "数据字典ID", required = true, dataType = "Long", paramType = "path"),
-        @ApiImplicitParam(name = "generatorDictStatus", value = "数据字典状态", required = true, dataType = "Integer",
+        @ApiImplicitParam(name = "generatorDictId", value = "数据字典ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+        @ApiImplicitParam(name = "generatorDictStatus", value = "数据字典状态", required = true, dataTypeClass = Integer.class,
             paramType = "path")})
     public Result<?> updateStatus(@PathVariable("generatorDictId") Long generatorDictId, @PathVariable("generatorDictStatus") Integer generatorDictStatus) {
         if (null == generatorDictId || StringUtils.isEmpty(generatorDictStatus)) {
@@ -135,7 +135,7 @@ public class GeneratorDictController {
      */
     @PostMapping("/delete/{generatorDictId}")
     @ApiOperation(value = "删除字典")
-    @ApiImplicitParam(paramType = "path", name = "generatorDictId", value = "字典ID", required = true, dataType = "Integer")
+    @ApiImplicitParam(paramType = "path", name = "generatorDictId", value = "字典ID", required = true, dataTypeClass = Integer.class)
     public Result<?> delete(@PathVariable("generatorDictId") Long generatorDictId) {
         boolean result = generatorDictService.deleteGeneratorDict(generatorDictId);
         if (result) {
@@ -150,7 +150,7 @@ public class GeneratorDictController {
      */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除字典")
-    @ApiImplicitParam(name = "generatorDictIds", value = "字典ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "generatorDictIds", value = "字典ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> generatorDictIds) {
         if (CollectionUtils.isEmpty(generatorDictIds)) {
             return Result.error("字典ID列表不能为空");
@@ -171,7 +171,7 @@ public class GeneratorDictController {
      */
     @PostMapping(value = "/query/{generatorDictCode}")
     @ApiOperation(value = "查询字典列表", notes = "查询字典列表")
-    @ApiImplicitParam(paramType = "query", name = "generatorDictCode", value = "字典值", required = true, dataType = "String")
+    @ApiImplicitParam(paramType = "query", name = "generatorDictCode", value = "字典值", required = true, dataTypeClass = String.class)
     public Result<List<GeneratorDict>> queryGeneratorDictList(@PathVariable("generatorDictCode") String generatorDictCode) {
         List<GeneratorDict> generatorDictList = generatorDictService.queryGeneratorDictListByParentCode(generatorDictCode);
         return Result.data(generatorDictList);
@@ -185,7 +185,7 @@ public class GeneratorDictController {
      */
     @PostMapping(value = "/batch/query")
     @ApiOperation(value = "批量查询字典列表", notes = "批量查询字典列表")
-    @ApiImplicitParam(paramType = "query", name = "generatorDictCodeList", value = "字典值", required = true, dataType = "List")
+    @ApiImplicitParam(paramType = "query", name = "generatorDictCodeList", value = "字典值", required = true, dataTypeClass = List.class)
     public Result<Map<String, List<GeneratorDict>>> queryBatchDictList(@RequestBody List<String> generatorDictCodeList) {
         Map<String, List<GeneratorDict>> resultMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(generatorDictCodeList))

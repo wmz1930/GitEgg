@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping(value = "role")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "RoleController|角色相关的前端控制器")
+@Api(value = "RoleController|角色相关的前端控制器", tags = {"角色配置"})
 @RefreshScope
 public class RoleController {
 
@@ -81,7 +81,7 @@ public class RoleController {
      */
     @PostMapping("/delete/{roleId}")
     @ApiOperation(value = "删除角色")
-    @ApiImplicitParam(paramType = "path", name = "roleId", value = "角色ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "roleId", value = "角色ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("roleId") Long roleId) {
         if (null == roleId) {
             return Result.error("ID不能为空");
@@ -95,7 +95,7 @@ public class RoleController {
      */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除角色")
-    @ApiImplicitParam(name = "roleIds", value = "角色ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "roleIds", value = "角色ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return Result.error("角色ID列表不能为空");
@@ -110,8 +110,8 @@ public class RoleController {
     @PostMapping("/status/{roleId}/{roleStatus}")
     @ApiOperation(value = "修改角色状态")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "roleId", value = "角色ID", required = true, dataType = "Long", paramType = "path"),
-        @ApiImplicitParam(name = "roleStatus", value = "角色状态", required = true, dataType = "Integer",
+        @ApiImplicitParam(name = "roleId", value = "角色ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+        @ApiImplicitParam(name = "roleStatus", value = "角色状态", required = true, dataTypeClass = Integer.class,
             paramType = "path")})
     public Result<?> updateStatus(@PathVariable("roleId") Long roleId,
         @PathVariable("roleStatus") Integer roleStatus) {
@@ -133,7 +133,7 @@ public class RoleController {
      */
     @GetMapping(value = "/resource/{roleId}")
     @ApiOperation(value = "获取角色的权限资源")
-    @ApiImplicitParam(paramType = "path", name = "roleId", value = "角色ID", required = true, dataType = "Integer")
+    @ApiImplicitParam(paramType = "path", name = "roleId", value = "角色ID", required = true, dataTypeClass = Integer.class)
     public Result<List<RoleResource>> queryRoleResource(@PathVariable("roleId") Integer roleId) {
         LambdaQueryWrapper<RoleResource> ew = new LambdaQueryWrapper<>();
         ew.eq(RoleResource::getRoleId, roleId);

@@ -56,7 +56,7 @@ import java.util.concurrent.TimeUnit;
  * OAuth2认证中心
  * @author GitEgg
  */
-@Api(tags = "OAuth2认证中心")
+@Api(value = "GitEggOAuthController | OAuth2认证中心", tags = {"OAuth2认证中心"})
 @Slf4j
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -114,19 +114,20 @@ public class GitEggOAuthController {
         return Result.data(imageCaptcha);
     }
 
-    @ApiOperation("OAuth2生成token")
+    @ApiOperation(value = "OAuth2获取token", position = 1)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "grant_type", defaultValue = "password", value = "授权模式", required = true),
-            @ApiImplicitParam(name = "client_id", defaultValue = "client", value = "Oauth2客户端ID", required = true),
-            @ApiImplicitParam(name = "client_secret", defaultValue = "123456", value = "Oauth2客户端秘钥", required = true),
-            @ApiImplicitParam(name = "refresh_token", value = "刷新token"),
-            @ApiImplicitParam(name = "username", defaultValue = "admin", value = "登录用户名"),
-            @ApiImplicitParam(name = "password", defaultValue = "123456", value = "登录密码"),
-            @ApiImplicitParam(name = "phoneNumber", value = "手机号码"),
-            @ApiImplicitParam(name = "smsCode", value = "短信模板code"),
-            @ApiImplicitParam(name = "code", value = "小程序code/短信验证码"),
-            @ApiImplicitParam(name = "encryptedData", value = "包括敏感数据在内的完整用户信息的加密数据"),
-            @ApiImplicitParam(name = "iv", value = "加密算法的初始向量"),
+            @ApiImplicitParam(name = "TenantId", defaultValue = "0", value = "租户ID", dataType="String", paramType = "header"),
+            @ApiImplicitParam(name = "grant_type", defaultValue = "password", value = "授权模式", required = true, dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "client_id", defaultValue = "client", value = "Oauth2客户端ID", required = true, dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "client_secret", defaultValue = "123456", value = "Oauth2客户端秘钥", required = true, dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "refresh_token", value = "刷新token", dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "username", defaultValue = "admin", value = "登录用户名", dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "password", defaultValue = "123456", value = "登录密码", dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "phoneNumber", value = "手机号码", dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "smsCode", value = "短信模板code", dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "code", value = "小程序code/短信验证码", dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "encryptedData", value = "包括敏感数据在内的完整用户信息的加密数据", dataType="String", paramType = "query"),
+            @ApiImplicitParam(name = "iv", value = "加密算法的初始向量", dataType="String", paramType = "query")
     })
     @PostMapping("/token")
     public Result postAccessToken( @ApiIgnore Principal principal, @ApiIgnore @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
@@ -160,7 +161,7 @@ public class GitEggOAuthController {
         return Result.data(oauth2Token);
     }
 
-    @ApiOperation("发送登录短信验证码")
+    @ApiOperation("发送短信验证码")
     @PostMapping("/sms/captcha/send")
     public Result sendSmsCaptcha(@ApiIgnore @RequestParam Map<String, String> parameters) {
         boolean checkCaptchaResult = CaptchaUtils.checkCaptcha(parameters, redisTemplate, captchaService);
@@ -183,6 +184,7 @@ public class GitEggOAuthController {
      * @param request
      * @return
      */
+    @ApiOperation("退出登录接口")
     @PostMapping("/logout")
     public Result logout(HttpServletRequest request) {
 
@@ -206,11 +208,13 @@ public class GitEggOAuthController {
         return Result.success();
     }
 
+    @ApiOperation("获取用户信息")
     @GetMapping("/user/info")
     public Result<GitEggUser> currentUser(@ApiIgnore @CurrentUser GitEggUser user) {
         return Result.data(user);
     }
 
+    @ApiOperation("获取认证公钥")
     @GetMapping("/public_key")
     public Map<String, Object> getKey() {
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();

@@ -44,7 +44,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/extension/mail/template")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "MailTemplateController|邮件模板前端控制器")
+@Api(value = "MailTemplateController|邮件模板前端控制器", tags = {"邮件模板配置"})
 @RefreshScope
 public class MailTemplateController {
 
@@ -124,7 +124,7 @@ public class MailTemplateController {
     */
     @PostMapping("/delete/{mailTemplateId}")
     @ApiOperation(value = "删除邮件模板")
-    @ApiImplicitParam(paramType = "path", name = "mailTemplateId", value = "邮件模板ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "mailTemplateId", value = "邮件模板ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("mailTemplateId") Long mailTemplateId) {
         if (null == mailTemplateId) {
             return Result.error("ID不能为空");
@@ -141,7 +141,7 @@ public class MailTemplateController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除邮件模板")
-    @ApiImplicitParam(name = "mailTemplateIds", value = "邮件模板ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "mailTemplateIds", value = "邮件模板ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> mailTemplateIds) {
         if (CollectionUtils.isEmpty(mailTemplateIds)) {
             return Result.error("邮件模板ID列表不能为空");
@@ -159,8 +159,8 @@ public class MailTemplateController {
      @PostMapping("/status/{mailTemplateId}/{templateStatus}")
      @ApiOperation(value = "修改邮件模板状态")
      @ApiImplicitParams({
-     @ApiImplicitParam(name = "mailTemplateId", value = "邮件模板ID", required = true, dataType = "Long", paramType = "path"),
-     @ApiImplicitParam(name = "templateStatus", value = "邮件模板状态", required = true, dataType = "Integer", paramType = "path") })
+     @ApiImplicitParam(name = "mailTemplateId", value = "邮件模板ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+     @ApiImplicitParam(name = "templateStatus", value = "邮件模板状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
      public Result<?> updateStatus(@PathVariable("mailTemplateId") Long mailTemplateId,
          @PathVariable("templateStatus") Integer templateStatus) {
 
@@ -182,6 +182,7 @@ public class MailTemplateController {
     * @throws IOException
     */
     @GetMapping("/download")
+    @ApiOperation("导出数据")
     public void download(HttpServletResponse response, QueryMailTemplateDTO queryMailTemplateDTO) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -205,6 +206,7 @@ public class MailTemplateController {
     * @throws IOException
     */
     @PostMapping("/upload")
+    @ApiOperation("批量上传数据")
     public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
     List<MailTemplateImport> mailTemplateImportList =  EasyExcel.read(file.getInputStream(), MailTemplateImport.class, null).sheet().doReadSync();
         if (!CollectionUtils.isEmpty(mailTemplateImportList))
@@ -224,6 +226,7 @@ public class MailTemplateController {
     * @throws IOException
     */
     @GetMapping("/download/template")
+    @ApiOperation("导出上传模板")
     public void downloadTemplate(HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -231,6 +234,6 @@ public class MailTemplateController {
         String fileName = URLEncoder.encode("邮件模板数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "邮件模板数据列表";
-        EasyExcel.write(response.getOutputStream(), MailTemplateImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), MailTemplateImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

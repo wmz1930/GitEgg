@@ -42,7 +42,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/extension")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Api(value = "GitEggDfsController|文件上传前端控制器")
+@Api(value = "GitEggDfsController|文件上传前端控制器", tags = {"文件上传"})
 @RefreshScope
 public class GitEggDfsController {
 
@@ -55,6 +55,7 @@ public class GitEggDfsController {
      * @return
      */
     @PostMapping("/upload/file")
+    @ApiOperation("上传文件")
     public Result<?> uploadFile(@RequestParam("uploadFile") MultipartFile[] uploadFile, String dfsCode) {
         List<GitEggDfsFile> gitEggDfsFiles = new ArrayList<>();
         if (ArrayUtils.isNotEmpty(uploadFile))
@@ -109,6 +110,7 @@ public class GitEggDfsController {
      * 通过文件名以文件流的方式下载文件
      */
     @GetMapping("/get/file/download")
+    @ApiOperation("文件下载")
     public void downloadFile(HttpServletResponse response,HttpServletRequest request,String dfsCode, String fileName) {
         if (fileName != null) {
             response.setCharacterEncoding(request.getCharacterEncoding());

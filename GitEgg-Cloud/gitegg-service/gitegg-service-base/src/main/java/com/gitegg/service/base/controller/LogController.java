@@ -11,6 +11,7 @@ import com.gitegg.service.base.dto.LogDTO;
 import com.gitegg.service.base.dto.QueryLogDTO;
 import com.gitegg.service.base.service.ILogService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
  * @since 2018-10-24
  */
 @RestController
+@Api(value = "LogController|日志查询前端控制器", tags = {"日志查询"})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @RequestMapping("/log")
 public class LogController {

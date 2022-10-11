@@ -7,7 +7,7 @@ import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import com.gitegg.platform.boot.excel.LocalDateTimeConverter;
+import com.alibaba.excel.converters.localdatetime.LocalDateTimeStringConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -66,7 +66,7 @@ public class SmsChannelImport implements Serializable {
     private Long smsQuantity;
 
     @ApiModelProperty(value = "有效期")
-    @ExcelProperty(value = "有效期" ,index = 7, converter = LocalDateTimeConverter.class)
+    @ExcelProperty(value = "有效期" ,index = 7, converter = LocalDateTimeStringConverter.class)
     @ColumnWidth(20)
     @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
     private LocalDateTime smsValidity;

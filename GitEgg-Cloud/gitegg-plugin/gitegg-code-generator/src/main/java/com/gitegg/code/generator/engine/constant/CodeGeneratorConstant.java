@@ -14,6 +14,11 @@ public class CodeGeneratorConstant {
     public static final String TABLE_DATA_TYPE_SINGLE = "single";
 
     /**
+     * 界面展示类型
+     */
+    public static final String TABLE_SHOW_TYPE = "tableShowType";
+
+    /**
      * 数据库类型，多表查询
      */
     public static final String TABLE_DATA_TYPE_JOIN_QUERY = "join_query";

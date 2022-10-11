@@ -2,6 +2,9 @@ package com.gitegg.service.base.controller;
 
 import java.util.List;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.util.StringUtils;
@@ -26,6 +29,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Api(value = "DistrictController|地区配置表前端控制器", tags = {"地区配置"})
 @RefreshScope
 @RequestMapping("/district")
 public class DistrictController {
@@ -36,6 +40,7 @@ public class DistrictController {
      * 查询地区
      */
     @GetMapping("/list")
+    @ApiOperation("查询地区信息")
     public Result<List<District>> list(String code) {
         Integer parentId = 0;
         if (!StringUtils.isEmpty(code)) {
