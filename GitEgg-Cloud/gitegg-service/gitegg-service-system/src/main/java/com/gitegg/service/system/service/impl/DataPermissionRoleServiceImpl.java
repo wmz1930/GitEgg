@@ -2,6 +2,7 @@ package com.gitegg.service.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import com.gitegg.platform.mybatis.constant.DataPermissionConstant;
 import com.gitegg.platform.mybatis.entity.DataPermissionEntity;
@@ -77,6 +78,12 @@ public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRol
     public boolean createDataPermissionRole(CreateDataPermissionRoleDTO dataPermissionRole) {
         DataPermissionRole dataPermissionRoleEntity = BeanCopierUtils.copyByClass(dataPermissionRole, DataPermissionRole.class);
         boolean result = this.save(dataPermissionRoleEntity);
+        if (result)
+        {
+            // 新增到缓存
+            DataPermissionRole dataPermissionRoleCache = this.getById(dataPermissionRoleEntity.getId());
+            this.addOrUpdateDataRolePermissionsCache(dataPermissionRoleCache);
+        }
         return result;
     }
 
@@ -88,6 +95,11 @@ public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRol
     @Override
     public boolean updateDataPermissionRole(UpdateDataPermissionRoleDTO dataPermissionRole) {
         DataPermissionRole dataPermissionRoleEntity = BeanCopierUtils.copyByClass(dataPermissionRole, DataPermissionRole.class);
+
+        // 更新到缓存
+        DataPermissionRole dataPermissionRoleCache = this.getById(dataPermissionRoleEntity.getId());
+        this.addOrUpdateDataRolePermissionsCache(dataPermissionRoleCache);
+
         boolean result = this.updateById(dataPermissionRoleEntity);
         return result;
     }
@@ -99,6 +111,9 @@ public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRol
     */
     @Override
     public boolean deleteDataPermissionRole(Long dataPermissionRoleId) {
+        // 更新到缓存
+        DataPermissionRole dataPermissionRoleCache = this.getById(dataPermissionRoleId);
+        this.deleteDataRolePermissionsCache(dataPermissionRoleCache);
         boolean result = this.removeById(dataPermissionRoleId);
         return result;
     }
@@ -110,6 +125,8 @@ public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRol
     */
     @Override
     public boolean batchDeleteDataPermissionRole(List<Long> dataPermissionRoleIds) {
+        List<DataPermissionRole> dataPermissionRoleCaches = this.listByIds(dataPermissionRoleIds);
+        this.batchDeleteDataRolePermissionsCache(dataPermissionRoleCaches);
         boolean result = this.removeByIds(dataPermissionRoleIds);
         return result;
     }
@@ -144,5 +161,60 @@ public class DataPermissionRoleServiceImpl extends ServiceImpl<DataPermissionRol
             dataPermissionMap.put(dataRolePermissionCache, dataPermissionEntity);
         });
         redisTemplate.boundHashOps(key).putAll(dataPermissionMap);
+    }
+
+    private void addOrUpdateDataRolePermissionsCache(DataPermissionRole dataPermissionRole) {
+        try {
+            DataPermissionEntity dataPermissionEntity = BeanCopierUtils.copyByClass(dataPermissionRole, DataPermissionEntity.class);
+            // 获取redis的map
+            String dataPermissionKey = this.genDataPermissionMapKey(dataPermissionRole);
+            // 获取redis的map中字段的key
+            String mappedStatementIdKey = this.genDataPermissionEntityKey(dataPermissionRole);
+            redisTemplate.boundHashOps(dataPermissionKey).put(mappedStatementIdKey, dataPermissionEntity);
+        } catch (Exception e) {
+            log.error("修改数据权限配置缓存失败：{}" , e);
+            throw new BusinessException("修改数据权限配置缓存失败：" , e);
+        }
+    }
+
+    private void deleteDataRolePermissionsCache(DataPermissionRole dataPermissionRole) {
+        try {
+            // 获取redis的map
+            String dataPermissionKey = this.genDataPermissionMapKey(dataPermissionRole);
+            // 获取redis的map中字段的key
+            String mappedStatementIdKey = this.genDataPermissionEntityKey(dataPermissionRole);
+            redisTemplate.boundHashOps(dataPermissionKey).delete(mappedStatementIdKey);
+        } catch (Exception e) {
+            log.error("删除数据权限配置缓存失败：{}" , e);
+            throw new BusinessException("删除数据权限配置缓存失败：" , e);
+        }
+    }
+
+    private void batchDeleteDataRolePermissionsCache(List<DataPermissionRole> dataPermissionRoles) {
+      for (DataPermissionRole dataPermissionRole : dataPermissionRoles)
+      {
+          this.deleteDataRolePermissionsCache(dataPermissionRole);
+      }
+    }
+
+    private String genDataPermissionMapKey(DataPermissionRole dataPermissionRole)
+    {
+        // 1 根据系统配置的数据权限拼装sql
+        StringBuffer statementSb = new StringBuffer();
+        if (enable) {
+            statementSb.append(DataPermissionConstant.TENANT_DATA_PERMISSION_KEY).append(dataPermissionRole.getTenantId());
+        } else {
+            statementSb.append(DataPermissionConstant.DATA_PERMISSION_KEY);
+        }
+        // 获取redis的map
+        return statementSb.toString();
+    }
+
+    private String genDataPermissionEntityKey(DataPermissionRole dataPermissionRole)
+    {
+        // 获取redis的map中字段的key
+        StringBuffer statementSbt = new StringBuffer(DataPermissionConstant.DATA_PERMISSION_KEY_MAPPER);
+        statementSbt.append(dataPermissionRole.getDataMapperFunction()).append(DataPermissionConstant.DATA_PERMISSION_KEY_TYPE).append(dataPermissionRole.getDataPermissionType());
+        return statementSbt.toString();
     }
 }

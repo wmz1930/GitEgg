@@ -1,7 +1,5 @@
 package ${package.ServiceImpl};
 
-import java.util.List;
-
 <#if config?? && config.queryReuse == true>
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.util.CollectionUtils;

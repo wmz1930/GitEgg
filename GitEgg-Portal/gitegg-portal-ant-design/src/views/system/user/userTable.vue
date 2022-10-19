@@ -216,7 +216,7 @@
                             :field-names="propsOrg"
                             :show-search="{ filter }"
                             :display-render="displayRender"
-                            expand-trigger="hover"
+                            change-on-select
                             placeholder="组织机构" />
               </a-form-model-item>
               <a-form-model-item label="用户账号"

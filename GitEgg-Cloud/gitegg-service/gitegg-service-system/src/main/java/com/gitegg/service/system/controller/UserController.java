@@ -8,6 +8,7 @@ import com.gitegg.platform.base.dto.CheckExistDTO;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
+import com.gitegg.platform.base.util.BeanCopierUtils;
 import com.gitegg.service.system.dto.CreateUserDTO;
 import com.gitegg.service.system.dto.QueryUserDTO;
 import com.gitegg.service.system.dto.UpdateDataPermissionUserDTO;
@@ -170,7 +171,8 @@ public class UserController {
         if (null == userId) {
             return Result.error("用户ID不能为空");
         }
-        UpdateUserDTO user = new UpdateUserDTO();
+        User oldInfo = userService.getById(userId);
+        UpdateUserDTO user = BeanCopierUtils.copyByClass(oldInfo, UpdateUserDTO.class);
         user.setId(userId);
         user.setPassword(defaultPwd);
         boolean result = userService.updateUser(user);

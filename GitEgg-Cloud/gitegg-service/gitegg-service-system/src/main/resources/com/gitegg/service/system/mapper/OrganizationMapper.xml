@@ -28,70 +28,70 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, tenant_id, parent_id, ancestors, organization_type, organization_name, organization_key, organization_icon, organization_level, organization_status, province, city, area, street, comments, create_time, creator, update_time, operator, del_flag
+        org.id, org.tenant_id, org.parent_id, org.ancestors, org.organization_type, org.organization_name, org.organization_key, org.organization_icon, org.organization_level, org.organization_status, org.province, org.city, org.area, org.street, org.comments, org.create_time, org.creator, org.update_time, org.operator, org.del_flag
     </sql>
 
     <!-- 通过parentId查询所有子机构 -->
     <select id="selectOrganizationChildren" resultType="com.gitegg.service.system.entity.Organization" parameterType="com.gitegg.service.system.entity.Organization">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_sys_organization
-        WHERE del_flag = 0
+        FROM t_sys_organization org
+        WHERE org.del_flag = 0
         <if test="org.organizationType != null and org.organizationType != ''">
-            AND organization_type = #{org.organizationType}
+            AND org.organization_type = #{org.organizationType}
         </if>
         <if test="org.organizationKey != null and org.organizationKey != ''">
-            AND organization_key = #{org.organizationKey}
+            AND org.organization_key = #{org.organizationKey}
         </if>
         <if test="org.organizationName != null and org.organizationName != ''">
-            AND organization_name = #{org.organizationName}
+            AND org.organization_name = #{org.organizationName}
         </if>
         <if test="org.organizationStatus != null and org.organizationStatus != ''">
-            AND organization_status = #{org.organizationStatus}
+            AND org.organization_status = #{org.organizationStatus}
         </if>
         <if test="org.organizationLevel != null and org.organizationLevel != ''">
-            AND organization_level = #{org.organizationLevel}
+            AND org.organization_level = #{org.organizationLevel}
         </if>
         <if test="org.parentId != null and org.parentId != ''">
             <choose>
                 <!-- 仅查询子机构，不包含parentId机构本身 -->
                 <when test="org.isLeaf != null and org.isLeaf == '1'.toString()">
-                    AND find_in_set(#{org.parentId}, ancestors)
+                    AND find_in_set(#{org.parentId}, org.ancestors)
                 </when>
                 <!-- 查询子机构，包含parentId机构本身 -->
                 <otherwise>
-                    AND (id = #{org.parentId} OR find_in_set(#{org.parentId}, ancestors))
+                    AND (org.id = #{org.parentId} OR find_in_set(#{org.parentId}, org.ancestors))
                 </otherwise>
             </choose>
         </if>
-        ORDER BY id desc
+        ORDER BY org.id desc
     </select>
 
     <!-- 级联查询树 -->
     <select id="selectOrganizationList" resultType="com.gitegg.service.system.entity.Organization" parameterType="com.gitegg.service.system.entity.Organization">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_sys_organization
-        WHERE del_flag = 0
+        FROM t_sys_organization org
+        WHERE org.del_flag = 0
         <if test="org.organizationType != null and org.organizationType != ''">
-            AND organization_type = #{org.organizationType}
+            AND org.organization_type = #{org.organizationType}
         </if>
         <if test="org.organizationKey != null and org.organizationKey != ''">
-            AND organization_key = #{org.organizationKey}
+            AND org.organization_key = #{org.organizationKey}
         </if>
         <if test="org.organizationName != null and org.organizationName != ''">
-            AND organization_name = #{org.organizationName}
+            AND org.organization_name = #{org.organizationName}
         </if>
         <if test="org.organizationStatus != null and org.organizationStatus != ''">
-            AND organization_status = #{org.organizationStatus}
+            AND org.organization_status = #{org.organizationStatus}
         </if>
         <if test="org.organizationLevel != null and org.organizationLevel != ''">
-            AND organization_level = #{org.organizationLevel}
+            AND org.organization_level = #{org.organizationLevel}
         </if>
         <if test="org.parentId != null">
-            AND parent_id = #{org.parentId}
+            AND org.parent_id = #{org.parentId}
         </if>
-        ORDER BY id desc
+        ORDER BY org.id desc
     </select>
 
 </mapper>
