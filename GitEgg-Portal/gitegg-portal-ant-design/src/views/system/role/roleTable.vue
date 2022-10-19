@@ -188,7 +188,7 @@
         <a-form-model-item label="数据权限"
                            prop="dataPermissionType">
           <a-select v-model="roleForm.dataPermissionType">
-            <a-select-option v-for="item in dataPermissionTypeList" :key="item.dictCode" placeholder="请选择分布式存储分类" :label="item.dictName" :value="item.dictCode">
+            <a-select-option v-for="item in dataPermissionTypeList" :key="item.dictCode" placeholder="请选择数据权限类型" :label="item.dictName" :value="item.dictCode">
               {{ item.dictName }}
             </a-select-option>
           </a-select>
@@ -362,7 +362,7 @@ export default {
         roleKey: '',
         roleLevel: '',
         roleStatus: 1,
-        dataPermissionType: 'DATA_PERMISSION_SELF',
+        dataPermissionType: '3',
         comments: ''
       },
       // 表头
@@ -533,7 +533,7 @@ export default {
         roleKey: '',
         roleLevel: '',
         roleStatus: 1,
-        dataPermissionType: 'DATA_PERMISSION_SELF',
+        dataPermissionType: '3',
         comments: ''
       }
     },
