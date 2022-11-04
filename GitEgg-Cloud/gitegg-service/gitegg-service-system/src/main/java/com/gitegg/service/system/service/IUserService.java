@@ -35,6 +35,21 @@ public interface IUserService extends IService<User> {
      * @return
      */
     boolean updateUser(UpdateUserDTO user);
+    
+    /**
+     * 重置用户密码
+     * @param userId
+     * @return
+     */
+    boolean resetUserPassword(Long userId);
+    
+    /**
+     * 修改用户状态
+     * @param userId
+     * @param status
+     * @return
+     */
+    boolean updateUserStatus(Long userId, Integer status);
 
     /**
      * 删除用户

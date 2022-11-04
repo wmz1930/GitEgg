@@ -3,6 +3,7 @@ package com.gitegg.service.system.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitegg.platform.base.constant.AuthConstant;
@@ -287,6 +288,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 userRoleService.save(userRole);
             }
         }
+        return result;
+    }
+    
+    /**
+     * 重置用户密码
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean resetUserPassword(Long userId) {
+        if (null == userId) {
+            throw new BusinessException("用户不存在");
+        }
+        User oldInfo = this.getById(userId);
+        if (oldInfo == null)
+        {
+            throw new BusinessException("用户不存在");
+        }
+        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        String cryptPwd = passwordEncoder.encode(AuthConstant.BCRYPT + oldInfo.getAccount() +  DigestUtils.md5DigestAsHex(defaultPwd.getBytes()));
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(User::getPassword, cryptPwd).eq(User::getId, userId);
+        boolean result = this.update(updateWrapper);
+        return result;
+    }
+    
+    /**
+     * 修改用户状态
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean updateUserStatus( Long userId, Integer status) {
+        if (null == userId || null == status) {
+            throw new BusinessException("参数错误");
+        }
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(User::getStatus, status).eq(User::getId, userId);
+        boolean result = this.update(updateWrapper);
         return result;
     }
     

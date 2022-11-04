@@ -160,7 +160,7 @@ public class UserController {
             return Result.error(ResultCodeEnum.FAILED);
         }
     }
-
+    
     /**
      * 重置密码
      */
@@ -171,18 +171,14 @@ public class UserController {
         if (null == userId) {
             return Result.error("用户ID不能为空");
         }
-        User oldInfo = userService.getById(userId);
-        UpdateUserDTO user = BeanCopierUtils.copyByClass(oldInfo, UpdateUserDTO.class);
-        user.setId(userId);
-        user.setPassword(defaultPwd);
-        boolean result = userService.updateUser(user);
+        boolean result = userService.resetUserPassword(userId);
         if (result) {
             return Result.success();
         } else {
             return Result.error(ResultCodeEnum.FAILED);
         }
     }
-
+    
     /**
      * 修改用户状态
      */
@@ -190,15 +186,9 @@ public class UserController {
     @ApiOperation(value = "管理员修改用户状态")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataTypeClass = Long.class, paramType = "path"),
-        @ApiImplicitParam(name = "status", value = "用户状态", required = true, dataTypeClass = Integer.class, paramType = "path")})
+            @ApiImplicitParam(name = "status", value = "用户状态", required = true, dataTypeClass = Integer.class, paramType = "path")})
     public Result<?> updateStatus(@PathVariable("userId") Long userId, @PathVariable("status") Integer status) {
-        if (null == userId || StringUtils.isEmpty(status)) {
-            return Result.error("ID和状态不能为空");
-        }
-        UpdateUserDTO user = new UpdateUserDTO();
-        user.setId(userId);
-        user.setStatus(status);
-        boolean result = userService.updateUser(user);
+        boolean result = userService.updateUserStatus(userId, status);
         if (result) {
             return Result.success();
         } else {
