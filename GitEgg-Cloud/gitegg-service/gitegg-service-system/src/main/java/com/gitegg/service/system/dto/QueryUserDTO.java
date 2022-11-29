@@ -76,6 +76,9 @@ public class QueryUserDTO implements Serializable
 
     @ApiModelProperty(value = "角色id")
     private Long roleId;
+    
+    @ApiModelProperty(value = "角色标识")
+    private String roleKey;
 
     @ApiModelProperty(value = "开始时间")
     private String beginDateTime;

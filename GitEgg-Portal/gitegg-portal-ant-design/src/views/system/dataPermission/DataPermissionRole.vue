@@ -524,8 +524,8 @@ export default {
       loadData: parameter => {
         return queryDataPermissionRoleList(Object.assign(parameter, this.listQuery))
           .then(res => {
-            this.list = res.data
-            return res
+            this.list = res.data.records
+            return res.data
           })
       },
       listRoleQuery: {
@@ -572,8 +572,8 @@ export default {
       loadRoleData: parameter => {
         return fetchList(Object.assign(parameter, this.listRoleQuery))
           .then(res => {
-            this.roleDataPermissionList = res.data
-            return res
+            this.roleDataPermissionList = res.data.records
+            return res.data
           })
       },
       rowSelection: {
@@ -680,8 +680,8 @@ export default {
     getList () {
       this.listLoading = true
       queryDataPermissionRoleList(this.listQuery).then(response => {
-        this.list = response.data
-        this.total = response.count
+        this.list = response.data.records
+        this.total = response.data.total
         this.listLoading = false
       })
     },

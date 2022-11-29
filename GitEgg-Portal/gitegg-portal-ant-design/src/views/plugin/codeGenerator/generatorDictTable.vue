@@ -413,8 +413,8 @@ export default {
       loadParentData: parameter => {
         return fetchGeneratorDictList(Object.assign(parameter, this.parentTreeQuery))
           .then(res => {
-            this.parentList = res.data
-            return res
+            this.parentList = res.data.records
+            return res.data
           })
       },
       dictTitle: '',
@@ -431,8 +431,8 @@ export default {
       loadData: parameter => {
         return fetchGeneratorDictList(Object.assign(parameter, this.treeQuery))
           .then(res => {
-            this.list = res.data
-            return res
+            this.list = res.data.records
+            return res.data
           })
       },
       rules: {

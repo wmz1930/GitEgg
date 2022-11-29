@@ -448,8 +448,8 @@
                 loadData: parameter => {
                     return queryDfsList(Object.assign(parameter, this.listQuery))
                         .then(res => {
-                            this.list = res.data
-                            return res
+                            this.list = res.data.records
+                            return res.data
                         })
                 },
                 dialogTestUploadVisible: false,

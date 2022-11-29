@@ -39,11 +39,13 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 /**
+ * 读取并缓存请求数据
  * Quoted from @see https://github.com/chenggangpro/spring-cloud-gateway-plugin
  *
  * Gateway Context Filter
@@ -69,8 +71,8 @@ public class GatewayRequestContextFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         GatewayContext gatewayContext = new GatewayContext();
-        gatewayContext.setReadRequestData(shouldReadRequestData(exchange));
-        gatewayContext.setReadResponseData(gatewayPluginProperties.getResponseLog());
+        gatewayContext.setReadRequestData(shouldReadRequestData(exchange) || shouldReadRequestInjectionData(exchange));
+        gatewayContext.setReadResponseData(gatewayPluginProperties.getLogRequest().getResponseLog());
         HttpHeaders headers = request.getHeaders();
         gatewayContext.setRequestHeaders(headers);
         if(Objects.nonNull(contextExtraDataGenerator)){
@@ -88,7 +90,7 @@ public class GatewayRequestContextFilter implements GlobalFilter, Ordered {
          */
         exchange.getAttributes().put(GatewayContext.CACHE_GATEWAY_CONTEXT, gatewayContext);
         MediaType contentType = headers.getContentType();
-        if(headers.getContentLength()>0){
+        if(headers.getContentLength() > 0){
             if(MediaType.APPLICATION_JSON.equals(contentType) || MediaType.APPLICATION_JSON_UTF8.equals(contentType)){
                 return readBody(exchange, chain,gatewayContext);
             }
@@ -112,8 +114,8 @@ public class GatewayRequestContextFilter implements GlobalFilter, Ordered {
      * @return boolean
      */
     private boolean shouldReadRequestData(ServerWebExchange exchange){
-        if(gatewayPluginProperties.getRequestLog()
-                && GatewayLogTypeEnum.ALL.getType().equals(gatewayPluginProperties.getLogType())){
+        if(gatewayPluginProperties.getLogRequest().getRequestLog()
+                && GatewayLogTypeEnum.ALL.getType().equals(gatewayPluginProperties.getLogRequest().getLogType())){
             log.debug("[GatewayContext]Properties Set Read All Request Data");
             return true;
         }
@@ -122,13 +124,13 @@ public class GatewayRequestContextFilter implements GlobalFilter, Ordered {
         boolean pathFlag = false;
         boolean lbFlag = false;
 
-        List<String> readRequestDataServiceIdList = gatewayPluginProperties.getServiceIdList();
+        List<String> readRequestDataServiceIdList = gatewayPluginProperties.getLogRequest().getServiceIdList();
 
-        List<String> readRequestDataPathList = gatewayPluginProperties.getPathList();
+        List<String> readRequestDataPathList = gatewayPluginProperties.getLogRequest().getPathList();
 
         if(!CollectionUtils.isEmpty(readRequestDataPathList)
-                && (GatewayLogTypeEnum.PATH.getType().equals(gatewayPluginProperties.getLogType())
-                    || GatewayLogTypeEnum.CONFIGURE.getType().equals(gatewayPluginProperties.getLogType()))){
+                && (GatewayLogTypeEnum.PATH.getType().equals(gatewayPluginProperties.getLogRequest().getLogType())
+                    || GatewayLogTypeEnum.CONFIGURE.getType().equals(gatewayPluginProperties.getLogRequest().getLogType()))){
             String requestPath = exchange.getRequest().getPath().pathWithinApplication().value();
             for(String path : readRequestDataPathList){
                 if(ANT_PATH_MATCHER.match(path,requestPath)){
@@ -147,31 +149,104 @@ public class GatewayRequestContextFilter implements GlobalFilter, Ordered {
 
         String routeServiceId = routeUri.getHost().toLowerCase();
         if(!CollectionUtils.isEmpty(readRequestDataServiceIdList)
-                && (GatewayLogTypeEnum.SERVICE.getType().equals(gatewayPluginProperties.getLogType())
-                || GatewayLogTypeEnum.CONFIGURE.getType().equals(gatewayPluginProperties.getLogType()))){
+                && (GatewayLogTypeEnum.SERVICE.getType().equals(gatewayPluginProperties.getLogRequest().getLogType())
+                || GatewayLogTypeEnum.CONFIGURE.getType().equals(gatewayPluginProperties.getLogRequest().getLogType()))){
             if(readRequestDataServiceIdList.contains(routeServiceId)){
                 log.debug("[GatewayContext]Properties Set Read Specific Request Data With ServiceId:{}",routeServiceId);
                 serviceFlag =  true;
             }
         }
 
-        if (GatewayLogTypeEnum.CONFIGURE.getType().equals(gatewayPluginProperties.getLogType())
+        if (GatewayLogTypeEnum.CONFIGURE.getType().equals(gatewayPluginProperties.getLogRequest().getLogType())
                 && serviceFlag && pathFlag && !lbFlag)
         {
             return true;
         }
-        else if (GatewayLogTypeEnum.SERVICE.getType().equals(gatewayPluginProperties.getLogType())
+        else if (GatewayLogTypeEnum.SERVICE.getType().equals(gatewayPluginProperties.getLogRequest().getLogType())
                 && serviceFlag && !lbFlag)
         {
             return true;
         }
-        else if (GatewayLogTypeEnum.PATH.getType().equals(gatewayPluginProperties.getLogType())
+        else if (GatewayLogTypeEnum.PATH.getType().equals(gatewayPluginProperties.getLogRequest().getLogType())
                 && pathFlag)
         {
             return true;
         }
 
         return false;
+    }
+    
+    /**
+     * 因为加入了SQL注入和XSS注入拦截，这里单独判断
+     * @return boolean
+     */
+    private boolean shouldReadRequestInjectionData(ServerWebExchange exchange){
+        if((gatewayPluginProperties.getSqlInjection().getEnable()
+                 && CollectionUtils.isEmpty(gatewayPluginProperties.getSqlInjection().getServiceIdList())
+                 && CollectionUtils.isEmpty(gatewayPluginProperties.getSqlInjection().getPathList()))
+                || (gatewayPluginProperties.getXssInjection().getEnable()
+                && CollectionUtils.isEmpty(gatewayPluginProperties.getXssInjection().getServiceIdList())
+                && CollectionUtils.isEmpty(gatewayPluginProperties.getXssInjection().getPathList())
+        )){
+            log.debug("[GatewayContext]Properties Set Read All Request Data");
+            return true;
+        }
+        
+        boolean serviceFlag = false;
+        boolean pathFlag = false;
+    
+        List<String> readRequestDataServiceIdList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(gatewayPluginProperties.getSqlInjection().getServiceIdList()))
+        {
+            readRequestDataServiceIdList.addAll(gatewayPluginProperties.getSqlInjection().getServiceIdList());
+        }
+
+        if (!CollectionUtils.isEmpty(gatewayPluginProperties.getXssInjection().getServiceIdList()))
+        {
+            readRequestDataServiceIdList.addAll(gatewayPluginProperties.getXssInjection().getServiceIdList());
+        }
+    
+        List<String> readRequestDataPathList = new ArrayList<>();
+        
+        if (!CollectionUtils.isEmpty(gatewayPluginProperties.getSqlInjection().getPathList()))
+        {
+            readRequestDataPathList.addAll(gatewayPluginProperties.getSqlInjection().getPathList());
+        }
+    
+        if (!CollectionUtils.isEmpty(gatewayPluginProperties.getXssInjection().getPathList()))
+        {
+            readRequestDataPathList.addAll(gatewayPluginProperties.getXssInjection().getPathList());
+        }
+        
+        // 因为请求的路径太多，防注入采取白名单模式，如果配置了地址，那么就放过，所以不需要进行参数解析
+        if(!CollectionUtils.isEmpty(readRequestDataPathList)){
+            String requestPath = exchange.getRequest().getPath().pathWithinApplication().value();
+            for(String path : readRequestDataPathList){
+                if(ANT_PATH_MATCHER.match(path,requestPath)){
+                    log.debug("[GatewayContext]Properties Set Not Read Specific Request Data With Request Path:{},Math Pattern:{}", requestPath, path);
+                    pathFlag =  true;
+                    break;
+                }
+            }
+        }
+        
+        Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
+        URI routeUri = route.getUri();
+        
+        String routeServiceId = routeUri.getHost().toLowerCase();
+        if(!CollectionUtils.isEmpty(readRequestDataServiceIdList)){
+            if(readRequestDataServiceIdList.contains(routeServiceId)){
+                log.debug("[GatewayContext]Properties Set Not Read Specific Request Data With ServiceId:{}",routeServiceId);
+                serviceFlag =  true;
+            }
+        }
+        
+        if (serviceFlag && pathFlag)
+        {
+            return false;
+        }
+        
+        return true;
     }
 
     /**

@@ -61,9 +61,9 @@ public class JustAuthConfigController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询租户第三方登录功能配置表列表")
-    public PageResult<JustAuthConfigDTO> list(QueryJustAuthConfigDTO queryJustAuthConfigDTO, Page<JustAuthConfigDTO> page) {
+    public Result<Page<JustAuthConfigDTO>> list(QueryJustAuthConfigDTO queryJustAuthConfigDTO, Page<JustAuthConfigDTO> page) {
         Page<JustAuthConfigDTO> pageJustAuthConfig = justAuthConfigService.queryJustAuthConfigList(page, queryJustAuthConfigDTO);
-        return PageResult.data(pageJustAuthConfig.getTotal(), pageJustAuthConfig.getRecords());
+        return Result.data(pageJustAuthConfig);
     }
 
     /**

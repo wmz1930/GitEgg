@@ -71,6 +71,10 @@ public class Resource extends BaseEntity {
     @ApiModelProperty(value = "是否显示")
     @TableField("resource_show")
     private Boolean resourceShow;
+    
+    @ApiModelProperty(value = "当类型为菜单且不展示时，左侧菜单的选中项")
+    @TableField("current_active_path")
+    private String currentActivePath;
 
     @ApiModelProperty(value = "是否缓存")
     @TableField("resource_cache")
@@ -79,6 +83,10 @@ public class Resource extends BaseEntity {
     @ApiModelProperty(value = "页面name")
     @TableField("resource_page_name")
     private String resourcePageName;
+    
+    @ApiModelProperty(value = "是否在tab中显示")
+    @TableField("tab_show")
+    private Boolean tabShow;
 
     @ApiModelProperty(value = "1有效，0禁用")
     @TableField("resource_status")

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ public class UpdateDataPermissionUserDTO extends BaseEntity {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
+    @NotNull
     private Long userId;
 
     @ApiModelProperty(value = "机构id")

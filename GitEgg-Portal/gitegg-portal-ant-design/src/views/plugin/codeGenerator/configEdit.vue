@@ -46,11 +46,11 @@
     import { STable } from '@/components'
     import { queryConfigList, createConfig, updateConfig, updateConfigStatus, batchDeleteConfig, deleteConfig, checkConfigExist, queryConfig } from '@/api/plugin/codeGenerator/config/config'
     import { queryFieldListAll, editField } from '@/api/plugin/codeGenerator/field/field'
-    import TableJoin from './configSteps/tableJoin'
-    import TableField from './configSteps/tableField'
-    import TableForm from './configSteps/tableForm'
-    import TableFormValid from './configSteps/tableFormValid'
-    import TableList from './configSteps/tableList'
+    import TableJoin from './configSteps/TableJoin'
+    import TableField from './configSteps/TableField'
+    import TableForm from './configSteps/TableForm'
+    import TableFormValid from './configSteps/TableFormValid'
+    import TableList from './configSteps/TableList'
 
     import moment from 'moment'
     export default {

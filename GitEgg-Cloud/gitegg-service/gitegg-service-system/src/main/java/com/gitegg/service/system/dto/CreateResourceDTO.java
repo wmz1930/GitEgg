@@ -56,12 +56,18 @@ public class CreateResourceDTO implements Serializable {
 
     @ApiModelProperty(value = "是否显示")
     private Boolean resourceShow;
+    
+    @ApiModelProperty(value = "当类型为菜单且不展示时，左侧菜单的选中项")
+    private String currentActivePath;
 
     @ApiModelProperty(value = "是否缓存")
     private Boolean resourceCache;
 
     @ApiModelProperty(value = "页面name")
     private String resourcePageName;
+    
+    @ApiModelProperty(value = "是否在tab中显示")
+    private Boolean tabShow;
 
     @ApiModelProperty(value = "1有效，0禁用")
     private Integer resourceStatus;

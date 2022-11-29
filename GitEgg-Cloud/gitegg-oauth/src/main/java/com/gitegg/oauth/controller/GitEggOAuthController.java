@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
+import com.gitegg.oauth.dto.LogoutDTO;
 import com.gitegg.oauth.dto.SmsVerificationDTO;
 import com.gitegg.oauth.util.CaptchaUtils;
 import com.gitegg.oauth.util.JwtUtils;
@@ -186,16 +187,15 @@ public class GitEggOAuthController {
      */
     @ApiOperation("退出登录接口")
     @PostMapping("/logout")
-    public Result logout(HttpServletRequest request) {
+    public Result logout(HttpServletRequest request, @RequestBody LogoutDTO logoutDTO) {
 
         String token = request.getHeader(AuthConstant.JWT_TOKEN_HEADER);
-        String refreshToken = request.getParameter(AuthConstant.REFRESH_TOKEN);
         long currentTimeSeconds = System.currentTimeMillis() / GitEggConstant.Number.THOUSAND;
 
         // 将token和refresh_token同时加入黑名单
         String[] tokenArray = new String[GitEggConstant.Number.TWO];
         tokenArray[GitEggConstant.Number.ZERO] = token.replace(AuthConstant.JWT_TOKEN_PREFIX, "");
-        tokenArray[GitEggConstant.Number.ONE] = refreshToken;
+        tokenArray[GitEggConstant.Number.ONE] = logoutDTO.getRefreshToken();
         for (int i = GitEggConstant.Number.ZERO; i < tokenArray.length; i++) {
             String realToken = tokenArray[i];
             JSONObject jsonObject = JwtUtils.decodeJwt(realToken);

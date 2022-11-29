@@ -5,7 +5,7 @@
     <parent>
         <artifactId>gitegg-service</artifactId>
         <groupId>com.gitegg.cloud</groupId>
-        <version>1.0.5.RELEASE</version>
+        <version>1.0.6.RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,11 +34,22 @@
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-mail</artifactId>
         </dependency>
+        <!-- 微信小程序 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-wechat</artifactId>
+        </dependency>
         <!-- gitegg-service-extension 的fegin公共调用方法 -->
         <dependency>
             <groupId>com.gitegg.cloud</groupId>
             <artifactId>gitegg-service-extension-client</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <!-- gitegg-service-system 的fegin公共调用方法 -->
+        <dependency>
+            <groupId>com.gitegg.cloud</groupId>
+            <artifactId>gitegg-service-system-client</artifactId>
+            <version>${gitegg.project.version}</version>
         </dependency>
     </dependencies>
 

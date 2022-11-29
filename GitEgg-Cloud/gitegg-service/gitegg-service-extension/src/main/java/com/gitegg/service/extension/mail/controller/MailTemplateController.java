@@ -59,9 +59,9 @@ public class MailTemplateController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询邮件模板列表")
-    public PageResult<MailTemplateDTO> list(QueryMailTemplateDTO queryMailTemplateDTO, Page<MailTemplateDTO> page) {
+    public Result<Page<MailTemplateDTO>> list(QueryMailTemplateDTO queryMailTemplateDTO, Page<MailTemplateDTO> page) {
         Page<MailTemplateDTO> pageMailTemplate = mailTemplateService.queryMailTemplateList(page, queryMailTemplateDTO);
-        return PageResult.data(pageMailTemplate.getTotal(), pageMailTemplate.getRecords());
+        return Result.data(pageMailTemplate);
     }
 
     /**

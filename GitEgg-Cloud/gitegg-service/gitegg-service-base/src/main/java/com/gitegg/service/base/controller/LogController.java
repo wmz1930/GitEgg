@@ -1,5 +1,6 @@
 package com.gitegg.service.base.controller;
 
+import com.gitegg.platform.base.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +37,8 @@ public class LogController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "查询操作日志列表")
-    public PageResult<LogDTO> list(QueryLogDTO log, Page<LogDTO> page) {
+    public Result<Page<LogDTO>> list(QueryLogDTO log, Page<LogDTO> page) {
         Page<LogDTO> pageLog = logService.selectLogList(page, log);
-        PageResult<LogDTO> pageResult = new PageResult<>(pageLog.getTotal(), pageLog.getRecords());
-        return pageResult;
+        return Result.data(pageLog);
     }
 }

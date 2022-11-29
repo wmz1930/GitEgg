@@ -10,7 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 /**
- * 容器启动完成加载资源权限数据到缓存
+ * 容器启动完成加载扩展信息数据到缓存
  * @author GitEgg
  */
 @Slf4j
@@ -28,8 +28,7 @@ public class InitExtensionCacheRunner implements CommandLineRunner {
     public void run(String... args) {
 
         log.info("InitExtensionCacheRunner running");
-    
-    
+        
         // 初始化第三方登录主配置
         justAuthConfigService.initJustAuthConfigList();
 

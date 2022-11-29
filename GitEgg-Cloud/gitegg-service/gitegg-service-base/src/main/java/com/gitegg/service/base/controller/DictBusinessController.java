@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * <p>
- * 系统数据字典表 前端控制器
+ * 业务数据字典表 前端控制器
  * </p>
  *
  * @author GitEgg
@@ -49,10 +49,9 @@ public class DictBusinessController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "查询字典列表")
-    public PageResult<DictBusinessDTO> list(QueryDictBusinessDTO dict, Page<DictBusinessDTO> page) {
+    public Result<Page<DictBusinessDTO>> list(QueryDictBusinessDTO dict, Page<DictBusinessDTO> page) {
         Page<DictBusinessDTO> pageDictBusiness = dictBusinessService.selectDictBusinessList(page, dict);
-        PageResult<DictBusinessDTO> pageResult = new PageResult<>(pageDictBusiness.getTotal(), pageDictBusiness.getRecords());
-        return pageResult;
+        return Result.data(pageDictBusiness);
     }
 
     /**

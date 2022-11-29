@@ -52,10 +52,9 @@ public class DictController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "查询字典列表")
-    public PageResult<DictDTO> list(QueryDictDTO dict, Page<DictDTO> page) {
+    public Result<Page<DictDTO>> list(QueryDictDTO dict, Page<DictDTO> page) {
         Page<DictDTO> pageDict = dictService.selectDictList(page, dict);
-        PageResult<DictDTO> pageResult = new PageResult<>(pageDict.getTotal(), pageDict.getRecords());
-        return pageResult;
+        return Result.data(pageDict);
     }
 
     /**

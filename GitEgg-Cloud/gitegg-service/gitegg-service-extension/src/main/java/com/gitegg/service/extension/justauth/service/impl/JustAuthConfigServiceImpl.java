@@ -128,12 +128,15 @@ public class JustAuthConfigServiceImpl extends ServiceImpl<JustAuthConfigMapper,
     */
     @Override
     public boolean deleteJustAuthConfig(Long justAuthConfigId) {
-        // 从缓存删除
         JustAuthConfig justAuthConfigDelete = this.getById(justAuthConfigId);
-        JustAuthConfigDTO justAuthConfigDTO = BeanCopierUtils.copyByClass(justAuthConfigDelete, JustAuthConfigDTO.class);
-        this.deleteJustAuthConfigCache(justAuthConfigDTO);
         // 从数据库删除
         boolean result = this.removeById(justAuthConfigId);
+        // 从缓存删除
+        if (result)
+        {
+            JustAuthConfigDTO justAuthConfigDTO = BeanCopierUtils.copyByClass(justAuthConfigDelete, JustAuthConfigDTO.class);
+            this.deleteJustAuthConfigCache(justAuthConfigDTO);
+        }
         return result;
     }
 
@@ -145,7 +148,9 @@ public class JustAuthConfigServiceImpl extends ServiceImpl<JustAuthConfigMapper,
     @Override
     public boolean batchDeleteJustAuthConfig(List<Long> justAuthConfigIds) {
         List<JustAuthConfig> justAuthConfigDeleteList = this.listByIds(justAuthConfigIds);
-        if (!CollectionUtils.isEmpty(justAuthConfigDeleteList))
+        boolean result = this.removeByIds(justAuthConfigIds);
+        // 从缓存删除
+        if (result && !CollectionUtils.isEmpty(justAuthConfigDeleteList))
         {
             for(JustAuthConfig justAuthConfigDelete: justAuthConfigDeleteList)
             {
@@ -153,7 +158,6 @@ public class JustAuthConfigServiceImpl extends ServiceImpl<JustAuthConfigMapper,
                 this.deleteJustAuthConfigCache(justAuthConfigDTO);
             }
         }
-        boolean result = this.removeByIds(justAuthConfigIds);
         return result;
     }
     

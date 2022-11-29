@@ -53,9 +53,9 @@ public class DatasourceController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询数据源配置表列表")
-    public PageResult<DatasourceDTO> list(QueryDatasourceDTO queryDatasourceDTO, Page<DatasourceDTO> page) {
+    public Result<Page<DatasourceDTO>> list(QueryDatasourceDTO queryDatasourceDTO, Page<DatasourceDTO> page) {
         Page<DatasourceDTO> pageDatasource = datasourceService.queryDatasourceList(page, queryDatasourceDTO);
-        return PageResult.data(pageDatasource.getTotal(), pageDatasource.getRecords());
+        return Result.data(pageDatasource);
     }
 
     /**

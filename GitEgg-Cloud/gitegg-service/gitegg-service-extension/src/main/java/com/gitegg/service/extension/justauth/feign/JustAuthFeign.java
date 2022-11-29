@@ -1,26 +1,19 @@
 package com.gitegg.service.extension.justauth.feign;
 
-import com.gitegg.platform.base.constant.GitEggConstant;
-import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.result.Result;
-import com.gitegg.platform.base.util.BeanCopierUtils;
 import com.gitegg.service.extension.client.dto.JustAuthSocialInfoDTO;
-import com.gitegg.service.extension.justauth.dto.*;
 import com.gitegg.service.extension.justauth.entity.JustAuthSocial;
 import com.gitegg.service.extension.justauth.entity.JustAuthSocialUser;
-import com.gitegg.service.extension.justauth.service.IJustAuthSocialService;
-import com.gitegg.service.extension.justauth.service.IJustAuthSocialUserService;
+import com.gitegg.service.extension.justauth.service.IJustAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * @ClassName: JustAuthFeign
@@ -34,44 +27,27 @@ import java.util.List;
 @Api(value = "JustAuthFeign|提供微服务调用接口")
 @RefreshScope
 public class JustAuthFeign {
-
-    private final IJustAuthSocialService justAuthSocialService;
     
-    private final IJustAuthSocialUserService justAuthSocialUserService;
+    private final IJustAuthService justAuthService;
 
     @GetMapping(value = "/user/bind/id")
     @ApiOperation(value = "查询第三方用户绑定关系", notes = "查询第三方用户绑定关系")
     Result<Object> userBindId(@NotBlank @RequestParam("uuid") String uuid, @NotBlank @RequestParam("source") String source) {
-        QueryJustAuthSocialDTO queryJustAuthSocialDTO = new QueryJustAuthSocialDTO();
-        queryJustAuthSocialDTO.setUuid(uuid);
-        queryJustAuthSocialDTO.setSource(source);
-        Long userId = justAuthSocialService.queryUserIdBySocial(queryJustAuthSocialDTO);
+        Long userId = justAuthService.userBindId(uuid, source);
         return Result.data(userId);
     }
 
     @PostMapping(value = "/user/create/or/update")
     @ApiOperation(value = "创建或更新第三方用户信息", notes = "创建或更新第三方用户信息")
     Result<Object> userCreateOrUpdate(@NotNull @RequestBody JustAuthSocialInfoDTO justAuthSocialInfoDTO) {
-        UpdateJustAuthSocialDTO createJustAuthSocialDTO = BeanCopierUtils.copyByClass(justAuthSocialInfoDTO, UpdateJustAuthSocialDTO.class);
-        JustAuthSocial justAuthSocial = justAuthSocialService.createOrUpdateJustAuthSocial(createJustAuthSocialDTO);
-        return Result.data(justAuthSocial.getId());
+        Long socialId = justAuthService.userCreateOrUpdate(justAuthSocialInfoDTO);
+        return Result.data(socialId);
     }
     
     @GetMapping(value = "/user/bind/query")
     @ApiOperation(value = "查询绑定第三方用户信息", notes = "查询绑定第三方用户信息")
     Result<Object> userBindQuery(@NotNull @RequestParam("socialId") Long socialId) {
-        QueryJustAuthSocialUserDTO justAuthSocialUserQuery = new QueryJustAuthSocialUserDTO();
-        justAuthSocialUserQuery.setSocialId(socialId);
-        List<JustAuthSocialUserDTO> justAuthSocialUserList = justAuthSocialUserService.queryJustAuthSocialUserList(justAuthSocialUserQuery);
-        if (CollectionUtils.isEmpty(justAuthSocialUserList))
-        {
-            return Result.error(ResultCodeEnum.BIND_NOT_FOUND);
-        }
-        else if (!CollectionUtils.isEmpty(justAuthSocialUserList) && justAuthSocialUserList.size() > 1)
-        {
-            return Result.error(ResultCodeEnum.BIND_MULTIPLE);
-        }
-        return Result.data(justAuthSocialUserList.get(GitEggConstant.Number.ZERO).getUserId());
+        return justAuthService.userBindQuery(socialId);
     }
     
     /**
@@ -82,32 +58,20 @@ public class JustAuthFeign {
     @GetMapping(value = "/social/info/query")
     Result<Object> querySocialInfo(@NotNull @RequestParam("socialId") Long socialId)
     {
-        JustAuthSocial justAuthSocial = justAuthSocialService.getById(socialId);
+        JustAuthSocial justAuthSocial = justAuthService.querySocialInfo(socialId);
         return Result.data(justAuthSocial);
     }
 
     @GetMapping(value = "/user/bind")
     @ApiOperation(value = "绑定第三方用户信息", notes = "绑定第三方用户信息")
     Result<JustAuthSocialUser> userBind(@NotNull @RequestParam("socialId") Long socialId, @NotNull @RequestParam("userId") Long userId) {
-        CreateJustAuthSocialUserDTO justAuthSocialUserCreate = new CreateJustAuthSocialUserDTO();
-        justAuthSocialUserCreate.setSocialId(socialId);
-        justAuthSocialUserCreate.setUserId(userId);
-        JustAuthSocialUser justAuthSocialUser = justAuthSocialUserService.createJustAuthSocialUser(justAuthSocialUserCreate);
+        JustAuthSocialUser justAuthSocialUser = justAuthService.userBind(socialId, userId);
         return Result.data(justAuthSocialUser);
     }
     
     @GetMapping(value = "/user/unbind")
     @ApiOperation(value = "解绑第三方用户信息", notes = "解绑第三方用户信息")
     Result<JustAuthSocialUser> userUnbind(@NotNull @RequestParam("socialId") Long socialId, @NotNull @RequestParam("userId") Long userId) {
-        QueryJustAuthSocialUserDTO justAuthSocialUserQuery = new QueryJustAuthSocialUserDTO();
-        justAuthSocialUserQuery.setSocialId(socialId);
-        justAuthSocialUserQuery.setUserId(userId);
-        JustAuthSocialUserDTO justAuthSocialUserDTO = justAuthSocialUserService.queryJustAuthSocialUser(justAuthSocialUserQuery);
-        if (null == justAuthSocialUserDTO)
-        {
-            return Result.error(ResultCodeEnum.BIND_NOT_FOUND);
-        }
-        justAuthSocialUserService.deleteJustAuthSocialUser(justAuthSocialUserDTO.getId());
-        return Result.success();
+        return justAuthService.userUnbind(socialId, userId);
     }
 }

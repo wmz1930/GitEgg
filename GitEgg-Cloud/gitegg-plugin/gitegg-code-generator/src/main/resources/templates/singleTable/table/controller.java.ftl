@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitegg.platform.base.constant.GitEggConstant;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.dto.CheckExistDTO;
 import ${package.Entity}.*;
@@ -80,9 +79,9 @@ public class ${table.controllerName} {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询${table.comment!}列表")
-    public PageResult<${entity}DTO> list(Query${entity}DTO query${entity}DTO, Page<${entity}DTO> page) {
+    public Result<Page<${entity}DTO>> list(Query${entity}DTO query${entity}DTO, Page<${entity}DTO> page) {
         Page<${entity}DTO> page${entity} = ${table.entityPath}Service.query${entity}List(page, query${entity}DTO);
-        return PageResult.data(page${entity}.getTotal(), page${entity}.getRecords());
+        return Result.data(page${entity});
     }
 
     /**

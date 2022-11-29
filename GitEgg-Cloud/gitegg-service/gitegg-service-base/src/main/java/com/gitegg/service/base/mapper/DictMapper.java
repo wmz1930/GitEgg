@@ -2,6 +2,7 @@ package com.gitegg.service.base.mapper;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -44,4 +45,14 @@ public interface DictMapper extends BaseMapper<Dict> {
      * @return
      */
     List<Dict> selectDictChildren(@Param("dict") QueryDictDTO dict);
+    
+    /**
+     * 查询数据字典，初始化
+     *
+     * @param dict
+     * @return dictInfo
+     */
+    @InterceptorIgnore(tenantLine = "true")
+    List<DictDTO> initDictList( @Param("dict") QueryDictDTO dict);
+    
 }

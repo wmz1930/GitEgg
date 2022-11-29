@@ -26,13 +26,19 @@
     </sql>
     
     <!-- 分页查询角色列表 -->
-	<select id="selectRoleList" resultType="com.gitegg.service.system.entity.Role" parameterType="com.gitegg.service.system.entity.Role">
+	<select id="selectRoleList" resultType="com.gitegg.service.system.entity.Role" parameterType="com.gitegg.service.system.dto.QueryRoleDTO">
 		SELECT
 		<include refid="Base_Column_List"/>
 		FROM t_sys_role
 		WHERE del_flag = 0
 		<if test="role.id != null and role.id != ''">
 			AND id = #{role.id}
+		</if>
+		<if test="role.roleIds != null and role.roleIds.size > 0 ">
+			and id in
+			<foreach collection="role.roleIds" item ="roleId" index="i" open="(" close=")" separator=",">
+				#{roleId}
+			</foreach>
 		</if>
 		<if test="role.roleName != null and role.roleName != ''">
 			AND role_name = #{role.roleName}
@@ -43,7 +49,8 @@
 		<if test="role.roleLevel != null and role.roleLevel != ''">
 			AND role_level = #{role.roleLevel}
 		</if>
-		<if test="role.roleStatus != null and role.roleStatus != ''">
+		<!--只写!=null即可，否则状态是0时，会有bug-->
+		<if test="role.roleStatus != null">
 			AND role_status = #{role.roleStatus}
 		</if>
 		<if test="role.dataPermissionType != null and role.dataPermissionType != ''">

@@ -53,9 +53,9 @@ public class JustAuthSocialUserController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询第三方用户绑定列表")
-    public PageResult<JustAuthSocialUserDTO> list(QueryJustAuthSocialUserDTO queryJustAuthSocialUserDTO, Page<JustAuthSocialUserDTO> page) {
+    public Result<Page<JustAuthSocialUserDTO>> list(QueryJustAuthSocialUserDTO queryJustAuthSocialUserDTO, Page<JustAuthSocialUserDTO> page) {
         Page<JustAuthSocialUserDTO> pageJustAuthSocialUser = justAuthSocialUserService.queryJustAuthSocialUserList(page, queryJustAuthSocialUserDTO);
-        return PageResult.data(pageJustAuthSocialUser.getTotal(), pageJustAuthSocialUser.getRecords());
+        return Result.data(pageJustAuthSocialUser);
     }
 
     /**

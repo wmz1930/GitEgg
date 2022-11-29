@@ -434,8 +434,8 @@
                 that.loadData = function (parameter) {
                     return queryMailLogList(Object.assign(parameter, that.listMailLogQuery))
                         .then(res => {
-                            that.list = res.data
-                            return res
+                            that.list = res.data.records
+                            return res.data
                         })
                 }
                 that.$nextTick(() => {

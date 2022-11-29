@@ -77,8 +77,8 @@ public class SocialController {
     /**
      * 锁定时间，单位 秒
      */
-    @Value("${system.maxTryTimes}")
-    private long maxLockTime;
+    @Value("${system.maxLockDuration}")
+    private long maxLockDuration;
     
     /**
      * 第三方登录缓存时间，单位 秒
@@ -252,7 +252,7 @@ public class SocialController {
             {
                 // 增加锁定次数
                 redisTemplate.boundValueOps(AuthConstant.LOCK_ACCOUNT_PREFIX + gitEggUser.getId()).increment(GitEggConstant.Number.ONE);
-                redisTemplate.expire(AuthConstant.LOCK_ACCOUNT_PREFIX +gitEggUser.getId(), maxLockTime , TimeUnit.SECONDS);
+                redisTemplate.expire(AuthConstant.LOCK_ACCOUNT_PREFIX +gitEggUser.getId(), maxLockDuration , TimeUnit.SECONDS);
                 throw new BusinessException("账号或密码错误");
             }
         }

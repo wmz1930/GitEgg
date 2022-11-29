@@ -50,10 +50,9 @@ public class GeneratorDictController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "查询字典列表")
-    public PageResult<GeneratorDictDTO> list(QueryGeneratorDictDTO dict, Page<GeneratorDictDTO> page) {
+    public Result<Page<GeneratorDictDTO>> list(QueryGeneratorDictDTO dict, Page<GeneratorDictDTO> page) {
         Page<GeneratorDictDTO> pageGeneratorDict = generatorDictService.selectGeneratorDictList(page, dict);
-        PageResult<GeneratorDictDTO> pageResult = new PageResult<>(pageGeneratorDict.getTotal(), pageGeneratorDict.getRecords());
-        return pageResult;
+        return Result.data(pageGeneratorDict);
     }
 
     /**

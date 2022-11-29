@@ -60,9 +60,9 @@ public class SmsChannelController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询短信渠道表列表")
-    public PageResult<SmsChannelDTO> list(QuerySmsChannelDTO querySmsChannelDTO, Page<SmsChannelDTO> page) {
+    public Result<Page<SmsChannelDTO>> list(QuerySmsChannelDTO querySmsChannelDTO, Page<SmsChannelDTO> page) {
         Page<SmsChannelDTO> pageSmsChannel = smsChannelService.querySmsChannelList(page, querySmsChannelDTO);
-        return PageResult.data(pageSmsChannel.getTotal(), pageSmsChannel.getRecords());
+        return Result.data(pageSmsChannel);
     }
     
     /**

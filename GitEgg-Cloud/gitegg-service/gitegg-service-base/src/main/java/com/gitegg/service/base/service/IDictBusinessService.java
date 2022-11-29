@@ -87,4 +87,17 @@ public interface IDictBusinessService extends IService<DictBusiness> {
      * @return
      */
     List<DictBusiness> queryDictBusinessTreeByParentId(Long parentId);
+    
+    /**
+     * 排除多租户，查询初始化业务数据字典
+     * @param dict
+     * @return
+     */
+    List<DictBusinessDTO> initDictBusinessList(QueryDictBusinessDTO dict);
+    
+    /**
+     * 初始化业务数据词典配置
+     * @return
+     */
+    void initDictBusinessConfig();
 }

@@ -40,8 +40,8 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
     /**
      * 锁定时间，单位 秒
      */
-    @Value("${system.maxTryTimes}")
-    private long maxLockTime;
+    @Value("${system.maxLockDuration}")
+    private long maxLockDuration;
 
     @Override
     public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {
@@ -60,7 +60,7 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
                 Object lockTimes = redisTemplate.boundValueOps(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId()).get();
                 if(null == lockTimes || (int)lockTimes <= maxTryTimes){
                     redisTemplate.boundValueOps(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId()).increment(GitEggConstant.Number.ONE);
-                    redisTemplate.expire(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId(), maxLockTime , TimeUnit.SECONDS);
+                    redisTemplate.expire(AuthConstant.LOCK_ACCOUNT_PREFIX + user.getId(), maxLockDuration , TimeUnit.SECONDS);
                 }
             }
         } catch (Exception e)

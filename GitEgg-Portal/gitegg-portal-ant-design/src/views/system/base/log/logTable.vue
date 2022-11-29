@@ -245,8 +245,8 @@ export default {
       loadData: parameter => {
         return fetchList(Object.assign(parameter, this.listQuery))
           .then(res => {
-            this.list = res.data
-            return res
+            this.list = res.data.records
+            return res.data
           })
       }
     }
@@ -261,8 +261,8 @@ export default {
     getList () {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data
-        this.total = response.count
+	this.list = response.data.records
+        this.total = response.data.total
         this.listLoading = false
       })
     },

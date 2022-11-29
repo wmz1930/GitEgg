@@ -26,8 +26,8 @@ import reactor.core.publisher.Mono;
 import java.util.Optional;
 
 /**
+ * 读取并缓存响应数据
  * Quoted from @see https://github.com/chenggangpro/spring-cloud-gateway-plugin
- *
  *
  * @author: chenggang
  * @createTime: 2019-04-11
@@ -54,7 +54,9 @@ public class GatewayResponseContextFilter implements GlobalFilter, Ordered {
                             Flux<DataBuffer> cachedFlux = Flux.defer(() -> {
                                 DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
                                 DataBufferUtils.retain(buffer);
-                                return Mono.just(buffer);
+                                return Mono.just(buffer).doFinally(s -> {
+                                    DataBufferUtils.release(buffer);
+                                });
                             });
                             BodyInserter<Flux<DataBuffer>, ReactiveHttpOutputMessage> bodyInserter = BodyInserters.fromDataBuffers(cachedFlux);
                             CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, exchange.getResponse().getHeaders());

@@ -60,9 +60,9 @@ public class JustAuthSocialController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询租户第三方登录功能配置表列表")
-    public PageResult<JustAuthSocialDTO> list(QueryJustAuthSocialDTO queryJustAuthSocialDTO, Page<JustAuthSocialDTO> page) {
+    public Result<Page<JustAuthSocialDTO>> list(QueryJustAuthSocialDTO queryJustAuthSocialDTO, Page<JustAuthSocialDTO> page) {
         Page<JustAuthSocialDTO> pageJustAuthSocial = justAuthSocialService.queryJustAuthSocialList(page, queryJustAuthSocialDTO);
-        return PageResult.data(pageJustAuthSocial.getTotal(), pageJustAuthSocial.getRecords());
+        return Result.data(pageJustAuthSocial);
     }
 
     /**

@@ -399,8 +399,8 @@
                 that.listQuery.generationId = that.configForm.id
                   that.loadData = function (parameter) {
                   return queryTableJoinList(Object.assign(parameter, that.listQuery)).then(response => {
-                    that.list = response.data
-                    return response
+                    that.list = response.data.records
+                    return response.data
                   })
                 }
                 that.$nextTick(() => {

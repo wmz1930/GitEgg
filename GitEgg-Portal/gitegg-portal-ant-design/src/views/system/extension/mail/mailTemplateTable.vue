@@ -495,8 +495,8 @@
                 that.loadData = function (parameter) {
                     return queryMailTemplateList(Object.assign(parameter, that.listMailTemplateQuery))
                         .then(res => {
-                            that.list = res.data
-                            return res
+                            that.list = res.data.records
+                            return res.data
                         })
                 }
                 that.$nextTick(() => {

@@ -5,6 +5,7 @@ import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.result.Result;
 import org.apache.http.HttpHeaders;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -32,7 +33,9 @@ public class AuthServerAccessDeniedHandler implements ServerAccessDeniedHandler 
         response.getHeaders().set("Cache-Control", "no-cache");
         String body= JSONUtil.toJsonStr(Result.error(ResultCodeEnum.NO_PERMISSION));
         DataBuffer buffer =  response.bufferFactory().wrap(body.getBytes(Charset.forName("UTF-8")));
-        return response.writeWith(Mono.just(buffer));
+        return response.writeWith(Mono.just(buffer)).doFinally(s -> {
+            DataBufferUtils.release(buffer);
+        });
     }
 }
 

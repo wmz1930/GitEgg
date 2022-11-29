@@ -730,8 +730,8 @@
                 that.loadData = function (parameter) {
                     return queryJustAuthSocialList(Object.assign(parameter, that.listJustAuthSocialQuery))
                         .then(res => {
-                            that.list = res.data
-                            return res
+                            that.list = res.data.records
+                            return res.data
                         })
                 }
                 that.$nextTick(() => {

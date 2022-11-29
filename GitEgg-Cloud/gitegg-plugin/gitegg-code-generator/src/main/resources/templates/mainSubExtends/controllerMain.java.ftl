@@ -81,9 +81,9 @@ public class ${table.controllerName} {
      */
      @GetMapping("/main/list")
      @ApiOperation(value = "联合主表查询${table.comment!}列表")
-     public PageResult<${entity}DTO> mainList(Query${entity}DTO query${entity}DTO, Page<${entity}DTO> page) {
+     public Result<Page<${entity}DTO>> mainList(Query${entity}DTO query${entity}DTO, Page<${entity}DTO> page) {
          Page<${entity}DTO> page${entity} = ${table.entityPath}Service.query${mainEntityName}${entity}List(page, query${entity}DTO);
-         return PageResult.data(page${entity}.getTotal(), page${entity}.getRecords());
+         return Result.data(page${entity});
      }
 
      /**
@@ -109,9 +109,9 @@ public class ${table.controllerName} {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询${table.comment!}列表")
-    public PageResult<${entity}DTO> list(Query${entity}DTO query${entity}DTO, Page<${entity}DTO> page) {
+    public Result<Page<${entity}DTO>> list(Query${entity}DTO query${entity}DTO, Page<${entity}DTO> page) {
         Page<${entity}DTO> page${entity} = ${table.entityPath}Service.query${entity}List(page, query${entity}DTO);
-        return PageResult.data(page${entity}.getTotal(), page${entity}.getRecords());
+        return Result.data(page${entity});
     }
 
     /**

@@ -84,4 +84,16 @@ public interface IDictService extends IService<Dict> {
      * @return
      */
     List<Dict> queryDictTreeByParentId(Long parentId);
+    
+    /**
+     * 排除多租户，查询初始化数据字典
+     * @param dict
+     * @return
+     */
+    List<DictDTO> initDictList(QueryDictDTO dict);
+    
+    /**
+     * 初始化数据词典配置
+     */
+    void initDictConfig();
 }

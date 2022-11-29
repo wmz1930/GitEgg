@@ -86,8 +86,8 @@ public class UserInfoDTO implements Serializable {
     @ApiModelProperty(value = "角色名称")
     private String roleName;
 
-    @ApiModelProperty(value = "数据权限")
-    private String dataPermission;
+    @ApiModelProperty(value = "数据权限列表")
+    private String organizationIds;
 
     @ApiModelProperty(value = "角色列表")
     private List<String> roles;

@@ -49,9 +49,9 @@ public class TenantController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "查询租户信息表列表")
-    public PageResult<TenantDTO> list(QueryTenantDTO queryTenantDTO, Page<TenantDTO> page) {
+    public Result<Page<TenantDTO>> list(QueryTenantDTO queryTenantDTO, Page<TenantDTO> page) {
         Page<TenantDTO> pageTenant = tenantService.queryTenantList(page, queryTenantDTO);
-        return PageResult.data(pageTenant.getTotal(), pageTenant.getRecords());
+        return Result.data(pageTenant);
     }
 
     /**

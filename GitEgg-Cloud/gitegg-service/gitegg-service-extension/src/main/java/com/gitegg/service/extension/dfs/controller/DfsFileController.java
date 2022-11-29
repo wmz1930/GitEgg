@@ -45,9 +45,9 @@ public class DfsFileController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询分布式存储文件记录表列表")
-    public PageResult<DfsFileDTO> list(QueryDfsFileDTO queryDfsFileDTO, Page<DfsFileDTO> page) {
+    public Result<Page<DfsFileDTO>> list(QueryDfsFileDTO queryDfsFileDTO, Page<DfsFileDTO> page) {
         Page<DfsFileDTO> pageDfsFile = dfsFileService.queryDfsFileList(page, queryDfsFileDTO);
-        return PageResult.data(pageDfsFile.getTotal(), pageDfsFile.getRecords());
+        return Result.data(pageDfsFile);
     }
 
     /**

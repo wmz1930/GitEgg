@@ -2,8 +2,11 @@ package com.gitegg.service.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitegg.service.system.dto.QueryRoleDTO;
 import com.gitegg.service.system.entity.Role;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -21,5 +24,12 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @param role
      * @return
      */
-    Page<Role> selectRoleList(Page<Role> page, @Param("role") Role role);
+    Page<Role> selectRoleList(Page<Role> page, @Param("role") QueryRoleDTO role);
+    
+    /**
+     * 查询角色列表
+     * @param role
+     * @return
+     */
+    List<Role> selectRoleList(@Param("role") QueryRoleDTO role);
 }

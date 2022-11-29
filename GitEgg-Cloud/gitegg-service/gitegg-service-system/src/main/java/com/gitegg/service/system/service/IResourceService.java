@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gitegg.service.system.dto.QueryUserResourceDTO;
 import com.gitegg.service.system.entity.Resource;
-import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -36,10 +35,10 @@ public interface IResourceService extends IService<Resource> {
 
     /**
      * 查询资源权限列表
-     * @param parentId
+     * @param resource
      * @return
      */
-    List<Resource> queryResourceByParentId(Long parentId);
+    List<Resource> queryResourceByParentId(Resource resource);
 
     /**
      * 创建资源权限
@@ -54,6 +53,14 @@ public interface IResourceService extends IService<Resource> {
      * @return
      */
     boolean updateResource(Resource resource);
+    
+    /**
+     * 修改资源权限状态
+     * @param resourceId
+     * @param status
+     * @return
+     */
+    boolean updateResourceStatus(Long resourceId, Integer status);
 
     /**
      * 删除资源权限

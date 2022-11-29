@@ -160,13 +160,13 @@ export default {
           this.localPagination = this.showPagination && Object.assign({}, this.localPagination, {
             current: (pagination && pagination.current) ||
             this.showPagination && this.localPagination.current || this.pageNum, // 返回结果中的当前分页数
-            total: r.count / 1, // 返回结果中的总记录数
+            total: r.total / 1, // 返回结果中的总记录数
             showSizeChanger: this.showSizeChanger,
             pageSize: (pagination && pagination.pageSize) ||
               this.localPagination.pageSize
           }) || false
           // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页
-          if (r.data.length === 0 && this.showPagination && this.localPagination.current > 1) {
+          if (r.records.length === 0 && this.showPagination && this.localPagination.current > 1) {
             this.localPagination.current--
             this.loadData()
             return
@@ -181,7 +181,7 @@ export default {
           } catch (e) {
             this.localPagination = false
           }
-          this.localDataSource = r.data // 返回结果中的数组数据
+          this.localDataSource = r.records // 返回结果中的数组数据
           this.localLoading = false
         })
       }

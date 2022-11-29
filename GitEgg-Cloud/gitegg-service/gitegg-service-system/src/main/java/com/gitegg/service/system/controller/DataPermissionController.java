@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitegg.platform.base.constant.GitEggConstant;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.dto.CheckExistDTO;
 import com.gitegg.service.system.entity.DataPermissionRole;
@@ -54,9 +53,9 @@ public class DataPermissionController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询数据权限配置表列表")
-    public PageResult<DataPermissionRoleDTO> list(QueryDataPermissionRoleDTO queryDataPermissionRoleDTO, Page<DataPermissionRoleDTO> page) {
+    public Result<Page<DataPermissionRoleDTO>> list(QueryDataPermissionRoleDTO queryDataPermissionRoleDTO, Page<DataPermissionRoleDTO> page) {
         Page<DataPermissionRoleDTO> pageDataPermissionRole = dataPermissionRoleService.queryDataPermissionRoleList(page, queryDataPermissionRoleDTO);
-        return PageResult.data(pageDataPermissionRole.getTotal(), pageDataPermissionRole.getRecords());
+        return Result.data(pageDataPermissionRole);
     }
 
     /**

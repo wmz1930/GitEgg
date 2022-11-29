@@ -44,9 +44,9 @@ public class FieldController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询字段属性配置表列表")
-    public PageResult<FieldDTO> list(QueryFieldDTO queryFieldDTO, Page<FieldDTO> page) {
+    public Result<Page<FieldDTO>> list(QueryFieldDTO queryFieldDTO, Page<FieldDTO> page) {
         Page<FieldDTO> pageField = fieldService.queryFieldList(page, queryFieldDTO);
-        return PageResult.data(pageField.getTotal(), pageField.getRecords());
+        return Result.data(pageField);
     }
 
     /**

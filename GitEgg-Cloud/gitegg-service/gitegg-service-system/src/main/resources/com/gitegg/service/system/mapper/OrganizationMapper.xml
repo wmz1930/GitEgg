@@ -46,7 +46,7 @@
         <if test="org.organizationName != null and org.organizationName != ''">
             AND org.organization_name = #{org.organizationName}
         </if>
-        <if test="org.organizationStatus != null and org.organizationStatus != ''">
+        <if test="org.organizationStatus != null">
             AND org.organization_status = #{org.organizationStatus}
         </if>
         <if test="org.organizationLevel != null and org.organizationLevel != ''">
@@ -82,7 +82,7 @@
         <if test="org.organizationName != null and org.organizationName != ''">
             AND org.organization_name = #{org.organizationName}
         </if>
-        <if test="org.organizationStatus != null and org.organizationStatus != ''">
+        <if test="org.organizationStatus != null">
             AND org.organization_status = #{org.organizationStatus}
         </if>
         <if test="org.organizationLevel != null and org.organizationLevel != ''">

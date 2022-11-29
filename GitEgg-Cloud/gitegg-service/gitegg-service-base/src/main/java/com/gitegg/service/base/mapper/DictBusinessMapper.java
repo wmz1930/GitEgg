@@ -1,9 +1,12 @@
 package com.gitegg.service.base.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitegg.service.base.dto.DictBusinessDTO;
+import com.gitegg.service.base.dto.DictDTO;
 import com.gitegg.service.base.dto.QueryDictBusinessDTO;
+import com.gitegg.service.base.dto.QueryDictDTO;
 import com.gitegg.service.base.entity.DictBusiness;
 import org.apache.ibatis.annotations.Param;
 
@@ -43,4 +46,13 @@ public interface DictBusinessMapper extends BaseMapper<DictBusiness> {
      * @return
      */
     List<DictBusiness> selectDictBusinessChildren(@Param("dict") QueryDictBusinessDTO dict);
+    
+    /**
+     * 查询数据字典，初始化
+     *
+     * @param dict
+     * @return dictInfo
+     */
+    @InterceptorIgnore(tenantLine = "true")
+    List<DictBusinessDTO> initDictBusinessList(@Param("dict") QueryDictBusinessDTO dict);
 }

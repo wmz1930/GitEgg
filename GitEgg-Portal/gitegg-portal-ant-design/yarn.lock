@@ -2194,7 +2194,7 @@ ant-design-vue@^1.6.2:
     vue-ref "^2.0.0"
     warning "^4.0.0"
 
-ant-design-vue@^1.7.8:
+ant-design-vue@^1.7.2:
   version "1.7.8"
   resolved "https://registry.npmmirror.com/ant-design-vue/-/ant-design-vue-1.7.8.tgz#1abbf86b68a4f5b1000bea0487b8031dc0001661"
   integrity sha512-F1hmiS9vwbyfuFvlamdW5l9bHKqRlj9wHaGDIE41NZMWXyWy8qL0UFa/+I0Wl8gQWZCqODW5pN6Yfoyn85At3A==

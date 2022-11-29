@@ -2,12 +2,14 @@ package com.gitegg.service.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gitegg.service.system.bo.UserExportBO;
 import com.gitegg.service.system.dto.CreateUserDTO;
 import com.gitegg.service.system.dto.QueryUserDTO;
 import com.gitegg.service.system.dto.UpdateUserDTO;
 import com.gitegg.service.system.entity.User;
 import com.gitegg.service.system.entity.UserInfo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,6 +37,7 @@ public interface IUserService extends IService<User> {
      * @return
      */
     boolean updateUser(UpdateUserDTO user);
+    
     
     /**
      * 重置用户密码
@@ -78,7 +81,7 @@ public interface IUserService extends IService<User> {
      * @param user
      * @return
      */
-    public Boolean checkUserExist(User user);
+    Boolean checkUserExist(User user);
 
     /**
      * 分页查询用户
@@ -86,7 +89,14 @@ public interface IUserService extends IService<User> {
      * @param user
      * @return
      */
-    Page<UserInfo> selectUserList(Page<UserInfo> page, QueryUserDTO user);
+    Page<UserInfo> queryUserPage(Page<UserInfo> page, QueryUserDTO user);
+    
+    /**
+     * 批量查询用户信息
+     * @param user
+     * @return
+     */
+    List<UserInfo> queryUserList(QueryUserDTO user);
 
     /**
      * 查询用户详细信息
@@ -96,9 +106,16 @@ public interface IUserService extends IService<User> {
     UserInfo queryUserInfo(User user);
     
     /**
-     * 批量查询用户信息
+     * 导出用户列表
      * @param user
      * @return
      */
-    List<UserInfo> queryUserList(QueryUserDTO user);
+    List<UserExportBO> exportUserList(QueryUserDTO user);
+    
+    /**
+     * 导入用户列表
+     * @param file
+     * @return
+     */
+    boolean importUserList(MultipartFile file);
 }

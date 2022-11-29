@@ -8,6 +8,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * <p>
  * 角色更新
@@ -21,7 +24,8 @@ import lombok.Data;
 public class UpdateRoleDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
+    @NotNull(message="不能为空")
     @ApiModelProperty(value = "主键")
     private Long id;
 

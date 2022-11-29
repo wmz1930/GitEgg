@@ -779,8 +779,8 @@
                 that.loadData = function (parameter) {
                     return queryJustAuthSourceList(Object.assign(parameter, that.listJustAuthSourceQuery))
                         .then(res => {
-                            that.list = res.data
-                            return res
+                            that.list = res.data.records
+                            return res.data
                         })
                 }
                 that.$nextTick(() => {

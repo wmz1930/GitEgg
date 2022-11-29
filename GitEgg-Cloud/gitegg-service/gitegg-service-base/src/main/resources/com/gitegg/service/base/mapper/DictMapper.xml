@@ -64,6 +64,35 @@
             <if test="dict.dictName != null and dict.dictName != ''">
                 AND dict_name = #{dict.dictName}
             </if>
+            <if test="dict.dictStatus != null and dict.dictStatus != ''">
+                AND dict_status = #{dict.dictStatus}
+            </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 初始化第三方数据字典列表，单独写是为了排除多租户插件 -->
+    <select id="initDictList" resultType="com.gitegg.service.base.dto.DictDTO" parameterType="com.gitegg.service.base.dto.QueryDictDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_dict
+        WHERE del_flag = 0
+        <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+            <if test="dict.id != null">
+                AND id = #{dict.id}
+            </if>
+            <if test="dict.parentId != null">
+                AND parent_id = #{dict.parentId}
+            </if>
+            <if test="dict.dictCode != null and dict.dictCode != ''">
+                AND dict_code = #{dict.dictCode}
+            </if>
+            <if test="dict.dictName != null and dict.dictName != ''">
+                AND dict_name = #{dict.dictName}
+            </if>
+            <if test="dict.dictStatus != null and dict.dictStatus != ''">
+                AND dict_status = #{dict.dictStatus}
+            </if>
         </trim>
         ORDER BY create_time DESC
     </select>

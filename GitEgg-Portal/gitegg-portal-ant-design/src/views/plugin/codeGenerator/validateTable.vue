@@ -291,8 +291,8 @@
                 loadData: parameter => {
                     return queryValidateList(Object.assign(parameter, this.listValidateQuery))
                         .then(res => {
-                            this.list = res.data
-                            return res
+                            this.list = res.data.records
+                            return res.data
                         })
                 }
             }

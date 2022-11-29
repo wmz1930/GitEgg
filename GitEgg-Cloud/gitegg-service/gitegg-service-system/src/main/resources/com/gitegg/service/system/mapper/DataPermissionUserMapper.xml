@@ -67,7 +67,6 @@
         sysUser.gender AS gender,
         sysUser.email AS email,
         sysUser.mobile AS mobile,
-        sysUser.password AS password,
         sysUser.status AS status,
         sysUser.avatar AS avatar,
         sysUser.country AS country,
@@ -85,7 +84,9 @@
         GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
         GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKey,
         GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleName,
-        dataPermission.organization_id AS dataPermission,
+        <!-- 在查询用户信息时，此字段是所有数据权限机构的集合，在这里是单个的数据权限id-->
+        dataPermission.organization_id AS organizationIds,
+        sysDataOrganization.organization_name AS organizationNames,
         sysOrganization.id AS organizationId,
         sysOrganization.organization_name AS organizationName
         FROM t_sys_data_permission_user dataPermission
@@ -98,6 +99,8 @@
         organizationUser.del_flag = 0
         INNER JOIN t_sys_organization sysOrganization ON organizationUser.organization_id = sysOrganization.id AND
         sysOrganization.del_flag = 0
+        INNER JOIN t_sys_organization sysDataOrganization ON dataPermission.organization_id = sysDataOrganization.id AND
+        sysDataOrganization.del_flag = 0
         WHERE sysUser.del_flag = 0 AND dataPermission.del_flag = 0
         <if test="user.id != null and user.id != ''">
             AND sysUser.id = #{user.id}
@@ -118,13 +121,15 @@
             <if test="user.email != null and user.email != ''">
                 AND sysUser.email like concat('%', #{user.email}, '%')
             </if>
-            <if test="user.status != null and user.status != ''">
+            <if test="user.status != null">
                 AND sysUser.status = #{user.status}
             </if>
             <if test="user.roleId != null and user.roleId != ''">
                 <!--这里需要这么写，否则多角色用户再通过角色查询时，只能查询出一个角色-->
-                AND sysUser.id IN (SELECT sysUser.id FROM t_sys_user sysUser INNER JOIN t_sys_user_role userRole ON
-                sysUser.id = userRole.user_id AND userRole.del_flag = 0 AND userRole.role_id = #{user.roleId})
+                AND sysUser.id IN (
+                SELECT userRole.user_id
+                FROM t_sys_user_role userRole
+                WHERE userRole.del_flag = 0 AND userRole.role_id = #{user.roleId})
             </if>
             <if test="user.organizationId != null and user.organizationId != ''">
                 AND dataPermission.organization_id = #{user.organizationId}

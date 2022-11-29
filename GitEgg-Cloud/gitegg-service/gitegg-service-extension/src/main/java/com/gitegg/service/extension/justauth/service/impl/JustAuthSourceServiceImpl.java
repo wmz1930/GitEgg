@@ -128,11 +128,14 @@ public class JustAuthSourceServiceImpl extends ServiceImpl<JustAuthSourceMapper,
     */
     @Override
     public boolean deleteJustAuthSource(Long justAuthSourceId) {
-        // 新增到缓存
         JustAuthSource justAuthSourceDelete = this.getById(justAuthSourceId);
-        JustAuthSourceDTO justAuthSourceDTO = BeanCopierUtils.copyByClass(justAuthSourceDelete, JustAuthSourceDTO.class);
-        this.deleteJustAuthSourceCache(justAuthSourceDTO);
         boolean result = this.removeById(justAuthSourceId);
+        // 从缓存删除
+        if (result)
+        {
+            JustAuthSourceDTO justAuthSourceDTO = BeanCopierUtils.copyByClass(justAuthSourceDelete, JustAuthSourceDTO.class);
+            this.deleteJustAuthSourceCache(justAuthSourceDTO);
+        }
         return result;
     }
 
@@ -144,7 +147,11 @@ public class JustAuthSourceServiceImpl extends ServiceImpl<JustAuthSourceMapper,
     @Override
     public boolean batchDeleteJustAuthSource(List<Long> justAuthSourceIds) {
         List<JustAuthSource> justAuthSourceDeleteList = this.listByIds(justAuthSourceIds);
-        if (!CollectionUtils.isEmpty(justAuthSourceDeleteList))
+
+        boolean result = this.removeByIds(justAuthSourceIds);
+    
+        // 从缓存删除
+        if (result && !CollectionUtils.isEmpty(justAuthSourceDeleteList))
         {
             for(JustAuthSource justAuthSourceDelete: justAuthSourceDeleteList)
             {
@@ -152,7 +159,7 @@ public class JustAuthSourceServiceImpl extends ServiceImpl<JustAuthSourceMapper,
                 this.deleteJustAuthSourceCache(justAuthSourceDTO);
             }
         }
-        boolean result = this.removeByIds(justAuthSourceIds);
+        
         return result;
     }
     

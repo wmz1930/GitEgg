@@ -515,8 +515,8 @@
                 that.loadData = function (parameter) {
                     return queryMailChannelList(Object.assign(parameter, that.listMailChannelQuery))
                         .then(res => {
-                            that.list = res.data
-                            return res
+                            that.list = res.data.records
+                            return res.data
                         })
                 }
                 that.$nextTick(() => {

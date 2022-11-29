@@ -20,4 +20,10 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Service
-public class DistrictServiceImpl extends ServiceImpl<DistrictMapper, District> implements IDistrictService {}
+public class DistrictServiceImpl extends ServiceImpl<DistrictMapper, District> implements IDistrictService {
+    
+    @Override
+    public District queryDistrict(String districtCode) {
+        return null;
+    }
+}

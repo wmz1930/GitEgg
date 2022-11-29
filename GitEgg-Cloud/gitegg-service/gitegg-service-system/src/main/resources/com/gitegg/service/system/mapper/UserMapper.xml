@@ -34,7 +34,7 @@
     </sql>
     
     <!-- 分页查询用户列表 -->
-	<select id="selectUserList" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.entity.User">
+	<select id="queryUserPage" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.entity.User">
 		SELECT DISTINCT
 		sysUser.id AS id,
 		sysUser.tenant_id AS tenantId,
@@ -61,7 +61,7 @@
 		GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
 		GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKey,
 		GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleName,
-		GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS dataPermission,
+		GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS organizationIds,
 		sysOrganization.id AS organizationId,
 		sysOrganization.organization_name AS organizationName
 		FROM t_sys_user sysUser
@@ -95,13 +95,16 @@
 			<if test="user.email != null and user.email != ''">
 				AND sysUser.email like concat('%', #{user.email}, '%')
 			</if>
-			<if test="user.status != null and user.status != ''">
+			<!--只写!=null即可，否则状态是0时，会有bug-->
+			<if test="user.status != null">
 				AND sysUser.status = #{user.status}
 			</if>
 			<if test="user.roleId != null and user.roleId != ''">
 				<!--这里需要这么写，否则多角色用户再通过角色查询时，只能查询出一个角色-->
-				AND sysUser.id IN (SELECT sysUser.id FROM t_sys_user sysUser INNER JOIN t_sys_user_role userRole ON
-				sysUser.id = userRole.user_id AND userRole.del_flag = 0 AND userRole.role_id = #{user.roleId})
+				AND sysUser.id IN (
+					SELECT userRole.user_id
+					FROM t_sys_user_role userRole
+					WHERE userRole.del_flag = 0 AND userRole.role_id = #{user.roleId})
 			</if>
 			<if test="user.organizationId != null and user.organizationId != ''">
 				AND sysOrganization.id = #{user.organizationId}
@@ -167,7 +170,7 @@
 		</if>
 		<trim prefix="AND (" suffix=")" prefixOverrides="AND">
 			<if test="user.account != null and user.account != ''">
-				AND sysUser.account = #{user.account}
+				AND (sysUser.account = #{user.account} OR sysUser.nickname = #{user.account} OR sysUser.mobile = #{user.account} OR sysUser.email = #{user.account})
 			</if>
 			<if test="user.realName != null and user.realName != ''">
 				AND sysUser.real_name = #{user.realName}
@@ -232,8 +235,8 @@
         sysUser.update_time AS updateTime,
         sysUser.operator AS operator,
         GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
-        GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKey,
-        GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleName,
+	GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKeys,
+	GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleNames,
         sysOrganization.id AS organizationId,
         sysOrganization.organization_name AS organizationName
         FROM t_sys_user sysUser
@@ -269,7 +272,8 @@
             <if test="user.email != null and user.email != ''">
                 AND sysUser.email = #{user.email}
             </if>
-            <if test="user.status != null and user.status != ''">
+	    <!--只写!=null即可，否则状态是0时，会有bug-->
+            <if test="user.status != null">
                 AND sysUser.status = #{user.status}
             </if>
             <if test="user.roleId != null and user.roleId != ''">

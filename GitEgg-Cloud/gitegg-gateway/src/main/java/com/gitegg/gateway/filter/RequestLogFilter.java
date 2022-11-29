@@ -53,7 +53,9 @@ public class RequestLogFilter implements GlobalFilter, Ordered {
         /*
          * not http or https scheme
          */
-        if ((!HTTP_SCHEME.equalsIgnoreCase(scheme) && !HTTPS_SCHEME.equals(scheme)) || !gatewayContext.getReadRequestData()){
+        if ((!HTTP_SCHEME.equalsIgnoreCase(scheme)
+                && !HTTPS_SCHEME.equals(scheme))
+                || !gatewayContext.getReadRequestData()){
             return chain.filter(exchange);
         }
 
@@ -61,7 +63,7 @@ public class RequestLogFilter implements GlobalFilter, Ordered {
         exchange.getAttributes().put(START_TIME, startTime);
 
         // 当返回参数为true时，记录请求参数和返回参数
-        if (gatewayPluginProperties.getEnable())
+        if (gatewayPluginProperties.getLogRequest().getEnable())
         {
             return chain.filter(exchange).then(Mono.fromRunnable(() -> logApiRequest(exchange)));
         }
@@ -103,7 +105,7 @@ public class RequestLogFilter implements GlobalFilter, Ordered {
 
         GatewayContext gatewayContext = exchange.getAttribute(GatewayContext.CACHE_GATEWAY_CONTEXT);
         // 记录参数请求日志
-        if (gatewayPluginProperties.getRequestLog())
+        if (gatewayPluginProperties.getLogRequest().getRequestLog())
         {
             MultiValueMap<String, String> queryParams = request.getQueryParams();
             if(!queryParams.isEmpty()){
@@ -126,7 +128,7 @@ public class RequestLogFilter implements GlobalFilter, Ordered {
         }
 
         // 记录参数返回日志
-        if (gatewayPluginProperties.getResponseLog())
+        if (gatewayPluginProperties.getLogRequest().getResponseLog())
         {
             log.debug("[RequestLogFilter](Response)HttpStatus:{}",response.getStatusCode());
             HttpHeaders headers = response.getHeaders();

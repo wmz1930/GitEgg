@@ -408,8 +408,8 @@
                 loadData: parameter => {
                     return queryJustAuthConfigList(Object.assign(parameter, this.listJustAuthConfigQuery))
                         .then(res => {
-                            this.list = res.data
-                            return res
+                            this.list = res.data.records
+                            return res.data
                         })
                 }
             }

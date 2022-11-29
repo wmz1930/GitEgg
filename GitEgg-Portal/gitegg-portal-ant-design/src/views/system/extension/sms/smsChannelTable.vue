@@ -430,8 +430,8 @@
                 that.loadData = function (parameter) {
                     return querySmsChannelList(Object.assign(parameter, that.listSmsChannelQuery))
                         .then(res => {
-                            that.list = res.data
-                            return res
+                            that.list = res.data.records
+                            return res.data
                         })
                 }
                 that.$nextTick(() => {

@@ -61,9 +61,9 @@ public class SmsTemplateController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询短信模板配置表列表")
-    public PageResult<SmsTemplateDTO> list(QuerySmsTemplateDTO querySmsTemplateDTO, Page<SmsTemplateDTO> page) {
+    public Result<Page<SmsTemplateDTO>> list(QuerySmsTemplateDTO querySmsTemplateDTO, Page<SmsTemplateDTO> page) {
         Page<SmsTemplateDTO> pageSmsTemplate = smsTemplateService.querySmsTemplateList(page, querySmsTemplateDTO);
-        return PageResult.data(pageSmsTemplate.getTotal(), pageSmsTemplate.getRecords());
+        return Result.data(pageSmsTemplate);
     }
 
     /**

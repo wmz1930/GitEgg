@@ -57,9 +57,9 @@ public class MailLogController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询邮件记录列表")
-    public PageResult<MailLogDTO> list(QueryMailLogDTO queryMailLogDTO, Page<MailLogDTO> page) {
+    public Result<Page<MailLogDTO>> list(QueryMailLogDTO queryMailLogDTO, Page<MailLogDTO> page) {
         Page<MailLogDTO> pageMailLog = mailLogService.queryMailLogList(page, queryMailLogDTO);
-        return PageResult.data(pageMailLog.getTotal(), pageMailLog.getRecords());
+        return Result.data(pageMailLog);
     }
 
     /**

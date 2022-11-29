@@ -16,8 +16,10 @@
         <result column="resource_url" property="resourceUrl"/>
         <result column="resource_level" property="resourceLevel"/>
         <result column="resource_show" property="resourceShow"/>
+        <result column="current_active_path" property="currentActivePath"/>
         <result column="resource_cache" property="resourceCache"/>
         <result column="resource_page_name" property="resourcePageName"/>
+        <result column="tab_show" property="tabShow"/>
         <result column="resource_status" property="resourceStatus"/>
         <result column="comments" property="comments"/>
         <result column="create_time" property="createTime"/>
@@ -29,7 +31,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, tenant_id, parent_id, ancestors, resource_name, resource_key, resource_type, resource_icon, resource_path, resource_url, resource_level, resource_show, resource_cache, resource_page_name, resource_status, comments, create_time, creator, update_time, operator, del_flag
+        id, tenant_id, parent_id, ancestors, resource_name, resource_key, resource_type, resource_icon, resource_path, resource_url, resource_level, resource_show, current_active_path, resource_cache, resource_page_name, tab_show, resource_status, comments, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 根据用户名查询用户权限 -->
@@ -47,8 +49,10 @@
         sysResource.resource_url,
         sysResource.resource_cache,
         sysResource.resource_show,
+        sysResource.current_active_path,
         sysResource.resource_level,
         sysResource.resource_page_name,
+        sysResource.tab_show,
         sysResource.resource_status
         FROM t_sys_user sysUser
         INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
@@ -80,7 +84,7 @@
         </collection>
     </resultMap>
     <select id="queryResourceRoles"  resultMap="resourceRoleMap">
-            select
+        select
             <include refid="Base_Column_List" />
         from t_sys_resource where (resource_type = 3 or resource_type = 4 ) and del_flag = 0
     </select>
@@ -109,6 +113,15 @@
                     AND (id = #{resource.parentId} OR find_in_set(#{resource.parentId}, ancestors))
                 </otherwise>
             </choose>
+        </if>
+        <if test="resource.resourceKey != null and resource.resourceKey != ''">
+            AND resource_key = #{resource.resourceKey}
+        </if>
+        <if test="resource.resourceName != null and resource.resourceName != ''">
+            AND resource_name = #{resource.resourceName}
+        </if>
+        <if test="resource.resourceStatus != null">
+            AND resource_status = #{resource.resourceStatus}
         </if>
         ORDER BY resource_level
     </select>

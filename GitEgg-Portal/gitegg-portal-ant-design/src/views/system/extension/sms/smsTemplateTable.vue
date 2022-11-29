@@ -653,8 +653,8 @@
                 that.loadData = function (parameter) {
                     return querySmsTemplateList(Object.assign(parameter, that.listSmsTemplateQuery))
                         .then(res => {
-                            that.list = res.data
-                            return res
+                            that.list = res.data.records
+                            return res.data
                         })
                 }
                 that.$nextTick(() => {

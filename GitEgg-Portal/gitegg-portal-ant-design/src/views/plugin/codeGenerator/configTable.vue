@@ -634,8 +634,8 @@
                 that.loadData = function (parameter) {
                   return queryConfigList(Object.assign(parameter, that.listQuery))
                         .then(res => {
-                            that.list = res.data
-                            return res
+                            that.list = res.data.records
+                            return res.data
                   })
                 }
                 that.$nextTick(() => {

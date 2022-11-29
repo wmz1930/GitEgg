@@ -59,9 +59,9 @@ public class MailChannelController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询邮件渠道表列表")
-    public PageResult<MailChannelDTO> list(QueryMailChannelDTO queryMailChannelDTO, Page<MailChannelDTO> page) {
+    public Result<Page<MailChannelDTO>> list(QueryMailChannelDTO queryMailChannelDTO, Page<MailChannelDTO> page) {
         Page<MailChannelDTO> pageMailChannel = mailChannelService.queryMailChannelList(page, queryMailChannelDTO);
-        return PageResult.data(pageMailChannel.getTotal(), pageMailChannel.getRecords());
+        return Result.data(pageMailChannel);
     }
 
     /**

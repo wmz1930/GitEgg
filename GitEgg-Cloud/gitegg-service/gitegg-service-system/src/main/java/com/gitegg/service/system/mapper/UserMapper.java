@@ -25,7 +25,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @param user
      * @return
      */
-    Page<UserInfo> selectUserList(Page<UserInfo> page, @Param("user") QueryUserDTO user);
+    Page<UserInfo> queryUserPage(Page<UserInfo> page, @Param("user") QueryUserDTO user);
 
     /**
      * 查询用户信息
