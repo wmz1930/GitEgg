@@ -67,13 +67,13 @@
           <a-input v-model="tableJoinForm.joinTableAlias" placeholder="组成SQL语句时表的别名" :maxLength="64" />
         </a-form-model-item>
         <a-form-model-item label="模块名称" prop="moduleName">
-          <a-input v-model="tableJoinForm.moduleName" placeholder="主表字表，字表的模块名称" :maxLength="64" />
+          <a-input v-model="tableJoinForm.moduleName" placeholder="主表子表，子表的模块名称" :maxLength="64" />
         </a-form-model-item>
         <a-form-model-item label="模块代码" prop="moduleCode">
-          <a-input v-model="tableJoinForm.moduleCode" placeholder="主表字表，字表的模块代码" :maxLength="64" />
+          <a-input v-model="tableJoinForm.moduleCode" placeholder="主表子表，子表的模块代码" :maxLength="64" />
         </a-form-model-item>
         <a-form-model-item label="Controller请求路径" prop="controllerPath">
-          <a-input v-model="tableJoinForm.controllerPath" placeholder="主表字表，字表的Controller请求路径" :maxLength="64" />
+          <a-input v-model="tableJoinForm.controllerPath" placeholder="主表子表，子表的Controller请求路径" :maxLength="64" />
         </a-form-model-item>
         <a-form-model-item label="表前缀" prop="joinTablePrefix">
           <a-input v-model="tableJoinForm.joinTablePrefix" placeholder="输入表前缀" :maxLength="64" />

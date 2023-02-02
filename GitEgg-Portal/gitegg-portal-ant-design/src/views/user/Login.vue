@@ -146,7 +146,7 @@
 
       <div class="user-login-other">
         <span>{{ $t('user.login.sign-in-with') }}</span>
-        <a @click="openSocialLogin('wechat_open')">
+        <a @click="openSocialLogin('wechat_mp')">
           <a-icon class="item-icon"
                   type="wechat"></a-icon>
         </a>
@@ -502,7 +502,7 @@ export default {
                 })
               } else {
                 this.isPhoneLoginError = true
-                this.loginPhoneErrorMsg = res.data.message
+                this.loginPhoneErrorMsg = res.data.msg
                 state.time = 60
                 state.smsSendBtn = false
                 window.clearInterval(interval)

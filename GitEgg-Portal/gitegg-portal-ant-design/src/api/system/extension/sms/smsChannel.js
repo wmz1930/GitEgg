@@ -58,7 +58,7 @@ export function checkSmsChannelExist (data) {
   return request({
     url: '/gitegg-service-extension/extension/sms/channel/check',
     method: 'post',
-    params: data
+    data
   })
 }
 

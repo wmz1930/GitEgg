@@ -39,22 +39,15 @@ function hasRole(roles, route) {
  *
  * 判断当前路由的跳转是否和其中一个一级子菜单一样，如果一样，那么这个菜单作为router-view父菜单使用，component设置为RouteView
  * @param resources 一级子菜单
- * @param parentUrl 父级跳转
  * @returns {map}
  */
- function checkChildHiddenAndRedirect (resources, parentUrl) {
+ function checkChildHiddenAndRedirect (resources) {
   let allHidden = false
-  let hasRedirectChild = false
   resources.forEach(resource => {
     // 只要有一个是展示的，那么就不算隐藏菜单
     allHidden = allHidden || resource.resourceShow
-
-    if (resource.resourcePath === parentUrl) {
-      // 动态组装菜单时，判断当前路由的跳转是否和其中一个一级子菜单一样，如果一样，那么这个菜单作为router-view父菜单使用，component设置为RouteView
-      hasRedirectChild = true
-    }
   })
-  return { menuChildHidden: !allHidden, redirectChild: hasRedirectChild }
+  return { menuChildHidden: !allHidden }
 }
 
 function filterAsyncRouter (routerMap, roles) {
@@ -75,7 +68,7 @@ function filterAsyncRouter (routerMap, roles) {
  * add by gitegg
  * @param resources
  */
-function assembleAsyncRoutes (resources) {
+function assembleAsyncRoutes (resources, parent) {
   const accessedRouters = []
   resources.forEach(resource => {
     var route = {}
@@ -85,8 +78,9 @@ function assembleAsyncRoutes (resources) {
 
     let nestedRoute = { menuChildHidden: false, redirectChild: false }
     if (resource.children && resource.children.length) {
-      nestedRoute = checkChildHiddenAndRedirect(resource.children, resource.resourceUrl)
+      nestedRoute = checkChildHiddenAndRedirect(resource.children)
     }
+    const redirectMenu = resource.resourceUrl.startsWith('redirect:')
 
     if (resource.resourceUrl.indexOf('Layout') >= 0) {
       route = {
@@ -99,11 +93,14 @@ function assembleAsyncRoutes (resources) {
           icon: resourceIcon
         }
       }
-    } else if (resource.children && resource.children.length && (resource.resourceUrl.indexOf('nested') >= 0 || nestedRoute.redirectChild)) { // 包含子菜单的二级以下菜单
+    } else if (resource.children && resource.children.length && (resource.resourceUrl.indexOf('nested') >= 0 || redirectMenu)) { // 包含子菜单的二级以下菜单
+      const redirectPath = redirectMenu
+        ? '/' + resource.resourceUrl.replace('redirect:', '')
+        : `${parent && parent.path || ''}/${resource.resourcePath}/${resource?.children[0]?.resourcePath}`
       route = {
-        path: '/' + resource.resourcePath,
+        path: `${parent && parent.path || ''}/${resource.resourcePath}`,
         component: resourceComponent,
-        redirect: nestedRoute.redirectChild ? resource.resourceUrl : '/' + resource.children[0].resourcePath,
+        redirect: redirectPath,
         name: resource.resourcePageName,
         hideChildrenInMenu: resource.resourceUrl.indexOf('nested') === -1 && nestedRoute.menuChildHidden,
         meta: {
@@ -116,7 +113,8 @@ function assembleAsyncRoutes (resources) {
     } else { // 最后一层菜单
       if (resource.resourcePath.indexOf('https://') === -1 && resource.resourcePath.indexOf('http://') === -1) {
         route = {
-          path: '/' + resource.resourcePath,
+          // path: '/' + resource.resourcePath,
+          path: `${parent && parent.path || ''}/${resource.resourcePath}`,
           component: () => import(`@/views/${resource.resourceUrl}`),
           name: resource.resourcePageName,
           hideChildrenInMenu: true,
@@ -128,8 +126,10 @@ function assembleAsyncRoutes (resources) {
           hidden: !resource.resourceShow
         }
       } else {
+        // path: item.path || `${parent && parent.path || ''}/${item.key}`,
         route = {
-          path: resource.resourcePath,
+          // path: resource.resourcePath,
+          path: `${parent && parent.path || ''}/${resource.resourcePath}`,
           component: () => import(`@/views/${resource.resourceUrl}`),
           name: resource.resourcePageName,
           hideChildrenInMenu: true,
@@ -145,7 +145,7 @@ function assembleAsyncRoutes (resources) {
     }
 
     if (resource.children && resource.children.length) {
-      route.children = assembleAsyncRoutes(resource.children)
+      route.children = assembleAsyncRoutes(resource.children, route)
     }
     accessedRouters.push(route)
   })

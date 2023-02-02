@@ -8,8 +8,6 @@
       <div class="login_wrap">
         <div class="login_left">
           <span class="circle">
-            <!-- <span></span>
-            <span></span> -->
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
           </span>
           <span class="star">

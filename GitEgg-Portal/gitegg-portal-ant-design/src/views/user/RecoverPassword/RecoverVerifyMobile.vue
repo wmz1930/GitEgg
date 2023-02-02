@@ -90,10 +90,10 @@
 <script>
 import Verify from '@/components/verifition/Verify'
 import { serialize } from '@/utils/util'
-import { getCaptchaType, getImageCaptcha, smsRegisterSend, checkSmsCode, checkUserExist } from '@/api/login'
+import { getCaptchaType, getImageCaptcha, smsPwdSend, checkSmsCode, checkUserExist } from '@/api/login'
 
 export default {
-  name: 'RegisterMobile',
+  name: 'RecoverVerifyMobile',
     components: {
     Verify
   },
@@ -104,8 +104,8 @@ export default {
         mobile: this.form.getFieldValue('phoneNumber')
       }
       checkUserExist(params).then(response => {
-        if (!response.data) {
-          callback(new Error('该手机号已注册'))
+        if (response.data) {
+          callback(new Error('该手机号未注册'))
         } else {
           callback()
         }
@@ -115,7 +115,7 @@ export default {
     var validSmsCode = (rule, value, callback) => {
       if (this.form.getFieldValue('phoneNumber') && value && value.length === 6) {
         var params = {
-          smsCode: 'sms_register_code',
+          smsCode: 'sms_change_info_code',
           phoneNumber: this.form.getFieldValue('phoneNumber'),
           verificationCode: value
         }
@@ -163,7 +163,7 @@ export default {
       validateFields((err, values) => {
         if (!err) {
           const registerParams = { ...values }
-          registerParams.smsCode = 'sms_register_code'
+          registerParams.smsCode = 'sms_change_info_code'
           registerParams.code = values.captcha
           that.setMobileSms(registerParams)
           that.$emit('nextStep')
@@ -227,7 +227,7 @@ export default {
         if (!err) {
           const registerParams = { ...values }
           registerParams.code = values.captcha
-          registerParams.smsCode = 'sms_register_code'
+          registerParams.smsCode = 'sms_change_info_code'
           // 判断是图片验证码还是滑动验证码
           if (this.loginCaptchaType === 'sliding') {
             registerParams.captcha_type = 'sliding'
@@ -257,7 +257,7 @@ export default {
       }, 1000)
 
       const hide = this.$message.loading('验证码发送中..', 0)
-      smsRegisterSend(serialize(registerParams)).then(res => {
+      smsPwdSend(serialize(registerParams)).then(res => {
         setTimeout(hide, 1)
         if (res.success && res.data) {
             this.$notification['success']({
@@ -269,7 +269,7 @@ export default {
                 state.time = 60
                 state.smsSendBtn = false
                 window.clearInterval(this.interval)
-        }
+          }
       }).catch(err => {
           setTimeout(hide, 1)
           clearInterval(this.interval)

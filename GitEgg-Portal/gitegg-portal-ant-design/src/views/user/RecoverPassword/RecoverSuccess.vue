@@ -1,12 +1,8 @@
 <template>
   <div>
     <a-form>
-      <a-result title="注册成功" :is-success="true" :sub-title="count + 's ' + successText" style="max-width: 560px; margin: 40px auto 0;">
+      <a-result title="密码修改成功" :is-success="true" :sub-title="count + 's ' + successText" style="max-width: 560px; margin: 40px auto 0;">
         <div class="information">
-          <a-row>
-            <a-col :sm="8" :xs="24">昵称：</a-col>
-            <a-col :sm="16" :xs="24">{{ nickname }}</a-col>
-          </a-row>
           <a-row>
             <a-col :sm="8" :xs="24">手机号：</a-col>
             <a-col :sm="16" :xs="24">{{ phoneNumber }}</a-col>
@@ -23,15 +19,13 @@
 <script>
 import md5 from 'md5'
 import { mapActions } from 'vuex'
-// import { timeFix } from '@/utils/util'
 export default {
-  name: 'RegisterSuccess',
+  name: 'RecoverSuccess',
   data () {
     return {
       loading: false,
       successText: '后跳转到登录前的页面',
       phoneNumber: '',
-      nickname: '',
       timer: undefined,
       count: 10,
       show: true
@@ -43,8 +37,7 @@ export default {
        // eslint-disable-next-line no-sparse-arrays
        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.opener.location.href) || [, ''])[1].replace(/\+/g, '%20')) || null
     },
-    successRegister (params) {
-      this.nickname = params.nickname
+    successChangePassword (params) {
       this.phoneNumber = params.mobile
       this.successLogin(params)
     },

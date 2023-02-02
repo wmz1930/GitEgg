@@ -222,6 +222,13 @@
         </a-row>
         <a-row>
           <a-col :md="12">
+            <a-form-model-item label="实体名称" prop="domainName">
+              <a-input v-model="configForm.domainName" placeholder="用于该功能界面展示，及操作提示的名称" :maxLength="500" />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :md="12">
             <a-form-model-item label="表单类型" prop="formType">
               <a-select v-model="configForm.formType" placeholder="请选择展示类型" allow-clear show-search :filter-option="filterOption">
                 <a-select-option v-for="item in formTypeDict.dictList" :key="item.id" :value="item.dictCode">
@@ -293,6 +300,15 @@
             <a-form-model-item label="生成类型" prop="codeType">
               <a-select v-model="configForm.codeType" placeholder="生成类型" :filter-option="filterOption">
                 <a-select-option v-for="item in codeTypeDict.dictList" :key="item.id" :value="item.dictCode">
+                  {{ item.dictName }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :md="12">
+            <a-form-model-item label="保存类型" prop="codeSaveType">
+              <a-select v-model="configForm.codeSaveType" placeholder="保存类型" :filter-option="filterOption">
+                <a-select-option v-for="item in codeSaveTypeDict.dictList" :key="item.id" :value="item.dictCode">
                   {{ item.dictName }}
                 </a-select-option>
               </a-select>
@@ -445,6 +461,11 @@
                   dictList: [],
                   filterMap: {}
                 },
+                codeSaveTypeDict: {
+                  dictCode: 'CODE_SAVE_TYPE',
+                  dictList: [],
+                  filterMap: {}
+                },
                 listQuery: {
                     datasourceId: '',
                     moduleName: '',
@@ -484,8 +505,9 @@
                     tableAlias: '',
                     tablePrefix: '',
                     parentPackage: '',
+                    domainName: '',
                     controllerPath: '',
-                    formType: 'modal',
+                    formType: 'Modal',
                     tableType: 'single',
                     extendsFlag: 'false',
                     tableShowType: undefined,
@@ -498,7 +520,8 @@
                     exportFlag: 'true',
                     queryReuse: 'true',
                     statusHandling: 'true',
-                    codeType: 'ALL'
+                    codeType: 'ALL',
+                    codeSaveType: 'SERVER_DOWNLOAD'
                 },
                 // 表头
                 columns: [
@@ -612,7 +635,7 @@
             //   that.yesOrNoDict = result
             // })
 
-            const dictList = [this.formTypeDict, this.treeTypeDict, this.tableTypeDict, this.tableShowTypeDict, this.formColDict, this.yesOrNoDict, this.codeTypeDict]
+            const dictList = [this.formTypeDict, this.treeTypeDict, this.tableTypeDict, this.tableShowTypeDict, this.formColDict, this.yesOrNoDict, this.codeTypeDict, this.codeSaveTypeDict]
 
             // const dictCodeList = [this.formTypeDict.dictCode, this.treeTypeDict.dictCode,
             // this.tableTypeDict.dictCode, this.tableShowTypeDict.dictCode, this.formColDict.dictCode,
@@ -678,6 +701,7 @@
                         tableAlias: '',
                         tablePrefix: '',
                         parentPackage: '',
+                        domainName: '',
                         controllerPath: '',
                         tableType: 'single',
                         tableShowType: undefined,
@@ -699,7 +723,7 @@
                     tablePrefix: '',
                     parentPackage: '',
                     controllerPath: '',
-                    formType: 'modal',
+                    formType: 'Modal',
                     tableType: 'single',
                     extendsFlag: 'false',
                     tableShowType: undefined,
@@ -712,7 +736,8 @@
                     exportFlag: 'true',
                     queryReuse: 'true',
                     statusHandling: 'true',
-                    codeType: 'ALL'
+                    codeType: 'ALL',
+                    codeSaveType: 'SERVER_DOWNLOAD'
                 }
             },
             // 选中 option 调用

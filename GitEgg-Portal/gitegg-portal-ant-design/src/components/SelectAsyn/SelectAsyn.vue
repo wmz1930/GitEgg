@@ -105,9 +105,9 @@ export default {
         }
         queryPamars[that.queryKey] = that.searchValue
         this.queryDataList(queryPamars).then(response => {
-            that.dataTotalCount = response.count
+            that.dataTotalCount = response.data.total
             if (that.dataList.length <= that.dataTotalCount) {
-              that.dataList = that.dataList.concat(response.data)
+              that.dataList = that.dataList.concat(response.data.records)
             }
             that.listLoading = false
         })

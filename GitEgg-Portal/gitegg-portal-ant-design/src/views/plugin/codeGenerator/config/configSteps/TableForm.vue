@@ -1,7 +1,7 @@
 <template>
   <a-card :bordered="false" class="step-content">
     <a-tabs :default-active-key="0">
-      <a-tab-pane v-for="fieldData in fieldDataList" :key="fieldData.joinId" :tab="'表【' + fieldData.joinTableName + '】 字段配置'">
+      <a-tab-pane v-for="fieldData in fieldDataList" :key="fieldData.joinId" :tab="'【' + fieldData.joinTableName + '】 字段配置'">
         <a-table
           :rowKey="row=>row.id + row.fieldName"
           :columns="columnsField"
@@ -9,40 +9,42 @@
           :scroll="{x:1500}"
           :pagination="false"
           bordered>
-          <template slot="requiredRender" slot-scope="text, record" >
-            <a-checkbox :value="text" v-model="record.required">
-              必填
+          <template slot="formAddRender" slot-scope="text, record" >
+            <a-checkbox v-model="record.formAdd">
+              新增
             </a-checkbox>
           </template>
-          <template slot="fieldUniqueRender" slot-scope="text, record" >
-            <a-checkbox :value="text" v-model="record.fieldUnique">
-              唯一
+          <template slot="formEditRender" slot-scope="text, record" >
+            <a-checkbox v-model="record.formEdit">
+              编辑
             </a-checkbox>
           </template>
-          <template slot="commentRender" slot-scope="text, record" >
-            <a-input
-              :value="text"
-              v-model="record.comment"
-            />
-          </template>
-          <template slot="entityTypeRender" slot-scope="text, record" >
+          <template slot="controlTypeRender" slot-scope="text, record" >
             <a-select :value="text"
-                      placeholder="请选择展示类型"
+                      placeholder="请选择组件类型"
                       show-search
                       style="width:100%;"
-                      :default-value="text"
+                      @change="handleChange(record)"
                       :filter-option="filterOption"
-                      v-model="record.entityType">
-              <a-select-option v-for="item in entityTypeDict.dictList" :key="item.id" :value="item.dictName">
+                      v-model="record.controlType">
+              <a-select-option v-for="item in controlTypeDict.dictList" :key="item.id" :value="item.dictCode">
                 {{ item.dictName }}
               </a-select-option>
             </a-select>
           </template>
-          <template slot="entityNameRender" slot-scope="text, record" >
-            <a-input
-              :value="text"
-              v-model="record.entityName"
-            />
+          <template slot="dictCodeRender" slot-scope="text, record" >
+            <a-select :value="text"
+                      placeholder="请选择字典编码"
+                      show-search
+                      style="width:100%;"
+                      :default-value="text"
+                      :filter-option="filterOption"
+                      :disabled="dictCodeDisabled(record.controlType)"
+                      v-model="record.dictCode">
+              <a-select-option v-for="item in baseDictList" :key="item.id" :value="item.dictCode">
+                {{ item.dictName }}
+              </a-select-option>
+            </a-select>
           </template>
         </a-table>
       </a-tab-pane>
@@ -51,14 +53,12 @@
 </template>
 
 <script>
+    import { queryDictBusinessList } from '@/api/system/base/dictBusiness'
     import { batchListGeneratorDict } from '@/api/plugin/codeGenerator/dict/dict'
-    let vm = {}
     export default {
-        name: 'FieldTable',
+        name: 'FormTable',
+        components: { },
         filters: {
-            entityTypeFilter (formType) {
-              return vm.entityTypeDict.filterMap[formType]
-            }
         },
         props: {
             configForm: {
@@ -71,7 +71,6 @@
             }
         },
         data () {
-            vm = this
             return {
                 listLoading: true,
                 entityTypeDict: {
@@ -79,6 +78,17 @@
                   dictList: [],
                   filterMap: {}
                 },
+                controlTypeDict: {
+                  dictCode: 'CONTROL_TYPE',
+                  dictList: [],
+                  filterMap: {}
+                },
+                queryTypeDict: {
+                  dictCode: 'QUERY_TYPE',
+                  dictList: [],
+                  filterMap: {}
+                },
+                baseDictList: [],
                 fieldDataList: [],
                 listQuery: {
                     id: '',
@@ -96,42 +106,53 @@
                         customRender: (text, record, index) => `${index + 1}`
                     },
                     {
-                        title: '字段名称',
-                        align: 'center',
-                        width: '100px',
-                        ellipsis: true,
-                        dataIndex: 'fieldName'
-                    },
-                    {
-                        title: '字段类型',
-                        align: 'center',
-                        width: '100px',
-                        ellipsis: true,
-                        dataIndex: 'fieldType'
-                    },
-                    {
                         title: '字段描述',
                         align: 'center',
                         width: '100px',
                         ellipsis: true,
-                        dataIndex: 'comment',
-                        scopedSlots: { customRender: 'commentRender' }
+                        dataIndex: 'comment'
                     },
                     {
-                        title: '字段类型',
+                        title: '实体类型',
                         align: 'center',
-                        width: '130px',
+                        width: '100px',
                         ellipsis: true,
-                        dataIndex: 'entityType',
-                        scopedSlots: { customRender: 'entityTypeRender' }
+                        dataIndex: 'entityType'
                     },
                     {
-                        title: '字段名称',
+                        title: '实体名称',
+                        align: 'center',
+                        width: '100px',
+                        ellipsis: true,
+                        dataIndex: 'entityName'
+                    },
+                    {
+                        title: '表单新增',
+                        align: 'center',
+                        width: '70px',
+                        dataIndex: 'formAdd',
+                        scopedSlots: { customRender: 'formAddRender' }
+                    },
+                    {
+                        title: '表单编辑',
+                        align: 'center',
+                        width: '70px',
+                        dataIndex: 'formEdit',
+                        scopedSlots: { customRender: 'formEditRender' }
+                    },
+                    {
+                        title: '组件类型',
                         align: 'center',
                         width: '130px',
-                        ellipsis: true,
-                        dataIndex: 'entityName',
-                        scopedSlots: { customRender: 'entityNameRender' }
+                        dataIndex: 'controlType',
+                        scopedSlots: { customRender: 'controlTypeRender' }
+                    },
+                    {
+                        title: '字典编码',
+                        align: 'center',
+                        width: '130px',
+                        dataIndex: 'dictCode',
+                        scopedSlots: { customRender: 'dictCodeRender' }
                     }
                 ],
                 rules: {
@@ -153,7 +174,8 @@
         },
         created () {
             const that = this
-            const dictList = [this.entityTypeDict]
+            this.getDictList()
+            const dictList = [this.entityTypeDict, this.controlTypeDict, this.queryTypeDict]
             const dictCodeList = dictList.map(function (n) {
               return n.dictCode
             })
@@ -179,10 +201,36 @@
               })
               return result
             },
+            getDictList () {
+                this.listLoading = true
+                queryDictBusinessList({ parentId: 0 }).then(response => {
+                    this.baseDictList = response.data
+                    this.listLoading = false
+                })
+            },
+            dictCodeDisabled (type) {
+              if (type && (type === 'SELECT' || type === 'RADIO' || type === 'CHECKBOX' ||
+               type === 'SELECT_MULTI' || type === 'SWITCH')) {
+                  return false
+              } else {
+                  return true
+              }
+            },
             filterOption (input, option) {
               return (
                       option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )
+            },
+            handleChange (item) {
+                const type = item.controlType
+                if (type &&
+                     (type === 'SELECT' || type === 'RADIO' || type === 'CHECKBOX' || type === 'SELECT_MULTI' || type === 'SWITCH') &&
+                     (item.dictCode === null || item.dictCode === undefined || item.dictCode === '')) {
+                    item.dictCode = undefined
+                } else if (!(type &&
+                     (type === 'SELECT' || type === 'RADIO' || type === 'CHECKBOX' || type === 'SELECT_MULTI' || type === 'SWITCH'))) {
+                    item.dictCode = null
+                }
             }
         }
     }

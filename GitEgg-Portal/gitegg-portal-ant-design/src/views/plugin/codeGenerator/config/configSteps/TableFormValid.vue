@@ -177,7 +177,7 @@
                         align: 'center',
                         width: '200px',
                         ellipsis: true,
-                        dataIndex: 'validateType',
+                        dataIndex: 'validateId',
                         scopedSlots: { customRender: 'validateTypeRender' }
                     },
                     {

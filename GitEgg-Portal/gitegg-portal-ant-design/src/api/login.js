@@ -25,7 +25,10 @@ const userApi = {
   // account
   SmsRegisterSend: '/gitegg-service-system/account/register/sms/send',
   Register: '/gitegg-service-system/account/register',
-  CheckUserExist: '/gitegg-service-system/account/register/check'
+  CheckUserExist: '/gitegg-service-system/account/register/check',
+  // change password
+  PwdSmsSend: '/gitegg-service-system/account/pwd/sms/send',
+  SmsChangePassword: '/gitegg-service-system/account/pwd/update'
 }
 
 export default userApi
@@ -175,6 +178,24 @@ export function userBindMobile (parameter) {
 export function userBindAccount (parameter) {
   return request({
     url: userApi.SocialBindAccount,
+    method: 'post',
+    data: parameter
+  })
+}
+
+// 发送修改密码短信
+export function smsPwdSend (parameter) {
+  return request({
+    url: userApi.PwdSmsSend,
+    method: 'post',
+    data: parameter
+  })
+}
+
+// 执行修改密码操作
+export function smsChangePassword (parameter) {
+  return request({
+    url: userApi.SmsChangePassword,
     method: 'post',
     data: parameter
   })

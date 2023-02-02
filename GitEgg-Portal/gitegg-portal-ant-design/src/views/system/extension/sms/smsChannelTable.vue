@@ -360,7 +360,8 @@
                     // 字段校验
                     channelCode: [
                         { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur', type: 'string' },
-                        { required: true, message: '请输入渠道编码', trigger: 'blur' }
+                        { required: true, message: '请输入渠道编码', trigger: 'blur' },
+                        { validator: validSmsChannel, trigger: 'blur' }
                     ],
                     channelName: [
                         { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur', type: 'string' },
@@ -382,9 +383,7 @@
                         { required: true, message: '请输入渠道状态', trigger: 'blur' }
                     ],
                     comments: [
-                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' },
-                        { required: true, message: '请输入描述', trigger: 'blur' },
-                        { validator: validSmsChannel, trigger: 'blur' }
+                        { min: 1, max: 255, message: '长度在 1 到 255 个字符', trigger: 'blur', type: 'string' }
                     ]
                 },
                 downloadLoading: false,

@@ -16,8 +16,12 @@ export default {
   methods: {
     ...mapActions(['Login']),
     getUrlKey: function (name) {
-       // eslint-disable-next-line no-sparse-arrays
-       return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.opener.location.href) || [, ''])[1].replace(/\+/g, '%20')) || null
+      let redirect = '/'
+      if (window.opener) {
+        redirect = window.opener.location.href
+      }
+      // eslint-disable-next-line no-sparse-arrays
+      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(redirect) || [, ''])[1].replace(/\+/g, '%20')) || null
     },
     socialCallback (socialType, parameter) {
       const that = this
@@ -71,9 +75,17 @@ export default {
         .finally(() => {
            this.$loading.hide()
            if (this.getUrlKey('redirect')) {
-              window.opener.location.href = window.opener.location.origin + this.getUrlKey('redirect')
+              if (window.opener) {
+                window.opener.location.href = window.opener.location.origin + this.getUrlKey('redirect')
+              } else {
+                window.location.href = window.location.origin + this.getUrlKey('redirect')
+              }
            } else {
-              window.opener.location.reload()
+            if (window.opener) {
+                window.opener.location.reload()
+              } else {
+                window.location.reload()
+              }
            }
            window.close()
        })
