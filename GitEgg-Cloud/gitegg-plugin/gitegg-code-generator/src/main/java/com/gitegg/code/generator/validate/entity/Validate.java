@@ -41,6 +41,9 @@ public class Validate extends BaseEntity {
     @ApiModelProperty(value = "'0'禁用，'1' 启用")
     @TableField("status")
     private Integer status;
-
+    
+    @ApiModelProperty(value = "备注")
+    @TableField("comments")
+    private String comments;
 
 }

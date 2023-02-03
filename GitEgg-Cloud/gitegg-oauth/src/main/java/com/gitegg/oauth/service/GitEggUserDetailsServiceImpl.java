@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.gitegg.oauth.exception.GitEggOAuth2Exception;
 import com.gitegg.platform.base.constant.GitEggConstant;
+import com.gitegg.platform.base.constant.TokenConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -75,7 +76,7 @@ public class GitEggUserDetailsServiceImpl implements UserDetailsService {
         // 通过手机号码登录
         if (!StringUtils.isEmpty(authGrantType) && AuthEnum.SMS_CAPTCHA.code.equals(authGrantType))
         {
-            String phone = request.getParameter(AuthConstant.PHONE_NUMBER);
+            String phone = request.getParameter(TokenConstant.PHONE_NUMBER);
             result = userFeign.queryUserByPhone(phone);
         }
         // 第三方登录

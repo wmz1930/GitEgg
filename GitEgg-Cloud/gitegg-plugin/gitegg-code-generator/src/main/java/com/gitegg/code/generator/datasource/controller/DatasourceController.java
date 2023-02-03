@@ -49,13 +49,23 @@ public class DatasourceController {
     private final IDatasourceService datasourceService;
 
     /**
-    * 查询数据源配置表列表
+    * 分页查询数据源配置表列表
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询数据源配置表列表")
     public Result<Page<DatasourceDTO>> list(QueryDatasourceDTO queryDatasourceDTO, Page<DatasourceDTO> page) {
         Page<DatasourceDTO> pageDatasource = datasourceService.queryDatasourceList(page, queryDatasourceDTO);
         return Result.data(pageDatasource);
+    }
+    
+    /**
+     * 不分页查询数据源配置表列表
+     */
+    @GetMapping("/all")
+    @ApiOperation(value = "不分页查询数据源配置表列表")
+    public Result<List<DatasourceDTO>> all(QueryDatasourceDTO queryDatasourceDTO) {
+        List<DatasourceDTO> datasourceList = datasourceService.queryDatasourceList(queryDatasourceDTO);
+        return Result.data(datasourceList);
     }
 
     /**
@@ -124,7 +134,7 @@ public class DatasourceController {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验数据源配置是否存在", notes = "校验数据源配置是否存在")
-    public Result<Boolean> checkDatasourceExist(CheckExistDTO datasource) {
+    public Result<Boolean> checkDatasourceExist(@RequestBody CheckExistDTO datasource) {
         String field = datasource.getCheckField();
         String value = datasource.getCheckValue();
         QueryWrapper<Datasource> datasourceQueryWrapper = new QueryWrapper<>();

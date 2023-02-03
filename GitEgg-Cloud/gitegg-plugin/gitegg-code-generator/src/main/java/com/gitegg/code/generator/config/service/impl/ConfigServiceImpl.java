@@ -80,14 +80,14 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
 
     /**
     * 创建代码生成配置表
-    * @param config
+    * @param configDTO
     * @return
     */
     @Override
-    public boolean createConfig(CreateConfigDTO config) {
-        Config configEntity = BeanCopierUtils.copyByClass(config, Config.class);
-        boolean result = this.save(configEntity);
-        return result;
+    public Config createConfig(CreateConfigDTO configDTO) {
+        Config configEntity = BeanCopierUtils.copyByClass(configDTO, Config.class);
+        this.save(configEntity);
+        return configEntity;
     }
 
     /**

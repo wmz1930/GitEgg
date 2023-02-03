@@ -35,6 +35,9 @@ public class QueryDfsFileDTO extends BaseEntity {
 
     @ApiModelProperty(value = "存储文件名")
     private String fileName;
+    
+    @ApiModelProperty(value = "存储文件名列表")
+    private String[] fileNames;
 
     @ApiModelProperty(value = "文件类型")
     private String fileExtension;
@@ -47,8 +50,13 @@ public class QueryDfsFileDTO extends BaseEntity {
 
     @ApiModelProperty(value = "备注")
     private String comments;
-
-
+    
+    @ApiModelProperty(value = "存储类型")
+    private String dfsType;
+    
+    @ApiModelProperty(value = "存储编码")
+    private String dfsCode;
+    
     @ApiModelProperty(value = "开始时间")
     private String beginDateTime;
 

@@ -85,6 +85,9 @@ public class FieldDTO extends BaseEntity {
 
     @ApiModelProperty(value = "字典编码")
     private String dictCode;
+    
+    @ApiModelProperty(value = "接口id")
+    private Long apiId;
 
     @ApiModelProperty(value = "最小值")
     private String min;

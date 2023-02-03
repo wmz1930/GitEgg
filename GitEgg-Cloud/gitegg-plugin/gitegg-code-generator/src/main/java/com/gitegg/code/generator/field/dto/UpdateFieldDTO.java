@@ -80,6 +80,9 @@ public class UpdateFieldDTO extends BaseEntity {
 
     @ApiModelProperty(value = "字典编码")
     private String dictCode;
+    
+    @ApiModelProperty(value = "数据接口")
+    private Long apiId;
 
     @ApiModelProperty(value = "最小值")
     private String min;

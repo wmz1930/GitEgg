@@ -2,9 +2,11 @@ package com.gitegg.service.extension.mail.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.email.enums.MailResultCodeEnum;
 import com.gitegg.platform.email.factory.JavaMailSenderFactory;
+import com.gitegg.platform.email.impl.GitEggJavaMailSenderImpl;
 import com.gitegg.service.extension.mail.dto.CreateMailLogDTO;
 import com.gitegg.service.extension.mail.dto.SendSimpleMailDTO;
 import com.gitegg.service.extension.mail.entity.MailTemplate;
@@ -153,6 +155,7 @@ public class MailTenantServiceImpl implements IMailService {
 
             //设置日志记录参数，这里没有使用通用的切面日志，因为单独为mail设置的发送记录存储表，且没有必要单独再做切面日志
             mailLog.setMailFrom(from);
+            mailLog.setChannelId(((GitEggJavaMailSenderImpl)javaMailSender).getId());
             mailLog.setMailTo(Arrays.toString(to));
             mailLog.setMailSubject(subject);
             mailLog.setMailContent(content);
@@ -216,6 +219,7 @@ public class MailTenantServiceImpl implements IMailService {
             javaMailSender.send(message);
             //设置日志记录参数，这里没有使用通用的切面日志，因为单独为mail设置的发送记录存储表，且没有必要单独再做切面日志
             mailLog.setMailFrom(from);
+            mailLog.setChannelId(((GitEggJavaMailSenderImpl)javaMailSender).getId());
             mailLog.setMailTo(sendSimpleMailDTO.getMailTo());
             mailLog.setMailSubject(sendSimpleMailDTO.getMailSubject());
             mailLog.setMailContent(sendSimpleMailDTO.getMailContent());

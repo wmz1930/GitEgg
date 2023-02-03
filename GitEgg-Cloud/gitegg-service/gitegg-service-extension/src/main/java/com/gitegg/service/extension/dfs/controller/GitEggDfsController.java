@@ -89,14 +89,14 @@ public class GitEggDfsController {
     /**
      * 通过批量文件名获取文件访问链接
      */
-    @GetMapping("/batch/get/file/url")
+    @PostMapping("/batch/get/file/url")
     @ApiOperation(value = "查询分布式存储配置表详情")
-    public Result<?> queryBatch(String dfsCode, @RequestParam("fileNames") String[] fileNames) {
+    public Result<?> queryBatch( @RequestBody QueryDfsFileDTO fileQuery) {
         List<GitEggDfsFile> gitEggDfsFiles = new ArrayList<>();
-        if (ArrayUtil.isNotEmpty(fileNames))
+        if (ArrayUtil.isNotEmpty(fileQuery.getFileNames()))
         {
-            for (String fileName : fileNames) {
-                String fileUrl = gitEggDfsService.getFileUrl(dfsCode, fileName);
+            for (String fileName : fileQuery.getFileNames()) {
+                String fileUrl = gitEggDfsService.getFileUrl(fileQuery.getDfsCode(), fileName);
                 GitEggDfsFile gitEggDfsFile = new GitEggDfsFile();
                 gitEggDfsFile.setFileName(fileName);
                 gitEggDfsFile.setFileUrl(fileUrl);

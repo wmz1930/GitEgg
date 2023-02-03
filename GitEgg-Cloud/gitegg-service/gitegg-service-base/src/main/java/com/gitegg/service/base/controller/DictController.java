@@ -208,7 +208,7 @@ public class DictController {
      */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验字典code是否存在", notes = "校验字典code是否存在")
-    public Result<Boolean> checkUserExist(UpdateDictDTO dictDTO) {
+    public Result<Boolean> checkUserExist(@RequestBody UpdateDictDTO dictDTO) {
         QueryWrapper<Dict> dictQueryWrapper = new QueryWrapper<>();
         if (null != dictDTO && null != dictDTO.getId()) {
             dictQueryWrapper.ne("id", dictDTO.getId());

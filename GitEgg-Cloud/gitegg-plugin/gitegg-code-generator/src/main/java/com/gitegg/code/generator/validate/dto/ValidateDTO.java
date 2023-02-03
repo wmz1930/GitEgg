@@ -32,4 +32,7 @@ public class ValidateDTO extends BaseEntity {
 
     @ApiModelProperty(value = "状态")
     private Integer status;
+    
+    @ApiModelProperty(value = "备注")
+    private String comments;
 }

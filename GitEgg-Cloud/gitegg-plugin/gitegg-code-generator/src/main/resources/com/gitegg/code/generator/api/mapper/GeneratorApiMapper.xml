@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.code.generator.api.mapper.GeneratorApiMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.code.generator.api.entity.GeneratorApi">
+        <id column="id" property="id" />
+        <result column="api_name" property="apiName" />
+        <result column="api_path" property="apiPath" />
+        <result column="api_method" property="apiMethod" />
+        <result column="api_params" property="apiParams" />
+        <result column="api_status" property="apiStatus" />
+        <result column="api_object" property="apiObject" />
+        <result column="label_field" property="labelField" />
+        <result column="value_field" property="valueField" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, api_name, api_path, api_method, api_params, api_status, api_object, label_field, value_field, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询接口配置表列表 -->
+    <select id="queryGeneratorApiList" resultType="com.gitegg.code.generator.api.dto.GeneratorApiDTO" parameterType="com.gitegg.code.generator.api.dto.QueryGeneratorApiDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_api
+        WHERE del_flag = 0
+        <if test="generatorApi.apiName != null and generatorApi.apiName != ''">
+            AND api_name like concat('%', #{generatorApi.apiName}, '%')
+        </if>
+        <if test="generatorApi.apiMethod != null and generatorApi.apiMethod != ''">
+            AND api_method = #{generatorApi.apiMethod}
+        </if>
+        <if test="generatorApi.apiStatus != null and generatorApi.apiStatus != ''">
+            AND api_status = #{generatorApi.apiStatus}
+        </if>
+        <if test="generatorApi.generatorApiIds != null and generatorApi.generatorApiIds.size > 0 ">
+            AND id in
+            <foreach collection="generatorApi.generatorApiIds" item ="generatorApiId" index="i" open="(" close=")" separator=",">
+                #{generatorApiId}
+            </foreach>
+        </if>
+        <if test="generatorApi.beginDateTime != null and generatorApi.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{generatorApi.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="generatorApi.endDateTime != null and generatorApi.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{generatorApi.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+    <!-- 查询接口配置表信息 -->
+    <select id="queryGeneratorApi" resultType="com.gitegg.code.generator.api.dto.GeneratorApiDTO" parameterType="com.gitegg.code.generator.api.dto.QueryGeneratorApiDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_code_generator_api
+        WHERE del_flag = 0
+        <if test="generatorApi.apiName != null and generatorApi.apiName != ''">
+            AND api_name like concat('%', #{generatorApi.apiName}, '%')
+        </if>
+        <if test="generatorApi.apiMethod != null and generatorApi.apiMethod != ''">
+            AND api_method = #{generatorApi.apiMethod}
+        </if>
+        <if test="generatorApi.apiStatus != null and generatorApi.apiStatus != ''">
+            AND api_status = #{generatorApi.apiStatus}
+        </if>
+            <if test="generatorApi.generatorApiIds != null and generatorApi.generatorApiIds.size > 0 ">
+                AND id in
+                <foreach collection="generatorApi.generatorApiIds" item ="generatorApiId" index="i" open="(" close=")" separator=",">
+                    #{generatorApiId}
+                </foreach>
+            </if>
+        <if test="generatorApi.beginDateTime != null and generatorApi.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{generatorApi.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="generatorApi.endDateTime != null and generatorApi.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{generatorApi.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+</mapper>

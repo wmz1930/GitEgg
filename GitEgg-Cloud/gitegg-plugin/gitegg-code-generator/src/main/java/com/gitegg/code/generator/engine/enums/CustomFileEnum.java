@@ -12,77 +12,92 @@ public enum CustomFileEnum {
     /**
      * ENTITY_FILE
      */
-    ENTITY_FILE("ENTITY", "/templates/singleTable/entity.java"),
+    ENTITY_FILE("ENTITY", "/entity/entity.java"),
 
     /**
      * SERVICE_FILE
      */
-    SERVICE_FILE("SERVICE", "/templates/singleTable/service.java"),
+    SERVICE_FILE("SERVICE", "/service/service.java"),
 
     /**
      * SERVICE_IMPL_FILE
      */
-    SERVICE_IMPL_FILE("SERVICE_IMPL", "/templates/singleTable/serviceImpl.java"),
+    SERVICE_IMPL_FILE("SERVICE_IMPL", "/service/impl/serviceImpl.java"),
 
     /**
      * MAPPER_FILE
      */
-    MAPPER_FILE("MAPPER", "/templates/singleTable/mapper.java"),
+    MAPPER_FILE("MAPPER", "/mapper/mapper.java"),
 
     /**
      * CONTROLLER_FILE
      */
-    CONTROLLER_FILE("CONTROLLER", "/templates/singleTable/controller.java"),
+    CONTROLLER_FILE("CONTROLLER", "/controller/controller.java"),
 
     /**
      * MAPPER_XML_FILE
      */
-    MAPPER_XML_FILE("MAPPER_XML", "/templates/singleTable/mapper.xml"),
+    MAPPER_XML_FILE("MAPPER_XML", "/mapper/mapper.xml"),
 
     /**
      * DTO_FILE
      */
-    DTO_FILE("DTO", "/templates/singleTable/dto.java.ftl"),
+    DTO_FILE("DTO", "/dto/dto.java.ftl"),
 
     /**
      * CREATE_DTO
      */
-    CREATE_DTO("CREATE_DTO", "/templates/singleTable/createDTO.java.ftl"),
+    CREATE_DTO("CREATE_DTO", "/dto/createDTO.java.ftl"),
 
     /**
      * UPDATE_DTO
      */
-    UPDATE_DTO("UPDATE_DTO", "/templates/singleTable/updateDTO.java.ftl"),
+    UPDATE_DTO("UPDATE_DTO", "/dto/updateDTO.java.ftl"),
 
     /**
      * QUERY_DTO
      */
-    QUERY_DTO("QUERY_DTO", "/templates/singleTable/queryDTO.java.ftl"),
+    QUERY_DTO("QUERY_DTO", "/dto/queryDTO.java.ftl"),
 
     /**
      * EXPORT
      */
-    EXPORT("EXPORT", "/templates/singleTable/entityExport.java.ftl"),
+    EXPORT("EXPORT", "/bo/exportBO.java.ftl"),
 
     /**
      * IMPORT
      */
-    IMPORT("IMPORT", "/templates/singleTable/entityImport.java.ftl"),
+    IMPORT("IMPORT", "/bo/importBO.java.ftl"),
 
     /**
      * SQL
      */
-    SQL("SQL", "/templates/singleTable/resource.sql.ftl"),
+    SQL("SQL", "/resource.sql.ftl"),
 
     /**
      * VUE
      */
-    VUE("VUE", "/templates/singleTable/pageListTable.vue.ftl"),
+    VUE("VUE", ".vue.ftl"),
 
     /**
      * JS
      */
-    JS("JS", "/templates/singleTable/pageListTable.js.ftl");
+    JS("JS", "/api.js.ftl"),
+    
+    /**
+     * VUE_FORM
+     */
+    VUE_FORM("VUE_FORM", "/Form.vue.ftl"),
+    
+    /**
+     * SCHEMA_TS
+     */
+    SCHEMA_TS("SCHEMA_TS", "/schema.ts.ftl"),
+    
+    /**
+     * TS
+     */
+    TS("TS", "/api.ts.ftl");
 
     public String name;
 

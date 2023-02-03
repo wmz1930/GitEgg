@@ -8,6 +8,7 @@
         <result column="validate_name" property="validateName" />
         <result column="validate_regular" property="validateRegular" />
         <result column="status" property="status" />
+        <result column="comments" property="comments" />
         <result column="tenant_id" property="tenantId" />
         <result column="create_time" property="createTime" />
         <result column="creator" property="creator" />
@@ -17,7 +18,7 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, validate_name, validate_regular, status, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, validate_name, validate_regular, status, comments, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 分页查询字段校验规则配置表列表 -->
@@ -28,6 +29,9 @@
         WHERE del_flag = 0
         <if test="validate.validateName != null and validate.validateName != ''">
             AND validate_name like concat('%', #{validate.validateName}, '%')
+        </if>
+        <if test="validate.status != null">
+            AND status = #{validate.status}
         </if>
         <if test="validate.beginDateTime != null and validate.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{validate.beginDateTime},'%Y-%m-%d %H:%M:%S')
@@ -45,6 +49,9 @@
         WHERE del_flag = 0
         <if test="validate.validateName != null and validate.validateName != ''">
             AND validate_name like concat('%', #{validate.validateName}, '%')
+        </if>
+        <if test="validate.status != null">
+            AND status = #{validate.status}
         </if>
         <if test="validate.beginDateTime != null and validate.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{validate.beginDateTime},'%Y-%m-%d %H:%M:%S')

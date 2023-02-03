@@ -206,7 +206,7 @@ public class GeneratorDictController {
      */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验字典code是否存在", notes = "校验字典code是否存在")
-    public Result<Boolean> checkUserExist(UpdateGeneratorDictDTO generatorDictDTO) {
+    public Result<Boolean> checkUserExist(@RequestBody UpdateGeneratorDictDTO generatorDictDTO) {
         QueryWrapper<GeneratorDict> generatorDictQueryWrapper = new QueryWrapper<>();
         if (null != generatorDictDTO && null != generatorDictDTO.getId()) {
             generatorDictQueryWrapper.ne("id", generatorDictDTO.getId());

@@ -64,6 +64,9 @@
             <if test="dict.dictName != null and dict.dictName != ''">
                 AND dict_name = #{dict.dictName}
             </if>
+            <if test="dict.dictStatus != null">
+                AND dict_status = #{dict.dictStatus}
+            </if>
         </trim>
         ORDER BY create_time DESC
     </select>

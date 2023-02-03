@@ -35,6 +35,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -422,6 +423,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return result;
     }
     
+    @Override
+    public boolean updateAccount(@Valid UpdateAccountDTO account) {
+        User userEntity = BeanCopierUtils.copyByClass(account, User.class);
+        // 查询已存在的用户，用户名、昵称、邮箱、手机号有任一重复即视为用户已存在，真实姓名是可以重复的。
+        List<User> userList = userMapper.queryExistUser(userEntity);
+        if (!CollectionUtils.isEmpty(userList)) {
+            throw new BusinessException("已存在的用户，用户名、昵称、邮箱、手机号有任一重复即视为用户已存在");
+        }
+        // 处理前端传过来的省市区
+        userEntity = resolveAreas(userEntity, account.getAreas());
+        return this.updateById(userEntity);
+    }
+    
     /**
      * 通过账号查询用户
      * @param userAccount 用户账号
@@ -548,7 +562,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!CollectionUtils.isEmpty(areas)) {
             userEntity.setProvince(areas.get(GitEggConstant.Address.PROVINCE));
             userEntity.setCity(areas.get(GitEggConstant.Address.CITY));
-            userEntity.setArea(areas.get(GitEggConstant.Address.AREA));
+            userEntity.setArea(areas.size() > GitEggConstant.Number.TWO ? areas.get(GitEggConstant.Address.AREA) : StrUtil.SPACE);
         }
         return userEntity;
     }

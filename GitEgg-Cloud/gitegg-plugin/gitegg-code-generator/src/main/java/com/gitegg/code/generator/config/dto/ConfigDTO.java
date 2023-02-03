@@ -26,6 +26,12 @@ public class ConfigDTO extends BaseEntity {
 
     @ApiModelProperty(value = "数据源")
     private Long datasourceId;
+    
+    @ApiModelProperty(value = "服务类型")
+    private String serviceType;
+    
+    @ApiModelProperty(value = "前端版本")
+    private String frontType;
 
     @ApiModelProperty(value = "数据源名称")
     private String datasourceName;
@@ -50,6 +56,9 @@ public class ConfigDTO extends BaseEntity {
 
     @ApiModelProperty(value = "父级包名")
     private String parentPackage;
+    
+    @ApiModelProperty(value = "实体名称")
+    private String domainName;
 
     @ApiModelProperty(value = "controller请求路径")
     private String controllerPath;
@@ -95,5 +104,8 @@ public class ConfigDTO extends BaseEntity {
 
     @ApiModelProperty(value = "代码生成类型")
     private String codeType;
+    
+    @ApiModelProperty(value = "代码保存类型")
+    private String codeSaveType;
 
 }

@@ -31,6 +31,14 @@ public class Config extends BaseEntity {
     @ApiModelProperty(value = "数据源")
     @TableField("datasource_id")
     private Long datasourceId;
+    
+    @ApiModelProperty(value = "服务类型")
+    @TableField("service_type")
+    private String serviceType;
+    
+    @ApiModelProperty(value = "前端版本")
+    @TableField("front_type")
+    private String frontType;
 
     @ApiModelProperty(value = "模块名称")
     @TableField("module_name")
@@ -59,7 +67,11 @@ public class Config extends BaseEntity {
     @ApiModelProperty(value = "父级包名")
     @TableField("parent_package")
     private String parentPackage;
-
+    
+    @ApiModelProperty(value = "实体名称")
+    @TableField("domain_name")
+    private String domainName;
+    
     @ApiModelProperty(value = "controller请求路径")
     @TableField("controller_path")
     private String controllerPath;
@@ -119,5 +131,9 @@ public class Config extends BaseEntity {
     @ApiModelProperty(value = "代码生成类型")
     @TableField("code_type")
     private String codeType;
-
+    
+    @ApiModelProperty(value = "代码保存类型")
+    @TableField("code_save_type")
+    private String codeSaveType;
+    
 }

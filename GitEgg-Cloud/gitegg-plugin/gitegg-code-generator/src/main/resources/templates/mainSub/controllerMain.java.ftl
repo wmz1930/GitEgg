@@ -80,7 +80,7 @@ public class ${table.controllerName} {
      */
      @GetMapping("/main/list")
      @ApiOperation(value = "联合主表查询${table.comment!}列表")
-     public Result<Page<${entity}DTO> mainList(Query${entity}DTO query${entity}DTO, Page<${entity}DTO> page) {
+     public Result<Page<${entity}DTO>> mainList(Query${entity}DTO query${entity}DTO, Page<${entity}DTO> page) {
          Page<${entity}DTO> page${entity} = ${table.entityPath}Service.query${mainEntityName}${entity}List(page, query${entity}DTO);
          return Result.data(page${entity});
      }

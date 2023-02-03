@@ -28,7 +28,7 @@ public class FieldUtils {
      * @throws Exception
      */
     public static boolean isDictCodeField(String controlType) {
-        List<String> dictCodeFieldList = Arrays.asList("SELECT", "RADIO", "CHECKBOX", "SELECT_MULTI", "SWITCH");
+        List<String> dictCodeFieldList = Arrays.asList("SELECT", "RADIO", "CHECKBOX", "SELECT_MULTI", "SWITCH", "API_TREE_SELECT", "API_TREE", "CASCADER");
         return dictCodeFieldList.contains(controlType);
     }
 

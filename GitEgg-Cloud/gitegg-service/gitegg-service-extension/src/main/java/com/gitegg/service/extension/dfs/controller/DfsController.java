@@ -159,7 +159,7 @@ public class DfsController {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验分布式存储配置表是否存在", notes = "校验分布式存储配置表是否存在")
-    public Result<Boolean> checkDfsExist(CheckExistDTO dfs) {
+    public Result<Boolean> checkDfsExist(@RequestBody CheckExistDTO dfs) {
         String field = dfs.getCheckField();
         String value = dfs.getCheckValue();
         QueryWrapper<Dfs> dfsQueryWrapper = new QueryWrapper<>();
@@ -177,11 +177,12 @@ public class DfsController {
 
     /**
      * 查询分布式存储配置的默认配置
+     * 有公开的图片，有私有的图片
      */
     @GetMapping("/query/default")
     @ApiOperation(value = "查询分布式存储配置表详情")
-    public Result<?> queryDefaultConfig() {
-        DfsDTO dfsDTO = dfsService.queryDefaultDfs();
+    public Result<?> queryDefaultConfig(QueryDfsDTO queryDfsDTO) {
+        DfsDTO dfsDTO = dfsService.queryDefaultDfs(queryDfsDTO);
         return Result.data(dfsDTO);
     }
  }

@@ -136,15 +136,18 @@ public class GitEggOAuthController {
         //先对密码进行处理，取account和md5加密密码
         String username = parameters.get("username");
         String password = parameters.get("password");
-        Result<Object> result = userFeign.queryUserByAccount(username);
-        if (null != result && result.isSuccess()) {
-            GitEggUser gitEggUser = new GitEggUser();
-            BeanUtil.copyProperties(result.getData(), gitEggUser, false);
-            if (!StringUtils.isEmpty(gitEggUser.getAccount())) {
-                username = gitEggUser.getAccount();
-                password = AuthConstant.BCRYPT + gitEggUser.getAccount() + password;
-                parameters.put("username", username);
-                parameters.put("password", password);
+        if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password))
+        {
+            Result<Object> result = userFeign.queryUserByAccount(username);
+            if (null != result && result.isSuccess()) {
+                GitEggUser gitEggUser = new GitEggUser();
+                BeanUtil.copyProperties(result.getData(), gitEggUser, false);
+                if (!StringUtils.isEmpty(gitEggUser.getAccount())) {
+                    username = gitEggUser.getAccount();
+                    password = AuthConstant.BCRYPT + gitEggUser.getAccount() + password;
+                    parameters.put("username", username);
+                    parameters.put("password", password);
+                }
             }
         }
 
@@ -174,7 +177,7 @@ public class GitEggOAuthController {
         else {
             throw new BusinessException("请通过正确的安全验证，再发送短信验证码");
         }
-        return sendResult;
+        return Result.data(sendResult);
     }
 
     /**

@@ -2,9 +2,13 @@ package com.gitegg.service.system.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitegg.platform.base.annotation.auth.CurrentUser;
 import com.gitegg.platform.base.annotation.resubmit.ResubmitLock;
+import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.platform.base.constant.GitEggConstant;
+import com.gitegg.platform.base.domain.GitEggUser;
 import com.gitegg.platform.base.dto.CheckExistDTO;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.exception.BusinessException;
@@ -28,7 +32,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -96,11 +103,7 @@ public class UserController {
     @ApiOperation(value = "更新用户信息")
     public Result<?> update(@RequestBody UpdateUserDTO user) {
         boolean result = userService.updateUser(user);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        return Result.result(result);
     }
 
     /**
@@ -114,11 +117,7 @@ public class UserController {
             return Result.error("用户ID不能为空");
         }
         boolean result = userService.deleteUser(userId);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        return Result.result(result);
     }
 
     /**
@@ -132,11 +131,7 @@ public class UserController {
             return Result.error("用户ID列表不能为空");
         }
         boolean result = userService.batchDeleteUser(userIds);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        return Result.result(result);
     }
 
     /**
@@ -144,24 +139,23 @@ public class UserController {
      */
     @PostMapping("/password/change")
     @ApiOperation(value = "用户修改密码")
-    public Result<?> updatePassword(@RequestBody UpdateUserDTO userUpdate, @ApiIgnore User tempUser) {
+    public Result<?> updatePassword(@RequestBody UpdateUserDTO userUpdate, @ApiIgnore @CurrentUser GitEggUser currentUser) {
         String newPwd = userUpdate.getNewPwd();
         String oldPwd = userUpdate.getOldPwd();
         if (StringUtils.isEmpty(newPwd) || StringUtils.isEmpty(oldPwd)) {
             return Result.error("密码不能为空");
         }
-        if (tempUser == null || !BCrypt.checkpw(tempUser.getAccount() + oldPwd, tempUser.getPassword())) {
+        User tempUser = userService.getById(currentUser.getId());
+        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        String password = AuthConstant.BCRYPT + tempUser.getAccount() +  DigestUtils.md5DigestAsHex(oldPwd.getBytes());
+        if (tempUser == null || !passwordEncoder.matches(password, tempUser.getPassword())) {
             return Result.error("原密码错误");
         }
-        UpdateUserDTO user = new UpdateUserDTO();
-        user.setId(tempUser.getId());
-        user.setPassword(newPwd);
-        boolean result = userService.updateUser(user);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        String passwordNew = AuthConstant.BCRYPT + tempUser.getAccount() +  DigestUtils.md5DigestAsHex(newPwd.getBytes());
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(User::getId, currentUser.getId()).set(User::getPassword, passwordEncoder.encode(passwordNew));
+        boolean result = userService.update(updateWrapper);
+        return Result.result(result);
     }
     
     /**
@@ -175,11 +169,7 @@ public class UserController {
             return Result.error("用户ID不能为空");
         }
         boolean result = userService.resetUserPassword(userId);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        return Result.result(result);
     }
     
     /**
@@ -192,11 +182,7 @@ public class UserController {
             @ApiImplicitParam(name = "status", value = "用户状态", required = true, dataTypeClass = Integer.class, paramType = "path")})
     public Result<?> updateStatus(@PathVariable("userId") Long userId, @PathVariable("status") Integer status) {
         boolean result = userService.updateUserStatus(userId, status);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        return Result.result(result);
     }
 
     /**
@@ -212,11 +198,7 @@ public class UserController {
         upUser.setAreas(user.getAreas());
         upUser.setId(tempUser.getId());
         boolean result = userService.updateUser(user);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        return Result.result(result);
     }
 
     /**
@@ -226,11 +208,7 @@ public class UserController {
     @ApiOperation(value = "更新用户数据权限")
     public Result<?> updateUserDataPermission(@Valid @RequestBody UpdateDataPermissionUserDTO updateDataPermission) {
         boolean result = dataPermissionUserService.updateUserOrganizationDataPermission(updateDataPermission);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        return Result.result(result);
     }
 
     /**
@@ -241,7 +219,7 @@ public class UserController {
      */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验用户账号是否存在", notes = "校验用户账号是否存在")
-    public Result<Boolean> checkUserExist(CheckExistDTO user) {
+    public Result<Boolean> checkUserExist(@RequestBody CheckExistDTO user) {
         String field = user.getCheckField();
         String value = user.getCheckValue();
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
@@ -250,11 +228,7 @@ public class UserController {
             userQueryWrapper.ne("id", user.getId());
         }
         int count = userService.count(userQueryWrapper);
-        if (GitEggConstant.COUNT_ZERO == count){
-            return Result.data(true);
-        } else {
-            return Result.data(false);
-        }
+        return Result.data(GitEggConstant.COUNT_ZERO == count);
     }
     
     /**

@@ -12,22 +12,22 @@ public enum DfsFactoryClassEnum {
     /**
      * MINIO MINIO
      */
-    MINIO("2", "com.gitegg.service.extension.dfs.factory.DfsMinioFactory"),
+    MINIO("MINIO", "com.gitegg.service.extension.dfs.factory.DfsMinioFactory"),
 
     /**
      * 七牛云Kodo QINIUYUN_KODO
      */
-    QI_NIU("3", "com.gitegg.service.extension.dfs.factory.DfsQiniuFactory"),
+    QI_NIU("QINIUYUN_KODO", "com.gitegg.service.extension.dfs.factory.DfsQiniuFactory"),
 
     /**
      * 阿里云OSS ALIYUN_OSS
      */
-    ALI_YUN("4", "com.gitegg.service.extension.dfs.factory.DfsAliyunFactory"),
+    ALI_YUN("ALIYUN_OSS", "com.gitegg.service.extension.dfs.factory.DfsAliyunFactory"),
 
     /**
      * 腾讯云COS TENCENT_COS
      */
-    TENCENT("5", "com.gitegg.service.extension.dfs.factory.DfsTencentFactory");
+    TENCENT("TENCENT_COS", "com.gitegg.service.extension.dfs.factory.DfsTencentFactory");
 
     public String code;
 

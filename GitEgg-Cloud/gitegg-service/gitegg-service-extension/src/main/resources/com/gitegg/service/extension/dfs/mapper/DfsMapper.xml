@@ -39,6 +39,21 @@
         <if test="dfs.id != null and dfs.id != ''">
             AND id = #{dfs.id}
         </if>
+        <if test="dfs.dfsCode != null and dfs.dfsCode != ''">
+            AND dfs_code = #{dfs.dfsCode}
+        </if>
+        <if test="dfs.dfsDefault != null and dfs.dfsDefault != ''">
+            AND dfs_default = #{dfs.dfsDefault}
+        </if>
+        <if test="dfs.dfsType != null and dfs.dfsType != ''">
+            AND dfs_type = #{dfs.dfsType}
+        </if>
+        <if test="dfs.accessControl != null and dfs.accessControl != ''">
+            AND access_control = #{dfs.accessControl}
+        </if>
+        <if test="dfs.dfsStatus != null">
+            AND dfs_status = #{dfs.dfsStatus}
+        </if>
         <if test="dfs.beginDateTime != null and dfs.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfs.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
@@ -63,6 +78,15 @@
         <if test="dfs.dfsDefault != null and dfs.dfsDefault != ''">
             AND dfs_default = #{dfs.dfsDefault}
         </if>
+        <if test="dfs.dfsType != null and dfs.dfsType != ''">
+            AND dfs_type = #{dfs.dfsType}
+        </if>
+        <if test="dfs.accessControl != null and dfs.accessControl != ''">
+            AND access_control = #{dfs.accessControl}
+        </if>
+        <if test="dfs.dfsStatus != null">
+            AND dfs_status = #{dfs.dfsStatus}
+        </if>
         <if test="dfs.beginDateTime != null and dfs.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfs.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
@@ -73,11 +97,23 @@
     </select>
 
     <!-- 查询默认配置 -->
-    <select id="queryDefaultDfs" resultType="com.gitegg.service.extension.dfs.dto.DfsDTO">
+    <select id="queryDefaultDfs" resultType="com.gitegg.service.extension.dfs.dto.DfsDTO"  parameterType="com.gitegg.service.extension.dfs.dto.QueryDfsDTO">
         SELECT
         id, dfs_type, dfs_code, access_url_prefix, upload_url
         FROM t_sys_dfs
-        WHERE del_flag = 0 AND dfs_default = '1'
+        WHERE del_flag = 0 AND dfs_default = '1' AND dfs_status = '1'
+        <if test="dfs.dfsCode != null and dfs.dfsCode != ''">
+            AND dfs_code = #{dfs.dfsCode}
+        </if>
+        <if test="dfs.dfsDefault != null and dfs.dfsDefault != ''">
+            AND dfs_default = #{dfs.dfsDefault}
+        </if>
+        <if test="dfs.dfsType != null and dfs.dfsType != ''">
+            AND dfs_type = #{dfs.dfsType}
+        </if>
+        <if test="dfs.accessControl != null and dfs.accessControl != ''">
+            AND access_control = #{dfs.accessControl}
+        </if>
     </select>
 
 </mapper>

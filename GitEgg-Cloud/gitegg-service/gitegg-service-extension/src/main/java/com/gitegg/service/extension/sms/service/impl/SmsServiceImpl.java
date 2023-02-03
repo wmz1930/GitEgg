@@ -121,7 +121,7 @@ public class SmsServiceImpl implements ISmsService {
             TimeUnit cacheTimeOutUnit = StringUtils.isEmpty(smsTemplateDTO.getCacheTimeOutUnit()) ? TimeUnit.valueOf(smsProperties.getExpirationTimeUnit()) : TimeUnit.valueOf(smsTemplateDTO.getCacheTimeOutUnit());
             // 将短信验证码存入redis并设置过期时间
             redisTemplate.opsForValue().set(redisKey, verificationCode, cacheTimeOut, cacheTimeOutUnit);
-            result.setData(null);
+            result.setData(true);
             // 发送成功，设置计数一次
             String redisKeyLimit = this.getRedisKeyPrefix(smsTemplateDTO.getSmsCode(), phoneNumber, SmsConstant.SMS_CACHE_LIMIT_PREFIX);
             redisTemplate.opsForValue().increment(redisKeyLimit, GitEggConstant.ONE_LONG);

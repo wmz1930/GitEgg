@@ -208,7 +208,7 @@ public class SmsChannelController {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验短信渠道表是否存在", notes = "校验短信渠道表是否存在")
-    public Result<Boolean> checkSmsChannelExist(CheckExistDTO smsChannel) {
+    public Result<Boolean> checkSmsChannelExist(@RequestBody CheckExistDTO smsChannel) {
         String field = smsChannel.getCheckField();
         String value = smsChannel.getCheckValue();
         QueryWrapper<SmsChannel> smsChannelQueryWrapper = new QueryWrapper<>();
@@ -217,10 +217,6 @@ public class SmsChannelController {
             smsChannelQueryWrapper.ne("id", smsChannel.getId());
         }
         int count = smsChannelService.count(smsChannelQueryWrapper);
-        if (GitEggConstant.COUNT_ZERO == count){
-            return Result.data(true);
-        } else{
-            return Result.data(false);
-        }
+        return Result.data(GitEggConstant.COUNT_ZERO == count);
     }
  }

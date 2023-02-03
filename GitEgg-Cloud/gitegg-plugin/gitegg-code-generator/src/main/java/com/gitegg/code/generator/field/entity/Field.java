@@ -104,6 +104,10 @@ public class Field extends BaseEntity {
     @ApiModelProperty(value = "字典编码")
     @TableField("dict_code")
     private String dictCode;
+    
+    @ApiModelProperty(value = "数据接口")
+    @TableField("api_id")
+    private Long apiId;
 
     @ApiModelProperty(value = "最小值")
     @TableField("min")

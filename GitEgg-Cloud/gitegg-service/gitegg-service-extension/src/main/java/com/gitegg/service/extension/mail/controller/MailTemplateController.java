@@ -2,7 +2,10 @@ package com.gitegg.service.extension.mail.controller;
 
 
 import com.alibaba.excel.EasyExcel;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitegg.platform.base.constant.GitEggConstant;
+import com.gitegg.platform.base.dto.CheckExistDTO;
 import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
@@ -10,6 +13,7 @@ import com.gitegg.service.extension.mail.dto.CreateMailTemplateDTO;
 import com.gitegg.service.extension.mail.dto.MailTemplateDTO;
 import com.gitegg.service.extension.mail.dto.QueryMailTemplateDTO;
 import com.gitegg.service.extension.mail.dto.UpdateMailTemplateDTO;
+import com.gitegg.service.extension.mail.entity.MailChannel;
 import com.gitegg.service.extension.mail.entity.MailTemplate;
 import com.gitegg.service.extension.mail.entity.MailTemplateExport;
 import com.gitegg.service.extension.mail.entity.MailTemplateImport;
@@ -235,5 +239,25 @@ public class MailTemplateController {
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "邮件模板数据列表";
         EasyExcel.write(response.getOutputStream(), MailTemplateImport.class).sheet(sheetName).doWrite(new ArrayList<>());
+    }
+    
+    /**
+     * 校验邮件模板
+     *
+     * @param mailTemplate
+     * @return
+     */
+    @PostMapping(value = "/check")
+    @ApiOperation(value = "校验邮件模板是否存在", notes = "校验邮件模板是否存在")
+    public Result<Boolean> checkMailTemplateExist(@RequestBody CheckExistDTO mailTemplate) {
+        String field = mailTemplate.getCheckField();
+        String value = mailTemplate.getCheckValue();
+        QueryWrapper<MailTemplate> mailTemplateQueryWrapper = new QueryWrapper<>();
+        mailTemplateQueryWrapper.eq(field, value);
+        if(null != mailTemplate.getId()) {
+            mailTemplateQueryWrapper.ne("id", mailTemplate.getId());
+        }
+        int count = mailTemplateService.count(mailTemplateQueryWrapper);
+        return Result.data(GitEggConstant.COUNT_ZERO == count);
     }
  }

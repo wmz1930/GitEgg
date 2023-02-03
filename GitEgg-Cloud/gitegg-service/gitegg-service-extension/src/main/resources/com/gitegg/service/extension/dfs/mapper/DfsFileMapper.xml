@@ -44,6 +44,18 @@
         <if test="dfsFile.id != null and dfsFile.id != ''">
             AND file.id = #{dfsFile.id}
         </if>
+        <if test="dfsFile.fileName != null and dfsFile.fileName != ''">
+            AND file.file_name = #{dfsFile.fileName}
+        </if>
+        <if test="dfsFile.dfsType != null and dfsFile.dfsType != ''">
+            AND dfs.dfs_type = #{dfsFile.dfsType}
+        </if>
+        <if test="dfsFile.originalName != null and dfsFile.originalName != ''">
+            AND file.original_name = #{dfsFile.originalName}
+        </if>
+        <if test="dfsFile.fileStatus != null">
+            AND file.file_status = #{dfsFile.fileStatus}
+        </if>
         <if test="dfsFile.beginDateTime != null and dfsFile.beginDateTime != ''">
             AND DATE_FORMAT(file.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfsFile.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
@@ -61,6 +73,18 @@
         WHERE del_flag = 0
         <if test="dfsFile.id != null and dfsFile.id != ''">
             AND id = #{dfsFile.id}
+        </if>
+        <if test="dfsFile.fileName != null and dfsFile.fileName != ''">
+            AND file.file_name = #{dfsFile.fileName}
+        </if>
+        <if test="dfsFile.dfsType != null and dfsFile.dfsType != ''">
+            AND dfs.dfs_type = #{dfsFile.dfsType}
+        </if>
+        <if test="dfsFile.originalName != null and dfsFile.originalName != ''">
+            AND file.original_name = #{dfsFile.originalName}
+        </if>
+        <if test="dfsFile.fileStatus != null">
+            AND file.file_status = #{dfsFile.fileStatus}
         </if>
         <if test="dfsFile.beginDateTime != null and dfsFile.beginDateTime != ''">
             AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{dfsFile.beginDateTime},'%Y-%m-%d %H:%M:%S')

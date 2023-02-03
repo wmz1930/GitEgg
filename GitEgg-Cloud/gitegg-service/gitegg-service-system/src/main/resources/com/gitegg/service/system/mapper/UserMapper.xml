@@ -4,29 +4,29 @@
 
      <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.gitegg.service.system.entity.User">
-		<id column="id" property="id"/>
-		<result column="tenant_id" property="tenantId"/>
-		<result column="account" property="account"/>
-		<result column="nickname" property="nickname"/>
-		<result column="real_name" property="realName"/>
-		<result column="gender" property="gender"/>
-		<result column="email" property="email"/>
-		<result column="mobile" property="mobile"/>
-		<result column="password" property="password"/>
-		<result column="status" property="status"/>
-		<result column="avatar" property="avatar"/>
-		<result column="country" property="country"/>
-		<result column="province" property="province"/>
-		<result column="city" property="city"/>
-		<result column="area" property="area"/>
-		<result column="street" property="street"/>
-		<result column="comments" property="comments"/>
-		<result column="create_time" property="createTime"/>
-		<result column="creator" property="creator"/>
-		<result column="update_time" property="updateTime"/>
-		<result column="operator" property="operator"/>
-		<result column="del_flag" property="delFlag"/>
-	</resultMap>
+        <id column="id" property="id"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="account" property="account"/>
+        <result column="nickname" property="nickname"/>
+        <result column="real_name" property="realName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <result column="mobile" property="mobile"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="avatar" property="avatar"/>
+        <result column="country" property="country"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="area" property="area"/>
+        <result column="street" property="street"/>
+        <result column="comments" property="comments"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="operator" property="operator"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
@@ -34,182 +34,171 @@
     </sql>
     
     <!-- 分页查询用户列表 -->
-	<select id="queryUserPage" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.entity.User">
-		SELECT DISTINCT
-		sysUser.id AS id,
-		sysUser.tenant_id AS tenantId,
-		sysUser.account AS account,
-		sysUser.nickname AS nickname,
-		sysUser.real_name AS realName,
-		sysUser.gender AS gender,
-		sysUser.email AS email,
-		sysUser.mobile AS mobile,
-		sysUser.status AS status,
-		sysUser.avatar AS avatar,
-		sysUser.country AS country,
-		sysUser.province AS province,
-		provinceDistrict.district_name AS provinceName,
-		sysUser.city AS city,
-		cityDistrict.district_name AS cityName,
-		sysUser.area AS area,
-		sysUser.street AS street,
-		sysUser.comments AS comments,
-		sysUser.create_time AS createTime,
-		sysUser.creator AS creator,
-		sysUser.update_time AS updateTime,
-		sysUser.operator AS operator,
-		GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
-		GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKey,
-		GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleName,
-		GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS organizationIds,
-		sysOrganization.id AS organizationId,
-		sysOrganization.organization_name AS organizationName
-		FROM t_sys_user sysUser
-		INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
-		LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
-		LEFT JOIN t_sys_district provinceDistrict ON sysUser.province = provinceDistrict.code
-		LEFT JOIN t_sys_district cityDistrict ON sysUser.city = cityDistrict.code
-		LEFT JOIN t_sys_data_permission_user dataPermission ON sysUser.id = dataPermission.user_id AND
-		dataPermission.del_flag = 0
-		INNER JOIN t_sys_organization_user organizationUser ON sysUser.id = organizationUser.user_id AND
-		organizationUser.del_flag = 0
-		INNER JOIN t_sys_organization sysOrganization ON organizationUser.organization_id = sysOrganization.id AND
-		sysOrganization.del_flag = 0
-		WHERE sysUser.del_flag = 0
-		<if test="user.id != null and user.id != ''">
-			AND sysUser.id = #{user.id}
-		</if>
-		<trim prefix="AND (" suffix=")" prefixOverrides="AND">
-			<if test="user.account != null and user.account != ''">
-				AND sysUser.account like concat('%', #{user.account}, '%')
-			</if>
-			<if test="user.nickname != null and user.nickname != ''">
-				AND sysUser.nickname like concat('%', #{user.nickname}, '%')
-			</if>
-			<if test="user.realName != null and user.realName != ''">
-				AND sysUser.real_name like concat('%', #{user.realName}, '%')
-			</if>
-			<if test="user.mobile != null and user.mobile != ''">
-				AND sysUser.mobile like concat('%', #{user.mobile}, '%')
-			</if>
-			<if test="user.email != null and user.email != ''">
-				AND sysUser.email like concat('%', #{user.email}, '%')
-			</if>
-			<!--只写!=null即可，否则状态是0时，会有bug-->
-			<if test="user.status != null">
-				AND sysUser.status = #{user.status}
-			</if>
-			<if test="user.roleId != null and user.roleId != ''">
-				<!--这里需要这么写，否则多角色用户再通过角色查询时，只能查询出一个角色-->
-				AND sysUser.id IN (
-					SELECT userRole.user_id
-					FROM t_sys_user_role userRole
-					WHERE userRole.del_flag = 0 AND userRole.role_id = #{user.roleId})
-			</if>
-			<if test="user.organizationId != null and user.organizationId != ''">
-				AND sysOrganization.id = #{user.organizationId}
-			</if>
-			<if test="user.beginDateTime != null and user.beginDateTime != ''">
-				AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{user.beginDateTime},'%Y-%m-%d')
-			</if>
-			<if test="user.endDateTime != null and user.endDateTime != ''">
-				AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{user.endDateTime},'%Y-%m-%d')
-			</if>
-		</trim>
-		GROUP BY sysUser.id
-		ORDER BY sysUser.create_time DESC
-	</select>
+    <select id="queryUserPage" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.entity.User">
+        SELECT DISTINCT
+        sysUser.id AS id,
+        sysUser.tenant_id AS tenantId,
+        sysUser.account AS account,
+        sysUser.nickname AS nickname,
+        sysUser.real_name AS realName,
+        sysUser.gender AS gender,
+        sysUser.email AS email,
+        sysUser.mobile AS mobile,
+        sysUser.status AS status,
+        sysUser.avatar AS avatar,
+        sysUser.country AS country,
+        sysUser.province AS province,
+        sysUser.city AS city,
+        sysUser.area AS area,
+        sysUser.street AS street,
+        sysUser.comments AS comments,
+        sysUser.create_time AS createTime,
+        sysUser.creator AS creator,
+        sysUser.update_time AS updateTime,
+        sysUser.operator AS operator,
+        GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
+        GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKey,
+        GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleName,
+        GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS organizationIds,
+        sysOrganization.id AS organizationId,
+        sysOrganization.organization_name AS organizationName
+        FROM t_sys_user sysUser
+        INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
+        LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
+        LEFT JOIN t_sys_data_permission_user dataPermission ON sysUser.id = dataPermission.user_id AND
+        dataPermission.del_flag = 0
+        INNER JOIN t_sys_organization_user organizationUser ON sysUser.id = organizationUser.user_id AND
+        organizationUser.del_flag = 0
+        INNER JOIN t_sys_organization sysOrganization ON organizationUser.organization_id = sysOrganization.id AND
+        sysOrganization.del_flag = 0
+        WHERE sysUser.del_flag = 0
+        <if test="user.id != null and user.id != ''">
+            AND sysUser.id = #{user.id}
+        </if>
+        <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+            <if test="user.account != null and user.account != ''">
+                AND sysUser.account like concat('%', #{user.account}, '%')
+            </if>
+            <if test="user.nickname != null and user.nickname != ''">
+                AND sysUser.nickname like concat('%', #{user.nickname}, '%')
+            </if>
+            <if test="user.realName != null and user.realName != ''">
+                AND sysUser.real_name like concat('%', #{user.realName}, '%')
+            </if>
+            <if test="user.mobile != null and user.mobile != ''">
+                AND sysUser.mobile like concat('%', #{user.mobile}, '%')
+            </if>
+            <if test="user.email != null and user.email != ''">
+                AND sysUser.email like concat('%', #{user.email}, '%')
+            </if>
+            <!--只写!=null即可，否则状态是0时，会有bug-->
+            <if test="user.status != null">
+                AND sysUser.status = #{user.status}
+            </if>
+            <if test="user.roleId != null and user.roleId != ''">
+                <!--这里需要这么写，否则多角色用户再通过角色查询时，只能查询出一个角色-->
+                AND sysUser.id IN (
+                    SELECT userRole.user_id
+                    FROM t_sys_user_role userRole
+                    WHERE userRole.del_flag = 0 AND userRole.role_id = #{user.roleId})
+            </if>
+            <if test="user.organizationId != null and user.organizationId != ''">
+                AND sysOrganization.id = #{user.organizationId}
+            </if>
+            <if test="user.beginDateTime != null and user.beginDateTime != ''">
+                AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{user.beginDateTime},'%Y-%m-%d')
+            </if>
+            <if test="user.endDateTime != null and user.endDateTime != ''">
+                AND DATE_FORMAT(sysUser.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{user.endDateTime},'%Y-%m-%d')
+            </if>
+        </trim>
+        GROUP BY sysUser.id
+        ORDER BY sysUser.create_time DESC
+    </select>
 
-	<!-- 查询用户信息 -->
-	<select id="queryUserInfo" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.entity.User">
-		SELECT DISTINCT
-		sysUser.id AS id,
-		sysUser.tenant_id AS tenantId,
-		sysUser.account AS account,
-		sysUser.nickname AS nickname,
-		sysUser.real_name AS realName,
-		sysUser.gender AS gender,
-		sysUser.email AS email,
-		sysUser.mobile AS mobile,
-		sysUser.password AS password,
-		sysUser.status AS status,
-		sysUser.avatar AS avatar,
-		sysUser.country AS country,
-		sysUser.province AS province,
-		provinceDistrict.district_name AS provinceName,
-		sysUser.city AS city,
-		cityDistrict.district_name AS cityName,
-		sysUser.area AS area,
-		sysUser.street AS street,
-		sysUser.comments AS comments,
-		sysUser.create_time AS createTime,
-		sysUser.creator AS creator,
-		sysUser.update_time AS updateTime,
-		sysUser.operator AS operator,
-		GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
-		GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKeys,
-		GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleNames,
-		GROUP_CONCAT(DISTINCT sysRole.data_permission_type) AS dataPermissionTypes,
-		GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS organizationIds,
-		sysOrganization.id AS organizationId,
-		sysOrganization.organization_name AS organizationName
-		FROM t_sys_user sysUser
-		INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
-		LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
-		LEFT JOIN t_sys_district provinceDistrict ON sysUser.province = provinceDistrict.code
-		LEFT JOIN t_sys_district cityDistrict ON sysUser.city = cityDistrict.code
-		LEFT JOIN t_sys_data_permission_user dataPermission ON sysUser.id = dataPermission.user_id AND
-		dataPermission.del_flag = 0
-		INNER JOIN t_sys_organization_user organizationUser ON sysUser.id = organizationUser.user_id AND
-		organizationUser.del_flag = 0
-		INNER JOIN t_sys_organization sysOrganization ON organizationUser.organization_id = sysOrganization.id AND
-		sysOrganization.del_flag = 0
-		WHERE sysUser.del_flag = 0
-		<if test="user.id != null and user.id != ''">
-			AND sysUser.id = #{user.id}
-		</if>
-		<trim prefix="AND (" suffix=")" prefixOverrides="AND">
-			<if test="user.account != null and user.account != ''">
-				AND (sysUser.account = #{user.account} OR sysUser.nickname = #{user.account} OR sysUser.mobile = #{user.account} OR sysUser.email = #{user.account})
-			</if>
-			<if test="user.realName != null and user.realName != ''">
-				AND sysUser.real_name = #{user.realName}
-			</if>
-			<if test="user.mobile != null and user.mobile != ''">
-				AND sysUser.mobile = #{user.mobile}
-			</if>
-			<if test="user.email != null and user.email != ''">
-				AND sysUser.email = #{user.email}
-			</if>
-		</trim>
-		GROUP BY sysUser.id
-	</select>
+    <!-- 查询用户信息,做一下优化，不要一条sql执行，性能很差 -->
+    <select id="queryUserInfo" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.entity.User">
+        SELECT DISTINCT
+        sysUser.id AS id,
+        sysUser.tenant_id AS tenantId,
+        sysUser.account AS account,
+        sysUser.nickname AS nickname,
+        sysUser.real_name AS realName,
+        sysUser.gender AS gender,
+        sysUser.email AS email,
+        sysUser.mobile AS mobile,
+        sysUser.password AS password,
+        sysUser.status AS status,
+        sysUser.avatar AS avatar,
+        sysUser.country AS country,
+        sysUser.province AS province,
+        sysUser.city AS city,
+        sysUser.area AS area,
+        sysUser.street AS street,
+        sysUser.comments AS comments,
+        sysUser.create_time AS createTime,
+        sysUser.creator AS creator,
+        sysUser.update_time AS updateTime,
+        sysUser.operator AS operator,
+        GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
+        GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKeys,
+        GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleNames,
+        GROUP_CONCAT(DISTINCT sysRole.data_permission_type) AS dataPermissionTypes,
+        GROUP_CONCAT(DISTINCT dataPermission.organization_id) AS organizationIds,
+        sysOrganization.id AS organizationId,
+        sysOrganization.organization_name AS organizationName
+        FROM t_sys_user sysUser
+        INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
+        LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
+        LEFT JOIN t_sys_data_permission_user dataPermission ON sysUser.id = dataPermission.user_id AND dataPermission.del_flag = 0
+        INNER JOIN t_sys_organization_user organizationUser ON sysUser.id = organizationUser.user_id AND organizationUser.del_flag = 0
+        INNER JOIN t_sys_organization sysOrganization ON organizationUser.organization_id = sysOrganization.id AND sysOrganization.del_flag = 0
+        WHERE sysUser.del_flag = 0
+        <if test="user.id != null and user.id != ''">
+            AND sysUser.id = #{user.id}
+        </if>
+        <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+            <if test="user.account != null and user.account != ''">
+                AND (sysUser.account = #{user.account} OR sysUser.nickname = #{user.account} OR sysUser.mobile = #{user.account} OR sysUser.email = #{user.account})
+            </if>
+            <if test="user.realName != null and user.realName != ''">
+                AND sysUser.real_name = #{user.realName}
+            </if>
+            <if test="user.mobile != null and user.mobile != ''">
+                AND sysUser.mobile = #{user.mobile}
+            </if>
+            <if test="user.email != null and user.email != ''">
+                AND sysUser.email = #{user.email}
+            </if>
+        </trim>
+        GROUP BY sysUser.id
+    </select>
 
-	<!-- 判断用户是否存在 -->
-	<select id="queryExistUser" resultType="com.gitegg.service.system.entity.User" parameterType="com.gitegg.service.system.entity.User">
-		SELECT
-		<include refid="Base_Column_List"/>
-		FROM t_sys_user
-		WHERE del_flag = 0
-		<if test="user.id != null and user.id != ''">
-			AND id != #{user.id}
-		</if>
-		<trim prefix="AND (" suffix=")" prefixOverrides="OR">
-			<if test="user.account != null and user.account != ''">
-				OR account = #{user.account} OR nickname = #{user.account} OR mobile = #{user.account} OR email = #{user.account}
-			</if>
-			<if test="user.nickname != null and user.nickname != ''">
-				OR account = #{user.nickname} OR nickname = #{user.nickname} OR mobile = #{user.nickname} OR email = #{user.nickname}
-			</if>
-			<if test="user.mobile != null and user.mobile != ''">
-				OR account = #{user.mobile} OR nickname = #{user.mobile} OR mobile = #{user.mobile} OR email = #{user.mobile}
-			</if>
-			<if test="user.email != null and user.email != ''">
-				OR account = #{user.email} OR nickname = #{user.email} OR mobile = #{user.email} OR email = #{user.email}
-			</if>
-		</trim>
-		ORDER BY id DESC
-	</select>
+    <!-- 判断用户是否存在 -->
+    <select id="queryExistUser" resultType="com.gitegg.service.system.entity.User" parameterType="com.gitegg.service.system.entity.User">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_user
+        WHERE del_flag = 0
+        <if test="user.id != null and user.id != ''">
+            AND id != #{user.id}
+        </if>
+        <trim prefix="AND (" suffix=")" prefixOverrides="OR">
+            <if test="user.account != null and user.account != ''">
+                OR account = #{user.account} OR nickname = #{user.account} OR mobile = #{user.account} OR email = #{user.account}
+            </if>
+            <if test="user.nickname != null and user.nickname != ''">
+                OR account = #{user.nickname} OR nickname = #{user.nickname} OR mobile = #{user.nickname} OR email = #{user.nickname}
+            </if>
+            <if test="user.mobile != null and user.mobile != ''">
+                OR account = #{user.mobile} OR nickname = #{user.mobile} OR mobile = #{user.mobile} OR email = #{user.mobile}
+            </if>
+            <if test="user.email != null and user.email != ''">
+                OR account = #{user.email} OR nickname = #{user.email} OR mobile = #{user.email} OR email = #{user.email}
+            </if>
+        </trim>
+        ORDER BY id DESC
+    </select>
 
     <!-- 批量查询用户信息 -->
     <select id="queryUserList" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.dto.QueryUserDTO">
@@ -235,8 +224,8 @@
         sysUser.update_time AS updateTime,
         sysUser.operator AS operator,
         GROUP_CONCAT(DISTINCT sysRole.id) AS roleIds,
-	GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKeys,
-	GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleNames,
+        GROUP_CONCAT(DISTINCT sysRole.role_key) AS roleKeys,
+        GROUP_CONCAT(DISTINCT sysRole.role_name) AS roleNames,
         sysOrganization.id AS organizationId,
         sysOrganization.organization_name AS organizationName
         FROM t_sys_user sysUser
@@ -272,7 +261,7 @@
             <if test="user.email != null and user.email != ''">
                 AND sysUser.email = #{user.email}
             </if>
-	    <!--只写!=null即可，否则状态是0时，会有bug-->
+        <!--只写!=null即可，否则状态是0时，会有bug-->
             <if test="user.status != null">
                 AND sysUser.status = #{user.status}
             </if>

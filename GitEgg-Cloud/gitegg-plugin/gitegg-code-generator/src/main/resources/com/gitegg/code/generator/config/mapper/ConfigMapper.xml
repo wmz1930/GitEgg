@@ -6,6 +6,8 @@
     <resultMap id="BaseResultMap" type="com.gitegg.code.generator.config.entity.Config">
         <id column="id" property="id" />
         <result column="datasource_id" property="datasourceId" />
+        <result column="service_type" property="serviceType" />
+        <result column="front_type" property="frontType" />
         <result column="module_name" property="moduleName" />
         <result column="module_code" property="moduleCode" />
         <result column="service_name" property="serviceName" />
@@ -13,6 +15,7 @@
         <result column="table_alias" property="tableAlias" />
         <result column="table_prefix" property="tablePrefix" />
         <result column="parent_package" property="parentPackage" />
+        <result column="domain_name" property="domainName" />
         <result column="controller_path" property="controllerPath" />
         <result column="form_type" property="formType" />
         <result column="table_type" property="tableType" />
@@ -28,6 +31,7 @@
         <result column="query_reuse" property="queryReuse" />
         <result column="status_handling" property="statusHandling" />
         <result column="code_type" property="codeType" />
+        <result column="code_save_type" property="codeSaveType" />
         <result column="tenant_id" property="tenantId" />
         <result column="create_time" property="createTime" />
         <result column="creator" property="creator" />
@@ -37,12 +41,12 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, datasource_id, module_name, module_code, service_name, table_name, table_alias, table_prefix, parent_package, controller_path, form_type, table_type, extends_flag, table_show_type, form_item_col, left_tree_type, front_code_path, service_code_path, front_code_dir, import_flag, export_flag, query_reuse, status_handling, code_type, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, datasource_id, service_type, front_type, module_name, module_code, service_name, table_name, table_alias, table_prefix, parent_package, domain_name, controller_path, form_type, table_type, extends_flag, table_show_type, form_item_col, left_tree_type, front_code_path, service_code_path, front_code_dir, import_flag, export_flag, query_reuse, status_handling, code_type, code_save_type, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 通用查询结果列 Config -->
     <sql id="Base_Column_List_Config">
-        config.id, config.datasource_id, config.module_name, config.module_code, config.service_name, config.table_name, config.table_alias, config.table_prefix, config.parent_package, config.controller_path, config.form_type, config.table_type, config.extends_flag, config.table_show_type, config.form_item_col, config.left_tree_type, config.front_code_path, config.service_code_path, front_code_dir, config.import_flag, config.export_flag, config.query_reuse, config.status_handling, config.code_type, config.tenant_id, config.create_time, config.creator, config.update_time, config.operator, config.del_flag
+        config.id, config.datasource_id, config.service_type, config.front_type, config.module_name, config.module_code, config.service_name, config.table_name, config.table_alias, config.table_prefix, config.parent_package, config.domain_name, config.controller_path, config.form_type, config.table_type, config.extends_flag, config.table_show_type, config.form_item_col, config.left_tree_type, config.front_code_path, config.service_code_path, front_code_dir, config.import_flag, config.export_flag, config.query_reuse, config.status_handling, config.code_type, config.code_save_type, config.tenant_id, config.create_time, config.creator, config.update_time, config.operator, config.del_flag
     </sql>
 
     <!-- 分页查询代码生成配置表列表 -->
@@ -55,6 +59,18 @@
         WHERE config.del_flag = 0
         <if test="config.id != null and config.id != ''">
             AND config.id = #{config.id}
+        </if>
+        <if test="config.datasourceId != null and config.datasourceId != ''">
+            AND config.datasource_id = #{config.datasourceId}
+        </if>
+        <if test="config.moduleName != null and config.moduleName != ''">
+            AND config.module_name = #{config.moduleName}
+        </if>
+        <if test="config.serviceName != null and config.serviceName != ''">
+            AND config.service_name = #{config.serviceName}
+        </if>
+        <if test="config.tableName != null and config.tableName != ''">
+            AND config.table_name = #{config.tableName}
         </if>
         <if test="config.startDateTime != null and config.startDateTime != ''">
             AND DATE_FORMAT(config.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{config.startDateTime},'%Y-%m-%d %H:%M:%S')
@@ -75,6 +91,18 @@
         WHERE config.del_flag = 0
         <if test="config.id != null and config.id != ''">
             AND config.id = #{config.id}
+        </if>
+        <if test="config.datasourceId != null and config.datasourceId != ''">
+            AND config.datasource_id = #{config.datasourceId}
+        </if>
+        <if test="config.moduleName != null and config.moduleName != ''">
+            AND config.module_name = #{config.moduleName}
+        </if>
+        <if test="config.serviceName != null and config.serviceName != ''">
+            AND config.service_name = #{config.serviceName}
+        </if>
+        <if test="config.tableName != null and config.tableName != ''">
+            AND config.table_name = #{config.tableName}
         </if>
         <if test="config.startDateTime != null and config.startDateTime != ''">
             AND DATE_FORMAT(config.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{config.startDateTime},'%Y-%m-%d %H:%M:%S')

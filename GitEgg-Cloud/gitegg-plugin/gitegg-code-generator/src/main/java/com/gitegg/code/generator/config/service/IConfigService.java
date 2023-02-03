@@ -41,7 +41,7 @@ public interface IConfigService extends IService<Config> {
     * @param config
     * @return
     */
-    boolean createConfig(CreateConfigDTO config);
+    Config createConfig(CreateConfigDTO config);
 
     /**
     * 更新代码生成配置表

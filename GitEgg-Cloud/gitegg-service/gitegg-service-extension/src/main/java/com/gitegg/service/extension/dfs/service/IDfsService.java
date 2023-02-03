@@ -76,5 +76,5 @@ public interface IDfsService extends IService<Dfs> {
      * 查询默认配置
      * @return
      */
-    DfsDTO queryDefaultDfs();
+    DfsDTO queryDefaultDfs(QueryDfsDTO queryDfsDTO);
 }

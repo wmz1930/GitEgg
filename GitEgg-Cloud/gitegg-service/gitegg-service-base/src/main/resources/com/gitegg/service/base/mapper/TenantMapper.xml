@@ -36,13 +36,23 @@
         <if test="tenant.id != null and tenant.id != ''">
             AND id = #{tenant.id}
         </if>
+        <if test="tenant.tenantName != null and tenant.tenantName != ''">
+            AND tenant_name = #{tenant.tenantName}
+        </if>
+        <if test="tenant.domainName != null and tenant.domainName != ''">
+            AND domain_name = #{tenant.domainName}
+        </if>
+        <if test="tenant.contactNumber != null and tenant.contactNumber != ''">
+            AND contact_number = #{tenant.contactNumber}
+        </if>
+        <if test="tenant.tenantStatus != null">
+            AND tenant_status = #{tenant.tenantStatus}
+        </if>
         <if test="tenant.beginDateTime != null and tenant.beginDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.beginDateTime},'%Y-%m-%d
-            %H:%M:%S')
+            AND DATE_FORMAT(expire_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="tenant.endDateTime != null and tenant.endDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{tenant.endDateTime},'%Y-%m-%d
-            %H:%M:%S')
+            AND DATE_FORMAT(expire_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{tenant.endDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         ORDER BY id DESC
     </select>
@@ -54,15 +64,25 @@
         FROM t_sys_tenant
         WHERE del_flag = 0
         <if test="tenant.id != null and tenant.id != ''">
-            AND ID = #{tenant.id}
+            AND id = #{tenant.id}
+        </if>
+        <if test="tenant.tenantName != null and tenant.tenantName != ''">
+            AND tenant_name = #{tenant.tenantName}
+        </if>
+        <if test="tenant.domainName != null and tenant.domainName != ''">
+            AND domain_name = #{tenant.domainName}
+        </if>
+        <if test="tenant.contactNumber != null and tenant.contactNumber != ''">
+            AND contact_number = #{tenant.contactNumber}
+        </if>
+        <if test="tenant.tenantStatus != null">
+            AND tenant_status = #{tenant.tenantStatus}
         </if>
         <if test="tenant.beginDateTime != null and tenant.beginDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.beginDateTime},'%Y-%m-%d
-            %H:%M:%S')
+            AND DATE_FORMAT(expire_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{tenant.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="tenant.endDateTime != null and tenant.endDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{tenant.endDateTime},'%Y-%m-%d
-            %H:%M:%S')
+            AND DATE_FORMAT(expire_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{tenant.endDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         ORDER BY id DESC
     </select>

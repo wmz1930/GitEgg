@@ -3,6 +3,7 @@ package com.gitegg.service.base.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -46,6 +47,7 @@ public class LogDTO implements Serializable {
     private String operationIp;
 
     @ApiModelProperty(value = "记录日期")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "操作人")

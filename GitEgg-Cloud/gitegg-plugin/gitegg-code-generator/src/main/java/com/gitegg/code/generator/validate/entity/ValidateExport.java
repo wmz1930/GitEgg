@@ -7,6 +7,7 @@ import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 import java.io.Serializable;
 import com.alibaba.excel.converters.localdatetime.LocalDateTimeStringConverter;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -43,9 +44,14 @@ public class ValidateExport implements Serializable {
     @ExcelProperty(value = "状态" ,index = 2)
     @ColumnWidth(20)
     private Integer status;
+    
+    @ApiModelProperty(value = "备注")
+    @ExcelProperty(value = "备注" ,index = 3)
+    @ColumnWidth(20)
+    private String comments;
 
     @ApiModelProperty(value = "创建时间")
-    @ExcelProperty(value = "创建时间" ,index = 3, converter = LocalDateTimeStringConverter.class)
+    @ExcelProperty(value = "创建时间" ,index = 4, converter = LocalDateTimeStringConverter.class)
     @ColumnWidth(20)
     @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

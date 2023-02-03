@@ -24,6 +24,7 @@
         <result column="query_type" property="queryType" />
         <result column="control_type" property="controlType" />
         <result column="dict_code" property="dictCode" />
+        <result column="api_id" property="apiId" />
         <result column="min" property="min" />
         <result column="max" property="max" />
         <result column="min_length" property="minLength" />
@@ -41,12 +42,12 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, generation_id, join_id, join_table_name, field_name, field_type, comment, entity_type, entity_name, form_add, form_edit, query_term, list_show, import_flag, export_flag, required, field_unique, query_type, control_type, dict_code, min, max, min_length, max_length, default_value, validate_id, validate_regular, field_sort, tenant_id, create_time, creator, update_time, operator, del_flag
+        id, generation_id, join_id, join_table_name, field_name, field_type, comment, entity_type, entity_name, form_add, form_edit, query_term, list_show, import_flag, export_flag, required, field_unique, query_type, control_type, dict_code, api_id, 'min', 'max', min_length, max_length, default_value, validate_id, validate_regular, field_sort, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
     <!-- 通用查询结果列_Field -->
     <sql id="Base_Column_List_Field">
-        field.id, field.generation_id, field.join_id, field.join_table_name, field.field_name, field.field_type, field.comment, field.entity_type, field.entity_name, field.form_add, field.form_edit, field.query_term, field.list_show, field.import_flag, field.export_flag, field.required, field.field_unique, field.query_type, field.control_type, field.dict_code, field.min, field.max, field.min_length, field.max_length, field.default_value, field.validate_id, field.validate_regular, field.field_sort, field.tenant_id, field.create_time, field.creator, field.update_time, field.operator, field.del_flag
+        field.id, field.generation_id, field.join_id, field.join_table_name, field.field_name, field.field_type, field.comment, field.entity_type, field.entity_name, field.form_add, field.form_edit, field.query_term, field.list_show, field.import_flag, field.export_flag, field.required, field.field_unique, field.query_type, field.control_type, field.dict_code, field.api_id, field.min, field.max, field.min_length, field.max_length, field.default_value, field.validate_id, field.validate_regular, field.field_sort, field.tenant_id, field.create_time, field.creator, field.update_time, field.operator, field.del_flag
     </sql>
 
     <!-- 分页查询字段属性配置表列表 -->

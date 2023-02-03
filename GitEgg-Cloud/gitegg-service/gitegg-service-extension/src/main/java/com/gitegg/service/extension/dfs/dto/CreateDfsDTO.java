@@ -25,7 +25,7 @@ public class CreateDfsDTO extends BaseEntity {
     private Long id;
 
     @ApiModelProperty(value = "分布式存储分类")
-    private Long dfsType;
+    private String dfsType;
 
     @ApiModelProperty(value = "分布式存储编号")
     private String dfsCode;

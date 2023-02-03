@@ -1,5 +1,6 @@
 package com.gitegg.service.extension.mail.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gitegg.platform.mybatis.entity.BaseEntity;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
@@ -25,8 +26,11 @@ public class MailLogDTO extends BaseEntity {
     @ApiModelProperty(value = "主键")
     private Long id;
 
-    @ApiModelProperty(value = "邮件渠道")
+    @ApiModelProperty(value = "邮件渠道id")
     private Long channelId;
+    
+    @ApiModelProperty(value = "邮件渠道名称")
+    private String channelName;
 
     @ApiModelProperty(value = "邮件模板")
     private Long templateId;
@@ -56,6 +60,7 @@ public class MailLogDTO extends BaseEntity {
     private String attachmentSize;
 
     @ApiModelProperty(value = "发送时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime sendTime;
 
     @ApiModelProperty(value = "发送结果码")

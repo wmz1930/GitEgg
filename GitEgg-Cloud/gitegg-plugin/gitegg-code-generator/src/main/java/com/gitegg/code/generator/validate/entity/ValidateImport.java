@@ -39,4 +39,9 @@ public class ValidateImport implements Serializable {
     @ExcelProperty(value = "状态" ,index = 2)
     @ColumnWidth(20)
     private Integer status;
+    
+    @ApiModelProperty(value = "备注")
+    @ExcelProperty(value = "备注" ,index = 3)
+    @ColumnWidth(20)
+    private String comments;
 }

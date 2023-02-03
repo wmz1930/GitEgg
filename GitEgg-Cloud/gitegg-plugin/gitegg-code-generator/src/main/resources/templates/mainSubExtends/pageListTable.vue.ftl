@@ -237,13 +237,13 @@
       </span>
     </s-table>
 
-    <#if config.formType = "modal">
+    <#if config.formType = "Modal">
     <a-modal :title="textMap[dialogStatus]"
              :maskClosable="false"
              :visible="dialogFormVisible"
              :width="800"
              @cancel="() => dialogFormVisible = false">
-    <#elseif config.formType == "drawer">
+    <#elseif config.formType == "Drawer">
     <a-drawer :title="textMap[dialogStatus]"
               placement="right"
               :visible="dialogFormVisible"
@@ -253,7 +253,7 @@
               :maskClosable="false"
               @cancel="() => dialogFormVisible = false">
     </#if>
-    <#if config.formType = "modal" || config.formType == "drawer">
+    <#if config.formType = "Modal" || config.formType == "Drawer">
       <a-form-model
         ref="${table.entityPath}Form"
         :model="${table.entityPath}Form"
@@ -415,20 +415,20 @@
 <#------------  END 字段循环遍历  ---------->
       </a-form-model>
     </#if>
-    <#if config.formType = "modal">
+    <#if config.formType = "Modal">
       <div slot="footer" class="dialog-footer">
-    <#elseif config.formType == "drawer">
+    <#elseif config.formType == "Drawer">
       <div class="footer-button">
     </#if>
-    <#if config.formType = "modal" || config.formType == "drawer">
+    <#if config.formType = "Modal" || config.formType == "Drawer">
         <a-button @click="dialogFormVisible = false">取消</a-button>
         <a-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</a-button>
         <a-button v-else type="primary" @click="updateData">修改</a-button>
       </div>
     </#if>
-    <#if config.formType = "modal">
+    <#if config.formType = "Modal">
     </a-modal>
-    <#elseif config.formType == "drawer">
+    <#elseif config.formType == "Drawer">
     </a-drawer>
     </#if>
   </a-card>
@@ -877,7 +877,7 @@
         }
     }
 </script>
-<#if config.formType == "drawer">
+<#if config.formType == "Drawer">
 <style lang="less" scoped>
   .footer-button {
     position: absolute;

@@ -183,7 +183,7 @@ public class RoleController {
      */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验角色是否存在", notes = "校验角色是否存在")
-    public Result<Boolean> checkRoleExist(CheckExistDTO role) {
+    public Result<Boolean> checkRoleExist(@RequestBody CheckExistDTO role) {
         String field = role.getCheckField();
         String value = role.getCheckValue();
         QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();

@@ -141,7 +141,7 @@ public class TenantController {
      */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验租户信息表是否存在", notes = "校验租户信息表是否存在")
-    public Result<Boolean> checkTenantExist(CheckExistDTO tenant) {
+    public Result<Boolean> checkTenantExist(@RequestBody CheckExistDTO tenant) {
         String field = tenant.getCheckField();
         String value = tenant.getCheckValue();
         QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();

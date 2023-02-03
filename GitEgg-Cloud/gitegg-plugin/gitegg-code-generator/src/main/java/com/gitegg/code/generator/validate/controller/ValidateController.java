@@ -184,7 +184,7 @@ public class ValidateController {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验字段校验规则配置表是否存在", notes = "校验字段校验规则配置表是否存在")
-    public Result<Boolean> checkValidateExist(CheckExistDTO validate) {
+    public Result<Boolean> checkValidateExist(@RequestBody CheckExistDTO validate) {
         String field = validate.getCheckField();
         String value = validate.getCheckValue();
         QueryWrapper<Validate> validateQueryWrapper = new QueryWrapper<>();

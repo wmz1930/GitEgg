@@ -98,8 +98,9 @@ public class DfsServiceImpl extends ServiceImpl<DfsMapper, Dfs> implements IDfsS
         lambdaUpdateWrapper.eq(Dfs::getId, dfsId).set(Dfs::getDfsDefault, GitEggConstant.ENABLE);
         boolean result = this.update(lambdaUpdateWrapper);
         if (result) {
+            Dfs dfs = this.getById(dfsId);
             LambdaUpdateWrapper<Dfs> lambdaUpdateWrapperNe = new LambdaUpdateWrapper<>();
-            lambdaUpdateWrapperNe.ne(Dfs::getId, dfsId).set(Dfs::getDfsDefault, GitEggConstant.DISABLE);
+            lambdaUpdateWrapperNe.ne(Dfs::getId, dfsId).eq(Dfs::getAccessControl, dfs.getAccessControl()).set(Dfs::getDfsDefault, GitEggConstant.DISABLE);
             result = this.update(lambdaUpdateWrapperNe);
         }
         return result;
@@ -132,8 +133,8 @@ public class DfsServiceImpl extends ServiceImpl<DfsMapper, Dfs> implements IDfsS
      * @return
      */
     @Override
-    public DfsDTO queryDefaultDfs() {
-        DfsDTO dfsDTO = dfsMapper.queryDefaultDfs();
+    public DfsDTO queryDefaultDfs(QueryDfsDTO queryDfsDTO) {
+        DfsDTO dfsDTO = dfsMapper.queryDefaultDfs(queryDfsDTO);
         return dfsDTO;
     }
 }

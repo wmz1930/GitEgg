@@ -33,20 +33,18 @@ public class PwdUserDTO implements Serializable {
 
     @ApiModelProperty(value = "用户密码")
     @NotBlank(message="密码不能为空")
-    @Pattern(regexp="^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$", message="请输入6-18位，不含特殊字符密码。")
     private String password;
-
-    @ApiModelProperty(value = "用户验证码key")
-    @NotBlank(message="不能为空")
-    private String verKey;
 
     @ApiModelProperty(value = "短信验证码")
     @NotBlank(message="短信验证码不能为空")
     @Length(max=6, min=6, message="请输入6位数短信验证码。")
+    private String code;
+    
+    @ApiModelProperty(value = "短信模板code")
+    @NotBlank(message="短信模板code不能为空")
     private String smsCode;
 
     @ApiModelProperty(value = "用户状态")
-    @Length(max = 1, min = 1, message = "请选择用户状态。")
     private Integer status;
 
     @ApiModelProperty(value = "角色id")

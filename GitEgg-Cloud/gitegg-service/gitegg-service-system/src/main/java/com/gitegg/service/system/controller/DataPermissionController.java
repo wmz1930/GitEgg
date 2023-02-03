@@ -144,7 +144,7 @@ public class DataPermissionController {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验数据权限配置表是否存在", notes = "校验数据权限配置表是否存在")
-    public Result<Boolean> checkDataPermissionRoleExist(CheckExistDTO dataPermissionRole) {
+    public Result<Boolean> checkDataPermissionRoleExist(@RequestBody CheckExistDTO dataPermissionRole) {
         String field = dataPermissionRole.getCheckField();
         String value = dataPermissionRole.getCheckValue();
         QueryWrapper<DataPermissionRole> dataPermissionRoleQueryWrapper = new QueryWrapper<>();

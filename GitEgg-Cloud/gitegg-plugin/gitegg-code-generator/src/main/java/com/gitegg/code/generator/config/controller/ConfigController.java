@@ -67,9 +67,9 @@ public class ConfigController {
     */
     @PostMapping("/create")
     @ApiOperation(value = "添加代码生成配置表")
-    public Result<?> create(@RequestBody CreateConfigDTO config) {
-        boolean result = configService.createConfig(config);
-        return Result.result(result);
+    public Result<?> create(@RequestBody CreateConfigDTO configDTO) {
+        Config config = configService.createConfig(configDTO);
+        return Result.data(config);
     }
 
     /**
@@ -118,7 +118,7 @@ public class ConfigController {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验代码生成配置表是否存在", notes = "校验代码生成配置表是否存在")
-    public Result<Boolean> checkConfigExist(CheckExistDTO config) {
+    public Result<Boolean> checkConfigExist(@RequestBody CheckExistDTO config) {
         String field = config.getCheckField();
         String value = config.getCheckValue();
         QueryWrapper<Config> configQueryWrapper = new QueryWrapper<>();

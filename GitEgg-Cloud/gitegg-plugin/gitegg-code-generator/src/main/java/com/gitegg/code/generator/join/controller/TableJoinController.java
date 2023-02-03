@@ -118,7 +118,7 @@ public class TableJoinController {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验多表查询时的联合表配置是否存在", notes = "校验多表查询时的联合表配置是否存在")
-    public Result<Boolean> checkTableJoinExist(CheckExistDTO tableJoin) {
+    public Result<Boolean> checkTableJoinExist(@RequestBody CheckExistDTO tableJoin) {
         String field = tableJoin.getCheckField();
         String value = tableJoin.getCheckValue();
         QueryWrapper<TableJoin> tableJoinQueryWrapper = new QueryWrapper<>();

@@ -25,37 +25,48 @@
         <result column="operator" property="operator" />
         <result column="del_flag" property="delFlag" />
     </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, channel_id, template_id, mail_subject, mail_from, mail_to, mail_cc, mail_bcc, mail_content, attachment_name, attachment_size, send_time, send_result_code, send_result_msg, tenant_id, create_time, creator, update_time, operator, del_flag
     </sql>
 
+    <!-- 通用查询结果列 Log -->
+    <sql id="Base_Column_List_Log">
+        log.id, log.channel_id, log.template_id, log.mail_subject, log.mail_from, log.mail_to, log.mail_cc, log.mail_bcc, log.mail_content, log.attachment_name, log.attachment_size, log.send_time, log.send_result_code, log.send_result_msg, log.tenant_id, log.create_time, log.creator, log.update_time, log.operator, log.del_flag
+    </sql>
+
     <!-- 分页查询邮件记录列表 -->
     <select id="queryMailLogList" resultType="com.gitegg.service.extension.mail.dto.MailLogDTO" parameterType="com.gitegg.service.extension.mail.dto.QueryMailLogDTO">
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_sys_mail_log
-        WHERE del_flag = 0
+        DISTINCT
+        <include refid="Base_Column_List_Log"/>
+        ,
+        channel.channel_name
+        FROM t_sys_mail_log log
+        LEFT JOIN t_sys_mail_channel channel on log.channel_id = channel.id
+        WHERE log.del_flag = 0
         <if test="mailLog.mailSubject != null and mailLog.mailSubject != ''">
-            AND mail_subject like concat('%', #{mailLog.mailSubject}, '%')
+            AND log.mail_subject like concat('%', #{mailLog.mailSubject}, '%')
         </if>
         <if test="mailLog.mailFrom != null and mailLog.mailFrom != ''">
-            AND mail_from like concat('%', #{mailLog.mailFrom}, '%')
+            AND log.mail_from like concat('%', #{mailLog.mailFrom}, '%')
         </if>
         <if test="mailLog.mailTo != null and mailLog.mailTo != ''">
-            AND mail_to like concat('%', #{mailLog.mailTo}, '%')
+            AND log.mail_to like concat('%', #{mailLog.mailTo}, '%')
         </if>
         <if test="mailLog.mailContent != null and mailLog.mailContent != ''">
-            AND mail_content like concat('%', #{mailLog.mailContent}, '%')
+            AND log.mail_content like concat('%', #{mailLog.mailContent}, '%')
         </if>
         <if test="mailLog.beginDateTime != null and mailLog.beginDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{mailLog.beginDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(log.create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{mailLog.beginDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
         <if test="mailLog.endDateTime != null and mailLog.endDateTime != ''">
-            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{mailLog.endDateTime},'%Y-%m-%d %H:%M:%S')
+            AND DATE_FORMAT(log.create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{mailLog.endDateTime},'%Y-%m-%d %H:%M:%S')
         </if>
-        ORDER BY id DESC
+        ORDER BY log.id DESC
     </select>
+
     <!-- 查询邮件记录信息 -->
     <select id="queryMailLog" resultType="com.gitegg.service.extension.mail.dto.MailLogDTO" parameterType="com.gitegg.service.extension.mail.dto.QueryMailLogDTO">
         SELECT

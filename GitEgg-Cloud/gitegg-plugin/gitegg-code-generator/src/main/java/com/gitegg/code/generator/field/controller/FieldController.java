@@ -135,7 +135,7 @@ public class FieldController {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验字段属性配置表是否存在", notes = "校验字段属性配置表是否存在")
-    public Result<Boolean> checkFieldExist(CheckExistDTO tableField) {
+    public Result<Boolean> checkFieldExist(@RequestBody CheckExistDTO tableField) {
         String field = tableField.getCheckField();
         String value = tableField.getCheckValue();
         QueryWrapper<Field> fieldQueryWrapper = new QueryWrapper<>();
