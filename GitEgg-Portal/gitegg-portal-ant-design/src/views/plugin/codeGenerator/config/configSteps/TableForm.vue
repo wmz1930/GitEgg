@@ -10,12 +10,12 @@
           :pagination="false"
           bordered>
           <template slot="formAddRender" slot-scope="text, record" >
-            <a-checkbox v-model="record.formAdd">
+            <a-checkbox :checked="text" v-model="record.formAdd">
               新增
             </a-checkbox>
           </template>
           <template slot="formEditRender" slot-scope="text, record" >
-            <a-checkbox v-model="record.formEdit">
+            <a-checkbox :checked="text" v-model="record.formEdit">
               编辑
             </a-checkbox>
           </template>

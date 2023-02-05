@@ -302,11 +302,11 @@
                 // 表头
                 columns: [
                     {
-                        title: '渠道编码',
+                        title: '邮件渠道',
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-                        dataIndex: 'channelId'
+                        dataIndex: 'channelName'
                     },
                     {
                         title: '邮件主题',

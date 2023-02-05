@@ -146,7 +146,7 @@
 
       <div class="user-login-other">
         <span>{{ $t('user.login.sign-in-with') }}</span>
-        <a @click="openSocialLogin('wechat_mp')">
+        <a @click="openSocialLogin('wechat_open')">
           <a-icon class="item-icon"
                   type="wechat"></a-icon>
         </a>
