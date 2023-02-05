@@ -65,6 +65,6 @@ export function checkRoleExist (data) {
   return request({
     url: '/gitegg-service-system/role/check',
     method: 'post',
-    params: data
+    data
   })
 }

@@ -8,7 +8,6 @@ import com.gitegg.code.generator.field.entity.Field;
 import com.gitegg.code.generator.field.service.IFieldService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

@@ -154,7 +154,7 @@ public class OrganizationController {
 
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验组织是否存在", notes = "校验组织是否存在")
-    public Result<Boolean> checkOrganization(CheckExistDTO organization) {
+    public Result<Boolean> checkOrganization(@RequestBody CheckExistDTO organization) {
         String field = organization.getCheckField();
         String value = organization.getCheckValue();
         QueryWrapper<Organization> organizationQueryWrapper = new QueryWrapper<>();

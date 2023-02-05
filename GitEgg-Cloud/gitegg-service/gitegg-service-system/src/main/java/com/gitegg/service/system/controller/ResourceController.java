@@ -140,7 +140,7 @@ public class ResourceController {
      */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验Resource是否存在", notes = "校验Resource是否存在")
-    public Result<Boolean> checkResource(CheckExistDTO resource) {
+    public Result<Boolean> checkResource(@RequestBody CheckExistDTO resource) {
         String field = resource.getCheckField();
         String value = resource.getCheckValue();
         QueryWrapper<Resource> resourceQueryWrapper = new QueryWrapper<>();

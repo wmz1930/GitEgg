@@ -47,13 +47,13 @@ public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
     */
     List<${entity}DTO> query${entity}List(@Param("${table.entityPath}") Query${entity}DTO ${table.entityPath}DTO);
 
-            <#if config?? && config.queryReuse == false>
+    <#if config?? && config.queryReuse == false>
     /**
     * 查询${table.comment!}信息
     * @param ${table.entityPath}DTO
     * @return
     */
     ${entity}DTO query${entity}(@Param("${table.entityPath}") Query${entity}DTO ${table.entityPath}DTO);
-            </#if>
+    </#if>
 }
 </#if>

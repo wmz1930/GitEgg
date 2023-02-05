@@ -50,6 +50,6 @@ export function checkTenantExist (data) {
   return request({
     url: '/gitegg-service-base/base/tenant/check',
     method: 'post',
-    params: data
+    data
   })
 }

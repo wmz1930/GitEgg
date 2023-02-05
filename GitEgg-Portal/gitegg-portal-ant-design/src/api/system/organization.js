@@ -50,6 +50,6 @@ export function checkOrganizationExist (data) {
   return request({
     url: '/gitegg-service-system/organization/check',
     method: 'post',
-    params: data
+    data
   })
 }

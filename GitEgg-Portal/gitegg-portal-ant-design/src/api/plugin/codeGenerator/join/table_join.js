@@ -50,6 +50,6 @@ export function checkTableJoinExist (data) {
   return request({
     url: '/gitegg-code-generator/code/generator/table/join/check',
     method: 'post',
-    params: data
+    data
   })
 }

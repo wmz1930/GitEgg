@@ -66,6 +66,6 @@ export function checkFieldExist (data) {
   return request({
     url: '/gitegg-code-generator/code/generator/field/check',
     method: 'post',
-    params: data
+    data
   })
 }

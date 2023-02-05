@@ -50,7 +50,7 @@ export function checkJustAuthSourceExist (data) {
   return request({
     url: '/gitegg-service-extension/extension/justauth/source/check',
     method: 'post',
-    params: data
+    data
   })
 }
 

@@ -193,6 +193,7 @@ public class GitEggOAuthController {
     public Result logout(HttpServletRequest request, @RequestBody LogoutDTO logoutDTO) {
 
         String token = request.getHeader(AuthConstant.JWT_TOKEN_HEADER);
+        String refreshToken = request.getParameter(AuthConstant.REFRESH_TOKEN);
         long currentTimeSeconds = System.currentTimeMillis() / GitEggConstant.Number.THOUSAND;
 
         // 将token和refresh_token同时加入黑名单

@@ -14,7 +14,6 @@ import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import com.gitegg.platform.base.util.BeanCopierUtils;
 <#assign dtoPackage="${package.Entity}"/>

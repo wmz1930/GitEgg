@@ -151,11 +151,11 @@ export function smsRegisterSend (parameter) {
   })
 }
 
-export function checkUserExist (parameter) {
+export function checkUserExist (data) {
   return request({
     url: userApi.CheckUserExist,
     method: 'post',
-    data: parameter
+    data
   })
 }
 

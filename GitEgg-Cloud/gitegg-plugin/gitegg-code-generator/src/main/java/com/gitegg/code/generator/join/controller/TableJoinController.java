@@ -11,7 +11,6 @@ import com.gitegg.code.generator.join.entity.TableJoin;
 import com.gitegg.code.generator.join.service.ITableJoinService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

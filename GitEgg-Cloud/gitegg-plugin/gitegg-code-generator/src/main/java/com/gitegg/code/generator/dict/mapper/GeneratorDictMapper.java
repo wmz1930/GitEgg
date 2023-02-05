@@ -34,7 +34,7 @@ public interface GeneratorDictMapper extends BaseMapper<GeneratorDict> {
      * @param dict
      * @return dictInfo
      */
-    List<GeneratorDictDTO> selectGeneratorDictList( @Param("dict") QueryGeneratorDictDTO dict);
+    List<GeneratorDictDTO> selectGeneratorDictList(@Param("dict") QueryGeneratorDictDTO dict);
 
     /**
      * 查询字典树列表

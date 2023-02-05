@@ -58,7 +58,7 @@ export function checkValidateExist (data) {
   return request({
     url: '/gitegg-code-generator/code/generator/validate/check',
     method: 'post',
-    params: data
+    data
   })
 }
 

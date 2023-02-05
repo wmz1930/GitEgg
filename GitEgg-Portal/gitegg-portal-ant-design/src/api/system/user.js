@@ -97,7 +97,7 @@ export function checkUserExist (data) {
   return request({
     url: '/gitegg-service-system/user/check',
     method: 'post',
-    params: data
+    data
   })
 }
 

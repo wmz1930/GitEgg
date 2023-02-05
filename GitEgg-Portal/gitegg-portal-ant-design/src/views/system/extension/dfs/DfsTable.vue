@@ -474,7 +474,7 @@
                 that.dfsTypeList = response.data
                 that.dfsTypeFilterMap = {}
                 that.dfsTypeList.forEach((item, index, arr) => {
-                  that.dfsTypeFilterMap[item.id] = item.dictName
+                  that.dfsTypeFilterMap[item.dictCode] = item.dictName
                 })
                 that.listLoading = false
                 that.getList()
@@ -558,18 +558,13 @@
                 })
             },
             updateData () {
+                var that = this
                 this.$refs['dfsForm'].validate(valid => {
                     if (valid) {
-                        updateDfs(this.dfsForm).then(() => {
-                            for (const v of this.list) {
-                                if (v.id === this.dfsForm.id) {
-                                    const index = this.list.indexOf(v)
-                                    this.list.splice(index, 1, this.dfsForm)
-                                    break
-                                }
-                            }
-                            this.dialogFormVisible = false
-                            this.$message.success('更新成功')
+                        updateDfs(that.dfsForm).then(() => {
+                            that.handleTableRefresh()
+                            that.dialogFormVisible = false
+                            that.$message.success('更新成功')
                         })
                     }
                 })

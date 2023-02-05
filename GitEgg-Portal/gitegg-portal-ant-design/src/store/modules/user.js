@@ -102,7 +102,7 @@ const user = {
         commit('SET_AVATAR', '')
         storage.remove(ACCESS_TOKEN)
         storage.remove(REFRESH_ACCESS_TOKEN)
-        logout(serialize({ RefreshToken: storage.get(REFRESH_ACCESS_TOKEN) })).then(() => {
+        logout(serialize({ refreshToken: storage.get(REFRESH_ACCESS_TOKEN) })).then(() => {
           resolve()
         }).catch(() => {
           resolve()

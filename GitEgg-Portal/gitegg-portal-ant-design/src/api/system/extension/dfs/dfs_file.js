@@ -50,6 +50,6 @@ export function checkDfsFileExist (data) {
   return request({
     url: '/gitegg-service-extension/extension/dfs/file/check',
     method: 'post',
-    params: data
+    data
   })
 }

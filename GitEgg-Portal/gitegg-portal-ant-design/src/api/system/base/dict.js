@@ -73,6 +73,6 @@ export function checkDictExist (data) {
   return request({
     url: '/gitegg-service-base/dict/check',
     method: 'post',
-    params: data
+    data
   })
 }

@@ -73,6 +73,6 @@ export function checkDictBusinessExist (data) {
   return request({
     url: '/gitegg-service-base/business/dict/check',
     method: 'post',
-    params: data
+    data
   })
 }

@@ -50,7 +50,7 @@ export function checkSmsTemplateExist (data) {
   return request({
     url: '/gitegg-service-extension/extension/sms/template/check',
     method: 'post',
-    params: data
+    data
   })
 }
 

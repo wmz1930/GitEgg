@@ -180,11 +180,7 @@ public class SmsTemplateController {
             smsTemplateQueryWrapper.ne("id", smsTemplate.getId());
         }
         int count = smsTemplateService.count(smsTemplateQueryWrapper);
-        if (GitEggConstant.COUNT_ZERO == count){
-            return Result.data(true);
-        } else{
-            return Result.data(false);
-        }
+        return Result.data(GitEggConstant.COUNT_ZERO == count);
     }
 
     /**
