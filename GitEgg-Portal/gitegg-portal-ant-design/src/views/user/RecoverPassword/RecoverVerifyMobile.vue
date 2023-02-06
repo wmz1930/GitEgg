@@ -3,6 +3,7 @@
     <a-form :form="form" style="max-width: 500px; margin: 40px auto 0;">
       <a-form-item
         label="手机号"
+        prop="phoneNumber"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
       >
@@ -17,7 +18,7 @@
           <a-input
             :style="{width: 'calc(100% - 80px)'}"
             :placeholder="$t('user.login.mobile.placeholder')"
-            v-decorator="['phoneNumber', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: $t('user.phone-number.required') }, { validator:validatePhoneNumber, trigger: 'blur' }], validateTrigger: 'change'}]"
+            v-decorator="['phoneNumber', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: $t('user.phone-number.required') }, { validator: validatePhoneNumber }]}]"
           >
             <a-icon slot="prefix"
                     type="mobile"/>
@@ -26,6 +27,7 @@
       </a-form-item>
       <a-form-item v-if="loginCaptchaType === 'image'"
                    label="图片验证码"
+                   prop="captchaCodeSms"
                    :labelCol="labelCol"
                    :wrapperCol="wrapperCol"
       >
@@ -37,7 +39,7 @@
             :placeholder="$t('user.verification-code.required')"
             :style="{width: 'calc(100% - 100px)', paddingRight: '15px'}"
             class="captcha-input"
-            v-decorator="[ 'captchaCodeSms', {rules: [{ required: true, message: $t('user.verification-code.required') }], validateTrigger: 'change'}]">
+            v-decorator="[ 'captchaCodeSms', {rules: [{ required: true, message: $t('user.verification-code.required') }]}]">
             >
             <a-icon slot="prefix"
                     type="safety-certificate"/>
@@ -50,6 +52,7 @@
       </a-form-item>
       <a-form-item
         label="短信验证码"
+        prop="captcha"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
       >
@@ -62,7 +65,7 @@
             :style="{width: 'calc(100% - 100px)', paddingRight: '15px'}"
             class="captcha-input"
             :max-length="6"
-            v-decorator="['captcha', {rules: [{ required: true, message: $t('user.verification-code.required') }, { validator:validSmsCode, trigger: 'blur' }], validateTrigger: 'blur'}]">
+            v-decorator="['captcha', {rules: [{ required: true, message: $t('user.verification-code.required') }, { validator: validSmsCode }]}]">
             >
             <a-icon slot="prefix"
                     type="mail"/>
@@ -110,6 +113,8 @@ export default {
           callback()
         }
       })
+      } else {
+          callback()
       }
     }
     var validSmsCode = (rule, value, callback) => {
@@ -126,6 +131,8 @@ export default {
             callback()
           }
         })
+      } else {
+          callback()
       }
     }
     return {
