@@ -1,0 +1,17 @@
+
+*.sh
+node_modules
+/node_modules
+*.md
+*.woff
+*.ttf
+.vscode
+.idea
+dist
+/public
+/src/components/verifition
+/docs
+.husky
+.local
+/bin
+Dockerfile

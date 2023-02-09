@@ -1,0 +1,135 @@
+import { BasicColumn } from '/@/components/Table';
+
+export const columns: BasicColumn[] = [
+  {
+    title: '字段描述',
+    align: 'center',
+    width: '100px',
+    ellipsis: true,
+    dataIndex: 'comment',
+  },
+  // {
+  //   title: '实体类型',
+  //   align: 'center',
+  //   width: '100px',
+  //   ellipsis: true,
+  //   dataIndex: 'entityType',
+  // },
+  {
+    title: '实体名称',
+    align: 'center',
+    width: '100px',
+    ellipsis: true,
+    dataIndex: 'entityName',
+  },
+  {
+    title: '表单新增',
+    align: 'center',
+    width: '70px',
+    dataIndex: 'formAdd',
+  },
+  {
+    title: '表单编辑',
+    align: 'center',
+    width: '70px',
+    dataIndex: 'formEdit',
+  },
+  {
+    title: '组件类型',
+    align: 'center',
+    width: '130px',
+    dataIndex: 'controlType',
+  },
+  {
+    title: '字典编码',
+    align: 'center',
+    width: '130px',
+    dataIndex: 'dictCode',
+  },
+  {
+    title: '数据接口',
+    align: 'center',
+    width: '130px',
+    dataIndex: 'apiId',
+  },
+];
+
+export const FormValidColumns: BasicColumn[] = [
+  {
+    title: '字段描述',
+    align: 'center',
+    width: '100px',
+    ellipsis: true,
+    dataIndex: 'comment',
+  },
+  {
+    title: '实体类型',
+    align: 'center',
+    width: '100px',
+    ellipsis: true,
+    dataIndex: 'entityType',
+  },
+  {
+    title: '实体名称',
+    align: 'center',
+    width: '100px',
+    ellipsis: true,
+    dataIndex: 'entityName',
+  },
+  {
+    title: '最小长度',
+    align: 'center',
+    width: '80px',
+    ellipsis: true,
+    dataIndex: 'minLength',
+  },
+  {
+    title: '最大长度',
+    align: 'center',
+    width: '80px',
+    ellipsis: true,
+    dataIndex: 'maxLength',
+  },
+  {
+    title: '是否必填',
+    align: 'center',
+    width: '80px',
+    ellipsis: true,
+    dataIndex: 'required',
+  },
+  {
+    title: '是否唯一',
+    align: 'center',
+    width: '80px',
+    ellipsis: true,
+    dataIndex: 'fieldUnique',
+  },
+  {
+    title: '校验类型',
+    align: 'center',
+    width: '200px',
+    ellipsis: true,
+    dataIndex: 'validateId',
+  },
+  {
+    title: '正则表达式',
+    align: 'center',
+    width: '130px',
+    ellipsis: true,
+    dataIndex: 'validateRegular',
+  },
+  {
+    title: '最大值',
+    align: 'center',
+    width: '80px',
+    ellipsis: true,
+    dataIndex: 'max',
+  },
+  {
+    title: '最小值',
+    align: 'center',
+    width: '80px',
+    ellipsis: true,
+    dataIndex: 'min',
+  },
+];
