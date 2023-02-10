@@ -7,8 +7,12 @@
 https://cloud.gitegg.com
 
 ### Demo演示
+
+Vue2版本：
 https://demo.gitegg.com
 
+Vue3版本：
+https://v3.gitegg.com
 
 ## 技术交流
 
@@ -106,7 +110,10 @@ GitEgg-Cloud
 
 1. gitegg-portal-ant-design 以ant-design-vue-pro为框架的后台管理界面 **（推荐使用，所有功能优先开发此版本再同步到element-ui版本）**
 
-2. gitegg-portal-element-ui  以vue-element-admin为框架的后台管理界面 (目前只实现了登录和权限管理)
+2. gitegg-portal-element-ui  以vue-element-admin为框架的后台管理界面 **(目前只实现了登录和权限管理，不再维护)**
+
+3. gitegg-portal-vben-admin  以vben admin为框架的后台管理界面 **（推荐使用）**
+
 
 ## 快速开始
 
