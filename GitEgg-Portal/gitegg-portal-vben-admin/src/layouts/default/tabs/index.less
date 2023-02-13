@@ -36,6 +36,11 @@ html[data-theme='light'] {
       border: 0;
       box-shadow: none;
 
+      // remove border-bottom
+      &::before {
+        border-bottom: 0 solid #f0f0f0 !important;
+      }
+
       .ant-tabs-nav-container {
         height: @multiple-height;
         padding-top: 2px;
