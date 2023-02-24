@@ -90,7 +90,7 @@
       }
 
       function handleTableChange(value: string, option: any) {
-        console.log(value + option.tableComment);
+        console.log(value + option?.tableComment);
       }
 
       async function handleSubmit() {
