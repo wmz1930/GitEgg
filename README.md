@@ -155,4 +155,4 @@ GitEgg-Cloud
 
 ## 版权许可
 
-[GNU General Public License v3.0](https://github.com/wmz1930/GitEgg/blob/main/LICENSE)
+[MIT License](https://github.com/wmz1930/GitEgg/blob/main/LICENSE)
