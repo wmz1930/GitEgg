@@ -1,10 +1,11 @@
 <template>
-  <div class="overflow-hidden bg-white resource-tree">
+  <div class="overflow-hidden m-4 mr-0 resource-tree">
     <BasicTree
       title="资源权限列表"
       toolbar
       search
       expandOnSearch
+      treeWrapperClassName="h-[calc(100%-55px)] overflow-auto"
       ref="refTree"
       :clickRowToExpand="false"
       :treeData="treeData"

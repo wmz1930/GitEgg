@@ -52,6 +52,13 @@ export const columns: BasicColumn[] = [
     width: '130px',
     dataIndex: 'apiId',
   },
+  {
+    title: '默认值',
+    align: 'center',
+    width: '80px',
+    ellipsis: true,
+    dataIndex: 'defaultValue',
+  },
 ];
 
 export const FormValidColumns: BasicColumn[] = [

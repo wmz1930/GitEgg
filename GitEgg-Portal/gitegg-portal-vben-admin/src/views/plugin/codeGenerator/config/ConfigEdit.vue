@@ -30,6 +30,7 @@
         :config="config"
         :fields="fieldList"
         v-show="steps[current] && steps[current].content === 'form-config'"
+        @add-data-modal="addAddDataModal"
         v-if="fieldInit"
         ref="tableForm"
       />
@@ -37,6 +38,7 @@
         :config="config"
         :fields="fieldList"
         v-show="steps[current] && steps[current].content === 'form-valid'"
+        @add-data-modal="addAddDataModal"
         v-if="fieldInit"
         ref="tableFormValid"
       />
@@ -66,12 +68,14 @@
         保存
       </a-button>
 
-      <a-button v-if="current == steps.length - 1" type="primary" @click="editFieldList">
+      <a-button v-if="current == steps.length - 1" type="primary" @click="saveAndClose">
         配置完成
       </a-button>
 
       <a-button v-if="current < steps.length - 1" type="primary" @click="next"> 下一步 </a-button>
     </div>
+    <!-- 操作弹框 -->
+    <AddDataModal @register="registerModal" @success="handleAddSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -84,10 +88,14 @@
   import TableList from './configSteps/TableList.vue';
   import { PageWrapper } from '/@/components/Page';
   import { Steps } from 'ant-design-vue';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useLoading } from '/@/components/Loading';
   import { useGo } from '/@/hooks/web/usePage';
+  import { useTabs } from '/@/hooks/web/useTabs';
+
+  import { useModal } from '/@/components/Modal';
+  import AddDataModal from './modal/AddDataModal.vue';
 
   import { queryConfig } from '/@/api/plugin/codeGenerator/config/config';
   import { getFieldListAll, editField } from '/@/api/plugin/codeGenerator/field/field';
@@ -104,10 +112,12 @@
       [Steps.name]: Steps,
       [Steps.Step.name]: Steps.Step,
       Icon,
+      AddDataModal,
     },
     setup() {
       const go = useGo();
       const route = useRoute();
+      const { closeCurrent } = useTabs();
       // 获取config id
       const configId = ref(route.params?.id);
       const config = ref<any>({});
@@ -116,6 +126,7 @@
       const current = ref(0);
       const steps = ref<StepProps[]>([]);
       const { createMessage } = useMessage();
+      const [registerModal, { openModal }] = useModal();
       const [openFullLoading, closeFullLoading] = useLoading({
         tip: '',
       });
@@ -230,6 +241,31 @@
         });
       }
 
+      async function saveAndClose() {
+        await editFieldList();
+        closeCurrent();
+      }
+
+      const tableForm = ref();
+      const tableFormValid = ref();
+
+      function addAddDataModal(record: Recordable) {
+        openModal(true, {
+          record,
+          isUpdate: true,
+        });
+      }
+
+      function handleAddSuccess({ values }) {
+        if (values.openType === 'dict') {
+          tableForm.value.getDictList();
+        } else if (values.openType === 'api') {
+          tableForm.value.getApiList();
+        } else if (values.openType === 'validate') {
+          tableFormValid.value.getValidateList();
+        }
+      }
+
       function next() {
         current.value++;
         // 字段配置
@@ -258,9 +294,15 @@
         fieldList,
         fieldInit,
         editFieldList,
+        saveAndClose,
         next,
         prev,
         backToList,
+        registerModal,
+        addAddDataModal,
+        handleAddSuccess,
+        tableForm,
+        tableFormValid,
       };
     },
   });

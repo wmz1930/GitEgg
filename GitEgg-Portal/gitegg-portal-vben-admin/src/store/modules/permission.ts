@@ -67,20 +67,20 @@ export const usePermissionStore = defineStore({
     frontMenuList: [],
   }),
   getters: {
-    getPermCodeList(): string[] | number[] {
-      return this.permCodeList;
+    getPermCodeList(state): string[] | number[] {
+      return state.permCodeList;
     },
-    getBackMenuList(): Menu[] {
-      return this.backMenuList;
+    getBackMenuList(state): Menu[] {
+      return state.backMenuList;
     },
-    getFrontMenuList(): Menu[] {
-      return this.frontMenuList;
+    getFrontMenuList(state): Menu[] {
+      return state.frontMenuList;
     },
-    getLastBuildMenuTime(): number {
-      return this.lastBuildMenuTime;
+    getLastBuildMenuTime(state): number {
+      return state.lastBuildMenuTime;
     },
-    getIsDynamicAddedRoute(): boolean {
-      return this.isDynamicAddedRoute;
+    getIsDynamicAddedRoute(state): boolean {
+      return state.isDynamicAddedRoute;
     },
   },
   actions: {
@@ -217,10 +217,10 @@ export const usePermissionStore = defineStore({
         //  如果确定不需要做后台动态权限，请在下方注释整个判断
         case PermissionModeEnum.BACK:
           const { createMessage } = useMessage();
+
           createMessage.loading({
             content: t('sys.app.menuLoading'),
-            duration: 0,
-            key: 'menuLoading',
+            duration: 1,
           });
 
           // !Simulate to obtain permission codes from the background,
@@ -257,8 +257,6 @@ export const usePermissionStore = defineStore({
 
           routeList = flatMultiLevelRoutes(routeList);
           routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
-
-          createMessage.destroy('menuLoading');
           break;
       }
 

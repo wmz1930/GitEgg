@@ -13,6 +13,26 @@
         :pagination="false"
         :resizeHeightOffset="70"
       >
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'validateId'">
+            <span>
+              校验类型
+              <a-tag
+                color="blue"
+                style="cursor: pointer"
+                @click="showAddDataModal({ openType: 'validate', titleText: '新增校验类型' })"
+              >
+                <template #icon>
+                  <icon icon="clarity:add-line" />
+                  新增
+                </template>
+              </a-tag>
+            </span>
+          </template>
+          <template v-else>
+            <HeaderCell :column="column" />
+          </template>
+        </template>
         <template #bodyCell="{ column, record, text }">
           <template v-if="column.key === 'maxLength'">
             <a-input v-model:value="record.maxLength" placeholder="最大长度" />
@@ -61,8 +81,10 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref, reactive, onMounted } from 'vue';
-  import { Tabs, Input, Select, Checkbox } from 'ant-design-vue';
+  import { Tabs, Input, Select, Tag, Checkbox } from 'ant-design-vue';
+  import Icon from '@/components/Icon/Icon.vue';
   import { BasicTable } from '/@/components/Table';
+  import HeaderCell from '/@/components/Table/src/components/HeaderCell.vue';
   import { FormValidColumns } from './table-form/table.form.data';
   import { getValidateListAll } from '/@/api/plugin/codeGenerator/validate/validate';
   export default defineComponent({
@@ -75,6 +97,9 @@
       ASelectOption: Select.Option,
       [Checkbox.name]: Checkbox,
       BasicTable,
+      HeaderCell,
+      Icon,
+      [Tag.name]: Tag,
     },
     props: {
       config: {
@@ -86,7 +111,8 @@
         default: () => [],
       },
     },
-    setup(props) {
+    emits: ['add-data-modal'],
+    setup(props, { emit }) {
       const fieldDataList = reactive<any[]>(props.fields);
       const validateDictList = ref<any[]>([]);
       const activeKey = ref('0');
@@ -115,6 +141,10 @@
         }
       }
 
+      function showAddDataModal(record: Recordable) {
+        emit('add-data-modal', record);
+      }
+
       const filterOption = (input: string, option: any) => {
         return option.title.toLowerCase().indexOf(input.toLowerCase()) >= 0;
       };
@@ -127,6 +157,7 @@
         validateDictList,
         filterOption,
         dictCodeDisabled,
+        showAddDataModal,
       };
     },
   });

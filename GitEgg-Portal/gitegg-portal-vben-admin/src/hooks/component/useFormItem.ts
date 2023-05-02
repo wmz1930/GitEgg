@@ -6,8 +6,8 @@ import {
   getCurrentInstance,
   watchEffect,
   unref,
-  nextTick,
   toRaw,
+  nextTick,
 } from 'vue';
 
 import { isEqual } from 'lodash-es';
@@ -53,7 +53,7 @@ export function useRuleFormItem<T extends Recordable>(
       nextTick(() => {
         emit?.(changeEvent, value, ...(toRaw(unref(emitData)) || []));
       });
-      // 1. 修复当apiselelct不设置默认值时，第一次选择值会触发验证，第二次选择则会恢复正常
+      // 1. �޸���apiselelct������Ĭ��ֵʱ����һ��ѡ��ֵ�ᴥ����֤���ڶ���ѡ�����ָ�����
       emit?.(changeEvent, value, ...(toRaw(unref(emitData)) || []));
     },
   });

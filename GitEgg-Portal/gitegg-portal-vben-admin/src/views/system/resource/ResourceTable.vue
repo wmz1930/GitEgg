@@ -115,7 +115,7 @@
       }
 
       function handleSuccess() {
-        reload();
+        reload(true);
       }
 
       // 状态转换

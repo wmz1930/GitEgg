@@ -28,12 +28,12 @@
 <script lang="ts">
   import { PlusOutlined, UploadOutlined } from '@ant-design/icons-vue';
   import { defineComponent, ref, unref, onBeforeMount, watch, toRefs } from 'vue';
-  import { message } from 'ant-design-vue';
+  import { message, Upload, Modal } from 'ant-design-vue';
   import { basicProps } from '/@/components/Upload/src/props';
   import { checkImgType, getBase64WithFile } from '/@/components/Upload/src/helper';
   import { buildUUID } from '/@/utils/uuid';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { Upload, Modal } from 'ant-design-vue';
+
   import type { UploadChangeParam } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useUploadType } from '/@/components/Upload/src/useUpload';
@@ -137,6 +137,7 @@
           emit('update:value', JSON.stringify(imgUrlList.value));
           emit('change', JSON.stringify(imgUrlList.value));
         } else {
+          imgUrlList.value = [];
           emit('update:value', '');
           emit('change', '');
         }
@@ -249,7 +250,9 @@
             fileList.value.push({
               uid: value.uid,
               name: value.fileName,
+              fileName: value.fileName,
               status: 'done',
+              encodedFileName: value.encodedFileName,
               url: fileUrl,
             });
           });
@@ -262,12 +265,26 @@
       };
 
       const handlePreview = async (file) => {
-        if (!file.url && !file.preview) {
-          file.preview = (await getBase64(file.file)) as string;
+        if (props.uploadType === 'image') {
+          if (!file.url && !file.preview) {
+            file.preview = (await getBase64(file.file)) as string;
+          }
+          previewImage.value = file.url || file.preview;
+          previewVisible.value = true;
+          previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
+        } else {
+          var xml = new XMLHttpRequest();
+          xml.open('GET', file.url, true);
+          xml.responseType = 'blob';
+          xml.onload = function () {
+            var url = window.URL.createObjectURL(xml.response);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = file.fileName;
+            a.click();
+          };
+          xml.send();
         }
-        previewImage.value = file.url || file.preview;
-        previewVisible.value = true;
-        previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
       };
 
       return {
@@ -291,8 +308,8 @@
 <style>
   /* you can make up upload button and sample style by using stylesheets */
   .ant-upload-select-picture-card i {
-    font-size: 32px;
     color: #999;
+    font-size: 32px;
   }
 
   .ant-upload-select-picture-card .ant-upload-text {

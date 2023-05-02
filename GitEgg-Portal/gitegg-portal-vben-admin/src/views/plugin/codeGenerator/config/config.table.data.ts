@@ -2,6 +2,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { getDataSourceAll } from '/@/api/plugin/codeGenerator/dataSource/data_source';
 import { listGeneratorDict } from '/@/api/plugin/codeGenerator/dict/dict';
+import { nextTick } from 'vue';
 
 export const columns: BasicColumn[] = [
   {
@@ -93,15 +94,26 @@ export const formSchema: FormSchema[] = [
     required: true,
     component: 'ApiSelect',
     defaultValue: 'cloud',
-    componentProps: {
-      api: listGeneratorDict,
-      params: 'SERVICE_TYPE',
-      resultField: 'list',
-      // use name as label
-      labelField: 'dictName',
-      // use id as value
-      valueField: 'dictCode',
-      placeholder: '请选择后台服务类型',
+    componentProps: ({ formActionType }) => {
+      return {
+        api: listGeneratorDict,
+        params: 'SERVICE_TYPE',
+        resultField: 'list',
+        // use name as label
+        labelField: 'dictName',
+        // use id as value
+        valueField: 'dictCode',
+        placeholder: '请选择后台服务类型',
+        onChange: (value) => {
+          nextTick(() => {
+            if (value !== 'cloud' && formActionType) {
+              formActionType.setFieldsValue({
+                serviceName: undefined,
+              });
+            }
+          });
+        },
+      };
     },
     colProps: { span: 12 },
   },
@@ -166,9 +178,21 @@ export const formSchema: FormSchema[] = [
   {
     field: 'serviceName',
     label: '服务名称',
-    required: true,
+    required: ({ values }) => {
+      if (values.serviceType === 'cloud') {
+        return true;
+      }
+      return false;
+    },
+    dynamicDisabled: ({ values }) => {
+      if (values.serviceType !== 'cloud') {
+        return true;
+      }
+      return false;
+    },
     component: 'Input',
     helpMessage: [
+      '选择SpringBoot时，不需要填写',
       '和微服务名称保持一致',
       '前端页面请求微服务接口的前缀',
       '数据权限表resource_url字段的前缀',
@@ -359,7 +383,6 @@ export const formSchema: FormSchema[] = [
     field: 'frontCodeDir',
     label: '页面文件目录自定义',
     labelWidth: 150,
-    required: true,
     component: 'Input',
     componentProps: {
       placeholder: '存放.vue页面文件的目录名称，用于区分不同系统，例如：system',

@@ -122,7 +122,7 @@
   import { mailTemplateColumn, mailTemplateSearch } from './mail.template.data';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Dropdown } from '/@/components/Dropdown';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { handleDownloadBlod } from '/@/utils/file/download';
   import { useLoading } from '/@/components/Loading';
 

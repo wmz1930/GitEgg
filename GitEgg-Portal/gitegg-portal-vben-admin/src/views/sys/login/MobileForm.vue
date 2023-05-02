@@ -82,7 +82,7 @@
   import { defineComponent, reactive, ref, unref, computed, onMounted } from 'vue';
   import { Checkbox, Form, Input, Row, Col, Button } from 'ant-design-vue';
   import { CountdownInput } from '/@/components/CountDown';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useUserStore } from '/@/store/modules/user';

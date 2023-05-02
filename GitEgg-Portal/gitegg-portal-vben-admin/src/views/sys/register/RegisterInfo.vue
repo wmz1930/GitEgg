@@ -82,7 +82,7 @@
   import { defineComponent, reactive, ref, computed } from 'vue';
   import { Checkbox, Form, Input, Row, Col, Button, Progress, Popover } from 'ant-design-vue';
   import type { RuleObject } from 'ant-design-vue/lib/form/interface';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
 
