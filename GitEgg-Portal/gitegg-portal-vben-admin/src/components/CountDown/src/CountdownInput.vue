@@ -20,7 +20,7 @@
   import CountButton from './CountButton.vue';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useRuleFormItem } from '/@/hooks/component/useFormItem';
-  import { useAttrs } from '/@/hooks/core/useAttrs';
+  import { useAttrs } from '@vben/hooks';
 
   const props = {
     value: { type: String },
@@ -56,8 +56,8 @@
   .@{prefix-cls} {
     .ant-input-group-addon {
       padding-right: 0;
-      background-color: transparent;
       border: none;
+      background-color: transparent;
 
       button {
         font-size: 14px;

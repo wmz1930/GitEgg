@@ -49,7 +49,7 @@
   import { defineComponent, reactive, ref, unref } from 'vue';
   import { Card, Form, Input, Row, Col, Button, Steps, Divider } from 'ant-design-vue';
   import type { RuleObject } from 'ant-design-vue/lib/form/interface';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useRouter } from 'vue-router';
@@ -190,28 +190,28 @@
   }
 
   .logo {
+    display: inline-block;
     position: relative;
     height: 45px;
     margin-right: 10px;
     border-style: none;
-    display: inline-block;
   }
 
   .bind-header {
     height: 100px;
+    box-shadow: rgb(177 175 175 / 40%) 0 0 10px 1px;
+    box-shadow: rgb(177 175 175 / 40%) 0 0 10px 1px;
     line-height: 100px;
-    -webkit-box-shadow: rgba(177, 175, 175, 0.4) 0px 0px 10px 1px;
-    box-shadow: rgba(177, 175, 175, 0.4) 0px 0px 10px 1px;
   }
 
   .title,
   .sub-title {
     position: relative;
-    font-size: 33px;
+    top: 2px;
     color: #333;
     font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-size: 33px;
     font-weight: 500;
-    top: 2px;
   }
 
   .sub-title {
@@ -222,28 +222,28 @@
 
   .has-account,
   .to-login {
-    font-size: 16px;
-    color: #999;
     margin-top: 10px;
+    color: #999;
+    font-size: 16px;
   }
 
   .bind-tips {
-    text-align: center;
-    width: 100%;
     display: inline-block;
+    width: 100%;
     color: #52c41a;
+    text-align: center;
   }
 
   .social-bind .ant-steps-navigation .ant-steps-item::after {
-    border: 0px solid rgba(0, 0, 0, 0.25) !important;
+    border: 0 solid rgb(0 0 0 / 25%) !important;
   }
 
   .footer {
     position: absolute;
-    width: 100%;
     bottom: 0;
-    padding: 0 16px;
+    width: 100%;
     margin: 48px 0 24px;
+    padding: 0 16px;
     text-align: center;
 
     .links {
@@ -251,8 +251,8 @@
       font-size: 14px;
 
       a {
-        color: #999;
         transition: all 0.3s;
+        color: #999;
 
         &:not(:last-child) {
           margin-right: 40px;

@@ -12,6 +12,12 @@
     <template #overlay>
       <Menu @click="handleMenuClick">
         <MenuItem
+          key="settings"
+          :text="t('layout.header.dropdownItemSettings')"
+          icon="ant-design:setting-outlined"
+        />
+        <MenuDivider />
+        <MenuItem
           key="doc"
           :text="t('layout.header.dropdownItemDoc')"
           icon="ion:document-text-outline"
@@ -48,6 +54,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useModal } from '/@/components/Modal';
+  import { useGo } from '/@/hooks/web/usePage';
 
   import headerImg from '/@/assets/images/header.jpg';
   import { propTypes } from '/@/utils/propTypes';
@@ -55,7 +62,7 @@
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
-  type MenuEvent = 'logout' | 'doc' | 'lock';
+  type MenuEvent = 'logout' | 'settings' | 'doc' | 'lock';
 
   export default defineComponent({
     name: 'UserDropdown',
@@ -74,6 +81,7 @@
       const { t } = useI18n();
       const { getShowDoc, getUseLockPage } = useHeaderSetting();
       const userStore = useUserStore();
+      const go = useGo();
 
       const getUserInfo = computed(() => {
         const { realName = '', avatar, desc } = userStore.getUserInfo || {};
@@ -84,6 +92,11 @@
 
       function handleLock() {
         openModal(true);
+      }
+
+      // account settings
+      function handleAccountSettings() {
+        go('/account/settings');
       }
 
       //  login out
@@ -101,6 +114,9 @@
           case 'logout':
             handleLoginOut();
             break;
+          case 'settings':
+            handleAccountSettings();
+            break;
           case 'doc':
             openDoc();
             break;
@@ -115,6 +131,7 @@
         t,
         getUserInfo,
         handleMenuClick,
+        handleAccountSettings,
         getShowDoc,
         register,
         getUseLockPage,
@@ -126,13 +143,13 @@
   @prefix-cls: ~'@{namespace}-header-user-dropdown';
 
   .@{prefix-cls} {
+    align-items: center;
     height: @header-height;
     padding: 0 0 0 10px;
     padding-right: 10px;
     overflow: hidden;
     font-size: 12px;
     cursor: pointer;
-    align-items: center;
 
     img {
       width: 24px;

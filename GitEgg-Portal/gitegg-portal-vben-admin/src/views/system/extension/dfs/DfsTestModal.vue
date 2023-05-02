@@ -37,7 +37,7 @@
 
   import { useMessage } from '/@/hooks/web/useMessage';
   import { Upload, Button } from 'ant-design-vue';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
 
   import { dfsUpload } from '/@/api/system/extension/dfs/dfs_upload';
 

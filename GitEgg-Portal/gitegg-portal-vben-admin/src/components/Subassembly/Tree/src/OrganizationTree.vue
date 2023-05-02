@@ -1,10 +1,11 @@
 <template>
-  <div class="overflow-hidden bg-white org-tree">
+  <div class="overflow-hidden m-4 mr-0 org-tree">
     <BasicTree
       title="组织机构列表"
       toolbar
       search
       expandOnSearch
+      treeWrapperClassName="h-[calc(100%-55px)] overflow-auto"
       ref="refTree"
       :clickRowToExpand="false"
       :treeData="treeData"
@@ -59,7 +60,11 @@
         isFirstLoaded.value = true;
       }
 
-      return { loading, refTree, treeData, handleSelect, handleCheck };
+      function reLoading() {
+        fetch();
+      }
+
+      return { loading, refTree, treeData, handleSelect, handleCheck, reLoading };
     },
   });
 </script>

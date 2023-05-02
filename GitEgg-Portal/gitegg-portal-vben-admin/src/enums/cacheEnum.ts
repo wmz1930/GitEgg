@@ -33,7 +33,7 @@ export const DICT_SYSTEM_CACHE_KEY = 'DICT_SYSTEM_CACHE_KEY__';
 // business dict cache key
 export const DICT_BUSSINESS_CACHE_KEY = 'DICT_BUSSINESS_CACHE_KEY__';
 
-// no clear  退出登录时，不会被清空的缓存，比如登录页的记住密码，都是加密存储
+// no clear  �˳���¼ʱ�����ᱻ��յĻ��棬�����¼ҳ�ļ�ס���룬���Ǽ��ܴ洢
 export const NO_CLEAR_START_KEY = 'NO_CLEAR_START_KEY__';
 
 // remember account key

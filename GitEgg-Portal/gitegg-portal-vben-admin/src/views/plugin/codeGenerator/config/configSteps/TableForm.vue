@@ -13,6 +13,39 @@
         :pagination="false"
         :resizeHeightOffset="70"
       >
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'dictCode'">
+            <span>
+              字典编码
+              <a-tag
+                color="blue"
+                style="cursor: pointer"
+                @click="showAddDataModal({ openType: 'dict', titleText: '新增数据字典' })"
+              >
+                <template #icon>
+                  <icon icon="clarity:add-line" />
+                  新增
+                </template>
+              </a-tag>
+            </span>
+          </template>
+          <template v-else-if="column.key === 'apiId'">
+            数据接口
+            <a-tag
+              color="blue"
+              style="cursor: pointer"
+              @click="showAddDataModal({ openType: 'api', titleText: '新增API接口' })"
+            >
+              <template #icon>
+                <icon icon="clarity:add-line" />
+                新增
+              </template>
+            </a-tag>
+          </template>
+          <template v-else>
+            <HeaderCell :column="column" />
+          </template>
+        </template>
         <template #bodyCell="{ column, record, text }">
           <template v-if="column.key === 'formAdd'">
             <a-checkbox v-model:checked="record.formAdd">新增</a-checkbox>
@@ -47,6 +80,7 @@
               style="width: 100%"
               :default-value="text"
               :disabled="dictCodeDisabled(record.controlType)"
+              @change="changeDictCode(record)"
               v-model:value="record.dictCode"
             >
               <a-select-option
@@ -79,6 +113,30 @@
               </a-select-option>
             </a-select>
           </template>
+          <template v-else-if="column.key === 'defaultValue'">
+            <!-- 当为字典类型,不为接口时. -->
+            <template v-if="!dictCodeDisabled(record.controlType) && apiDisabled(record.dictCode)">
+              <a-select
+                placeholder="请选择默认值"
+                show-search
+                :filter-option="filterOption"
+                style="width: 100%"
+                v-model:value="record.defaultValue"
+              >
+                <a-select-option
+                  v-for="item in defaultValueDictMap.get(record.dictCode)"
+                  :key="item.id"
+                  :title="item.dictName"
+                  :value="item.dictCode"
+                >
+                  {{ item.dictName }}
+                </a-select-option>
+              </a-select>
+            </template>
+            <template v-else>
+              <a-input v-model:value="record.defaultValue" placeholder="可输入默认值" />
+            </template>
+          </template>
         </template>
       </BasicTable>
     </a-tab-pane>
@@ -86,11 +144,17 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref, reactive, onMounted } from 'vue';
-  import { Tabs, Input, Select, Checkbox } from 'ant-design-vue';
+  import { Tabs, Input, Select, Tag, Checkbox } from 'ant-design-vue';
+  import Icon from '@/components/Icon/Icon.vue';
+  import HeaderCell from '/@/components/Table/src/components/HeaderCell.vue';
   import { BasicTable } from '/@/components/Table';
   import { columns } from './table-form/table.form.data';
   import { listGeneratorDict } from '/@/api/plugin/codeGenerator/dict/dict';
-  import { queryDictBusinessList } from '/@/api/system/base/dictBusiness';
+  import {
+    queryDictBusinessList,
+    listDictBusiness,
+    batchListDictBusiness,
+  } from '/@/api/system/base/dictBusiness';
   import { getGeneratorApiListAll } from '/@/api/plugin/codeGenerator/api/api';
   export default defineComponent({
     components: {
@@ -102,6 +166,9 @@
       ASelectOption: Select.Option,
       [Checkbox.name]: Checkbox,
       BasicTable,
+      HeaderCell,
+      Icon,
+      [Tag.name]: Tag,
     },
     props: {
       config: {
@@ -113,15 +180,37 @@
         default: () => [],
       },
     },
-    setup(props) {
+    emits: ['add-data-modal'],
+    setup(props, { emit }) {
       const fieldDataList = reactive<any[]>(props.fields);
       const controlTypeDictList = ref<any[]>([]);
       const dictCodeDictList = ref<any[]>([]);
+      const defaultValueDictMap = ref(new Map<any, any>());
       const apiList = ref<any[]>([]);
       const activeKey = ref('0');
 
       // 挂载后查询配置
-      onMounted(() => {
+      onMounted(async () => {
+        // 批量初始化数据字典值
+        const dictCodeList: string[] = [];
+        fieldDataList.forEach((val) => {
+          val.fieldDTOList.forEach((val) => {
+            if (!dictCodeDisabled(val.controlType) && val.dictCode && val.dictCode !== '') {
+              dictCodeList.push(val.dictCode);
+            }
+          });
+        });
+        if (dictCodeList && dictCodeList.length > 0) {
+          const dictResultMap = await batchListDictBusiness(dictCodeList);
+          if (dictResultMap) {
+            dictCodeList.forEach(function (dictCode) {
+              if (dictResultMap[dictCode]) {
+                defaultValueDictMap.value.set(dictCode, dictResultMap[dictCode]);
+              }
+            });
+          }
+        }
+
         getControlType();
         getDictList();
         getApiList();
@@ -129,6 +218,16 @@
 
       async function getControlType() {
         controlTypeDictList.value = await listGeneratorDict('CONTROL_TYPE');
+      }
+
+      async function getDefaultValueDict(dictCode: string) {
+        const defaultValueDictList = await listDictBusiness(dictCode);
+        defaultValueDictMap.value.set(dictCode, defaultValueDictList);
+      }
+
+      async function changeDictCode(record: Recordable) {
+        record.defaultValue = undefined;
+        getDefaultValueDict(record.dictCode);
       }
 
       async function getDictList() {
@@ -165,6 +264,10 @@
         }
       }
 
+      function showAddDataModal(record: Recordable) {
+        emit('add-data-modal', record);
+      }
+
       const filterOption = (input: string, option: any) => {
         return option.title.toLowerCase().indexOf(input.toLowerCase()) >= 0;
       };
@@ -178,10 +281,14 @@
         getApiList,
         controlTypeDictList,
         dictCodeDictList,
+        defaultValueDictMap,
+        getDefaultValueDict,
+        changeDictCode,
         apiList,
         filterOption,
         dictCodeDisabled,
         apiDisabled,
+        showAddDataModal,
       };
     },
   });

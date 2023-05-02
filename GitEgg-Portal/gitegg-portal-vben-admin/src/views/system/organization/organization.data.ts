@@ -6,6 +6,7 @@ import { Switch } from 'ant-design-vue';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { updateOrganizationStatus, checkOrganizationExist } from '/@/api/system/organization';
 import { getDictCache } from '/@/utils/gitegg/dictUtils';
+import { renderDict } from '/@/utils/gitegg/formUtils';
 
 export const columns: BasicColumn[] = [
   {
@@ -23,6 +24,9 @@ export const columns: BasicColumn[] = [
   {
     title: '组织类型',
     dataIndex: 'organizationType',
+    customRender: ({ text }) => {
+      return renderDict(text, 'ORGANIZATION_TYPE', false, false);
+    },
   },
   {
     title: '组织排序',
@@ -157,7 +161,7 @@ export const formSchema: FormSchema[] = [
             return new Promise((resolve, reject) => {
               const keyData = {
                 id: model.id,
-                checkField: 'account',
+                checkField: 'organization_name',
                 checkValue: value,
               };
               checkOrganizationExist(keyData)
@@ -194,7 +198,7 @@ export const formSchema: FormSchema[] = [
             return new Promise((resolve, reject) => {
               const keyData = {
                 id: model.id,
-                checkField: 'organizationKey',
+                checkField: 'organization_key',
                 checkValue: value,
               };
               checkOrganizationExist(keyData)

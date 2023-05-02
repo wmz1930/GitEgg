@@ -1,7 +1,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { h } from 'vue';
-import { Icon } from '/@/components/Icon';
+import Icon from '@/components/Icon/Icon.vue';
 import { Switch } from 'ant-design-vue';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { updateResourceStatus, checkResourceExist } from '/@/api/system/resource';
@@ -170,7 +170,7 @@ export const formSchema: FormSchema[] = [
             return new Promise((resolve, reject) => {
               const keyData = {
                 id: model.id,
-                checkField: 'resourceKey',
+                checkField: 'resource_key',
                 checkValue: value,
               };
               checkResourceExist(keyData)

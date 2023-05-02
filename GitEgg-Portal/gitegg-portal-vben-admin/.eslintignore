@@ -1,7 +1,6 @@
 
 *.sh
 node_modules
-/node_modules
 *.md
 *.woff
 *.ttf

@@ -113,7 +113,7 @@
   import { Tooltip, Popover, Checkbox, Divider } from 'ant-design-vue';
   import type { CheckboxChangeEvent } from 'ant-design-vue/lib/checkbox/interface';
   import { SettingOutlined, DragOutlined } from '@ant-design/icons-vue';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { ScrollContainer } from '/@/components/Container';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useTableContext } from '../../hooks/useTableContext';
@@ -165,7 +165,7 @@
 
       const plainSortOptions = ref<Options[]>([]);
 
-      const columnListRef = ref<ComponentRef>(null);
+      const columnListRef = ref(null);
 
       const state = reactive<State>({
         checkAll: true,
@@ -183,8 +183,8 @@
       });
 
       watchEffect(() => {
+        const columns = table.getColumns();
         setTimeout(() => {
-          const columns = table.getColumns();
           if (columns.length && !state.isInit) {
             init();
           }
@@ -291,7 +291,7 @@
         nextTick(() => {
           const columnListEl = unref(columnListRef);
           if (!columnListEl) return;
-          const el = columnListEl.$el as any;
+          const el = (columnListEl as any).$el;
           if (!el) return;
           // Drag and drop sort
           sortable = Sortablejs.create(unref(el), {
@@ -347,7 +347,9 @@
       function handleColumnFixed(item: BasicColumn, fixed?: 'left' | 'right') {
         if (!state.checkedList.includes(item.dataIndex as string)) return;
 
-        const columns = getColumns() as BasicColumn[];
+        const columns = getColumns().filter((c: BasicColumn) =>
+          state.checkedList.includes(c.dataIndex as string),
+        ) as BasicColumn[];
         const isFixed = item.fixed === fixed ? false : fixed;
         const index = columns.findIndex((col) => col.dataIndex === item.dataIndex);
         if (index !== -1) {
@@ -414,8 +416,8 @@
 
   .@{prefix-cls} {
     &__popover-title {
-      position: relative;
       display: flex;
+      position: relative;
       align-items: center;
       justify-content: space-between;
     }

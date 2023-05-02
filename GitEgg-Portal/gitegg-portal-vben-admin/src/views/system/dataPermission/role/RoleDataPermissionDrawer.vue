@@ -4,7 +4,7 @@
     @register="userDataPermissionDrawer"
     showFooter
     :title="getTitle"
-    width="25%"
+    width="30%"
     class="data-permission"
     @ok="handleSubmit"
   >
@@ -17,10 +17,7 @@
         onChange: onSelectChange,
         preserveSelectedRowKeys: true,
       }"
-    >
-      <template #tableTitle> </template>
-      <template #toolbar> </template>
-    </BasicTable>
+    />
   </BasicDrawer>
 </template>
 <script lang="ts">
@@ -55,8 +52,12 @@
           schemas: searchFormSchemaRole,
           showResetButton: false,
         },
+        // isCanResizeParent: true,
+        // canResize: true,
+        // 自适应高度偏移， 计算结果-偏移量
+        resizeHeightOffset: 80,
         useSearchForm: true,
-        showTableSetting: true,
+        showTableSetting: false,
         bordered: true,
         showIndexColumn: false,
         clickToRowSelect: false,
@@ -166,7 +167,7 @@
 
 <style lang="less" scoped>
   .data-permission .org-tree .vben-basic-drawer .ant-drawer-body .scrollbar__wrap {
-    padding: 1px !important;
     margin-bottom: 0 !important;
+    padding: 1px !important;
   }
 </style>

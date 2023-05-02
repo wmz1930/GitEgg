@@ -89,7 +89,7 @@
   import { Checkbox, Form, Input, Row, Col, Button, Select } from 'ant-design-vue';
   import Verify from '/@/components/verifition/Verify.vue';
   import { CountdownInput } from '/@/components/CountDown';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import {

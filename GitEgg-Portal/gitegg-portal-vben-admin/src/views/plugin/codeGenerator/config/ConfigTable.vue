@@ -49,24 +49,24 @@
               },
               {
                 label: '配置规则',
-                icon: 'clarity:note-edit-line',
+                icon: 'clarity:cog-line',
                 onClick: handleEditConfig.bind(null, record),
               },
               {
                 label: '生成代码',
-                icon: 'clarity:note-edit-line',
+                icon: 'clarity:shuffle-line',
                 onClick: processGenerateCode.bind(null, record),
               },
             ]"
             :dropDownActions="[
               {
                 label: '复制表配置',
-                icon: 'clarity:note-edit-line',
+                icon: 'clarity:copy-line',
                 onClick: copyTableConfig.bind(null, record),
               },
               {
                 label: '复制全部配置',
-                icon: 'clarity:note-edit-line',
+                icon: 'clarity:copy-solid',
                 onClick: copyTableFieldConfig.bind(null, record),
               },
               {
@@ -110,7 +110,7 @@
   import { useGo } from '/@/hooks/web/usePage';
 
   import { Dropdown } from '/@/components/Dropdown';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
 
   export default defineComponent({
     name: 'ConfigManagement',

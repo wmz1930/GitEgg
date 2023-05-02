@@ -50,26 +50,26 @@ export const useUserStore = defineStore({
     lastUpdateTime: 0,
   }),
   getters: {
-    getUserInfo(): UserInfo {
-      return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
+    getUserInfo(state): UserInfo {
+      return state.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
     },
-    getRefreshToken(): string {
-      return this.refreshToken || getAuthCache<string>(REFRESH_TOKEN_KEY);
+    getRefreshToken(state): string {
+      return state.refreshToken || getAuthCache<string>(REFRESH_TOKEN_KEY);
     },
-    getToken(): string {
-      return this.token || getAuthCache<string>(TOKEN_KEY);
+    getToken(state): string {
+      return state.token || getAuthCache<string>(TOKEN_KEY);
     },
-    getRoleList(): RoleEnum[] {
-      return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
+    getRoleList(state): RoleEnum[] {
+      return state.roleList.length > 0 ? state.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
     },
-    getRouteList(): RoleEnum[] {
-      return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
+    getRouteList(state): RoleEnum[] {
+      return state.roleList.length > 0 ? state.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
     },
-    getSessionTimeout(): boolean {
-      return !!this.sessionTimeout;
+    getSessionTimeout(state): boolean {
+      return !!state.sessionTimeout;
     },
-    getLastUpdateTime(): number {
-      return this.lastUpdateTime;
+    getLastUpdateTime(state): number {
+      return state.lastUpdateTime;
     },
   },
   actions: {
@@ -131,11 +131,7 @@ export const useUserStore = defineStore({
       // get user info
       const userInfo = await this.getUserInfoAction();
 
-      // 将跳转主页提前到菜单加载之前，否则会在登录页加载，显得系统很卡
-      goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
-
       const sessionTimeout = this.sessionTimeout;
-
       if (sessionTimeout) {
         this.setSessionTimeout(false);
       } else {
@@ -148,6 +144,7 @@ export const useUserStore = defineStore({
           router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
           permissionStore.setDynamicAddedRoute(true);
         }
+        goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
       }
       return userInfo;
     },

@@ -15,7 +15,7 @@ export enum PageEnum {
   BASE_SOCIAL_BIND = '/social/bind',
 }
 
-// ä½¿ç”¨page nameåˆ¤æ–­é»‘ç™½åå•ï¼Œä½¿ç”¨pathæ—¶ï¼Œå¦‚æœæœ‰è·¯å¾„å‚æ•°ï¼Œé‚£ä¹ˆæœ‰é—®é¢˜
+// Ê¹ÓÃpage nameÅĞ¶ÏºÚ°×Ãûµ¥£¬Ê¹ÓÃpathÊ±£¬Èç¹ûÓĞÂ·¾¶²ÎÊı£¬ÄÇÃ´ÓĞÎÊÌâ
 export enum PageNameEnum {
   // basic login name
   BASE_LOGIN = 'Login',

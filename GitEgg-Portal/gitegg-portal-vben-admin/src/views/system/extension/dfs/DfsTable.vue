@@ -97,7 +97,7 @@
   import DfsDrawer from './DfsDrawer.vue';
   import DfsTestModal from './DfsTestModal.vue';
   import { Dropdown } from '/@/components/Dropdown';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
 

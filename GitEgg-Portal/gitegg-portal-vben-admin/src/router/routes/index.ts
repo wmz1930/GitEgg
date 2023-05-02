@@ -2,6 +2,7 @@ import type { AppRouteRecordRaw, AppRouteModule } from '/@/router/types';
 
 import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from '/@/router/routes/basic';
 
+import { mainOutRoutes } from './mainOut';
 import { PageEnum } from '/@/enums/pageEnum';
 import { t } from '/@/hooks/web/useI18n';
 
@@ -82,6 +83,7 @@ export const basicRoutes = [
   SocialCallbackRoute,
   SocialBindRoute,
   RootRoute,
+  ...mainOutRoutes,
   REDIRECT_ROUTE,
   PAGE_NOT_FOUND_ROUTE,
 ];

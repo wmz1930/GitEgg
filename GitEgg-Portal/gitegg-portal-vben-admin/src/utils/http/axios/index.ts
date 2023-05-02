@@ -12,7 +12,7 @@ import { checkStatus } from './checkStatus';
 import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { RequestEnum, ResultEnum, ContentTypeEnum, AuthorizationTypeEnum } from '/@/enums/httpEnum';
-import { isString } from '/@/utils/is';
+import { isString, isUnDef, isNull, isEmpty } from '/@/utils/is';
 import { getToken, getRrefreshToken } from '/@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
@@ -20,13 +20,12 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
-import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import { AxiosAuthRefreshRequestConfig } from 'axios-auth-refresh';
+import createAuthRefreshInterceptor, { AxiosAuthRefreshRequestConfig } from 'axios-auth-refresh';
 import { LoginApiEnum } from '/@/api/login';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
-const { createMessage, createErrorModal } = useMessage();
+const { createMessage, createErrorModal, createSuccessModal } = useMessage();
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -54,13 +53,23 @@ const transform: AxiosTransform = {
       // return '[HTTP] Request has no return value';
       throw new Error(t('sys.api.apiRequestFailed'));
     }
-
-    //  这里 code，msg为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
+    //  这里 code，success，msg为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
     const { code, msg } = data;
 
     // 这里逻辑可以根据项目进行修改
     const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
+      let successMsg = msg;
+
+      if (isNull(successMsg) || isUnDef(successMsg) || isEmpty(successMsg)) {
+        successMsg = t(`sys.api.operationSuccess`);
+      }
+
+      if (options.successMessageMode === 'modal') {
+        createSuccessModal({ title: t('sys.api.successTip'), content: successMsg });
+      } else if (options.successMessageMode === 'message') {
+        createMessage.success(successMsg);
+      }
       // 这里的data是AxiosResponse的data，请求需要的是业务后台返回的data
       return data.data;
     } else if (data instanceof Blob) {
@@ -249,7 +258,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // 基础接口地址
         // baseURL: globSetting.apiUrl,
 
-        headers: { 'Content-Type': ContentTypeEnum.JSON },
+        // headers: { 'Content-Type': ContentTypeEnum.JSON },
         // 如果是form-data格式
         // headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
         // 数据处理方式

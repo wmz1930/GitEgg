@@ -125,7 +125,7 @@ export function transformBackObj<T = AppRouteModule>(resources, parentPath = '')
     // 可以读取自定义菜单图表
     route.meta.icon =
       resource?.resourceIcon?.indexOf(':') == -1
-        ? 'system-' + resource?.resourceIcon + '|svg'
+        ? resource?.resourceIcon + '|svg'
         : resource?.resourceIcon;
     route.meta.orderNo = resource.resourceLevel;
     route.meta.hideMenu = !resource.resourceShow;
