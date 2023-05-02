@@ -45,7 +45,11 @@
       </template>
       <template #toolbar>
 <#if config.importFlag == true>
-        <Upload accept=".xls,.xlsx" :showUploadList="false" :beforeUpload="beforeImport${entity}List">
+        <Upload
+          accept=".xls,.xlsx"
+          :showUploadList="false"
+          :beforeUpload="beforeImport${entity}List"
+        >
           <a-button type="primary"> <icon icon="ant-design:upload-outlined" /> 数据导入 </a-button>
         </Upload>
 </#if>
@@ -133,11 +137,12 @@
 </#if>
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import {
-<#if tableShowType?? && tableShowType == "tree_table">
-    get${entity}Tree,
-<#else>
+<#--<#if tableShowType?? && tableShowType == "tree_table">-->
+<#--    get${entity}Tree,-->
+<#--<#else>-->
+<#--    get${entity}List,-->
+<#--</#if>-->
     get${entity}List,
-</#if>
     delete${entity},
     batchDelete${entity},
 <#if config.exportFlag == true>
@@ -161,7 +166,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
 
   import { Dropdown } from '/@/components/Dropdown';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
 
 <#if config.importFlag == true || config.exportFlag == true>
   import { handleDownloadBlod } from '/@/utils/file/download';
@@ -170,7 +175,7 @@
 
   export default defineComponent({
     name: '${entity}Management',
-    components: { BasicTable, <#if config.formType == "Drawer" ||  config.formType == "Modal">${entity}${config.formType}</#if>, TableAction, Dropdown, Icon, <#if config.importFlag == true || config.exportFlag == true>Upload,</#if> },
+    components: { BasicTable, <#if config.formType == "Drawer" ||  config.formType == "Modal">${entity}${config.formType}</#if>, TableAction, Dropdown, Icon, <#if config.importFlag == true || config.exportFlag == true>Upload</#if> },
 <#if config.tableShowType == "table_table">
     inheritAttrs: false,
     emits: ['show-children', 'check'],

@@ -29,6 +29,7 @@ import ${dtoPackage?replace("entity","dto")}.*;
 
 import ${package.Service}.${table.serviceName};
 
+import javax.validation.Valid;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -65,7 +66,7 @@ import ${superControllerClassPackage};
 <#else>
 @Controller
 </#if>
-@RequestMapping("<#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>")
+@RequestMapping("<#if config.serviceName?? && config.serviceName != "">/${config.serviceName}</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath}<#else>/${table.entityPath}</#if>")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Api(value = "${table.controllerName}|${table.comment!}前端控制器", tags = {"${table.comment!}"})
 <#if config.serviceType == "cloud">
@@ -132,7 +133,7 @@ public class ${table.controllerName} {
     */
     @PostMapping("/create")
     @ApiOperation(value = "添加${table.comment!}")
-    public Result<?> create(@RequestBody Create${entity}DTO ${table.entityPath}) {
+    public Result<?> create(@RequestBody @Valid Create${entity}DTO ${table.entityPath}) {
         boolean result = ${table.entityPath}Service.create${entity}(${table.entityPath});
         return Result.result(result);
     }
@@ -145,7 +146,7 @@ public class ${table.controllerName} {
     */
     @PostMapping("/update")
     @ApiOperation(value = "更新${table.comment!}")
-    public Result<?> update(@RequestBody Update${entity}DTO ${table.entityPath}) {
+    public Result<?> update(@RequestBody @Valid Update${entity}DTO ${table.entityPath}) {
         boolean result = ${table.entityPath}Service.update${entity}(${table.entityPath});
         return Result.result(result);
     }
@@ -239,7 +240,7 @@ public class ${table.controllerName} {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验${table.comment!}是否存在", notes = "校验${table.comment!}是否存在")
-    public Result<Boolean> check${entity}Exist(@RequestBody CheckExistDTO ${table.entityPath}) {
+    public Result<Boolean> check${entity}Exist(@RequestBody @Valid CheckExistDTO ${table.entityPath}) {
         String field = ${table.entityPath}.getCheckField();
         String value = ${table.entityPath}.getCheckValue();
         QueryWrapper<${entity}> ${table.entityPath}QueryWrapper = new QueryWrapper<>();

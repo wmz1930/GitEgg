@@ -6,7 +6,17 @@ package ${dtoPackage?replace("entity","dto")};
 import ${pkg};
     </#if>
 </#list>
+
+<#list fields as field>
+    <#if field.controlType == "DTAE_TIME_PICKER" || field.controlType == "DTAE_PICKER" || field.controlType == "TIME_PICKER">
+        <#assign hasJsonFormat= true/>
+    </#if>
+</#list>
+<#if hasJsonFormat?? && hasJsonFormat == true>
+import com.fasterxml.jackson.annotation.JsonFormat;
+</#if>
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Max;
 import org.hibernate.validator.constraints.Length;
@@ -88,16 +98,19 @@ public class Update${entity}DTO implements Serializable {
      */
         </#if>
     </#if>
-    <#if field.required == true>
+    <#if field.required == true && field.entityType?? && field.entityType == 'String'>
     @NotBlank(message="${field.comment}不能为空")
     </#if>
-    <#if field.min??>
+    <#if field.required == true && field.entityType?? && field.entityType != 'String'>
+    @NotNull(message="${field.comment}不能为空")
+    </#if>
+    <#if field.min?? && field.entityType?? && field.entityType != 'String'>
     @Min(${field.min}L)
     </#if>
-    <#if field.max??>
+    <#if field.max?? && field.entityType?? && field.entityType != 'String'>
     @Max(${field.max}L)
     </#if>
-    <#if field.maxLength??>
+    <#if field.minLength?? && field.maxLength?? && field.entityType?? && field.entityType == 'String'>
     @Length(min=${field.minLength},max=${field.maxLength})
     </#if>
     <#if field.validateValue??>
@@ -105,6 +118,13 @@ public class Update${entity}DTO implements Serializable {
     </#if>
     <#if field.validateRegular??>
     @Pattern(regexp="${field.validateRegular}",message="${field.comment}格式错误")
+    </#if>
+    <#if field.controlType == "DTAE_TIME_PICKER">
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    <#elseif field.controlType == "DTAE_PICKER">
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    <#elseif field.controlType == "TIME_PICKER">
+    @JsonFormat(pattern = "HH:mm:ss")
     </#if>
     private ${field.entityType} ${field.entityName};
     </#if>

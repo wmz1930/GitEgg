@@ -15,7 +15,10 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './${dataTsName}';
   import { Basic${config.formType}, use${config.formType}Inner } from '/@/components/${config.formType}';
-  import { create${entity}, update${entity} } from '/@/api/${vueJsPath}';
+  import {
+    create${entity},
+    update${entity},
+  } from '/@/api/${vueJsPath}';
 
   export default defineComponent({
     name: '${entity}${config.formType}',

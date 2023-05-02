@@ -2,9 +2,9 @@
 package ${dtoPackage?replace("entity","bo")};
 
 <#list fields as field>
-<#if field?? && field.exportFlag == true && field.entityType == "LocalDateTime">
-    <#assign hasDateTime=true />
-</#if>
+    <#if field.controlType == "DTAE_TIME_PICKER" || field.controlType == "DTAE_PICKER" || field.controlType == "TIME_PICKER">
+        <#assign hasDateTime= true/>
+    </#if>
 </#list>
 import com.alibaba.excel.annotation.ExcelProperty;
 <#if hasDateTime?? && hasDateTime == true>
@@ -76,9 +76,13 @@ public class ${entity}ExportBO implements Serializable {
     </#if>
     @ExcelProperty(value = "${field.comment}" ,index = ${i}<#if field?? && field.entityType?? && field.entityType == "LocalDateTime">, converter = LocalDateTimeStringConverter.class</#if>)
     @ColumnWidth(20)
-<#if field?? && field.entityType?? && field.entityType == "LocalDateTime">
+    <#if field.controlType == "DTAE_TIME_PICKER">
     @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
-</#if>
+    <#elseif field.controlType == "DTAE_PICKER">
+    @DateTimeFormat("yyyy-MM-dd")
+    <#elseif field.controlType == "TIME_PICKER">
+    @DateTimeFormat("HH:mm:ss")
+    </#if>
     private ${field.entityType} ${field.entityName};
     <#assign i=i+1/>
     </#if>

@@ -12,7 +12,6 @@ import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.fill.Column;
-import com.gitegg.code.generator.api.dto.GeneratorApiDTO;
 import com.gitegg.code.generator.api.entity.GeneratorApi;
 import com.gitegg.code.generator.api.service.IGeneratorApiService;
 import com.gitegg.code.generator.config.dto.QueryConfigDTO;
@@ -23,7 +22,10 @@ import com.gitegg.code.generator.datasource.service.IDatasourceService;
 import com.gitegg.code.generator.engine.GitEggDatabaseQuery;
 import com.gitegg.code.generator.engine.constant.CodeGeneratorConstant;
 import com.gitegg.code.generator.engine.dto.TableDTO;
-import com.gitegg.code.generator.engine.enums.*;
+import com.gitegg.code.generator.engine.enums.CustomFileEnum;
+import com.gitegg.code.generator.engine.enums.CustomFileMainSubEnum;
+import com.gitegg.code.generator.engine.enums.CustomFileMainSubExtendsEnum;
+import com.gitegg.code.generator.engine.enums.TableTypeEnum;
 import com.gitegg.code.generator.engine.service.IEngineService;
 import com.gitegg.code.generator.engine.util.EngineUtils;
 import com.gitegg.code.generator.field.dto.FieldDTO;
@@ -52,7 +54,6 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -411,7 +412,7 @@ public class EngineServiceImpl implements IEngineService {
             List<FieldDTO> dictFieldDTOS = dictCodeFieldDTOS.stream().filter(f-> !StringUtils.isEmpty(f.getDictCode()) && !f.getDictCode().equals("API_DICT")).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(dictFieldDTOS))
             {
-                customMap.put(GitEggCodeGeneratorConstant.DICT_CODE_FIELDS,new ArrayList<>());
+                customMap.put(GitEggCodeGeneratorConstant.DICT_CODE_FIELDS, dictFieldDTOS);
                 customMap.put(CodeGeneratorConstant.HAS_DICT, true);
                 List<String> dictCodes = dictFieldDTOS.stream().map(FieldDTO::getDictCode).distinct().collect(Collectors.toList());
                 customMap.put(CodeGeneratorConstant.DICT_CODE_LIST, dictCodes);
@@ -543,11 +544,14 @@ public class EngineServiceImpl implements IEngineService {
             {
                 servicePath = servicePath + File.separator + serviceName;
             }
-        
-            if (!StringUtils.isEmpty(frontCodeDir))
-            {
-                servicePath = frontCodeDir + servicePath ;
-            }
+        } else if (!StringUtils.isEmpty(config.getControllerPath()))
+        {
+            servicePath = config.getControllerPath().replaceFirst(StrUtil.SLASH, StrUtil.EMPTY).replace(StrUtil.SLASH, File.separator);
+        }
+
+        if (!StringUtils.isEmpty(frontCodeDir))
+        {
+            servicePath = frontCodeDir + File.separator + servicePath ;
         }
     
         //判断是否生成后端代码
@@ -580,18 +584,23 @@ public class EngineServiceImpl implements IEngineService {
             // vue and js
             String vueFile = vueFileEntity + CodeGeneratorConstant.TABLE_VUE;
     
-            String dataJsName = StrUtil.toSymbolCase(vueFileEntity, StrUtil.C_DOT);
+            String dataJsName = StrUtil.toSymbolCase(vueFileEntity, StrUtil.C_UNDERLINE);
             // VUE3使用ts，VUE2使用js
             String jsFile = dataJsName
                     + (CodeGeneratorConstant.VUE3.equals(config.getFrontType()) ? CodeGeneratorConstant.TS : CodeGeneratorConstant.JS);
+            String vueFilePath = (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
+            if (!StringUtils.isEmpty(config.getControllerPath()))
+            {
+                vueFilePath = servicePath;
+            }
         
-            String vuePath = finalFrontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
-            String jsPath = finalFrontCodePath + GitEggCodeGeneratorConstant.JS_PATH + (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
+            String vuePath = finalFrontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + vueFilePath;
+            String jsPath = finalFrontCodePath + GitEggCodeGeneratorConstant.JS_PATH + vueFilePath;
             customFilePath.put(vueFile, vuePath);
             customFilePath.put(jsFile, jsPath);
         
-            customMap.put(GitEggCodeGeneratorConstant.VUE_TABLE_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFile);
-            customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH)) + config.getModuleCode() + StrUtil.SLASH + dataJsName);
+            customMap.put(GitEggCodeGeneratorConstant.VUE_TABLE_PATH, vueFilePath.replace(File.separator, StrUtil.SLASH)  + StrUtil.SLASH + vueFile);
+            customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, (vueFilePath.replace(File.separator, StrUtil.SLASH)) + StrUtil.SLASH + dataJsName);
         
             // 生成前端页面 VUE AND JS/TS
             String frontFtlBasePath = EngineUtils.getFrontFtlPath(config.getTableType(), config.getFrontType());
@@ -603,22 +612,25 @@ public class EngineServiceImpl implements IEngineService {
                 customFileMap.put(vueEditFile, frontFtlBasePath + "/" + CodeGeneratorConstant.TABLE + CustomFileEnum.VUE.path);
                 customFilePath.put(vueEditFile, vuePath);
             }
-            
-            // tree_table/table都要用到table模板，所以这里需要做转换
-            customFileMap.put(vueFile, frontFtlBasePath + "/" +
-                    (CodeGeneratorConstant.TREE_TABLE.equals(tableShowType) ? CodeGeneratorConstant.TABLE : tableShowType) + CustomFileEnum.VUE.path);
+
+
+            customFileMap.put(vueFile, frontFtlBasePath + "/" + tableShowType+ CustomFileEnum.VUE.path);
             customFileMap.put(jsFile,  frontFtlBasePath + "/api" + (CodeGeneratorConstant.VUE3.equals(config.getFrontType()) ? CustomFileEnum.TS.path : CustomFileEnum.JS.path));
-            
-        
+
             // 如果是vue3，那么需要增加form.vue.ftl和schema.ts.ftl
             if (CodeGeneratorConstant.VUE3.equals(config.getFrontType()))
             {
+                // vue3可以和table模板共用
+                // tree_table/table都要用到table模板，所以这里需要做转换
+                customFileMap.put(vueFile, frontFtlBasePath + "/" +
+                        (CodeGeneratorConstant.TREE_TABLE.equals(tableShowType) ? CodeGeneratorConstant.TABLE : tableShowType) + CustomFileEnum.VUE.path);
+
                 String dataTsName = dataJsName + ".data";
                 customMap.put(CodeGeneratorConstant.DATA_TS_NAME, dataTsName);
                 String vueFormFile = vueFileEntity + config.getFormType().replaceAll("Tab", "Detail") + CodeGeneratorConstant.FORM_VUE;
                 String tsFile = dataTsName + CodeGeneratorConstant.TS;
-                customMap.put(GitEggCodeGeneratorConstant.VUE_FORM_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFormFile);
-                customMap.put(GitEggCodeGeneratorConstant.VUE_TS_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + tsFile);
+                customMap.put(GitEggCodeGeneratorConstant.VUE_FORM_PATH, vueFilePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + vueFormFile);
+                customMap.put(GitEggCodeGeneratorConstant.VUE_TS_PATH, vueFilePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + tsFile);
             
                 customFileMap.put(vueFormFile, frontFtlBasePath + "/form/" + config.getFormType().replaceAll("Modal","").replaceAll("Drawer","")  + CustomFileEnum.VUE_FORM.path);
                 customFileMap.put(tsFile,  frontFtlBasePath + "/schema" + CustomFileEnum.SCHEMA_TS.path);
@@ -718,7 +730,7 @@ public class EngineServiceImpl implements IEngineService {
             String parent = config.getParentPackage();
             String moduleName = config.getModuleCode();
             String codeDirPath =  (parent + StrUtil.DOT + moduleName).replace(StrUtil.DOT, File.separator) + File.separator;
-
+    
             // 查询资源权限表最大的id，用于生成资源权限脚本
             Long maxId = GitEggConstant.ZERO_LONG;
             Result<Object> result = resourceFeign.queryResourceMaxId();

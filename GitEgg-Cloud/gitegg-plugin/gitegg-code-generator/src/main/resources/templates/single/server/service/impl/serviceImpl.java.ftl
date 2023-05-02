@@ -168,7 +168,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         ${entity} ${table.entityPath}Entity = BeanCopierUtils.copyByClass(${table.entityPath}DTO, ${entity}.class);
 
         LambdaQueryWrapper<${entity}> lew = new LambdaQueryWrapper<>();
-        lew.eq(${entity}::get${entity}Name, ${table.entityPath}Entity.get${entity}Name()).or().eq(${entity}::get${entity}Key, ${table.entityPath}Entity.get${entity}Key());
+        lew.eq(${entity}::get${entity}Name, ${table.entityPath}Entity.get${entity}Name()).or().eq(${entity}::get${entity}Code, ${table.entityPath}Entity.get${entity}Code());
         List<${entity}> ${table.entityPath}List = list(lew);
         if (!CollectionUtils.isEmpty(${table.entityPath}List)) {
             throw new BusinessException("名称或标识已经存在");
@@ -198,7 +198,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     public boolean update${entity}(Update${entity}DTO ${table.entityPath}DTO) {
         ${entity} ${table.entityPath}Entity = BeanCopierUtils.copyByClass(${table.entityPath}DTO, ${entity}.class);
         LambdaQueryWrapper<${entity}> ew = new LambdaQueryWrapper<>();
-        ew.ne(${entity}::getId, ${table.entityPath}Entity.getId()).and(e -> e.eq(${entity}::get${entity}Name, ${table.entityPath}Entity.get${entity}Name()).or().eq(${entity}::get${entity}Key, ${table.entityPath}Entity.get${entity}Key()));
+        ew.ne(${entity}::getId, ${table.entityPath}Entity.getId()).and(e -> e.eq(${entity}::get${entity}Name, ${table.entityPath}Entity.get${entity}Name()).or().eq(${entity}::get${entity}Code, ${table.entityPath}Entity.get${entity}Code()));
         List<${entity}> ${table.entityPath}List = list(ew);
         if (!CollectionUtils.isEmpty(${table.entityPath}List)) {
             throw new BusinessException("名称或标识已经存在");

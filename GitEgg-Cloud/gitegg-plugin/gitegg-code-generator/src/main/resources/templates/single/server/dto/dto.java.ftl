@@ -6,6 +6,14 @@ package ${dtoPackage?replace("entity","dto")};
 import ${pkg};
     </#if>
 </#list>
+<#list fields as field>
+    <#if field.controlType == "DTAE_TIME_PICKER" || field.controlType == "DTAE_PICKER" || field.controlType == "TIME_PICKER">
+        <#assign hasJsonFormat= true/>
+    </#if>
+</#list>
+<#if hasJsonFormat?? && hasJsonFormat == true>
+import com.fasterxml.jackson.annotation.JsonFormat;
+</#if>
 <#if swagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -67,6 +75,13 @@ public class ${entity}DTO implements Serializable {
     * ${field.comment}
     */
         </#if>
+    </#if>
+    <#if field.controlType == "DTAE_TIME_PICKER">
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    <#elseif field.controlType == "DTAE_PICKER">
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    <#elseif field.controlType == "TIME_PICKER">
+    @JsonFormat(pattern = "HH:mm:ss")
     </#if>
     private ${field.entityType} ${field.entityName};
   </#if>
