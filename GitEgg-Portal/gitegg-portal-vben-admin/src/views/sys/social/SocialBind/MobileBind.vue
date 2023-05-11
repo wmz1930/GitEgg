@@ -4,7 +4,6 @@
     :model="formData"
     :rules="formRules"
     ref="formRef"
-    @keypress.enter="verifySendSms"
   >
     <FormItem name="phoneNumber" class="enter-x">
       <Input
