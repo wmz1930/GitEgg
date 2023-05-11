@@ -87,6 +87,9 @@ public class SmsServiceImpl implements ISmsService {
                 smsDataParam.setParams(smsDataMap);
                 ISmsSendService smsSendService = smsFactory.getSmsSendService(smsTemplateDTO);
                 Result result = smsSendService.sendSms(smsDataParam, phoneNumberList);
+                smsTemplateDTO.setSecretId(null);
+                smsTemplateDTO.setSecretKey(null);
+                smsTemplateDTO.setRegionId(null);
                 result.setData(smsTemplateDTO);
                 return result;
             }
