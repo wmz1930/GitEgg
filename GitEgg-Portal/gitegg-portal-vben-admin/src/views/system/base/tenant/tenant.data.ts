@@ -174,7 +174,7 @@ export const tenantForm: FormSchema[] = [
       accessPrivate: false,
       uploadType: 'image',
     },
-    required: true,
+    rules: [{ required: true, message: '请上传背景图片', trigger: 'change' }],
   },
   {
     label: '联系人',
