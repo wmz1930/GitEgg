@@ -1,4 +1,4 @@
-package com.gitegg.service.extension.wechat.miniapp.dto;
+package com.gitegg.service.extension.wx.miniapp.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

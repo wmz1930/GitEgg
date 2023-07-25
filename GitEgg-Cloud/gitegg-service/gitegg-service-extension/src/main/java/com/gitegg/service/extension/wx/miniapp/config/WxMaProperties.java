@@ -1,4 +1,4 @@
-package com.gitegg.service.extension.wechat.miniapp.config;
+package com.gitegg.service.extension.wx.miniapp.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,6 +16,12 @@ public class WxMaProperties {
 
     @Data
     public static class Config {
+
+        /**
+         * 租户
+         */
+        private Long tenantId;
+
         /**
          * 设置微信小程序的appid
          */

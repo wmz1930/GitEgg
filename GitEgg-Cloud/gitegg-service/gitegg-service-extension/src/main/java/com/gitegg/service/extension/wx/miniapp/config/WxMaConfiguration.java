@@ -1,19 +1,19 @@
-package com.gitegg.service.extension.wechat.miniapp.config;
+package com.gitegg.service.extension.wx.miniapp.config;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.bean.WxMaKefuMessage;
 import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
-import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
-import cn.binarywang.wx.miniapp.config.impl.WxMaRedissonConfigImpl;
 import cn.binarywang.wx.miniapp.message.WxMaMessageHandler;
 import cn.binarywang.wx.miniapp.message.WxMaMessageRouter;
+import com.gitegg.platform.base.constant.AuthConstant;
+import com.gitegg.platform.wechat.miniapp.config.GitEggWxMaRedissonConfigImpl;
 import com.google.common.collect.Lists;
+import jodd.util.StringPool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.common.error.WxRuntimeException;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @EnableConfigurationProperties(WxMaProperties.class)
 public class WxMaConfiguration {
-    
+
     private final WxMaProperties properties;
     
     private final RedissonClient redissonClient;
@@ -45,24 +45,30 @@ public class WxMaConfiguration {
     @Bean
     public WxMaService wxMaService() {
         List<WxMaProperties.Config> configs = this.properties.getConfigs();
-        if (configs == null) {
-            throw new WxRuntimeException("大哥，拜托先看下项目首页的说明（readme文件），添加下相关配置，注意别配错了！");
-        }
+        //已添加缓存配置，如果配置文件没有，那么在缓存新增时，仍然可以setConfigs
+//        if (configs == null) {
+//            throw new WxRuntimeException("大哥，拜托先看下项目首页的说明（readme文件），添加下相关配置，注意别配错了！");
+//        }
         WxMaService maService = new WxMaServiceImpl();
-        maService.setMultiConfigs(
-            configs.stream()
-                .map(a -> {
+        if (null != configs)
+        {
+            maService.setMultiConfigs(
+                    configs.stream()
+                            .map(a -> {
 //                    WxMaDefaultConfigImpl config = new WxMaDefaultConfigImpl();
 //                    WxMaDefaultConfigImpl config = new WxMaRedisConfigImpl(new JedisPool());
-                    WxMaRedissonConfigImpl config = new WxMaRedissonConfigImpl(redissonClient);
-                    // 使用上面的配置时，需要同时引入jedis-lock的依赖，否则会报类无法找到的异常
-                    config.setAppid(a.getAppid());
-                    config.setSecret(a.getSecret());
-                    config.setToken(a.getToken());
-                    config.setAesKey(a.getAesKey());
-                    config.setMsgDataFormat(a.getMsgDataFormat());
-                    return config;
-                }).collect(Collectors.toMap(WxMaDefaultConfigImpl::getAppid, a -> a, (o, n) -> o)));
+                                GitEggWxMaRedissonConfigImpl config = new GitEggWxMaRedissonConfigImpl(redissonClient);
+                                // 使用上面的配置时，需要同时引入jedis-lock的依赖，否则会报类无法找到的异常
+                                config.setTenantId(null != a.getTenantId() ? a.getTenantId().toString() : AuthConstant.DEFAULT_TENANT_ID.toString());
+                                config.setConfigKey(config.getTenantId() + StringPool.UNDERSCORE + a.getAppid());
+                                config.setAppid(a.getAppid());
+                                config.setSecret(a.getSecret());
+                                config.setToken(a.getToken());
+                                config.setAesKey(a.getAesKey());
+                                config.setMsgDataFormat(a.getMsgDataFormat());
+                                return config;
+                            }).collect(Collectors.toMap( GitEggWxMaRedissonConfigImpl::getConfigKey, a -> a, (o, n) -> o)));
+        }
         return maService;
     }
 

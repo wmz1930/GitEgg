@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.service.extension.wx.miniapp.mapper.MiniappMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.service.extension.wx.miniapp.entity.Miniapp">
+        <id column="id" property="id" />
+        <result column="miniapp_name" property="miniappName" />
+        <result column="appid" property="appid" />
+        <result column="secret" property="secret" />
+        <result column="token" property="token" />
+        <result column="aes_key" property="aesKey" />
+        <result column="msg_data_format" property="msgDataFormat" />
+        <result column="storage_type" property="storageType" />
+        <result column="key_prefix" property="keyPrefix" />
+        <result column="redis_host" property="redisHost" />
+        <result column="redis_port" property="redisPort" />
+        <result column="http_client_type" property="httpClientType" />
+        <result column="http_proxy_host" property="httpProxyHost" />
+        <result column="http_proxy_port" property="httpProxyPort" />
+        <result column="http_proxy_username" property="httpProxyUsername" />
+        <result column="http_proxy_password" property="httpProxyPassword" />
+        <result column="status" property="status" />
+        <result column="md5" property="md5" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, miniapp_name, appid, secret, token, aes_key, msg_data_format, storage_type, key_prefix, redis_host, redis_port, http_client_type, http_proxy_host, http_proxy_port, http_proxy_username, http_proxy_password, status, md5, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询微信小程序配置列表 -->
+    <select id="queryMiniappList" resultType="com.gitegg.service.extension.wx.miniapp.dto.MiniappDTO" parameterType="com.gitegg.service.extension.wx.miniapp.dto.QueryMiniappDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_wechat_miniapp
+        WHERE del_flag = 0
+        <if test="miniapp.miniappName != null and miniapp.miniappName != ''">
+            AND miniapp_name like concat('%', #{miniapp.miniappName}, '%')
+        </if>
+        <if test="miniapp.appid != null and miniapp.appid != ''">
+            AND appid = #{miniapp.appid}
+        </if>
+        <if test="miniapp.secret != null and miniapp.secret != ''">
+            AND secret = #{miniapp.secret}
+        </if>
+        <if test="miniapp.status != null and miniapp.status != ''">
+            AND status = #{miniapp.status}
+        </if>
+        <if test="miniapp.miniappIds != null and miniapp.miniappIds.size > 0 ">
+            AND id in
+            <foreach collection="miniapp.miniappIds" item ="miniappId" index="i" open="(" close=")" separator=",">
+                #{miniappId}
+            </foreach>
+        </if>
+        <if test="miniapp.beginDateTime != null and miniapp.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{miniapp.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="miniapp.endDateTime != null and miniapp.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{miniapp.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+    <!-- 查询微信小程序配置信息 -->
+    <select id="queryMiniapp" resultType="com.gitegg.service.extension.wx.miniapp.dto.MiniappDTO" parameterType="com.gitegg.service.extension.wx.miniapp.dto.QueryMiniappDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_wechat_miniapp
+        WHERE del_flag = 0
+        <if test="miniapp.miniappName != null and miniapp.miniappName != ''">
+            AND miniapp_name like concat('%', #{miniapp.miniappName}, '%')
+        </if>
+        <if test="miniapp.appid != null and miniapp.appid != ''">
+            AND appid = #{miniapp.appid}
+        </if>
+        <if test="miniapp.secret != null and miniapp.secret != ''">
+            AND secret = #{miniapp.secret}
+        </if>
+        <if test="miniapp.status != null and miniapp.status != ''">
+            AND status = #{miniapp.status}
+        </if>
+        <if test="miniapp.miniappIds != null and miniapp.miniappIds.size > 0 ">
+            AND id in
+            <foreach collection="miniapp.miniappIds" item ="miniappId" index="i" open="(" close=")" separator=",">
+                #{miniappId}
+            </foreach>
+        </if>
+        <if test="miniapp.beginDateTime != null and miniapp.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{miniapp.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="miniapp.endDateTime != null and miniapp.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{miniapp.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 初始化查询微信小程序配置信息 -->
+    <select id="initMiniappList" resultType="com.gitegg.service.extension.wx.miniapp.dto.MiniappDTO" parameterType="com.gitegg.service.extension.wx.miniapp.dto.QueryMiniappDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_wechat_miniapp
+        WHERE del_flag = 0
+        <if test="miniapp.miniappName != null and miniapp.miniappName != ''">
+            AND miniapp_name like concat('%', #{miniapp.miniappName}, '%')
+        </if>
+        <if test="miniapp.appid != null and miniapp.appid != ''">
+            AND appid = #{miniapp.appid}
+        </if>
+        <if test="miniapp.secret != null and miniapp.secret != ''">
+            AND secret = #{miniapp.secret}
+        </if>
+        <if test="miniapp.status != null and miniapp.status != ''">
+            AND status = #{miniapp.status}
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 不区分租户查询微信小程序配置信息 -->
+    <select id="getMiniapp" resultType="com.gitegg.service.extension.wx.miniapp.dto.MiniappDTO" parameterType="com.gitegg.service.extension.wx.miniapp.dto.QueryMiniappDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_wechat_miniapp
+        WHERE del_flag = 0
+        <if test="miniapp.miniappName != null and miniapp.miniappName != ''">
+            AND miniapp_name = #{miniapp.miniappName}
+        </if>
+        <if test="miniapp.appid != null and miniapp.appid != ''">
+            AND appid = #{miniapp.appid}
+        </if>
+        <if test="miniapp.secret != null and miniapp.secret != ''">
+            AND secret = #{miniapp.secret}
+        </if>
+        <if test="miniapp.status != null and miniapp.status != ''">
+            AND status = #{miniapp.status}
+        </if>
+        ORDER BY id DESC
+    </select>
+</mapper>

@@ -1,8 +1,9 @@
-package com.gitegg.service.extension.wechat.miniapp.controller;
+package com.gitegg.service.extension.wx.miniapp.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.constant.WxMaConstants;
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
+import com.gitegg.service.extension.wx.miniapp.service.IMiniappService;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,8 @@ import java.util.List;
 public class WxMaMediaController {
     private final WxMaService wxMaService;
 
+    private final IMiniappService miniappService;
+
     /**
      * 上传临时素材
      *
@@ -42,7 +45,7 @@ public class WxMaMediaController {
      */
     @PostMapping("/upload")
     public List<String> uploadMedia(@PathVariable String appid, HttpServletRequest request) throws WxErrorException {
-        if (!wxMaService.switchover(appid)) {
+        if (!miniappService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
 
@@ -78,7 +81,7 @@ public class WxMaMediaController {
      */
     @GetMapping("/download/{mediaId}")
     public File getMedia(@PathVariable String appid, @PathVariable String mediaId) throws WxErrorException {
-        if (!wxMaService.switchover(appid)) {
+        if (!miniappService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
         File media = wxMaService.getMediaService().getMedia(mediaId);
